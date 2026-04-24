@@ -196,7 +196,33 @@ Directo, pero con Playwright abierto para verificar.
 - **NO** commitear archivos generados: `.pyc`, `__pycache__/`, logs, `.vscode/`, `.idea/`. Verificar que el `.gitignore` del repo los cubre.
 
 ### MCPs del proyecto
-El `.mcp.json` del módulo declara: `playwright`, `context7`, `fs-addons`. El MCP de **odoo funciona actualmente por configuración global del usuario** pero no está en el `.mcp.json` del repo. Formalizarlo ahí como primera tarea para que cualquiera que clone el repo lo tenga configurado.
+El `.mcp.json` del módulo declara: `playwright`, `context7`, `fs-addons`, `odoo`.
+
+#### Variables de entorno requeridas
+El `.mcp.json` no lleva credenciales ni rutas absolutas hardcodeadas; todo se resuelve por **variables de entorno** que cada dev configura en su máquina. Hay un `.env.example` en la raíz con la lista completa y valores de muestra.
+
+| Variable | Para qué | Ejemplo |
+|---|---|---|
+| `ODOO_URL` | URL de la instancia Odoo local | `http://localhost:14070` |
+| `ODOO_DB` | Nombre de la base de datos | `odoo14_community` |
+| `ODOO_USER` | Usuario Odoo (lectura para el MCP) | `admin` |
+| `ODOO_PASSWORD` | Password de ese usuario | *(la tuya, NO commitear)* |
+| `ODOO_ADDONS_PATH` | Ruta absoluta al directorio de addons que el MCP `fs-addons` puede leer | `/opt/odoo/v14/github/avanzosc/odoo-addons` |
+
+Dos formas válidas de configurarlas:
+
+1. **`.bashrc` / `.zshrc`** (export persistente):
+   ```bash
+   export ODOO_URL=http://localhost:14070
+   export ODOO_DB=odoo14_community
+   export ODOO_USER=admin
+   export ODOO_PASSWORD=tu-password-real
+   export ODOO_ADDONS_PATH=/opt/odoo/v14/github/avanzosc/odoo-addons
+   ```
+
+2. **Fichero `.env` local en la raíz del módulo** (cargado manualmente al lanzar Claude Code, p.ej. `set -a && source .env && set +a && claude`). El `.gitignore` ya bloquea `.env` y `.env.*`, así que no hay riesgo de commitear credenciales.
+
+Si falta `ODOO_PASSWORD` o `ODOO_ADDONS_PATH`, los MCPs `odoo` y `fs-addons` arrancan rotos. El `.env.example` es el contrato — actualízalo cuando añadas variables nuevas.
 
 ---
 
@@ -403,7 +429,7 @@ Esta sección se actualiza según se toman decisiones. Claude debe preguntar por
 - [ ] **Datos legales del footer** — confirmar que siguen vigentes:
   - CIF: B20875340
   - Av. Julio Urkijo 34 bajo, 20720 Azkoitia, Gipuzkoa
-  - Tel: 943 026 902 / 688 663 234
+  - Tel: 943 026 902
   - Email: comercial@avanzosc.es
 - [ ] **Portal ERP actual** — ¿el botón "Acceso clientes" apunta a `/web/login` estándar de Odoo o hay una URL custom del portal?
 - [ ] **Analytics y tracking** — ¿Google Analytics 4, Plausible, Matomo? Decidir antes de ir a producción.

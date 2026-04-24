@@ -24,7 +24,7 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/opt/odoo/v14/github/avanzosc/odoo-addons"
+        "${ODOO_ADDONS_PATH}"
       ],
       "env": {}
     },
