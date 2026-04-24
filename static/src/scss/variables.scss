@@ -1,0 +1,24 @@
+// Paleta de marca — propuesta inicial (CLAUDE.md §9.3).
+// TODO: sustituir por hex exactos extraídos del logo antes de producción.
+
+:root {
+    --brand-primary: #E85D2F;
+    --brand-primary-dark: #C44015;
+    --brand-secondary: #1B2A41;
+    --brand-accent: #F5B800;
+
+    --neutral-900: #0F1419;
+    --neutral-700: #3A4149;
+    --neutral-500: #7A828B;
+    --neutral-300: #D3D7DC;
+    --neutral-100: #F4F5F7;
+    --neutral-0: #FFFFFF;
+
+    --success: #2D8B57;
+    --danger: #C73E3E;
+}
+
+$brand-primary: #E85D2F;
+$brand-primary-dark: #C44015;
+$brand-secondary: #1B2A41;
+$brand-accent: #F5B800;

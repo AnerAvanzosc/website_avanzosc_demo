@@ -1,0 +1,3 @@
+// Reglas globales del sitio. Las variables viven en variables.scss y
+// se cargan ANTES que este archivo desde views/assets.xml (Odoo v14 no
+// permite @import entre ficheros propios — hay que listarlos en el bundle).

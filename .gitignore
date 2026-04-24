@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Editores / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Secretos / credenciales
+.env
+.env.*
+*.key
+*.pem
+credentials.json
+
+# Estado per-usuario de Claude Code (allowlist con rutas y PIDs)
+.claude/settings.local.json

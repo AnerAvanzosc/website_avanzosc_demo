@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Registro de assets del frontend vía herencia XML de web.assets_frontend.
+         En Odoo 14 NO se usa la clave 'assets' del manifest (eso es v15+). -->
+    <template id="assets_frontend"
+              name="website_avanzosc_demo assets frontend"
+              inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <!-- Variables primero: el bundle concatena en orden, así que el
+                 SCSS posterior puede usar las variables definidas aquí. -->
+            <link rel="stylesheet"
+                  type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/variables.scss"/>
+            <link rel="stylesheet"
+                  type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/main.scss"/>
+            <script type="text/javascript"
+                    src="/website_avanzosc_demo/static/src/js/main.js"/>
+        </xpath>
+    </template>
+</odoo>

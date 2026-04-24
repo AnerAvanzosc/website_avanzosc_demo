@@ -1,0 +1,46 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ],
+      "env": {}
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "env": {}
+    },
+    "fs-addons": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/opt/odoo/v14/github/avanzosc/odoo-addons"
+      ],
+      "env": {}
+    },
+    "odoo": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "mcp-server-odoo"
+      ],
+      "env": {
+        "ODOO_URL": "${ODOO_URL:-http://localhost:14070}",
+        "ODOO_DB": "${ODOO_DB:-odoo14_community}",
+        "ODOO_USER": "${ODOO_USER:-admin}",
+        "ODOO_PASSWORD": "${ODOO_PASSWORD}",
+        "ODOO_YOLO": "read"
+      }
+    }
+  }
+}
