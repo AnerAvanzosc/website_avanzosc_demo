@@ -97,3 +97,35 @@ los CDN no afecta al render base.
 - **Viewport:** 1280×800 px
 - **Module commit:** Task 0.4 HEAD (commit `2c73f6e` o posterior, ver `git log`)
 - **Date:** 2026-04-27
+
+---
+
+## local-scaffold-with-typography-1280.png
+
+**What it represents:** Home page del local Odoo 14 tras **Task 0.5** (SCSS base —
+`_variables.scss` con la paleta §9.3, `_mixins.scss` con `@mixin reduced-motion`,
+`_typography.scss` con la jerarquía §9.4: Inter en body, Space Grotesk en h1-h3,
+JetBrains Mono en code/pre). Las reglas tipográficas están compiladas en el bundle
+y aplicadas al `<body>` (computed `font-family` = Inter), pero el tema Odoo default
+no incluye `<h1>` ni `<code>` en la home, por lo que el cambio visual perceptible
+respecto a los baselines anteriores es mínimo (texto del footer "Useful Links",
+"About us" etc. ahora sí en Inter). Sirve de checkpoint pre-snippet.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px
+- **Module commit:** Task 0.5 HEAD (commit `8ed1563` o posterior, ver `git log`)
+- **Date:** 2026-04-27
+
+---
+
+## local-scaffold-with-typography-375.png
+
+**What it represents:** Misma vista que la anterior en viewport mobile 375×667 px.
+Comportamiento responsive del tema Odoo default ya con los assets SCSS de Task 0.5
+cargados. Hamburger menu visible, "Contact Us" CTA, footer apilado en una columna.
+Cambio tipográfico aplicable al texto del footer.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 375×667 px
+- **Module commit:** Task 0.5 HEAD (commit `8ed1563` o posterior, ver `git log`)
+- **Date:** 2026-04-27
