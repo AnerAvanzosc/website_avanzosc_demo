@@ -28,7 +28,7 @@
 
 **0.1 — Esqueleto del módulo.** Files: `__init__.py`, `__manifest__.py`, `models/__init__.py`, `.gitkeep` en data/views/snippets/scss/js/img/description. Ref: spec §3.1, CLAUDE.md §8. Acceptance: árbol idéntico a CLAUDE.md §8 (incluye `sector_specifics.xml` reservado). Manifest con `depends=['website','website_sale','website_slides']`, `installable=True`. Deps: ninguna.
 
-**0.2 — Snapshot Playwright pre-cambios.** Files: PNGs en `docs/superpowers/plans/snapshots/00-pre/`. Ref: CLAUDE.md §6. Acceptance: home actual de `https://avanzosc.es` y home Odoo limpio en 1280×800 y 375×667. Deps: 0.1.
+**0.2 — Snapshot Playwright pre-cambios.** Files: PNGs en `docs/superpowers/plans/snapshots/00-baseline/`. Ref: CLAUDE.md §6. Acceptance: home actual de `https://avanzosc.es` y home Odoo limpio en 1280×800 y 375×667. Deps: 0.1.
 
 **0.3 — Google Fonts + Lucide en assets.** Files: `views/assets.xml` (nuevo). Ref: CLAUDE.md §4, spec §9.4/§9.7. Acceptance: `<template inherit_id="web.assets_frontend">` carga `<link>` Google Fonts (Space Grotesk 500/600, Inter 400/500/600, JetBrains Mono) y `<script>` `https://cdn.jsdelivr.net/npm/lucide@0.453.0/dist/umd/lucide.min.js` + llamada `lucide.createIcons()` al cargar. Verificable: `curl http://localhost:14070 | grep -E "googleapis|lucide"`. Deps: 0.1.
 
