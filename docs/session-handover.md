@@ -7,95 +7,90 @@ Documento de continuidad para la siguiente sesión. Lee esto antes de tocar nada
 ## 1. Estado del repo
 
 - **Working dir local**: `/opt/odoo/v14/workspace/website_avanzosc_demo`
-- **Remoto**: `https://github.com/AnerAvanzosc/website_avanzosc_demo` (público)
-- **Rama**: `main` (única, default en GitHub)
+- **Remoto**: `https://github.com/AnerAvanzosc/website_avanzosc_demo` (público, fork experimental personal del desarrollador)
+- **Rama**: `main` (única)
 - **Working tree**: limpio
-- **Último commit**: `bb5bb13` — `[FIX] security: externalize credentials and paths before public push`
-- **Historial completo (2 commits)**:
-  - `309fc2f` `[ADD] website_avanzosc_demo: initial scaffold — experimental workspace`
-  - `bb5bb13` `[FIX] security: externalize credentials and paths before public push`
+- **Último commit**: `c9de31e` — `[DOC] §11: close brainstorm decisions`
+- **Commits locales sin pushear** (de más antiguo a más reciente):
+  - `2e6b7be` `[DOC] CLAUDE.md: clarify repo location, GitHub policy and §11 structure`
+  - `c9de31e` `[DOC] §11: close brainstorm decisions`
+- **Push pendiente de autorización explícita en sesión futura. Las autorizaciones no se heredan.**
 
-Variables de entorno requeridas para que arranquen los MCPs (ver `.env.example` y `CLAUDE.md` §7):
-`ODOO_URL`, `ODOO_DB`, `ODOO_USER`, `ODOO_PASSWORD`, `ODOO_ADDONS_PATH`.
-
----
-
-## 2. Decisiones realmente validadas por el usuario en esta sesión
-
-Citas literales del turno donde el usuario aprobó cada cosa.
-
-### 2.1 Operativa Git
-- **Crear repo Git en el workspace** — turno: `cd /opt/odoo/v14/workspace/website_avanzosc_demo / git init / git add . / git commit -m "Initial scaffold — experimental phase"`. Comandos exactos del usuario.
-- **Opción A para `.gitignore` mínimo** (incluir `__pycache__`, `*.pyc`, `.vscode`, `.idea`, etc.) — turno del usuario: `a`.
-- **Reorganización a 2 commits con Opción A** (aplastar audit dentro del initial, security fix como segundo commit) — turno del usuario: `Opción A confirmada. Tira.`
-- **Push autorizado al repo público** — turnos: `hazlo` + `https://github.com/aneravanzosc/website_avanzosc_demo este es link en donde quiero subir el proyecto`.
-- **Renombrar `master` → `main` y borrar `master` remoto** — turno: `Renombra la rama default de master a main. Local: git branch -M main...`
-- **Cambiar default branch via API + delete `master` remoto** — turno: `si` (en respuesta a oferta explícita de hacerlo por API).
-
-### 2.2 Contenido del proyecto
-- **Quitar tlf móvil 688 663 234 de CLAUDE.md §11** — instrucción explícita en el plan de cierre de auditoría.
-- **Externalizar `ODOO_ADDONS_PATH` a env var en `.mcp.json`** — instrucción explícita.
-- **Crear `.env.example` con la plantilla de variables** — instrucción explícita con valores listados.
-- **Documentar variables de entorno en CLAUDE.md §7** — instrucción explícita.
-- **Archivar plan i18n en `docs/superpowers/plans/archived/`** — instrucción explícita en la auditoría de asunciones.
-- **Revertir 4 `[x]` a `[ ]` en CLAUDE.md §11** (idiomas, claim, 9 bloques, blog) — instrucción explícita.
-
-### 2.3 Mensajes de commit
-Los 3 mensajes que están (o estuvieron) en historial los proporcionó el usuario verbatim. **Ningún commit lleva `Co-Authored-By` salvo el initial original (que ya no existe en historia, fue reescrito en Opción A).**
+Variables de entorno requeridas para los MCPs (ver `.env.example` y `CLAUDE.md` §7): `ODOO_URL`, `ODOO_DB`, `ODOO_USER`, `ODOO_PASSWORD`, `ODOO_ADDONS_PATH`.
 
 ---
 
-## 3. Decisiones explícitamente NO tomadas
+## 2. Qué se hizo en esta sesión (2026-04-27)
 
-Reabiertas en CLAUDE.md §11 tras la auditoría de asunciones. **No asumas que ninguna está cerrada.** Pregunta antes de actuar sobre ellas.
+### 2.1 Limpieza de coherencia en CLAUDE.md (commit `2e6b7be`)
 
-### 3.1 Estratégicas (reabiertas porque las había tratado como cerradas sin validación)
-- **Idiomas del sitio**: ES-only / ES+EN / ES+EU+EN. Implica `res.lang`, `website.language_ids`, estructura de URLs, alcance de traducción por página.
-- **Claim definitivo de la home**: candidatos A/B/C en CLAUDE.md §9.1.
-- **Estructura de bloques de la home**: propuesta de 9 bloques pendiente de validar (orden y contenido).
-- **Blog**: ¿dentro o fuera del sitio? Con o sin plan editorial.
+El handover anterior había detectado 3 ambigüedades. Resueltas en este commit:
 
-### 3.2 Pendientes desde el origen
-- **Casos de éxito destacados** (6-8 proyectos, con permiso de cliente o anonimizados).
-- **Hex exactos del logo** (extraer del PNG actual).
-- **SVG vectorial del logo**.
-- **Datos legales del footer** (confirmar vigencia de CIF, dirección, tlf fijo, email comercial).
-- **Portal ERP**: ¿`/web/login` estándar o URL custom?
-- **Analytics**: GA4 / Plausible / Matomo / nada.
-- **Dominio y plan de despliegue**: ¿Odoo aparte o sobre el de producción? Migración de tienda y cursos antiguos.
+- **Línea 1 (política GitHub)**: reformulada de "NUNCA HAGAS NADA EN GITHUB" a "Nunca operar sobre GitHub (push, branches, PRs, settings, releases) sin autorización explícita en la sesión actual. Las autorizaciones son puntuales y NO se heredan entre sesiones."
+- **§7 (Servidor Odoo local)**: actualizada la ubicación real del repo (`AnerAvanzosc/website_avanzosc_demo` con working dir `/opt/odoo/v14/workspace/...`); nota corta de que el repo oficial `avanzosc/odoo-addons` no se toca durante la fase experimental.
+- **§11 estructura**: las 4 decisiones estratégicas que vivían como `[ ]` bajo el subapartado "Decisiones ya tomadas ✓" se movieron a "Decisiones pendientes". El subapartado "ya tomadas" quedó solo con `[x]` reales.
 
----
+### 2.2 Brainstorm cerrado de las 5 decisiones estratégicas (commit `c9de31e`)
 
-## 4. Errores conocidos y cosas a vigilar
+Ejecutado vía `superpowers:brainstorming`, **una decisión a la vez**, con 3-5 líneas de implicaciones técnicas por cada opción antes de cada pregunta. Cada decisión cerrada con **cita literal** de la respuesta del usuario en CLAUDE.md §11.
 
-### 4.1 Errores que cometí en esta sesión
-- **Asumí decisiones de CLAUDE.md §11 como cerradas** sin evidencia conversacional de validación. El usuario me hizo auditar, lo reconocí, y revertimos los 4 `[x]` a `[ ]`. Aprendizaje: los `[x]` en docs no son evidencia de validación si no hay turno del usuario respaldándolo.
-- **Añadí `Co-Authored-By` al primer commit** (`Initial scaffold — experimental phase`) sin que el usuario lo pidiera. Ese commit ya no está en historia (sustituido en Opción A). El usuario me lo señaló como asunción.
-- **Reporté incorrectamente que `.claude/settings.local.json` estaba en el commit inicial.** Verificación posterior con `git cat-file -p` mostró que **nunca estuvo tracked**. El harness de Claude Code crea/modifica `.claude/` después del primer scan de git, y como nunca entró al índice, no estaba en historia. Por suerte el plan de Opción A funcionó igual.
-- **Asumí que el usuario había cambiado el default branch en GitHub** cuando dijo `estoy en main ya`. La API decía lo contrario (`master` seguía siendo default). Hubo que cambiarlo por API. Aprendizaje: verificar con `gh repo view --json defaultBranchRef` antes de intentar borrar la rama antigua.
+| # | Decisión | Resultado | Cita literal del usuario |
+|---|---|---|---|
+| 1 | Idiomas | **ES + EU** (URL raíz ES sin prefijo + `/eu/`). `website.language_ids = [es_ES, eu_ES]`. Páginas corporativas fijas en los 2 idiomas; casos de éxito y contenidos largos arrancan ES-only con traducción progresiva. | «hagamos el B» |
+| 2 | Claim de la home | **«Odoo industrial de verdad, desde 2008.»** (opción B de §9.1). EU: «Benetako Odoo industriala, 2008tik.». El activo "17 años" se traslada al contador animado y/o timeline en lugar del H1. | «b» |
+| 3 | Estructura de la home | **8 secciones, funnel B2B reordenado** (Approach B), 9 snippets QWeb. Bloque 4 combina `s_avanzosc_contador` + `s_avanzosc_timeline` en una sola sección visual. **Snippets NUEVOS a crear** (no listados en §8): `s_avanzosc_pilares`, `s_avanzosc_cta_contacto`. | «b» |
+| 4 | Casos de éxito | **8 archetypes anónimos** (sin nombres, sin fotos, sin métricas reales). 4 industrial (metalúrgico, química, alimentaria, textil) + 2 distribución (retail multitienda, mayorista) + 1 servicios (IT/SAT) + 1 academias (grupo educativo multicentro). Snippet `s_avanzosc_caso_exito` se diseñará anonymous-first. | «lo que recomiendes, pero por ahora que sea generico en cuanto a nombres fotos y datos, ya que no tengo ni yo los datos» |
+| 5 | Blog | **Fuera del sitio**. `website_blog` NO en `depends`, ni menú, ni link, ni snippet en home. Módulo residual en BD pero invisible. Reversible si en el futuro hay recursos editoriales sostenidos. | «no quiero blogs, fuera fuear» |
 
-### 4.2 Cosas a vigilar en sesiones futuras
-- **`.claude/settings.local.json` es local-only** (gitignored en `.gitignore:28`). Contiene allowlist de Bash con paths absolutos de `/opt/odoo/v14`, `/etc/odoo`, `/home/avanzosc` y PIDs concretos. **Nunca commitear.** Si en algún momento aparece en `git status` como tracked, algo se ha roto.
-- **`.env.example` está exceptuado del `.env.*` ignore** (`!.env.example` en `.gitignore`). El `.env` real (con credenciales) sigue ignorado.
-- **CLAUDE.md línea 1**: `ES IMPORTANTE QUE NUNCA HAGAS NADA EN GITHUB (DIGO PUSH COMMIT NI NADA)`. En esta sesión el usuario sobreescribió esta restricción con autorizaciones explícitas (`hazlo` + URL). En sesiones futuras, **volver a pedir autorización explícita** antes de cualquier commit/push — no asumir que el override de esta sesión persiste.
-- **El módulo está versionado como repo independiente** en `github.com/AnerAvanzosc/website_avanzosc_demo`, no como subcarpeta de `github.com/avanzosc/odoo-addons` (que es como CLAUDE.md §7 lo describe en "Git"). Es un fork experimental personal del usuario. Si en algún momento se decide integrarlo en el repo grande de avanzosc, requerirá `git subtree` o copia + PR.
-- **Memoria persistente vacía**: el directorio `~/.claude/projects/-opt-odoo-v14-workspace-website-avanzosc-demo/memory/` no existe todavía. No hay memorias guardadas.
+Detalle completo de cada decisión en CLAUDE.md §11 → "Decisiones ya tomadas ✓".
 
 ---
 
-## 5. Próximo paso planificado
+## 3. Decisiones operativas pendientes en §11
 
-**Brainstorm formal de las decisiones del §11 en orden**, siguiendo el flujo `superpowers:brainstorming`. Orden propuesto (ataca primero las que bloquean al resto):
+**No bloquean empezar el spec ni la implementación inicial.** Son tareas a cerrar antes de producción, no antes de picar código.
 
-1. **Idiomas del sitio** — bloquea estructura de URLs, alcance de traducción, modelo `res.lang`.
-2. **Claim de la home** — bloquea hero, copy, traducciones.
-3. **Estructura de bloques de la home** — bloquea snippets a desarrollar.
-4. **Blog dentro/fuera** — afecta a `depends`, menú, plan editorial.
-5. **Casos de éxito** — bloquea snippet "caso de éxito".
-6. **Logo (hex + SVG)** — bloquea paleta SCSS y header.
-7. **Datos legales footer** — confirmar y cerrar.
-8. **Portal ERP** — decidir destino del botón "Acceso clientes".
-9. **Analytics** — decidir antes de producción.
-10. **Dominio y despliegue** — decidir antes de meterse a fondo.
+1. **Hex exactos del logo** — extraer del PNG actual y actualizar la tabla §9.3.
+2. **SVG vectorial del logo** — vectorizar si no existe ya.
+3. **Datos legales del footer** — confirmar vigencia de CIF B20875340, Av. Julio Urkijo 34 bajo (20720 Azkoitia), Tel 943 026 902, comercial@avanzosc.es.
+4. **Portal ERP** — ¿botón "Acceso clientes" apunta a `/web/login` estándar o a URL custom?
+5. **Analytics y tracking** — ¿GA4, Plausible, Matomo, ninguno?
+6. **Dominio y despliegue** — ¿Odoo aparte o sobre el de producción? Plan de migración de tienda y cursos antiguos.
 
-**No empezar a picar páginas/snippets hasta tener al menos 1-4 decididas**, porque condicionan toda la arquitectura QWeb del módulo.
+---
+
+## 4. Siguiente paso planificado
+
+**Redactar el design doc consolidado del módulo en sesión nueva**, en:
+`docs/superpowers/specs/2026-04-27-website-avanzosc-demo-design.md`
+
+Debe cubrir:
+- Arquitectura del módulo `website_avanzosc_demo` (estructura de carpetas, `__manifest__`, hooks de assets v14 vía herencia XML de `web.assets_frontend`).
+- Modelo i18n ES + EU (`website.language_ids`, estructura de URLs, alcance de traducción por página).
+- Estructura de la home (las 8 secciones validadas, con QWeb por sección).
+- Inventario completo de snippets: los 7 listados en §8 + los 2 nuevos `s_avanzosc_pilares` y `s_avanzosc_cta_contacto`.
+- Sistema de animaciones/UX (GSAP 3 + ScrollTrigger + SplitText, Lenis, IntersectionObserver; reglas §5: solo `transform`/`opacity`, `prefers-reduced-motion`, sin scrolljacking).
+- Catálogo de casos: los 8 archetypes anónimos, con esquema del snippet `s_avanzosc_caso_exito` anonymous-first y plan de "promoción" a nombrado cuando se consigan permisos.
+- Páginas sectoriales (industrial / distribución / servicios / academias) y secundarias (conócenos, trabaja con nosotros, contacto, kit-consulting landing).
+- Header (Acceso clientes destacado) y footer.
+
+Tras escribir el spec → revisión por el usuario → transición a `superpowers:writing-plans` para el plan de implementación por fases. **No invocar otros skills de implementación entre medias.**
+
+---
+
+## 5. Errores y cosas a vigilar (acumulado entre sesiones)
+
+### 5.1 Heredado de la sesión anterior
+- **`.claude/settings.local.json` es local-only** (gitignored, `.gitignore:28`). Contiene allowlist de Bash con paths absolutos de `/opt/odoo/v14`, `/etc/odoo`, `/home/avanzosc` y PIDs. Nunca commitear. Si aparece en `git status` como tracked, algo se ha roto.
+- **`.env.example` está exceptuado del `.env.*` ignore** (`!.env.example`). El `.env` real (con credenciales) sigue ignorado.
+- **Repo independiente, no subcarpeta del oficial**: el módulo vive en `github.com/AnerAvanzosc/website_avanzosc_demo` (fork personal), no en `github.com/avanzosc/odoo-addons`. Si más adelante se decide integrarlo en el oficial, requerirá `git subtree` o copia + PR.
+- **Memoria persistente vacía**: el directorio `~/.claude/projects/-opt-odoo-v14-workspace-website-avanzosc-demo/memory/` sigue sin usarse.
+
+### 5.2 De esta sesión
+- **No añadir `Co-Authored-By` a commits sin que el usuario lo pida.** Error señalado en el handover anterior; se mantuvo en esta sesión — ningún commit nuevo lo lleva.
+- **CLAUDE.md línea 1 ya está reformulada**: nunca operar sobre GitHub sin autorización explícita en la sesión actual. Las autorizaciones son puntuales y NO se heredan entre sesiones.
+- **2 commits locales sin pushear al cierre**: `2e6b7be` y `c9de31e`. Si en sesión futura el usuario autoriza el push, son los pendientes.
+- **Forma del brainstorm que funcionó**: una decisión a la vez, 3-5 líneas de implicaciones por opción, multiple choice cuando aplica, recomendación explícita del asistente, cita literal de la respuesta del usuario al cerrar en §11. El usuario priorizó respuestas cortas («b», «hagamos el B»). Repetir este estilo en futuros brainstorms del mismo proyecto.
+- **Anonimato total en casos**: los 8 archetypes no tienen nombres, fotos ni datos reales. Cuando se consigan permisos de un cliente, ese caso se promociona de anónimo a nombrado sin tocar la estructura del snippet.
+
+---
