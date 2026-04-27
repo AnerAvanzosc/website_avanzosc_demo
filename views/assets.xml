@@ -10,7 +10,7 @@
                  SCSS posterior puede usar las variables definidas aquí. -->
             <link rel="stylesheet"
                   type="text/scss"
-                  href="/website_avanzosc_demo/static/src/scss/variables.scss"/>
+                  href="/website_avanzosc_demo/static/src/scss/_variables.scss"/>
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/main.scss"/>
