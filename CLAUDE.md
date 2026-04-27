@@ -484,6 +484,11 @@ No-negociables operativos (complementan los técnicos de §10). Aplican a Claude
 
 5. **El smoke test se ejecuta y se guarda en `docs/smoke-tests/<task-id>.log`** (ej: `docs/smoke-tests/0.1.log`). El log captura las **últimas 20 líneas del output** de Odoo tras `-u <module> --stop-after-init`. El commit que cierra la tarea incluye este archivo. Sin log, tarea no cierra.
 
+   **Política de warnings toleradas en smoke logs**: el log se guarda íntegro. Cualquier `WARNING` que aparezca debe revisarse, EXCEPTO las siguientes (ruido conocido del core de Odoo 14, fuera de nuestro control):
+   - `DeprecationWarning: nodes.Node.traverse() is obsoleted by Node.findall()` desde `/opt/odoo/v14/base/odoo/addons/base/models/ir_module.py:128`. Justificación: stdlib `docutils` deprecó `Node.traverse()` y el core de Odoo 14 no se ha actualizado; aparece exactamente 1 vez por instalación, no afecta funcionalidad.
+
+   Cualquier warning **no listado arriba** debe investigarse antes de cerrar la tarea (probablemente sí es del módulo o de una dependencia que toca el módulo). La lista vive aquí, no en cada log; si una nueva warning recurrente del core aparece, se añade a esta lista en un commit `[DOC]` aparte y queda tolerada para futuras tareas.
+
 6. **El smoke test se ejecuta SIEMPRE vía `./scripts/run-smoke.sh <task-id>`**, nunca invocando `odoo-bin` directamente. El script gestiona el ciclo «parar dev server → smoke → restart dev server con los mismos args», escribe `docs/smoke-tests/<task-id>.log` (regla #5) y devuelve exit code 1 si el output contiene `Traceback` o `ERROR`. Esta regla aplica a Claude principal y a cualquier subagente. El comando subyacente que ejecuta el script está documentado en §7 y solo es referencia interna; en flujo real se invoca por el script. **Garantía del script**: `exit 0` implica que el dev server responde HTTP 200/303 en `localhost:14070` tras el restart, no solo que el proceso esté vivo. Tres modos de fallo del restart se detectan con diagnóstico distinguido en stderr: «died immediately after restart», «died before listening on :14070», «alive but not listening on :14070».
 
 **Política de añadidos a este documento**: cualquier sección nueva (§13, §14, …) va al final, NUNCA insertada en medio. Numeración estable = referencias estables.
