@@ -27,3 +27,6 @@ credentials.json
 
 # Estado per-usuario de Claude Code (allowlist con rutas y PIDs)
 .claude/settings.local.json
+
+# Playwright MCP state (snapshots de sesión, no versionados)
+.playwright-mcp/
