@@ -24,6 +24,11 @@
 #
 # Idempotent: running twice in a row is safe.
 # Required by CLAUDE.md §12 rule #6.
+#
+# IMPORTANT: dev server is restarted with an explicit PATH so that
+# --dev=all auto-reload uses the venv Python (not /usr/bin/python3 which
+# lacks Odoo's dependencies like PyPDF2). Without this, the reloader
+# silently kills the dev server every time a file changes.
 
 set -euo pipefail
 
@@ -118,7 +123,10 @@ restart_dev() {
         return 0
     fi
     echo "[run-smoke] Restarting dev server..."
-    nohup "${DEV_ARGS_ARR[@]}" > "$DEV_LOG" 2>&1 &
+    # Explicit PATH (NOT prepend $PATH): determinista, evita contaminación de venvs ajenos.
+    # Necesario para que el watchdog de --dev=all use el venv Python en cada reload
+    # (su shebang es #!/usr/bin/env python3, que resuelve por $PATH).
+    PATH="/opt/odoo/v14/venv/bin:/usr/local/bin:/usr/bin:/bin" nohup "${DEV_ARGS_ARR[@]}" > "$DEV_LOG" 2>&1 &
     NEW_PID=$!
     echo "$NEW_PID" > "$PID_FILE"
     echo "[run-smoke] Dev server PID=$NEW_PID (logs at $DEV_LOG)"
