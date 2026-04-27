@@ -29,7 +29,7 @@
          la variable `lucide`.
          Ref: spec §3.3 (pipeline de assets, punto 1-2), CLAUDE.md §9.4, §9.7. -->
     <template id="head_external_assets"
-              name="website_avanzosc_demo head: Google Fonts + Lucide"
+              name="website_avanzosc_demo head: Google Fonts + Lucide + GSAP + Splitting + Lenis"
               inherit_id="web.layout">
         <!-- Ancla: después del último elemento de <head> (position inside
              añade al final del contenedor, antes del cierre </head>).
@@ -48,7 +48,14 @@
             <link rel="stylesheet"
                   href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap"/>
 
-            <!-- 3. Lucide Icons 0.453.0 UMD build — expone el global `lucide`.
+            <!-- 3. Splitting.js 1.0.6 CSS — base styles for split word/char nodes.
+                 Debe ir en <head> con las demás hojas de estilo para que los
+                 estilos estén disponibles antes del primer paint.
+                 Ref: spec §9.1 tabla de versiones. -->
+            <link rel="stylesheet"
+                  href="https://cdn.jsdelivr.net/npm/splitting@1.0.6/dist/splitting.css"/>
+
+            <!-- 4. Lucide Icons 0.453.0 UMD build — expone el global `lucide`.
                  Sin atributo defer: ejecuta síncronamente durante el parse,
                  antes de que los bundles defer de Odoo arranquen los widgets.
                  La llamada lucide.createIcons() vive en main.js dentro de
@@ -57,6 +64,30 @@
                  Ref: CLAUDE.md §9.7, spec §9 tabla de versiones. -->
             <script type="text/javascript"
                     src="https://cdn.jsdelivr.net/npm/lucide@0.453.0/dist/umd/lucide.min.js"/>
+
+            <!-- 5. GSAP 3.12.5 — core. Debe cargar antes de cualquier plugin.
+                 Sin defer: expone el global `gsap` síncronamente.
+                 Ref: spec §9.1 tabla de versiones. -->
+            <script type="text/javascript"
+                    src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"/>
+
+            <!-- 6. GSAP ScrollTrigger 3.12.5 — plugin. Requiere core GSAP cargado
+                 previamente (orden garantizado por posición en este bloque).
+                 Ref: spec §9.1 tabla de versiones. -->
+            <script type="text/javascript"
+                    src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"/>
+
+            <!-- 7. Splitting.js 1.0.6 JS — reemplazo MIT de GSAP SplitText.
+                 Expone el global `Splitting`. Usado en hero para split por letra.
+                 Ref: spec §9.1 (nota: descarte de SplitText en favor de Splitting.js MIT). -->
+            <script type="text/javascript"
+                    src="https://cdn.jsdelivr.net/npm/splitting@1.0.6/dist/splitting.min.js"/>
+
+            <!-- 8. Lenis 1.0.42 — smooth scroll global. Expone el global `Lenis`.
+                 La instancia se crea en Task 0.6; aquí solo se registra la librería.
+                 Ref: spec §9.1 tabla de versiones, CLAUDE.md §5 (smooth scroll con Lenis). -->
+            <script type="text/javascript"
+                    src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"/>
         </xpath>
     </template>
 </odoo>
