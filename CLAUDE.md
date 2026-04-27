@@ -457,3 +457,19 @@ Las 6 decisiones siguientes (D1-D6) se cerraron en la sesión de revisión del s
 - [ ] **Portal ERP actual** — ¿el botón "Acceso clientes" apunta a `/web/login` estándar de Odoo o hay una URL custom del portal?
 - [ ] **Analytics y tracking** — ¿Google Analytics 4, Plausible, Matomo? Decidir antes de ir a producción.
 - [ ] **Plan de migración de contenido antiguo** — tienda y cursos del sitio actual: ¿migración de productos / cursos al nuevo, o se mantienen como están y solo se re-skinean? (La parte "dónde se despliega" quedó resuelta por D6.)
+
+---
+
+## 12. Convenciones de commits y scope
+
+No-negociables operativos (complementan los técnicos de §10). Aplican a Claude principal, a cualquier subagente dispatched, y a futuros añadidos al proyecto.
+
+1. **NO añadir trailer `Co-Authored-By:` a ningún commit.** Los commits son atribuidos al usuario que opera la herramienta. Excepción única: que el usuario lo pida explícitamente en una sesión concreta. La autorización NO se hereda entre sesiones.
+
+2. **NO crear archivos fuera del scope literal de la tarea**, aunque «vengan bien» para tareas futuras. Si una tarea X.Y crea `foo.scss`, eso es lo único que crea, aunque el implementer prevea que `bar.scss` se necesitará en X.Z. Las dependencias se respetan en el orden del plan.
+
+3. **Verificar antes de crear**: si la tarea crea archivos en una carpeta, primero `ls` (o equivalente) para ver si ya existen. Si existen, **leer y extender**, no sobrescribir.
+
+4. **Cada tarea tiene smoke test obligatorio post-implementación**: el módulo debe recargar sin errores ni warnings nuevos (comando en §7). Sin smoke test verde, la tarea no se cierra.
+
+**Política de añadidos a este documento**: cualquier sección nueva (§13, §14, …) va al final, NUNCA insertada en medio. Numeración estable = referencias estables.
