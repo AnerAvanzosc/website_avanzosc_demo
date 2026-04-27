@@ -1,20 +1,20 @@
-2026-04-27 10:20:18,989 45647 INFO odoo14_community odoo.modules.loading: loading 1 modules... 
-2026-04-27 10:20:19,001 45647 INFO odoo14_community odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
-2026-04-27 10:20:19,061 45647 INFO odoo14_community odoo.modules.loading: updating modules list 
-2026-04-27 10:20:19,063 45647 INFO odoo14_community odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
-2026-04-27 10:20:20,541 45647 INFO odoo14_community odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Website Avanzosc Demo'] to user __system__ #1 via n/a 
-2026-04-27 10:20:20,542 45647 INFO odoo14_community odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Website Avanzosc Demo'] to user __system__ #1 via n/a 
-2026-04-27 10:20:22,049 45647 INFO odoo14_community odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
-2026-04-27 10:20:22,080 45647 INFO odoo14_community odoo.modules.loading: loading 59 modules... 
-2026-04-27 10:20:22,528 45647 INFO odoo14_community odoo.modules.loading: Loading module website_avanzosc_demo (59/59) 
-2026-04-27 10:20:22,947 45647 WARNING odoo14_community py.warnings: /opt/odoo/v14/base/odoo/addons/base/models/ir_module.py:128: DeprecationWarning: nodes.Node.traverse() is obsoleted by Node.findall().
+2026-04-27 10:35:58,811 48581 INFO odoo14_community odoo.modules.loading: loading 1 modules... 
+2026-04-27 10:35:58,826 48581 INFO odoo14_community odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-04-27 10:35:58,900 48581 INFO odoo14_community odoo.modules.loading: updating modules list 
+2026-04-27 10:35:58,903 48581 INFO odoo14_community odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-04-27 10:36:00,526 48581 INFO odoo14_community odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Website Avanzosc Demo'] to user __system__ #1 via n/a 
+2026-04-27 10:36:00,526 48581 INFO odoo14_community odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Website Avanzosc Demo'] to user __system__ #1 via n/a 
+2026-04-27 10:36:02,016 48581 INFO odoo14_community odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-04-27 10:36:02,053 48581 INFO odoo14_community odoo.modules.loading: loading 59 modules... 
+2026-04-27 10:36:02,492 48581 INFO odoo14_community odoo.modules.loading: Loading module website_avanzosc_demo (59/59) 
+2026-04-27 10:36:02,931 48581 WARNING odoo14_community py.warnings: /opt/odoo/v14/base/odoo/addons/base/models/ir_module.py:128: DeprecationWarning: nodes.Node.traverse() is obsoleted by Node.findall().
   for node in self.document.traverse(nodes.system_message):
  
-2026-04-27 10:20:22,998 45647 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/assets.xml 
-2026-04-27 10:20:23,040 45647 INFO odoo14_community odoo.modules.loading: Module website_avanzosc_demo: loading demo 
-2026-04-27 10:20:23,054 45647 INFO odoo14_community odoo.modules.loading: Module website_avanzosc_demo loaded in 0.53s, 82 queries 
-2026-04-27 10:20:23,054 45647 INFO odoo14_community odoo.modules.loading: 59 modules loaded in 0.97s, 98 queries (+0 extra) 
-2026-04-27 10:20:23,534 45647 INFO odoo14_community odoo.modules.loading: Modules loaded. 
-2026-04-27 10:20:23,538 45647 INFO odoo14_community odoo.service.server: Initiating shutdown 
-2026-04-27 10:20:23,538 45647 INFO odoo14_community odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
-2026-04-27 10:20:23,538 45647 INFO odoo14_community odoo.sql_db: ConnectionPool(used=0/count=0/max=64): Closed 1 connections  
+2026-04-27 10:36:02,974 48581 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/assets.xml 
+2026-04-27 10:36:03,015 48581 INFO odoo14_community odoo.modules.loading: Module website_avanzosc_demo: loading demo 
+2026-04-27 10:36:03,027 48581 INFO odoo14_community odoo.modules.loading: Module website_avanzosc_demo loaded in 0.54s, 82 queries 
+2026-04-27 10:36:03,027 48581 INFO odoo14_community odoo.modules.loading: 59 modules loaded in 0.97s, 98 queries (+0 extra) 
+2026-04-27 10:36:03,482 48581 INFO odoo14_community odoo.modules.loading: Modules loaded. 
+2026-04-27 10:36:03,486 48581 INFO odoo14_community odoo.service.server: Initiating shutdown 
+2026-04-27 10:36:03,486 48581 INFO odoo14_community odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-04-27 10:36:03,486 48581 INFO odoo14_community odoo.sql_db: ConnectionPool(used=0/count=0/max=64): Closed 1 connections  
