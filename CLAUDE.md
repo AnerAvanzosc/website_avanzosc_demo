@@ -406,26 +406,37 @@ Esta sección se actualiza según se toman decisiones. Claude debe preguntar por
 - [x] **Arquitectura**: todo dentro del mismo Odoo, tema custom sobre `website`.
 - [x] **Nombre del módulo**: `website_avanzosc_demo`.
 - [x] **Repo y ruta** (fase experimental): `github.com/AnerAvanzosc/website_avanzosc_demo`, working dir `/opt/odoo/v14/workspace/website_avanzosc_demo`. El repo oficial `github.com/avanzosc/odoo-addons` NO se toca durante esta fase.
+- [x] **Idiomas**: ES + EU. `website.language_ids = [es_ES, eu_ES]`, URL raíz ES (sin prefijo) + `/eu/`. Páginas corporativas fijas en los 2 idiomas; casos de éxito y contenidos largos pueden arrancar ES-only con traducción progresiva. **Validación**: turno del usuario (2026-04-27) tras presentar A/B/C/D: «hagamos el B».
+- [x] **Claim de la home**: «Odoo industrial de verdad, desde 2008.» (opción B de §9.1). EU: «Benetako Odoo industriala, 2008tik.». Encaja con SplitText sin sobrepasar 800ms y con tono §9.2 (frases cortas, cero palabrería). El activo "17 años" se traslada al contador animado y/o timeline en lugar de aparecer en el H1. **Validación**: turno del usuario (2026-04-27) tras presentar A/B/C/D: «b».
+- [x] **Estructura de la home**: 8 secciones visuales en orden funnel B2B (Approach B), con 9 snippets QWeb:
+  1. Hero (claim + 2 CTAs) — `s_avanzosc_hero`.
+  2. Tres pilares (Desde 2008 / 600+ módulos OCA / Equipo STEM) — `s_avanzosc_pilares` *(NUEVO, no listado en §8)*.
+  3. Grid de sectores (Industrial · Distribución · Servicios · Academias) — `s_avanzosc_sectores`.
+  4. Trayectoria + volumen (bloque combinado): `s_avanzosc_contador` (600+) sobre `s_avanzosc_timeline` (hitos 2008→hoy de §9.1).
+  5. Caso de éxito destacado — `s_avanzosc_caso_exito`.
+  6. Equipo (fotos reales + titulación + especialidad) — `s_avanzosc_equipo`.
+  7. CTA Kit Consulting — `s_avanzosc_cta_kit_consulting`.
+  8. CTA contacto final (teléfono + email + botón) — `s_avanzosc_cta_contacto` *(NUEVO, no listado en §8)*.
+
+  **Snippets nuevos a crear** y a añadir a §8 antes de implementar: `s_avanzosc_pilares`, `s_avanzosc_cta_contacto`.
+  **Validación**: turno del usuario (2026-04-27) tras presentar A/B/C: «b».
+
+- [x] **Casos de éxito destacados**: catálogo inicial de 8 archetypes anónimos (sin nombres reales, sin fotos reales, sin métricas reales — Avanzosc aún no tiene los datos consolidados). Cobertura por sector:
+  1. Industrial — fabricante metalúrgico/mecanizado exportador (MRP por capacidad, configurador multivariante, aduanas, multidivisa).
+  2. Industrial — química con trazabilidad batch + ADR (lotes, vencimientos, fichas de seguridad, SILICIE).
+  3. Industrial — alimentaria con AECOC + balanzas (trazabilidad lote, alérgenos, integración con balanzas de envasado).
+  4. Industrial — textil con temporadas y OEMs (PV/OI, variantes talla-color, producción para terceros).
+  5. Distribución — cadena retail multitienda + ecommerce (POS multitienda, sync ecommerce, multialmacén, devoluciones omnicanal).
+  6. Distribución — mayorista con catálogo 50.000+ referencias (configurador, listas de precios por cliente, EDI, packs).
+  7. Servicios — IT/SAT con técnicos en ruta (helpdesk, planning geolocalizado, SLA, facturación recurrente).
+  8. Academias — grupo educativo multicentro (matriculación online, gestión académica multicentro, pagos, comunicación con familias).
+
+  **Implicaciones para snippets**: `s_avanzosc_caso_exito` debe diseñarse anonymous-first — sin logo, sin nombre, con visuales placeholder (capturas anonimizadas de dashboards Odoo o ilustraciones abstractas, **nunca stock photos** per §9.6) y sin métricas inventadas. Cuando se consigan permisos, un caso pasa de anónimo a nombrado sin tocar la estructura del snippet.
+  **Validación**: turno del usuario (2026-04-27) tras presentar A/B/C/D/E: «lo que recomiendes, pero por ahora que sea generico en cuanto a nombres fotos y datos, ya que no tengo ni yo los datos» → confirma los 8 (Approach A) y reafirma anonimato total para la fase actual.
+- [x] **Blog**: FUERA del sitio. `website_blog` NO se añade a `depends` de `website_avanzosc_demo`. Ni menú, ni link, ni snippet en home. El módulo `website_blog` queda residual en BD (instalado por ronda anterior) pero invisible al visitante. Reversible: el día que Avanzosc decida activar el canal con persona dedicada, basta con añadir el módulo a `depends` y estilizar plantillas. **Validación**: turno del usuario (2026-04-27) tras presentar A/B/C: «no quiero blogs, fuera fuear».
 
 ### Decisiones pendientes
 
-- [ ] **Idiomas**: propuesta C — ES + EU + EN desde el inicio. Afectaría a `res.lang`, `website.language_ids` y estructura de URLs (`/es/`, `/eu/`, `/en/`). Cada página corporativa fija (home, sectoriales, conócenos, contacto, trabaja con nosotros, kit-consulting) se publicaría en los 3 idiomas. Casos de éxito y otros contenidos largos podrían arrancar ES-only con traducción progresiva. **Sin validación explícita del usuario — pendiente de confirmar.**
-- [ ] **Claim definitivo de la home**: candidatos en §9.1 (A: "17 años…", B: "Odoo industrial de verdad, desde 2008.", C: "Los veteranos de Odoo en España."). **Sin validación explícita del usuario — pendiente de elegir.**
-- [ ] **Estructura de secciones de la home** — propuesta de 9 bloques (excluyendo blog):
-  1. Hero con claim + CTAs.
-  2. Tres pilares (Desde 2008 / 600+ módulos OCA / Equipo STEM).
-  3. Contador animado "600+ módulos".
-  4. Grid de sectores (Industrial · Distribución · Servicios · Academias).
-  5. Timeline trayectoria (hitos 2008→hoy de §9.1).
-  6. Equipo (fotos reales + titulación + especialidad).
-  7. Caso de éxito destacado.
-  8. CTA Kit Consulting.
-  9. CTA contacto final (teléfono + email + botón).
-
-  **Sin validación explícita del usuario — pendiente de confirmar bloques y orden.**
-
-- [ ] **Blog**: propuesta de dejarlo fuera del sitio completo (ni menú principal ni home), por falta de capacidad editorial sostenida. Implicaría: `website_blog` NO en `depends`; ocultar cualquier `website.menu` de blog del módulo base; sin plan editorial. **Sin validación explícita del usuario — pendiente de confirmar.**
-- [ ] **Casos de éxito destacados** — de los 600+ módulos, qué 6-8 proyectos son los "killer" para mostrar (grupo de 7 colegios, industrial con exportación internacional, configurador de producto V8→V12, etc.). Necesitamos nombres de cliente (con permiso) o descripciones anonimizadas.
 - [ ] **Hex exactos del logo** — extraer de `https://avanzosc.es/web/image/website/1/logo/Avanzosc` y actualizar la tabla de 9.3.
 - [ ] **SVG del logo** — vectorizar si no existe ya.
 - [ ] **Datos legales del footer** — confirmar que siguen vigentes:
