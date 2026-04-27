@@ -183,8 +183,8 @@ Bloque 4 visual = una sola sección en el DOM, con `s_avanzosc_contador` arriba 
 
 - **XML**: `views/snippets/hero.xml`
 - **SCSS**: `static/src/scss/snippets/_hero.scss`
-- **JS**: `static/src/js/snippets/hero.js` (entrada orquestada GSAP + SplitText)
-- **Deps externas**: GSAP 3, ScrollTrigger, SplitText (ver §9.1 sobre licencia)
+- **JS**: `static/src/js/snippets/hero.js` (entrada orquestada GSAP + Splitting.js)
+- **Deps externas**: GSAP 3, ScrollTrigger, Splitting.js (MIT)
 - **Estado**: a crear
 - **Reutilización**: home (sección 1) + cada sectorial (instancia con copy adaptado)
 
@@ -243,7 +243,7 @@ Bloque 4 visual = una sola sección en el DOM, con `s_avanzosc_contador` arriba 
 - **Deps externas**: GSAP 3 (stagger entrada)
 - **Estado**: a crear
 - **Reutilización**: home (sección 6)
-- **Datos**: lista de personas hardcoded en QWeb v1; futura migración a `hr.employee` con `x_avanzosc_show_on_website` evaluable en v2.
+- **Datos**: lista de personas hardcoded en QWeb v1. Migración futura a `hr.employee` con campo `x_avanzosc_show_on_website` **[propuesta v2 — pendiente validación]**.
 
 ### 6.8 `s_avanzosc_cta_kit_consulting`
 
@@ -332,6 +332,12 @@ Layout (de izquierda a derecha):
 - **Acceso clientes**: botón destacado, color `--brand-primary` (CLAUDE.md §9.3). URL: `/web/login` por defecto **[propuesta — pendiente validar contra CLAUDE.md §11 decisión pendiente "Portal ERP actual"]**.
 - **Sticky** al scroll: header reduce padding y opacidad de fondo aumenta tras 80px de scroll. GSAP ScrollTrigger.
 
+#### Mobile breakpoint
+
+- **≥992px** (Bootstrap `lg+`): menú completo visible con dropdown de "Soluciones sectoriales", switcher `ES|EU` y botón "Acceso clientes" en barra horizontal.
+- **<992px** (Bootstrap `md-`): hamburger lateral. Al abrirlo, overlay con menú vertical + switcher `ES|EU` dentro (no visible en barra). Botón "Acceso clientes" se mantiene visible en la barra como **icono de usuario** (Lucide `user`), no como botón con texto.
+- Razón: 992px es el corte estándar de Bootstrap 5 para "desktop nav vs mobile burger". El submenú sectorial dropdown no escala bien en tablet pequeña.
+
 ### 8.2 Footer
 
 3 columnas + barra inferior:
@@ -347,7 +353,7 @@ COL 1: Avanzosc                 COL 2: Soluciones              COL 3: Contacto
 © 2026 Avanzosc S.L. · CIF B20875340 · Aviso legal · Política de privacidad · Cookies
 ```
 
-Datos legales **[propuesta — pendientes confirmación CLAUDE.md §11]**: CIF B20875340, dirección, tel y email tal como aparecen en CLAUDE.md §11 (sección "Decisiones pendientes").
+Datos legales **confirmados vigentes** (sesión 2026-04-27): CIF B20875340, Av. Julio Urkijo 34 bajo (20720 Azkoitia, Gipuzkoa), 943 026 902, comercial@avanzosc.es. Eliminar el item de CLAUDE.md §11 "Decisiones pendientes" en el commit que mueve D1-D6.
 
 ---
 
@@ -361,16 +367,16 @@ Principios y prohibiciones: ver CLAUDE.md §5. Esta sección concreta versiones,
 |---|---|---|---|
 | GSAP | 3.12.5 | `cdnjs.cloudflare.com` | hero, timeline, equipo |
 | GSAP ScrollTrigger | 3.12.5 | `cdnjs.cloudflare.com` | timeline, header sticky |
-| GSAP SplitText | 3.12.5 | `cdnjs.cloudflare.com` (premium) | hero |
+| Splitting.js | 1.0.6 (última estable conocida; verificar al integrar) | `cdn.jsdelivr.net` (MIT) | hero |
 | Lenis | 1.0.42 | `cdn.jsdelivr.net` (MIT) | global (smooth scroll) |
 | Swiper | 11.x | `cdn.jsdelivr.net` (MIT) | reservado v2; **no** se carga en v1 si ningún snippet lo usa |
 | Lucide Icons | 0.453.x | `cdn.jsdelivr.net` (ISC) | global (iconografía CLAUDE.md §9.7) |
 
-**[?] SplitText es plugin Club GreenSock (de pago).** Si Avanzosc no tiene licencia activa, sustituir por `Splitting.js` (MIT) — funcionalmente equivalente para split por palabra/letra. Bloquea el desarrollo del hero.
+**Nota**: se descartó GSAP SplitText (Club GreenSock, de pago) en favor de Splitting.js (MIT) — funcionalmente equivalente para split por palabra/letra, sin coste de licencia. Decisión de sesión 2026-04-27.
 
 ### 9.2 Animaciones destacadas por snippet
 
-- **`s_avanzosc_hero`**: SplitText title (letra a letra, stagger 30ms, ease-out expo, total ≤800ms — CLAUDE.md §11 decisión "Claim de la home") → subtítulo fade+slide 12px (300ms, delay 600ms) → CTAs fade (300ms, delay 900ms).
+- **`s_avanzosc_hero`**: title con Splitting.js (split por letra) animado vía GSAP (stagger 30ms, ease-out expo, total ≤800ms — CLAUDE.md §11 decisión "Claim de la home") → subtítulo fade+slide 12px (300ms, delay 600ms) → CTAs fade (300ms, delay 900ms).
 - **`s_avanzosc_contador`**: interpolación 0 → 600 al entrar en viewport (1.2s, ease-out cubic). Solo se anima la primera vez.
 - **`s_avanzosc_timeline`**: ScrollTrigger marca progreso del año actual; parallax sutil ≤30% sobre fondos (CLAUDE.md §5).
 - **`s_avanzosc_equipo`**: stagger entrada de retratos (60ms entre cada uno, ease-out expo).
@@ -412,8 +418,10 @@ Mapeo de URLs antiguas más relevantes detectables del avanzosc.es actual **[pro
 | `/` | `/` | Sin cambio. |
 | `/page/contactenos` | `/contacto` | URL Odoo genérica → slug propio. |
 | `/page/sobre-nosotros` | `/conocenos` | Renombrado per CLAUDE.md §2. |
-| `/page/cursos` | `/slides` (o `/formacion` si re-slug) | Slides por defecto en Odoo es `/slides`. **[?] ¿re-slug a `/formacion`?** |
-| `/shop` | `/shop` | Sin cambio en v1; re-slug a `/tienda` postergado a v2 si se decide. |
+| `/page/cursos` | `/slides` | Old slug Odoo → URL real Odoo. |
+| `/formacion` | `/slides` | Slug "bonito" expuesto por el menú v1 (CLAUDE.md §2 "Formación"). 301 a la URL real Odoo. |
+| `/shop` | `/shop` | URL real Odoo; sin cambio. |
+| `/tienda` | `/shop` | Slug "bonito" expuesto por el menú v1 (CLAUDE.md §2 "Tienda"). 301 a la URL real Odoo. |
 | `/blog` | `/` (con flash message) o 410 Gone | CLAUDE.md §11 decisión "Blog": fuera. **[?] ¿301 a home o 410 Gone?** |
 | `/blog/categoria/*` | idem | Misma decisión. |
 | `/page/industria-4-0` o similar | `/industrial` | Soluciones de fabricación → sectorial industrial. |
@@ -424,15 +432,15 @@ Mapeo de URLs antiguas más relevantes detectables del avanzosc.es actual **[pro
 
 Auditoría SEO previa al switchover (Screaming Frog o equivalente) detectará URLs adicionales. **No se hace mapeo exhaustivo de artículos individuales de blog** (D6).
 
+**Compromiso v1 sobre `/tienda` y `/formacion`** (sesión 2026-04-27): el menú v1 expone los slugs "bonitos" `/tienda` y `/formacion`. Al hacer clic, el navegador hace 301 a la URL real Odoo (`/shop`, `/slides`). **El usuario verá la URL real en la barra de direcciones tras el redirect**, no `/tienda` ni `/formacion`. La opción de heredar `WebsiteSale` y `WebsiteSlides` para que las URLs reales sean directamente `/tienda` y `/formacion` (sin redirect) queda **explícitamente diferida a v2 o más allá** — requiere override de controllers de módulos core, fuera del alcance de v1.
+
 ---
 
 ## 12. Convivencia temporal y switchover
 
 ### 12.1 Fase de desarrollo y QA
 
-- Subdominio: `nueva.avanzosc.es`. **[?] ¿el subdominio apunta al mismo Odoo `odoo14_community` o a una instancia separada?** Implicaciones:
-  - **Mismo Odoo** (recomendado para v1): se configura `website` adicional con `domain = nueva.avanzosc.es`, comparte BD; tienda y formación se ven igual desde ambos. Al switchover basta cambiar `domain` del website nuevo a `avanzosc.es` y el viejo a un dominio archivado.
-  - **Odoo separado**: aislamiento total (mejor para QA destructivo) pero hay que sincronizar datos al switchover.
+- Subdominio: `nueva.avanzosc.es`. **Decisión (sesión 2026-04-27): mismo Odoo `odoo14_community` con `website` adicional.** Se configura un segundo `website.website` con `domain = nueva.avanzosc.es`; comparte BD, tienda y formación se ven igual desde ambos. Al switchover basta cambiar el `domain` del website nuevo a `avanzosc.es` y el viejo a un dominio archivado. Razón: evita sincronización de datos entre instancias y simplifica el switchover. Se asume que QA no necesita aislamiento destructivo en v1.
 - DNS: `nueva.avanzosc.es` → IP del servidor actual o staging.
 - `robots.txt` del subdominio: `Disallow: /` para que Google no indexe la versión en pruebas.
 
@@ -453,17 +461,13 @@ Pasos en orden:
 
 Resolver antes de las fases en las que cada una bloquea.
 
-1. **[?] SplitText (GSAP Club premium) vs Splitting.js (MIT)**. ¿Avanzosc tiene licencia Club GreenSock activa? Si no, sustituir por Splitting.js. Bloquea hero animation.
-2. **[?] EU slugs no sectoriales** (`/eu/ezagutu-gaitzazu`, `/eu/lan-egin-gurekin`, `/eu/kontaktua`). Validación lingüística por equipo Avanzosc. Bloquea creación de páginas bilingües.
-3. **[?] Botón "Acceso clientes"**. ¿`/web/login` estándar o URL custom de portal? CLAUDE.md §11 decisión pendiente. Bloquea header.
-4. **[?] Datos legales del footer**. CIF, dirección, tel y email vigentes. CLAUDE.md §11 decisión pendiente. Bloquea footer.
-5. **[?] Hex exactos del logo + SVG**. CLAUDE.md §11 decisiones pendientes. Bloquean SCSS variables y header/footer brand visual.
-6. **[?] Analytics**. GA4, Plausible, Matomo o ninguno. CLAUDE.md §11 decisión pendiente. Bloquea integración en `views/layout.xml`.
-7. **[?] Subdominio `nueva.avanzosc.es` — mismo Odoo o instancia separada**. §12.1 de este spec. Bloquea decisión de despliegue.
-8. **[?] Re-slug `/slides` → `/formacion` y `/shop` → `/tienda`**. CLAUDE.md §2 dice "Formación (renombrado de Cursos)" y "Tienda" pero no especifica si el slug también cambia o solo el label del menú. Bloquea redirects 301.
-9. **[?] `/blog/*` post-switchover**: 301 a home, 410 Gone o landing «archivado». Mejor para SEO depende del tráfico real del blog. Bloquea redirects.
-10. **[?] `/kit-digital` antiguo**: ¿se mantiene activa porque sigue habiendo prospects con el programa antiguo, o se redirige a `/kit-consulting`? Depende del estado real del programa Red.es a día de hoy. Bloquea redirects.
-11. **[?] Caso de éxito en home (D3) — selección inicial**. ¿Qué archetype del 1-8 va por defecto? Recomendación: archetype 1 (industrial metalúrgico exportador) por ser el sector ancla. Bloquea poblar `ir.config_parameter` inicial.
-12. **[?] Sesión fotográfica del equipo**. CLAUDE.md §9.6 prioriza fotos reales. ¿Existe sesión planificada o usamos placeholders en v1 con plan de sustitución? Bloquea `s_avanzosc_equipo` con fotos finales.
+1. **[?] EU slugs no sectoriales** (`/eu/ezagutu-gaitzazu`, `/eu/lan-egin-gurekin`, `/eu/kontaktua`). Validación lingüística por equipo Avanzosc. Bloquea creación de páginas bilingües.
+2. **[?] Botón "Acceso clientes"**. ¿`/web/login` estándar o URL custom de portal? CLAUDE.md §11 decisión pendiente. Bloquea header.
+3. **[?] Hex exactos del logo + SVG**. CLAUDE.md §11 decisiones pendientes. Bloquean SCSS variables y header/footer brand visual.
+4. **[?] Analytics**. GA4, Plausible, Matomo o ninguno. CLAUDE.md §11 decisión pendiente. Bloquea integración en `views/layout.xml`.
+5. **[?] `/blog/*` post-switchover**: 301 a home, 410 Gone o landing «archivado». Mejor para SEO depende del tráfico real del blog. Bloquea redirects. Se resolverá con auditoría SEO real antes del switchover.
+6. **[?] `/kit-digital` antiguo**: ¿se mantiene activa porque sigue habiendo prospects con el programa antiguo, o se redirige a `/kit-consulting`? Depende del estado real del programa Red.es a fecha del switchover. Bloquea redirects.
+7. **[?] Caso de éxito en home (D3) — selección inicial**. ¿Qué archetype del 1-8 va por defecto? Recomendación: archetype 1 (industrial metalúrgico exportador) por ser el sector ancla. Bloquea poblar `ir.config_parameter` inicial.
+8. **[?] Sesión fotográfica del equipo**. CLAUDE.md §9.6 prioriza fotos reales. ¿Existe sesión planificada o usamos placeholders en v1 con plan de sustitución? Bloquea `s_avanzosc_equipo` con fotos finales.
 
 ---
