@@ -1,4 +1,4 @@
-ES IMPORTANTE QUE NUNCA HAGAS NADA EN GITHUB (DIGO PUSH COMMIT NI NADA)
+Nunca operar sobre GitHub (push, branches, PRs, settings, releases) sin autorización explícita en la sesión actual. Las autorizaciones son puntuales y NO se heredan entre sesiones.
 # Proyecto: Web corporativa `website_avanzosc_demo`
 
 Rediseño completo de **avanzosc.es**. Avanzosc S.L. es una consultora de Odoo fundada en 2008, con sede en Azkoitia (Gipuzkoa). El objetivo es sustituir la web actual (tema Odoo genérico) por una web moderna, con personalidad de marca, que capitalice los diferenciadores reales de la empresa y funcione como canal de captación B2B.
@@ -177,8 +177,8 @@ Directo, pero con Playwright abierto para verificar.
 - **Archivo de configuración**: `/etc/odoo/odoo14_community.conf` (NO `/opt/odoo/v14/odoo.conf`). Todos los comandos CLI deben usar `-c /etc/odoo/odoo14_community.conf`.
 - Base de datos: `odoo14_community`.
 - Puerto: `14070`.
-- Módulo versionado en Git, ruta completa: `/opt/odoo/v14/github/avanzosc/odoo-addons/website_avanzosc_demo`.
-- El `addons_path` ya incluye `/opt/odoo/v14/github/avanzosc/odoo-addons` — confirmado. Odoo verá el módulo en cuanto tenga `__manifest__.py`.
+- Working dir del módulo (fase experimental): `/opt/odoo/v14/workspace/website_avanzosc_demo`.
+- Para que Odoo cargue el módulo desde aquí, el `addons_path` debe incluir esta ruta o existir un symlink desde un directorio ya presente en `addons_path`. Verificar en cada install/update.
 - Arrancar SIEMPRE con `--dev=all`:
   ```bash
   ./odoo-bin -c /etc/odoo/odoo14_community.conf --dev=all -d odoo14_community
@@ -189,7 +189,9 @@ Directo, pero con Playwright abierto para verificar.
   ```
 
 ### Git
-- Repo: `github.com/avanzosc/odoo-addons`.
+- **Repo activo (fase experimental)**: `github.com/AnerAvanzosc/website_avanzosc_demo` (público, fork personal del desarrollador).
+- **Working dir local**: `/opt/odoo/v14/workspace/website_avanzosc_demo`.
+- El **repo oficial de Avanzosc** (`github.com/avanzosc/odoo-addons`) **NO se toca** durante la fase experimental. Cuando el módulo madure, se decidirá si y cómo migrarlo (subtree, copia + PR, etc.).
 - Commits pequeños, mensajes en inglés (convención OCA): `[ADD] website_avanzosc_demo: snippet hero with GSAP entrance animation`.
 - Prefijos habituales en Odoo/OCA: `[ADD]`, `[FIX]`, `[IMP]` (improve), `[REF]` (refactor), `[REM]` (remove), `[MIG]` (migration).
 - Una rama por feature: `feature/home-hero`, `feature/timeline-trayectoria`, etc.
@@ -403,7 +405,10 @@ Esta sección se actualiza según se toman decisiones. Claude debe preguntar por
   - `website_blog` quedó instalado en BD de la ronda anterior pero NO se declara en `depends` de `website_avanzosc_demo`. Queda residual e invisible al no tener menú ni enlaces; si en v2 se decide retomar el canal, basta con reactivar.
 - [x] **Arquitectura**: todo dentro del mismo Odoo, tema custom sobre `website`.
 - [x] **Nombre del módulo**: `website_avanzosc_demo`.
-- [x] **Repo y ruta**: `github.com/avanzosc/odoo-addons`, en `/opt/odoo/v14/github/avanzosc/odoo-addons/website_avanzosc_demo`.
+- [x] **Repo y ruta** (fase experimental): `github.com/AnerAvanzosc/website_avanzosc_demo`, working dir `/opt/odoo/v14/workspace/website_avanzosc_demo`. El repo oficial `github.com/avanzosc/odoo-addons` NO se toca durante esta fase.
+
+### Decisiones pendientes
+
 - [ ] **Idiomas**: propuesta C — ES + EU + EN desde el inicio. Afectaría a `res.lang`, `website.language_ids` y estructura de URLs (`/es/`, `/eu/`, `/en/`). Cada página corporativa fija (home, sectoriales, conócenos, contacto, trabaja con nosotros, kit-consulting) se publicaría en los 3 idiomas. Casos de éxito y otros contenidos largos podrían arrancar ES-only con traducción progresiva. **Sin validación explícita del usuario — pendiente de confirmar.**
 - [ ] **Claim definitivo de la home**: candidatos en §9.1 (A: "17 años…", B: "Odoo industrial de verdad, desde 2008.", C: "Los veteranos de Odoo en España."). **Sin validación explícita del usuario — pendiente de elegir.**
 - [ ] **Estructura de secciones de la home** — propuesta de 9 bloques (excluyendo blog):
@@ -420,9 +425,6 @@ Esta sección se actualiza según se toman decisiones. Claude debe preguntar por
   **Sin validación explícita del usuario — pendiente de confirmar bloques y orden.**
 
 - [ ] **Blog**: propuesta de dejarlo fuera del sitio completo (ni menú principal ni home), por falta de capacidad editorial sostenida. Implicaría: `website_blog` NO en `depends`; ocultar cualquier `website.menu` de blog del módulo base; sin plan editorial. **Sin validación explícita del usuario — pendiente de confirmar.**
-
-### Decisiones pendientes
-
 - [ ] **Casos de éxito destacados** — de los 600+ módulos, qué 6-8 proyectos son los "killer" para mostrar (grupo de 7 colegios, industrial con exportación internacional, configurador de producto V8→V12, etc.). Necesitamos nombres de cliente (con permiso) o descripciones anonimizadas.
 - [ ] **Hex exactos del logo** — extraer de `https://avanzosc.es/web/image/website/1/logo/Avanzosc` y actualizar la tabla de 9.3.
 - [ ] **SVG del logo** — vectorizar si no existe ya.
