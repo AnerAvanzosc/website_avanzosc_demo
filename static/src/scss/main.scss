@@ -3,4 +3,8 @@
 // archivo vía views/assets.xml. El pipeline de Odoo 14 concatena los ficheros
 // SCSS en orden de registro y los compila juntos; los @import con rutas
 // relativas entre ficheros propios del módulo no se resuelven en este contexto.
-// Las reglas de snippets se añadirán aquí tarea a tarea (v1 scope: solo base).
+//
+// Reglas globales del sitio (layout shell, header, footer, generic utilities)
+// se añaden aquí tarea a tarea. SCSS específico de snippets vive en
+// static/src/scss/snippets/<snippet>.scss, registrado en views/assets.xml
+// por separado — NO importado desde este archivo (per CLAUDE.md §8 y §4).

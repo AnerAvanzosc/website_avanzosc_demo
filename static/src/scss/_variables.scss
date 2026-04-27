@@ -5,7 +5,7 @@
 
 :root {
     --brand-primary: #E85D2F;       // TODO #spec-q3: pendiente de extracción del logo
-    --brand-primary-dark: #C44015;
+    --brand-primary-dark: #C44015;  // TODO #spec-q3: derivado de --brand-primary; actualizar en bloque cuando primary cambie
     --brand-secondary: #1B2A41;     // TODO #spec-q3: pendiente de extracción del logo
     --brand-accent: #F5B800;
 
@@ -20,6 +20,16 @@
     --danger: #C73E3E;
 }
 
+// SCSS equivalents de los CSS custom props de marca.
+// Convención de uso (importante para futuros snippets / parciales):
+//   - var(--brand-*)   → forma preferente. Resuelta en runtime, soporta
+//                        theming dinámico, accesible desde JS y desde
+//                        cualquier parcial sin duplicar la fuente.
+//   - $brand-*         → solo cuando se necesiten funciones de color SCSS
+//                        (darken, lighten, mix, rgba con interpolación)
+//                        que no se pueden aplicar a custom properties.
+// Mantener los dos bloques sincronizados es responsabilidad de quien edita
+// la paleta — un cambio en :root debe replicarse aquí abajo.
 $brand-primary: #E85D2F;
 $brand-primary-dark: #C44015;
 $brand-secondary: #1B2A41;

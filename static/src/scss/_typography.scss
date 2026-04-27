@@ -71,6 +71,11 @@ code, pre, kbd, samp {
 
 // ─── prefers-reduced-motion — animaciones/transiciones (CLAUDE.md §5) ─────────
 // Reset global para usuarios que prefieren movimiento reducido.
+// Se usa @media directo (NO @include reduced-motion del mixin) porque esta
+// regla aplica a TODOS los elementos del sitio (* selector). El mixin
+// @include reduced-motion (de _mixins.scss) se reserva para snippets /
+// parciales de componente, donde el scope es local. Aquí evitamos un
+// @include innecesario que añadiría una indirección sobre una regla global.
 @media (prefers-reduced-motion: reduce) {
     * {
         animation: none !important;
