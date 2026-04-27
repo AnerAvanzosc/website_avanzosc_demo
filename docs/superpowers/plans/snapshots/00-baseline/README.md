@@ -129,3 +129,20 @@ Cambio tipográfico aplicable al texto del footer.
 - **Viewport:** 375×667 px
 - **Module commit:** Task 0.5 HEAD (commit `8ed1563` o posterior, ver `git log`)
 - **Date:** 2026-04-27
+
+---
+
+## local-scaffold-with-lenis-1280.png
+
+**What it represents:** Home page del local Odoo 14 tras **Task 0.6** (Lenis 1.0.42
+inicializado en `static/src/js/main.js` dentro del `publicWidget` `AvanzoscRoot`).
+El global `window.lenis` queda expuesto para diagnóstico. Render visual idéntico al
+baseline anterior — Lenis afecta al comportamiento del scroll (smooth), no al layout.
+Checkpoint: confirma que la inicialización de Lenis no introduce errores JS ni rompe
+el render del tema Odoo default. Verificado: `typeof window.lenis === "object"`,
+`window.lenis.constructor.name === "Lenis"`, `typeof window.lenis.raf === "function"`.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px
+- **Module commit:** Task 0.6 HEAD (ver `git log`)
+- **Date:** 2026-04-27
