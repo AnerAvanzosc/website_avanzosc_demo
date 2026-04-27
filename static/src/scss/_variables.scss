@@ -1,10 +1,12 @@
 // Paleta de marca — propuesta inicial (CLAUDE.md §9.3).
-// TODO: sustituir por hex exactos extraídos del logo antes de producción.
+// TODO #spec-q3: sustituir --brand-primary y --brand-secondary por hex exactos
+// extraídos del logo (https://avanzosc.es/web/image/website/1/logo/Avanzosc)
+// antes de producción. Ver spec §9.3 y CLAUDE.md §11 (decisiones pendientes).
 
 :root {
-    --brand-primary: #E85D2F;
+    --brand-primary: #E85D2F;       // TODO #spec-q3: pendiente de extracción del logo
     --brand-primary-dark: #C44015;
-    --brand-secondary: #1B2A41;
+    --brand-secondary: #1B2A41;     // TODO #spec-q3: pendiente de extracción del logo
     --brand-accent: #F5B800;
 
     --neutral-900: #0F1419;

@@ -1,3 +1,6 @@
-// Reglas globales del sitio. Las variables viven en _variables.scss y
-// se cargan ANTES que este archivo desde views/assets.xml (Odoo v14 no
-// permite @import entre ficheros propios — hay que listarlos en el bundle).
+// Punto de entrada SCSS — website_avanzosc_demo.
+// Los parciales (_variables, _mixins, _typography) se cargan antes que este
+// archivo vía views/assets.xml. El pipeline de Odoo 14 concatena los ficheros
+// SCSS en orden de registro y los compila juntos; los @import con rutas
+// relativas entre ficheros propios del módulo no se resuelven en este contexto.
+// Las reglas de snippets se añadirán aquí tarea a tarea (v1 scope: solo base).

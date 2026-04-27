@@ -6,11 +6,22 @@
               name="website_avanzosc_demo assets frontend"
               inherit_id="web.assets_frontend">
         <xpath expr="." position="inside">
-            <!-- Variables primero: el bundle concatena en orden, así que el
-                 SCSS posterior puede usar las variables definidas aquí. -->
+            <!-- Parciales SCSS en orden estricto: variables → mixins → typography.
+                 El compilador SCSS de Odoo 14 concatena los archivos en el orden
+                 de registro y los procesa juntos, por lo que los @import entre
+                 ficheros propios del módulo NO se resuelven con rutas relativas
+                 dentro del pipeline. Cada parcial se declara aquí explícitamente
+                 para que el bundler los incluya en el orden correcto.
+                 Ref: CLAUDE.md §4 (assets), task 0.5. -->
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/_variables.scss"/>
+            <link rel="stylesheet"
+                  type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/_mixins.scss"/>
+            <link rel="stylesheet"
+                  type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/_typography.scss"/>
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/main.scss"/>

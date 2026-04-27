@@ -1,0 +1,79 @@
+// Tipografía base — website_avanzosc_demo.
+// Fuentes declaradas en CLAUDE.md §9.4 y spec §9.4.
+// Las Google Fonts (Space Grotesk, Inter, JetBrains Mono) se cargan vía
+// <link> en views/assets.xml (head_external_assets), no desde aquí.
+// NO se sobrescriben variables de Bootstrap en este archivo (otra fase).
+
+// ─── Body copy ───────────────────────────────────────────────────────────────
+// Inter 400, 18px, line-height 1.65 (CLAUDE.md §9.4).
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    line-height: 1.65;
+    font-weight: 400;
+}
+
+// ─── Headings ─────────────────────────────────────────────────────────────────
+// Space Grotesk para H1–H3 (CLAUDE.md §9.4):
+//   H1: 56–72px, letter-spacing -0.02em, peso 600.
+//   H2: 40–48px, peso 500.
+//   H3: 28–32px, peso 500.
+// Nota: clamp() con unidades mixtas (px + vw + rem) no está soportado por
+// libsass (compilador de Odoo 14). Se usan tamaños base documentados (mínimo
+// del rango) con media query para el máximo a ≥1200px (xl breakpoint Bootstrap).
+
+h1, .h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 56px;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+
+    @media (min-width: 1200px) {
+        font-size: 72px;
+    }
+}
+
+h2, .h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 40px;
+    font-weight: 500;
+
+    @media (min-width: 1200px) {
+        font-size: 48px;
+    }
+}
+
+h3, .h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+
+    @media (min-width: 1200px) {
+        font-size: 32px;
+    }
+}
+
+// ─── Small / labels técnicos ──────────────────────────────────────────────────
+// Inter 500, 14px, letter-spacing +0.02em (CLAUDE.md §9.4).
+small, .small {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+// ─── Código y datos técnicos ──────────────────────────────────────────────────
+// JetBrains Mono 400 (CLAUDE.md §9.4, §9.7).
+code, pre, kbd, samp {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 400;
+}
+
+// ─── prefers-reduced-motion — animaciones/transiciones (CLAUDE.md §5) ─────────
+// Reset global para usuarios que prefieren movimiento reducido.
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}

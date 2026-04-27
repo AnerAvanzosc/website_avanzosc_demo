@@ -1,0 +1,17 @@
+// Mixins globales — website_avanzosc_demo.
+// Scope v1: solo el mixin de reduced-motion (CLAUDE.md §5, §12 #2).
+// Mixins adicionales se añaden tarea a tarea cuando se necesiten.
+
+// reduced-motion — envuelve reglas de animación/transición para respetar
+// la preferencia de accesibilidad del sistema operativo.
+// Uso:
+//   @include reduced-motion {
+//       animation: none;
+//       transition: none;
+//   }
+// Ref: CLAUDE.md §5 ("Respetar prefers-reduced-motion").
+@mixin reduced-motion {
+    @media (prefers-reduced-motion: reduce) {
+        @content;
+    }
+}
