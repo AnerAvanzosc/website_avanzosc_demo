@@ -18,4 +18,43 @@
                     src="/website_avanzosc_demo/static/src/js/main.js"/>
         </xpath>
     </template>
+
+    <!-- Inyección de fuentes externas y Lucide CDN en <head>.
+         Se hereda web.layout (raíz de toda la jerarquía de layouts de Odoo)
+         para que las etiquetas aparezcan en <head> en todas las páginas del
+         sitio web. Los <link rel="preconnect"> y el <script> de Lucide deben
+         estar en <head> — no en el bundle web.assets_frontend — ya que el
+         bundler concatena recursos locales y pasaría las URLs externas como
+         CSS @import, perdiendo las directivas preconnect y el scope global de
+         la variable `lucide`.
+         Ref: spec §3.3 (pipeline de assets, punto 1-2), CLAUDE.md §9.4, §9.7. -->
+    <template id="head_external_assets"
+              name="website_avanzosc_demo head: Google Fonts + Lucide"
+              inherit_id="web.layout">
+        <!-- Ancla: después del último elemento de <head> (position inside
+             añade al final del contenedor, antes del cierre </head>).
+             Esto garantiza que nuestros recursos externos se cargan en <head>
+             independientemente del orden en que otras herencias modifiquen
+             la sección head. -->
+        <xpath expr="//head" position="inside">
+            <!-- 1. Google Fonts — preconnect (mejora TTFB de las fuentes) -->
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+
+            <!-- 2. Google Fonts — stylesheet:
+                 - Space Grotesk 500, 600 (headings H1-H3, CLAUDE.md §9.4)
+                 - Inter 400, 500, 600 (body copy, CLAUDE.md §9.4)
+                 - JetBrains Mono 400 (código/datos técnicos, CLAUDE.md §9.4) -->
+            <link rel="stylesheet"
+                  href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap"/>
+
+            <!-- 3. Lucide Icons 0.453.0 UMD build — expone el global `lucide`.
+                 La llamada lucide.createIcons() se ejecuta desde main.js
+                 en DOMContentLoaded, cuando todos los elementos del DOM
+                 con atributo data-lucide están disponibles.
+                 Ref: CLAUDE.md §9.7, spec §9 tabla de versiones. -->
+            <script type="text/javascript"
+                    src="https://cdn.jsdelivr.net/npm/lucide@0.453.0/dist/umd/lucide.min.js"/>
+        </xpath>
+    </template>
 </odoo>
