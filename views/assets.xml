@@ -49,9 +49,11 @@
                   href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap"/>
 
             <!-- 3. Lucide Icons 0.453.0 UMD build — expone el global `lucide`.
-                 La llamada lucide.createIcons() se ejecuta desde main.js
-                 en DOMContentLoaded, cuando todos los elementos del DOM
-                 con atributo data-lucide están disponibles.
+                 Sin atributo defer: ejecuta síncronamente durante el parse,
+                 antes de que los bundles defer de Odoo arranquen los widgets.
+                 La llamada lucide.createIcons() vive en main.js dentro de
+                 publicWidget.AvanzoscRoot.start(), que dispara después de
+                 que el módulo Odoo esté cargado.
                  Ref: CLAUDE.md §9.7, spec §9 tabla de versiones. -->
             <script type="text/javascript"
                     src="https://cdn.jsdelivr.net/npm/lucide@0.453.0/dist/umd/lucide.min.js"/>
