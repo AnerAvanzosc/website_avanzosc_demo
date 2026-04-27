@@ -1,15 +1,24 @@
-# Snapshots — Phase 1: Layout base
+# Layout snapshots — Phase 1
 
-Captured during Phase 1 (header desktop + footer) implementation.
+Inicial: 2026-04-27. Capturas tras los hitos de la fase 1 (layout base: menú,
+header desktop, footer, sticky behaviour). Sirve de before/after reference para
+las 7 tareas de Phase 1 (1.1–1.7) y para diff visual contra los baselines de
+`00-baseline/`. Cada captura indica su tarea de origen y el commit del módulo
+en ese punto. Mismo formato heading-per-entry que `00-baseline/README.md`
+(formato canónico para todos los folders de snapshots).
 
-## Contents
+---
 
-| File | Task | Viewport | Description |
-|------|------|----------|-------------|
-| `menu-1280.png` | 1.1 | 1280×800 | Home page after adding `data/menu.xml` (11 menu entries). Shows default Odoo navbar with both default items (Home, Shop, Blog, Courses, Contact us) and new Avanzosc items. Duplicates are expected and will be cleaned in a later task. |
+## menu-1280.png
 
-## Notes
+**What it represents:** Home page del local Odoo 14 tras **Task 1.1** (creación
+de `data/menu.xml` con los 11 records: 7 items top-level más 4 hijos del
+dropdown «Soluciones sectoriales»). El navbar muestra los 11 nuevos items
+**alongside** los items default de Odoo (Home, Shop, Blog, Courses, Contact us)
+— los duplicados son esperados per briefing y se limpian en una tarea posterior.
+Sirve como baseline visible del problema de coexistencia con el menú default.
 
-- Screenshots taken against `http://localhost:14070` (Odoo 14 Community, `odoo14_community` DB).
-- Default Odoo menu items (Home, Shop, Blog, Courses, Contact us) are still present alongside the new items — this is expected per Task 1.1 briefing. Cleanup is a later task.
-- Snapshot baseline for comparison during Phase 1 tasks (1.2–1.7).
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px
+- **Module commit:** Task 1.1 HEAD (commit `c08f3ba` o posterior, ver `git log`)
+- **Date:** 2026-04-27
