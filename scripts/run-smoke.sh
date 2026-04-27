@@ -54,15 +54,43 @@ ODOO_DB="odoo14_community"
 MODULE="website_avanzosc_demo"
 DEV_LOG="/tmp/odoo-dev.log"
 
-# 1. Detect running dev server. Pattern anchored at start of cmdline to avoid spurious matches.
+# 1. Detect running dev server.
+# Strategy: PID file is the primary source of truth (we wrote it ourselves),
+# pgrep is a fallback. The reason: --dev=all uses os.execvp() on auto-reload,
+# which resolves "python" via $PATH and may set argv[0] to bare "python"
+# (no full venv path). A strict pgrep pattern anchored to ${ODOO_PYTHON}
+# stops matching after such a re-exec, leading to ghost duplicate processes.
+# PID survives across exec() so /tmp/odoo-dev.pid remains valid.
+DEV_PID=""
+if [[ -f "$PID_FILE" ]]; then
+    PID_FROM_FILE="$(cat "$PID_FILE" 2>/dev/null || true)"
+    if [[ -n "$PID_FROM_FILE" ]] && kill -0 "$PID_FROM_FILE" 2>/dev/null; then
+        # Validate it is actually our Odoo dev process (not a stray reuse of the PID).
+        CMDLINE="$(tr '\0' ' ' < /proc/"$PID_FROM_FILE"/cmdline 2>/dev/null || true)"
+        if [[ "$CMDLINE" == *"$ODOO_BIN"* && "$CMDLINE" == *"--dev=all"* && "$CMDLINE" == *"-d ${ODOO_DB}"* ]]; then
+            DEV_PID="$PID_FROM_FILE"
+            echo "[run-smoke] Found dev server via PID file: PID=$DEV_PID"
+        fi
+    fi
+fi
+
+# Fallback: pgrep with cmd-line anchored at start; optional non-space path
+# prefix (so both "/opt/.../venv/bin/python" and bare "python" match), then
+# odoo-bin + --dev=all + -d <db>. The ^ anchor + non-space class avoid
+# matching processes (e.g. bash -c '…python …odoo-bin …') whose argv contain
+# the literal string but do not begin with the python executable.
 # pgrep returns 1 on no match — || true keeps the assignment under set -e.
-DEV_PID="$(pgrep -af "^${ODOO_PYTHON} ${ODOO_BIN}.*--dev=all.*-d ${ODOO_DB}" 2>/dev/null | awk '{print $1}' | head -n 1 || true)"
+if [[ -z "$DEV_PID" ]]; then
+    DEV_PID="$(pgrep -af "^([^ ]*/)?python[0-9.]* ${ODOO_BIN}.*--dev=all.*-d ${ODOO_DB}" 2>/dev/null | awk '{print $1}' | head -n 1 || true)"
+    if [[ -n "$DEV_PID" ]]; then
+        echo "[run-smoke] Found dev server via pgrep fallback: PID=$DEV_PID"
+    fi
+fi
 
 # 2. Capture argv as array via /proc/<pid>/cmdline (NUL-separated, robust under whitespace).
 DEV_ARGS_ARR=()
 if [[ -n "$DEV_PID" ]]; then
     mapfile -t DEV_ARGS_ARR < <(tr '\0' '\n' < /proc/"$DEV_PID"/cmdline | sed '/^$/d')
-    echo "[run-smoke] Found running dev server: PID=$DEV_PID"
     echo "[run-smoke]   args: ${DEV_ARGS_ARR[*]}"
 
     # 3. SIGTERM, wait up to 10s, SIGKILL fallback.
@@ -81,7 +109,7 @@ if [[ -n "$DEV_PID" ]]; then
         sleep 1
     fi
 else
-    echo "[run-smoke] No dev server matching pattern detected; going straight to smoke."
+    echo "[run-smoke] No dev server detected (PID file empty/stale and pgrep fallback no match); going straight to smoke."
 fi
 
 # 4-5. Run smoke; save tail-20 to log; check full output for errors.
