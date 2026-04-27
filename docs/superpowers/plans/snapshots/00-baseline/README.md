@@ -20,6 +20,7 @@ the "before" baseline for the entire redesign.
 
 - **URL:** `https://avanzosc.es`
 - **Viewport:** 1280×800 px
+- **Module commit:** N/A (live production site)
 - **Date:** 2026-04-27
 
 ---
@@ -34,6 +35,7 @@ responsive work.
 
 - **URL:** `https://avanzosc.es`
 - **Viewport:** 375×667 px
+- **Module commit:** N/A (live production site)
 - **Date:** 2026-04-27
 
 ---
