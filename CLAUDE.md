@@ -476,6 +476,8 @@ No-negociables operativos (complementan los técnicos de §10). Aplican a Claude
 
 2. **NO crear archivos fuera del scope literal de la tarea**, aunque «vengan bien» para tareas futuras. Si una tarea X.Y crea `foo.scss`, eso es lo único que crea, aunque el implementer prevea que `bar.scss` se necesitará en X.Z. Las dependencias se respetan en el orden del plan.
 
+   **Aclaración**: si una tarea genera artefactos en una carpeta con `README` / index documentado (snapshots, smoke logs, etc.), **actualizar ese README es scope de la tarea, no scope creep**. Distinguir entre «no crear archivos no pedidos» (regla activa) y «mantener consistente la documentación de los archivos que sí pides» (parte del scope). Ejemplo: Task 0.2 crea 4 PNGs en `docs/superpowers/plans/snapshots/00-baseline/` → su README debe listarlas; Task 0.3 añade un PNG más a esa carpeta → su scope incluye actualizar el README con la nueva entrada.
+
 3. **Verificar antes de crear**: si la tarea crea archivos en una carpeta, primero `ls` (o equivalente) para ver si ya existen. Si existen, **leer y extender**, no sobrescribir.
 
 4. **Cada tarea tiene smoke test obligatorio post-implementación**: el módulo debe recargar sin errores ni warnings nuevos (comando en §7). Sin smoke test verde, la tarea no se cierra.
