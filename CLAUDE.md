@@ -255,6 +255,7 @@ website_avanzosc_demo/
 │       ├── contador_modulos.xml
 │       ├── timeline_trayectoria.xml
 │       ├── sectores_grid.xml
+│       ├── sector_specifics.xml
 │       ├── equipo.xml
 │       ├── caso_exito.xml
 │       ├── cta_kit_consulting.xml
@@ -437,15 +438,22 @@ Esta sección se actualiza según se toman decisiones. Claude debe preguntar por
   **Validación**: turno del usuario (2026-04-27) tras presentar A/B/C/D/E: «lo que recomiendes, pero por ahora que sea generico en cuanto a nombres fotos y datos, ya que no tengo ni yo los datos» → confirma los 8 (Approach A) y reafirma anonimato total para la fase actual.
 - [x] **Blog**: FUERA del sitio. `website_blog` NO se añade a `depends` de `website_avanzosc_demo`. Ni menú, ni link, ni snippet en home. El módulo `website_blog` queda residual en BD (instalado por ronda anterior) pero invisible al visitante. Reversible: el día que Avanzosc decida activar el canal con persona dedicada, basta con añadir el módulo a `depends` y estilizar plantillas. **Validación**: turno del usuario (2026-04-27) tras presentar A/B/C: «no quiero blogs, fuera fuear».
 
+#### Decisiones derivadas de la revisión del design spec (sesión 2026-04-27)
+
+Las 6 decisiones siguientes (D1-D6) se cerraron en la sesión de revisión del spec, posterior al brainstorm original. Detalle técnico completo en `docs/superpowers/specs/2026-04-27-website-avanzosc-demo-design.md` §2.
+
+- [x] **D1 — Estructura común de páginas sectoriales**: cada sectorial sigue el patrón `hero sectorial · subsectores (QWeb estático) · s_avanzosc_sector_specifics · 1-2 archetypes filtrados · s_avanzosc_cta_contacto`. Bloque propio por sector: industrial→tipos de fabricación, distribución→integraciones logísticas, servicios→gestión de proyectos, academias→comunicación con familias. **Snippet nuevo añadido** a §8: `sector_specifics.xml`. **Validación**: turno del usuario (2026-04-27) en revisión del spec: «Sectoriales — patrón común con bloque específico por sector. Estructura base como propones (hero + subsectores + archetypes filtrados + CTA), añadiendo un bloque propio a mitad de página por sectorial […]».
+- [x] **D2 — Slugs URL EU traducidos al euskera**: bajo `/eu/`, los 4 slugs sectoriales son `/eu/industriala/`, `/eu/banaketa/`, `/eu/zerbitzuak/`, `/eu/akademiak/`. Slugs no sectoriales (conócenos, contacto, etc.) pendientes de validación lingüística por equipo Avanzosc — listados en preg. abierta del spec. **Validación**: turno del usuario (2026-04-27): «Slugs traducidos al euskera bajo /eu/. /eu/industriala/, /eu/banaketa/, /eu/zerbitzuak/, /eu/akademiak/».
+- [x] **D3 — Caso de éxito en home — selección configurable**: uno fijo, seleccionado vía `ir.config_parameter` `website_avanzosc_demo.featured_archetype_id`. Mismo patrón aplicable a sectoriales (`featured_archetypes_<sector>`). **Validación**: turno del usuario (2026-04-27): «Caso de éxito en home: uno fijo configurable vía ir.config_parameter. Aprobada tu propuesta».
+- [x] **D4 — Snippets fuera del Website Builder**: los 10 snippets v1 NO se registran en el builder. Sólo `<t t-call="…"/>` desde home y páginas. Coherente con §10 ("todo por código, no tocar el builder"). Cualquier apertura futura a drag&drop requiere decisión explícita. **Validación**: turno del usuario (2026-04-27): «Snippets: solo includes XML, NO registrados en el builder. Coherente con CLAUDE.md §10 […]. Si en v2 se decide habilitar drag & drop en builder, se registran entonces — esa puerta requiere decisión futura explícita, no se abre por defecto».
+- [x] **D5 — `/kit-consulting` ES-only**: la landing del programa Red.es queda monolingüe en castellano por naturaleza temporal y audiencia hispanohablante. **Validación**: turno del usuario (2026-04-27): «/kit-consulting en ES-only. Aprobada. Programa estatal, audiencia hispanohablante, contenido temporal».
+- [x] **D6 — Convivencia temporal y switchover**: la web nueva vive en `nueva.avanzosc.es` durante desarrollo y QA, sobre el **mismo Odoo `odoo14_community`** con un `website` adicional (decisión de la propia sesión de revisión del spec — descartada la opción "Odoo separado"). Switchover al dominio principal con redirects 301 desde URLs antiguas; mapeo concreto en design spec §11. No mapeo exhaustivo de artículos de blog. **Validación**: turno del usuario (2026-04-27): «Convivencia temporal en subdominio + switchover planificado. Web nueva vive en nueva.avanzosc.es durante desarrollo y QA. Cuando esté validada, switchover al dominio principal con redirects 301 desde URLs antiguas para no perder SEO acumulado».
+- [x] **Datos legales del footer (vigentes)**: confirmados en sesión 2026-04-27. CIF B20875340 · Av. Julio Urkijo 34 bajo, 20720 Azkoitia, Gipuzkoa · Tel 943 026 902 · Email comercial@avanzosc.es. (Antes en "Decisiones pendientes" — confirmados literalmente por el usuario en la sesión de revisión del spec).
+
 ### Decisiones pendientes
 
 - [ ] **Hex exactos del logo** — extraer de `https://avanzosc.es/web/image/website/1/logo/Avanzosc` y actualizar la tabla de 9.3.
 - [ ] **SVG del logo** — vectorizar si no existe ya.
-- [ ] **Datos legales del footer** — confirmar que siguen vigentes:
-  - CIF: B20875340
-  - Av. Julio Urkijo 34 bajo, 20720 Azkoitia, Gipuzkoa
-  - Tel: 943 026 902
-  - Email: comercial@avanzosc.es
 - [ ] **Portal ERP actual** — ¿el botón "Acceso clientes" apunta a `/web/login` estándar de Odoo o hay una URL custom del portal?
 - [ ] **Analytics y tracking** — ¿Google Analytics 4, Plausible, Matomo? Decidir antes de ir a producción.
-- [ ] **Dominio y despliegue** — ¿la web nueva se desarrolla en un Odoo aparte o sobre el mismo donde está la web actual? ¿Plan de migración de contenido antiguo (tienda, cursos)?
+- [ ] **Plan de migración de contenido antiguo** — tienda y cursos del sitio actual: ¿migración de productos / cursos al nuevo, o se mantienen como están y solo se re-skinean? (La parte "dónde se despliega" quedó resuelta por D6.)
