@@ -14,10 +14,10 @@
 
 ```bash
 # Smoke test
-/opt/odoo/v14/odoo-bin -c /etc/odoo/odoo14_community.conf -u website_avanzosc_demo -d odoo14_community --stop-after-init
+/opt/odoo/v14/base/odoo-bin -c /etc/odoo/odoo14_community.conf -u website_avanzosc_demo -d odoo14_community --stop-after-init
 
 # Servidor dev (terminal del usuario)
-/opt/odoo/v14/odoo-bin -c /etc/odoo/odoo14_community.conf --dev=all -d odoo14_community
+/opt/odoo/v14/base/odoo-bin -c /etc/odoo/odoo14_community.conf --dev=all -d odoo14_community
 ```
 
 **Convenciones:** cada tarea = `Files / Ref / Acceptance / Deps [/ Bloqueo]`. Atómicas 30 min – 4 h. Commits NO se planifican (usuario decide). Smoke + Playwright + gate humano al final de cada fase. 8 `[?]` del spec §13 + 2 gates de sesión (Q1 TRANSLATION DRAFT, Q3 revisión legal) → bloqueos blandos asignados a tareas concretas; tabla al final.
