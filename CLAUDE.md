@@ -193,7 +193,15 @@ Directo, pero con Playwright abierto para verificar.
 - **Working dir local**: `/opt/odoo/v14/workspace/website_avanzosc_demo`.
 - El **repo oficial de Avanzosc** (`github.com/avanzosc/odoo-addons`) **NO se toca** durante la fase experimental. Cuando el módulo madure, se decidirá si y cómo migrarlo (subtree, copia + PR, etc.).
 - Commits pequeños, mensajes en inglés (convención OCA): `[ADD] website_avanzosc_demo: snippet hero with GSAP entrance animation`.
-- Prefijos habituales en Odoo/OCA: `[ADD]`, `[FIX]`, `[IMP]` (improve), `[REF]` (refactor), `[REM]` (remove), `[MIG]` (migration).
+- Prefijos de commit (mapeo de uso para este proyecto):
+  - `[ADD]` — añadir un módulo nuevo completo o un componente arquitectural mayor.
+  - `[FEAT]` — implementar una tarea concreta del plan dentro de un módulo existente (uso principal durante v1).
+  - `[FIX]` — corregir un bug detectado.
+  - `[IMP]` — mejorar algo existente sin que sea bug ni feature nueva.
+  - `[REF]` — refactor sin cambio de comportamiento.
+  - `[REM]` — eliminar código.
+  - `[MIG]` — migración entre versiones de Odoo.
+  - `[DOC]` — solo documentación.
 - Una rama por feature: `feature/home-hero`, `feature/timeline-trayectoria`, etc.
 - **NO** commitear archivos generados: `.pyc`, `__pycache__/`, logs, `.vscode/`, `.idea/`. Verificar que el `.gitignore` del repo los cubre.
 
