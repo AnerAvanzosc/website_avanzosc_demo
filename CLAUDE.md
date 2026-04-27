@@ -482,4 +482,6 @@ No-negociables operativos (complementan los técnicos de §10). Aplican a Claude
 
 5. **El smoke test se ejecuta y se guarda en `docs/smoke-tests/<task-id>.log`** (ej: `docs/smoke-tests/0.1.log`). El log captura las **últimas 20 líneas del output** de Odoo tras `-u <module> --stop-after-init`. El commit que cierra la tarea incluye este archivo. Sin log, tarea no cierra.
 
+6. **El smoke test se ejecuta SIEMPRE vía `./scripts/run-smoke.sh <task-id>`**, nunca invocando `odoo-bin` directamente. El script gestiona el ciclo «parar dev server → smoke → restart dev server con los mismos args», escribe `docs/smoke-tests/<task-id>.log` (regla #5) y devuelve exit code 1 si el output contiene `Traceback` o `ERROR`. Esta regla aplica a Claude principal y a cualquier subagente. El comando subyacente que ejecuta el script está documentado en §7 y solo es referencia interna; en flujo real se invoca por el script.
+
 **Política de añadidos a este documento**: cualquier sección nueva (§13, §14, …) va al final, NUNCA insertada en medio. Numeración estable = referencias estables.

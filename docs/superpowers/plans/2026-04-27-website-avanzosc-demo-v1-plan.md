@@ -13,10 +13,10 @@
 **Comandos** (CLAUDE.md §7):
 
 ```bash
-# Smoke test
-/opt/odoo/v14/venv/bin/python /opt/odoo/v14/base/odoo-bin -c /etc/odoo/odoo14_community.conf -u website_avanzosc_demo -d odoo14_community --stop-after-init
+# Smoke test (CLAUDE.md §12 regla #6 — gestiona dev server + log automáticamente)
+./scripts/run-smoke.sh <task-id>
 
-# Servidor dev (terminal del usuario)
+# Servidor dev (terminal del usuario; el script lo arranca/para por sí mismo cuando es necesario)
 /opt/odoo/v14/venv/bin/python /opt/odoo/v14/base/odoo-bin -c /etc/odoo/odoo14_community.conf --dev=all -d odoo14_community
 ```
 
