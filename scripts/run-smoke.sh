@@ -15,7 +15,12 @@
 #   6. Fails (exit 1) if full smoke output contains Traceback or ERROR (or odoo-bin exits non-zero).
 #   7. On success, restarts the dev server with the captured args (nohup, background).
 #   8. Records new PID at /tmp/odoo-dev.pid.
-#   9. Waits 2s and verifies the new PID is alive. If it died, fails (exit 1 in success path; warning in fail path).
+#   9. Strict restart verification — exit 0 only if dev server responds 200/303 on :14070 within 15s.
+#      Three failure modes detected with distinct diagnostic messages:
+#        a. Immediate death (≤2s)        → "died immediately after restart"
+#        b. Death during HTTP polling     → "died before listening on :14070"
+#        c. Alive but never responds      → "alive but not listening on :14070"
+#      Failure during success-path → exit 1. Failure during post-smoke-fail-path → warning, exit 1 already set for smoke.
 #
 # Idempotent: running twice in a row is safe.
 # Required by CLAUDE.md §12 rule #6.
@@ -100,8 +105,12 @@ elif [[ $SMOKE_RC -ne 0 ]]; then
 fi
 
 # Helper: restart dev server using captured argv. Sets NEW_PID.
-# Returns 0 if PID is alive 2s after restart; 1 if it died (Mejora 1).
-# Best-effort polls for HTTP readiness up to 15s afterwards (always returns 0 if PID alive).
+# Returns 0 only if PID is alive AND HTTP responds 200/303 within 15s.
+# Returns 1 in three failure modes (with distinct diagnostic messages):
+#   a. Immediate death (≤2s after nohup)        → "died immediately after restart"
+#   b. Death during 15s HTTP polling            → "died before listening on :14070"
+#   c. Alive but never responds 200/303 in 15s  → "alive but not listening on :14070"
+# Caller decides whether the failure is fatal (success path) or just a warning (fail path).
 restart_dev() {
     if [[ ${#DEV_ARGS_ARR[@]} -eq 0 ]]; then
         echo "[run-smoke] No previous dev server captured; nothing to restart."
@@ -114,15 +123,15 @@ restart_dev() {
     echo "$NEW_PID" > "$PID_FILE"
     echo "[run-smoke] Dev server PID=$NEW_PID (logs at $DEV_LOG)"
 
-    # Mejora 1: verify it didn't die immediately.
+    # Mejora 1 (a): immediate-death detection.
     sleep 2
     if ! kill -0 "$NEW_PID" 2>/dev/null; then
-        echo "[run-smoke] WARNING: dev server PID=$NEW_PID died immediately after restart" >&2
+        echo "[run-smoke] dev server PID=$NEW_PID died immediately after restart" >&2
         echo "[run-smoke]   check $DEV_LOG for details" >&2
         return 1
     fi
 
-    # Best-effort wait until it listens on 14070.
+    # Strict HTTP poll: success only if 200/303 within 15s.
     for i in $(seq 1 15); do
         if curl -s -o /dev/null -w "%{http_code}" -m 2 http://localhost:14070/web/login 2>/dev/null | grep -qE "200|303"; then
             echo "[run-smoke] Dev server listening after ${i}s"
@@ -130,8 +139,15 @@ restart_dev() {
         fi
         sleep 1
     done
-    echo "[run-smoke] WARNING: dev server PID=$NEW_PID alive but not listening on 14070 after 15s" >&2
-    return 0  # alive is enough; HTTP readiness was best-effort
+
+    # Failure (b) or (c): no HTTP after 15s. Diagnose by checking PID liveness.
+    if ! kill -0 "$NEW_PID" 2>/dev/null; then
+        echo "[run-smoke] dev server PID=$NEW_PID died before listening on :14070" >&2
+    else
+        echo "[run-smoke] dev server PID=$NEW_PID alive but not listening on :14070" >&2
+    fi
+    echo "[run-smoke]   check $DEV_LOG for details" >&2
+    return 1
 }
 
 if [[ $SMOKE_FAIL -eq 1 ]]; then
@@ -141,7 +157,7 @@ if [[ $SMOKE_FAIL -eq 1 ]]; then
     echo "[run-smoke] Full output preserved at $FAIL_LOG"
     # Try to restart anyway. If restart also fails, just warn — exit 1 is already set for smoke.
     if ! restart_dev; then
-        echo "[run-smoke] WARNING: dev server restart also failed (already exiting 1 for smoke)" >&2
+        echo "[run-smoke] WARNING: dev server restart did not become healthy (already exiting 1 for smoke fail)" >&2
     fi
     exit 1
 fi
@@ -149,9 +165,9 @@ fi
 echo "[run-smoke] SMOKE OK"
 echo "[run-smoke] Log saved to $LOG_FILE (last 20 lines)"
 
-# 7-9. Restart in success path. If restart fails, the script fails (exit 1).
+# 7-9. Restart in success path. If restart_dev returns 1 (any of the 3 failure modes), exit 1.
 if ! restart_dev; then
-    echo "[run-smoke] FAIL: smoke passed but dev server restart failed" >&2
+    echo "[run-smoke] FAIL: smoke passed but dev server restart did not become healthy" >&2
     exit 1
 fi
 
