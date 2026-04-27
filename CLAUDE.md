@@ -181,11 +181,11 @@ Directo, pero con Playwright abierto para verificar.
 - Para que Odoo cargue el módulo desde aquí, el `addons_path` debe incluir esta ruta o existir un symlink desde un directorio ya presente en `addons_path`. Verificar en cada install/update.
 - Arrancar SIEMPRE con `--dev=all`:
   ```bash
-  ./odoo-bin -c /etc/odoo/odoo14_community.conf --dev=all -d odoo14_community
+  /opt/odoo/v14/venv/bin/python /opt/odoo/v14/base/odoo-bin -c /etc/odoo/odoo14_community.conf --dev=all -d odoo14_community
   ```
 - Tras añadir archivos nuevos o cambiar `__manifest__.py`:
   ```bash
-  ./odoo-bin -c /etc/odoo/odoo14_community.conf -u website_avanzosc_demo -d odoo14_community --stop-after-init
+  /opt/odoo/v14/venv/bin/python /opt/odoo/v14/base/odoo-bin -c /etc/odoo/odoo14_community.conf -u website_avanzosc_demo -d odoo14_community --stop-after-init
   ```
 
 ### Git
