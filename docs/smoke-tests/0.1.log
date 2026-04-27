@@ -1,0 +1,20 @@
+2026-04-27 09:32:18,545 39611 INFO odoo14_community odoo.modules.loading: loading 1 modules... 
+2026-04-27 09:32:18,565 39611 INFO odoo14_community odoo.modules.loading: 1 modules loaded in 0.02s, 0 queries (+0 extra) 
+2026-04-27 09:32:18,627 39611 INFO odoo14_community odoo.modules.loading: updating modules list 
+2026-04-27 09:32:18,629 39611 INFO odoo14_community odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-04-27 09:32:20,036 39611 INFO odoo14_community odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Website Avanzosc Demo'] to user __system__ #1 via n/a 
+2026-04-27 09:32:20,036 39611 INFO odoo14_community odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Website Avanzosc Demo'] to user __system__ #1 via n/a 
+2026-04-27 09:32:21,508 39611 INFO odoo14_community odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-04-27 09:32:21,538 39611 INFO odoo14_community odoo.modules.loading: loading 59 modules... 
+2026-04-27 09:32:21,975 39611 INFO odoo14_community odoo.modules.loading: Loading module website_avanzosc_demo (59/59) 
+2026-04-27 09:32:22,415 39611 WARNING odoo14_community py.warnings: /opt/odoo/v14/base/odoo/addons/base/models/ir_module.py:128: DeprecationWarning: nodes.Node.traverse() is obsoleted by Node.findall().
+  for node in self.document.traverse(nodes.system_message):
+ 
+2026-04-27 09:32:22,460 39611 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/assets.xml 
+2026-04-27 09:32:22,486 39611 INFO odoo14_community odoo.modules.loading: Module website_avanzosc_demo: loading demo 
+2026-04-27 09:32:22,499 39611 INFO odoo14_community odoo.modules.loading: Module website_avanzosc_demo loaded in 0.52s, 57 queries 
+2026-04-27 09:32:22,499 39611 INFO odoo14_community odoo.modules.loading: 59 modules loaded in 0.96s, 73 queries (+0 extra) 
+2026-04-27 09:32:23,003 39611 INFO odoo14_community odoo.modules.loading: Modules loaded. 
+2026-04-27 09:32:23,006 39611 INFO odoo14_community odoo.service.server: Initiating shutdown 
+2026-04-27 09:32:23,006 39611 INFO odoo14_community odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-04-27 09:32:23,006 39611 INFO odoo14_community odoo.sql_db: ConnectionPool(used=0/count=0/max=64): Closed 1 connections  

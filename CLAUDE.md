@@ -480,4 +480,6 @@ No-negociables operativos (complementan los técnicos de §10). Aplican a Claude
 
 4. **Cada tarea tiene smoke test obligatorio post-implementación**: el módulo debe recargar sin errores ni warnings nuevos (comando en §7). Sin smoke test verde, la tarea no se cierra.
 
+5. **El smoke test se ejecuta y se guarda en `docs/smoke-tests/<task-id>.log`** (ej: `docs/smoke-tests/0.1.log`). El log captura las **últimas 20 líneas del output** de Odoo tras `-u <module> --stop-after-init`. El commit que cierra la tarea incluye este archivo. Sin log, tarea no cierra.
+
 **Política de añadidos a este documento**: cualquier sección nueva (§13, §14, …) va al final, NUNCA insertada en medio. Numeración estable = referencias estables.

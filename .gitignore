@@ -15,6 +15,7 @@ Thumbs.db
 
 # Logs
 *.log
+!docs/smoke-tests/*.log
 
 # Secretos / credenciales
 .env
