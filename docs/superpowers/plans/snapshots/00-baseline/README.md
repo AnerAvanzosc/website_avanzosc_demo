@@ -1,11 +1,8 @@
-# Baseline snapshots — Task 0.2
+# Baseline snapshots
 
-Captured: 2026-04-27
-Module commit SHA: d171e413555486bcad27d578b3dccf3baaef8b99
-
-These four PNGs document the visual state of both the live production site and the
-local Odoo scaffold at the start of v1 development. They serve as before/after
-reference for every subsequent visual comparison.
+Inicial: 2026-04-27. Carpeta de capturas baseline + snapshots tras hitos de Phase 0
+(scaffold, fonts, libs externas). Sirve de before/after reference para futuras tareas
+visuales. Cada captura indica su tarea de origen y el commit del módulo en ese punto.
 
 ---
 
@@ -67,4 +64,36 @@ links. Reference for mobile baseline of the scaffold state.
 - **URL:** `http://localhost:14070/`
 - **Viewport:** 375×667 px
 - **Module commit:** `d171e413555486bcad27d578b3dccf3baaef8b99`
+- **Date:** 2026-04-27
+
+---
+
+## local-scaffold-with-fonts-1280.png
+
+**What it represents:** Home page of the local Odoo 14 instance after **Task 0.3**
+(Google Fonts + Lucide CDN registered en `<head>` vía herencia de `web.layout`). Las
+fuentes se cargan pero ninguna regla SCSS las aplica todavía a elementos concretos
+(eso es Task 0.5), por lo que el render visual es prácticamente idéntico al de
+`local-scaffold-1280.png`. Sirve como checkpoint: confirma que la inyección en `<head>`
+no rompe el layout default de Odoo.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px
+- **Module commit:** Task 0.3 HEAD (commit `8f6676b` o posterior, ver `git log`)
+- **Date:** 2026-04-27
+
+---
+
+## local-scaffold-with-libs-1280.png
+
+**What it represents:** Home page del local Odoo 14 tras **Task 0.4** (GSAP 3.12.5 +
+ScrollTrigger 3.12.5 + Splitting.js 1.0.6 + Lenis 1.0.42 cargados como libs externas
+en `<head>`, sin instanciar todavía). Tampoco hay cambio visual respecto al baseline
+de fonts: las librerías exponen sus globales (`gsap`, `ScrollTrigger`, `Splitting`,
+`Lenis`) pero ningún snippet las consume aún. Verificación visual de que registrar
+los CDN no afecta al render base.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px
+- **Module commit:** Task 0.4 HEAD (commit `2c73f6e` o posterior, ver `git log`)
 - **Date:** 2026-04-27

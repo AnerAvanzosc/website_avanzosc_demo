@@ -35,9 +35,23 @@
              añade al final del contenedor, antes del cierre </head>).
              Esto garantiza que nuestros recursos externos se cargan en <head>
              independientemente del orden en que otras herencias modifiquen
-             la sección head. -->
+             la sección head.
+             Por qué `position="inside"` y no un anchor más específico
+             (p.ej. `//head/script[@id="..."] position="after"`): la
+             estructura de <head> en `web.layout` v14 es estable y termina
+             con `<t t-raw="head or ''"/>`, por lo que `inside` resuelve
+             siempre al final del contenedor. Anchors específicos a IDs
+             concretos serían más frágiles ante futuros cambios menores
+             de Odoo. -->
         <xpath expr="//head" position="inside">
-            <!-- 1. Google Fonts — preconnect (mejora TTFB de las fuentes) -->
+            <!-- 1. Google Fonts — preconnect (mejora TTFB de las fuentes).
+                 Nota: NO añadimos preconnect para `cdnjs.cloudflare.com` ni
+                 `cdn.jsdelivr.net`. Los <script> y <link rel="stylesheet">
+                 que apuntan a esos CDNs son render-blocking en <head>, así
+                 que el navegador abre conexión inmediatamente; un preconnect
+                 no aportaría diferencia perceptible. Re-evaluar si en
+                 futuras tareas (hero/timeline) el first-paint timing pasa a
+                 depender críticamente de esas librerías. -->
             <link rel="preconnect" href="https://fonts.googleapis.com"/>
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
 
@@ -51,6 +65,12 @@
             <!-- 3. Splitting.js 1.0.6 CSS — base styles for split word/char nodes.
                  Debe ir en <head> con las demás hojas de estilo para que los
                  estilos estén disponibles antes del primer paint.
+                 Nota: el plan task 0.4 lista `splitting.min.js + splitting.css`
+                 agrupados después de ScrollTrigger. Aquí se adelanta el CSS
+                 (posición 3) por delante de los <script> JS para respetar la
+                 convención CSS-antes-de-JS en <head> (evita reflows / FOUC
+                 sobre los nodos split). El JS de Splitting sigue en posición
+                 7, después de GSAP/ScrollTrigger.
                  Ref: spec §9.1 tabla de versiones. -->
             <link rel="stylesheet"
                   href="https://cdn.jsdelivr.net/npm/splitting@1.0.6/dist/splitting.css"/>
