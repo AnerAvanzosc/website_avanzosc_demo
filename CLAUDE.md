@@ -251,12 +251,14 @@ website_avanzosc_demo/
 │   │   └── kit_consulting.xml
 │   └── snippets/
 │       ├── hero.xml
+│       ├── pilares.xml
 │       ├── contador_modulos.xml
 │       ├── timeline_trayectoria.xml
 │       ├── sectores_grid.xml
 │       ├── equipo.xml
 │       ├── caso_exito.xml
-│       └── cta_kit_consulting.xml
+│       ├── cta_kit_consulting.xml
+│       └── cta_contacto.xml
 ├── static/
 │   ├── src/
 │   │   ├── scss/
@@ -410,15 +412,15 @@ Esta sección se actualiza según se toman decisiones. Claude debe preguntar por
 - [x] **Claim de la home**: «Odoo industrial de verdad, desde 2008.» (opción B de §9.1). EU: «Benetako Odoo industriala, 2008tik.». Encaja con SplitText sin sobrepasar 800ms y con tono §9.2 (frases cortas, cero palabrería). El activo "17 años" se traslada al contador animado y/o timeline en lugar de aparecer en el H1. **Validación**: turno del usuario (2026-04-27) tras presentar A/B/C/D: «b».
 - [x] **Estructura de la home**: 8 secciones visuales en orden funnel B2B (Approach B), con 9 snippets QWeb:
   1. Hero (claim + 2 CTAs) — `s_avanzosc_hero`.
-  2. Tres pilares (Desde 2008 / 600+ módulos OCA / Equipo STEM) — `s_avanzosc_pilares` *(NUEVO, no listado en §8)*.
+  2. Tres pilares (Desde 2008 / 600+ módulos OCA / Equipo STEM) — `s_avanzosc_pilares`.
   3. Grid de sectores (Industrial · Distribución · Servicios · Academias) — `s_avanzosc_sectores`.
   4. Trayectoria + volumen (bloque combinado): `s_avanzosc_contador` (600+) sobre `s_avanzosc_timeline` (hitos 2008→hoy de §9.1).
   5. Caso de éxito destacado — `s_avanzosc_caso_exito`.
   6. Equipo (fotos reales + titulación + especialidad) — `s_avanzosc_equipo`.
   7. CTA Kit Consulting — `s_avanzosc_cta_kit_consulting`.
-  8. CTA contacto final (teléfono + email + botón) — `s_avanzosc_cta_contacto` *(NUEVO, no listado en §8)*.
+  8. CTA contacto final (teléfono + email + botón) — `s_avanzosc_cta_contacto`.
 
-  **Snippets nuevos a crear** y a añadir a §8 antes de implementar: `s_avanzosc_pilares`, `s_avanzosc_cta_contacto`.
+  **Snippets nuevos a crear** (ya añadidos a §8): `s_avanzosc_pilares`, `s_avanzosc_cta_contacto`.
   **Validación**: turno del usuario (2026-04-27) tras presentar A/B/C: «b».
 
 - [x] **Casos de éxito destacados**: catálogo inicial de 8 archetypes anónimos (sin nombres reales, sin fotos reales, sin métricas reales — Avanzosc aún no tiene los datos consolidados). Cobertura por sector:
