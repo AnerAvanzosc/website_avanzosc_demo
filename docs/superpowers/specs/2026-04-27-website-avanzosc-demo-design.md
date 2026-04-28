@@ -87,7 +87,7 @@ Cerradas en el turno 2026-04-27 posterior al cierre de §11. **El spec las trata
 
 Ver CLAUDE.md §8 (ya alineado con §11). Adición pendiente tras aprobar este spec: `views/snippets/sector_specifics.xml` (snippet introducido por D1).
 
-**Sin** carpeta `models/` poblada en v1 — no hay modelos Python custom necesarios. Se reserva la carpeta vacía con `__init__.py` para futuro.
+**Carpeta `models/` mínima en v1**: solo lo necesario para el `post_init_hook` que crea la jerarquía del menú dropdown (CLAUDE.md §11 D7). Sin modelos Python custom de negocio en v1; la carpeta `models/` queda vacía con `__init__.py` placeholder. La lógica del hook vive en `hooks.py` en la raíz del módulo (no es un model, es una función a nivel de paquete invocada vía `'post_init_hook'` del `__manifest__.py`). Razón: el `Menu.create()` de Odoo 14 multi-website aplana sub-jerarquías declaradas en XML data — detalle en CLAUDE.md §11 D7.
 
 ### 3.3 Pipeline de assets
 
