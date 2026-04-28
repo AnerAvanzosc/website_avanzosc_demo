@@ -161,6 +161,8 @@ footer#bottom .o_footer_copyright {
     // Hide the brand promotion («Powered by Odoo - The #1 Open Source
     // eCommerce»). Para v1 corporativo no queremos publicidad de Odoo;
     // si en el futuro se decide mostrarla, quitar esta regla.
+    // Legal: permitido en self-hosted Community per LGPLv3 / OPL — la
+    // imposición «Powered by Odoo» solo aplica a Odoo SaaS plans.
     .o_brand_promotion {
         display: none;
     }

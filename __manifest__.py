@@ -11,6 +11,9 @@
         "website_sale",
         "website_slides",
     ],
+    # Note: `i18n/*.po` files are NOT listed here — Odoo auto-loads them
+    # from the module's `i18n/` directory on -i / -u (per OCA + core
+    # convention). `eu.po` lives there for Basque translations (Task 1.4).
     "data": [
         "views/assets.xml",
         "data/menu.xml",
