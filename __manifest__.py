@@ -27,6 +27,8 @@
         "views/snippets/cta_kit_consulting.xml",
         "views/snippets/cta_contacto.xml",
         "views/snippets/contador_modulos.xml",
+        "views/snippets/caso_exito.xml",
+        "data/config_parameters.xml",
         "views/test_snippets.xml",
     ],
     "installable": True,

@@ -1,0 +1,132 @@
+// =============================================================================
+// _caso_exito.scss — Estilos del snippet s_avanzosc_caso_exito (Task 3.6).
+// Scope: card 7/5 cols con title + summary + bullets + SVG dashboard.
+// Ref: spec §6.6 §10, CLAUDE.md §11 D3 (anonymous-first, configurable).
+// =============================================================================
+
+.s_avanzosc_caso_exito {
+    background-color: var(--neutral-100, #F4F5F7);
+    padding: 5rem 0;
+
+    @media (max-width: 767.98px) {
+        padding: 3rem 0;
+    }
+
+    // Reveal initial (todo el bloque): opacity 0 → 1 simple, sin stagger
+    // (el contenido es una unidad narrativa).
+    opacity: 0;
+    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
+
+    &.is-revealed {
+        opacity: 1;
+    }
+
+    @include reduced-motion {
+        opacity: 1;
+        transition: none;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Eyebrow («Caso de éxito»)
+// -----------------------------------------------------------------------------
+// Pequeño texto identificador antes del título grande. Inter peso 500
+// uppercase con tracking +0.05em — patrón estándar de eyebrow para
+// secciones tipo case-study.
+// -----------------------------------------------------------------------------
+.s_avanzosc_caso_exito_eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--brand-primary, #E85D2F);
+    margin: 0 0 1rem 0;
+}
+
+// -----------------------------------------------------------------------------
+// Bloque texto (col-lg-7)
+// -----------------------------------------------------------------------------
+.s_avanzosc_caso_exito_text {
+    padding-right: 2rem;
+
+    @media (max-width: 991.98px) {  // < lg → col-12, sin separación
+        padding-right: 0;
+        margin-bottom: 2rem;
+    }
+}
+
+.s_avanzosc_caso_exito_meta {
+    font-family: 'JetBrains Mono', monospace;  // CLAUDE.md §9.4 mono para metadatos técnicos.
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--neutral-500, #7A828B);
+    margin: 0 0 0.5rem 0;
+}
+
+.s_avanzosc_caso_exito_title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;  // ~32px H3 spec §9.4
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--neutral-900, #0F1419);
+    margin: 0 0 1.5rem 0;
+}
+
+.s_avanzosc_caso_exito_summary {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.25rem;  // 20px — algo mayor que body para destacar como subtítulo.
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--neutral-700, #3A4149);
+    margin: 0 0 1.5rem 0;
+}
+
+// -----------------------------------------------------------------------------
+// Lista de capability_details (bullets)
+// -----------------------------------------------------------------------------
+// Bullets custom usando ::before en lugar del bullet default — control de
+// color y separación. Indentación pequeña para que la lista respire.
+// -----------------------------------------------------------------------------
+.s_avanzosc_caso_exito_details {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: var(--neutral-700, #3A4149);
+        padding-left: 1.5rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+
+        &::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--brand-primary, #E85D2F);
+            font-weight: 600;
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Visual SVG (col-lg-5)
+// -----------------------------------------------------------------------------
+.s_avanzosc_caso_exito_visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.s_avanzosc_caso_exito_svg {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    // Sutil sombra para que el «dashboard» card se vea elevado del fondo.
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.06));
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Task 3.6 — config_parameters.
+    Ref: CLAUDE.md §11 D3 «Caso de éxito en home — selección configurable»
+    + plan §3.6 + Q2 archetypes anonymous-first.
+
+    Default `featured_archetype_id = '1'` — el archetype industrial 1
+    (Fabricante metal-mecánico exportador) es el sector ancla de Avanzosc
+    per §11. Cambio en runtime vía Settings → Technical → System Parameters
+    (o `odoo-bin shell` + `env['ir.config_parameter'].set_param(...)`)
+    sin redeploy ni reinicio.
+
+    `noupdate="1"`: el valor inicial se siembra en `-i`; ediciones admin
+    posteriores persisten a través de `-u <module>` sin ser revertidas
+    (CLAUDE.md §10 «no tocar el Builder» — config params editables son la
+    única superficie admin-mutable que respetamos).
+
+    Patrón espejo previsto para sectoriales (Phase 5):
+    `featured_archetypes_industrial`, `featured_archetypes_distribucion`,
+    etc. con listas de IDs filtradas por sector.
+-->
+<odoo>
+    <data noupdate="1">
+        <record id="featured_archetype_id_param" model="ir.config_parameter">
+            <field name="key">website_avanzosc_demo.featured_archetype_id</field>
+            <field name="value">1</field>
+        </record>
+    </data>
+</odoo>
