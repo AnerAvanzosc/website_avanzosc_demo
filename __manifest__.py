@@ -19,6 +19,11 @@
         "data/menu.xml",
         "data/redirects.xml",
         "views/layout.xml",
+        # Phase 3 — snippets (Tasks 3.1-3.10). Each snippet is a QWeb
+        # template invoked via `t-call` from `views/test_snippets.xml`
+        # (the QA progressive page) or future `views/pages/*.xml`.
+        "views/snippets/pilares.xml",
+        "views/test_snippets.xml",
     ],
     "installable": True,
     "application": False,

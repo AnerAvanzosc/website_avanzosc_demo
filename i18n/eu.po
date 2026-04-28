@@ -151,3 +151,24 @@ msgstr "Denda"
 msgid "Formación"
 msgstr "Formakuntza"
 
+# DRAFT - REVIEW NEEDED — Task 3.1 pilar 1 (trayectoria desde 2008).
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_pilares
+#, fuzzy
+msgid "En el ecosistema Odoo desde OpenERP."
+msgstr "OpenERPetik Odoo ekosisteman."
+
+# DRAFT - REVIEW NEEDED — Task 3.1 pilar 2 (volumen técnico, 600+ módulos).
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_pilares
+#, fuzzy
+msgid "Módulos publicados, muchos en OCA."
+msgstr "Argitaratutako moduluak, asko OCAn."
+
+# DRAFT - REVIEW NEEDED — Task 3.1 pilar 3 (equipo STEM mayoritariamente femenino).
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_pilares
+#, fuzzy
+msgid "Ingenieras y mayoría femenina."
+msgstr "Ingeniariak eta emakume gehienak."
+

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Task 3.1 — s_avanzosc_pilares snippet.
+    Ref: spec §6.2, plan §3.1, CLAUDE.md §9.1 pilares + §9.8 números grandes.
+
+    3 columnas Bootstrap (col-12 col-md-4) con un número editorial grande
+    (Space Grotesk 64px) sobre 1-line de descripción. Pilares decididos
+    sesión 2026-04-28 (A-C cerrados):
+
+        Pilar 1 — Trayectoria        : «2008»  + «En el ecosistema Odoo desde OpenERP.»
+        Pilar 2 — Volumen técnico    : «600+»  + «Módulos publicados, muchos en OCA.»
+        Pilar 3 — Equipo              : «STEM»  + «Ingenieras y mayoría femenina.»
+
+    Pilar 3 es text-led (sin número): «STEM» actúa como punchline visual
+    consistente con el tamaño Space Grotesk 64px de los pilares 1 y 2,
+    reforzando el activo de marca per CLAUDE.md §9.1 pilar 3.
+
+    Animación de entrada: IntersectionObserver en pilares.js añade clase
+    `is-revealed` al contenedor cuando entra en viewport (threshold 0.2).
+    El stagger 100ms entre columnas se aplica vía SCSS :nth-child con
+    transition-delay (CLAUDE.md §5: solo opacity + transform animados).
+
+    No registrado en website builder (CLAUDE.md §11 D4 — todo por código).
+-->
+<odoo>
+    <template id="s_avanzosc_pilares" name="Avanzosc · Pilares">
+        <section class="s_avanzosc_pilares" data-name="Avanzosc Pilares">
+            <div class="container">
+                <div class="row">
+                    <!-- Pilar 1: trayectoria desde 2008. -->
+                    <div class="col-12 col-md-4">
+                        <div class="s_avanzosc_pilares_item">
+                            <span class="s_avanzosc_pilares_number">2008</span>
+                            <p class="s_avanzosc_pilares_text">En el ecosistema Odoo desde OpenERP.</p>
+                        </div>
+                    </div>
+                    <!-- Pilar 2: volumen técnico (600+ módulos). -->
+                    <div class="col-12 col-md-4">
+                        <div class="s_avanzosc_pilares_item">
+                            <span class="s_avanzosc_pilares_number">600+</span>
+                            <p class="s_avanzosc_pilares_text">Módulos publicados, muchos en OCA.</p>
+                        </div>
+                    </div>
+                    <!-- Pilar 3: equipo STEM. Text-led, sin número (decisión B). -->
+                    <div class="col-12 col-md-4">
+                        <div class="s_avanzosc_pilares_item">
+                            <span class="s_avanzosc_pilares_number">STEM</span>
+                            <p class="s_avanzosc_pilares_text">Ingenieras y mayoría femenina.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

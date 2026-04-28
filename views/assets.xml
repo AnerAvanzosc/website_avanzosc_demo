@@ -36,11 +36,20 @@
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/snippets/_footer.scss"/>
+            <!-- Snippets de Phase 3. Orden de carga: cada uno se añade
+                 conforme se implementa (Tasks 3.1-3.10). Ref: plan §3. -->
+            <link rel="stylesheet"
+                  type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/snippets/_pilares.scss"/>
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/main.scss"/>
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/main.js"/>
+            <!-- JS de snippets — registrar widgets publicWidget. Cada uno
+                 se añade tras su SCSS (orden Phase 3 1.X). -->
+            <script type="text/javascript"
+                    src="/website_avanzosc_demo/static/src/js/snippets/pilares.js"/>
         </xpath>
     </template>
 

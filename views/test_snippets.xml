@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Página de pruebas /test-snippets — Phase 3.
+
+    Ref: plan §3.11 «crear página temporal /test-snippets que renderiza
+    cada snippet con datos de muestra».
+
+    Inicialmente arranca en Task 3.1 con un solo `t-call` al snippet de
+    pilares. Las Tasks 3.2-3.10 añaden t-calls subsiguientes a esta
+    misma página conforme cada snippet se implementa, de modo que la
+    página acumula los 10 snippets para el gate de verificación visual
+    en Task 3.11.
+
+    Esta página es PROVISIONAL del módulo durante Phase 3. Phase 4 crea
+    el `page_home` definitivo (`/`) que reemplazará el rol de esta
+    página de testing — `/test-snippets` puede entonces (a) eliminarse
+    si ya no aporta valor diagnóstico, o (b) mantenerse como herramienta
+    de QA para iteraciones futuras. Decisión diferida a Task 3.11.
+
+    URL: `/test-snippets` (no traducida; página interna de QA).
+    Acceso: pública sin login para que Playwright pueda screenshot.
+
+    NO registrada en website builder (CLAUDE.md §11 D4).
+-->
+<odoo>
+    <data noupdate="1">
+
+        <template id="page_test_snippets" name="Avanzosc · Test snippets (Phase 3 QA)">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <main>
+                        <!-- Phase 3 progressive integration. Cada Task 3.X
+                             añade un nuevo `t-call` debajo del anterior. -->
+
+                        <!-- Task 3.1 — pilares. -->
+                        <t t-call="website_avanzosc_demo.s_avanzosc_pilares"/>
+                    </main>
+                </div>
+            </t>
+        </template>
+
+        <record id="test_snippets_page" model="website.page">
+            <field name="name">Avanzosc Test Snippets</field>
+            <field name="type">qweb</field>
+            <field name="url">/test-snippets</field>
+            <field name="view_id" ref="page_test_snippets"/>
+            <field name="is_published" eval="True"/>
+            <field name="website_indexed" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

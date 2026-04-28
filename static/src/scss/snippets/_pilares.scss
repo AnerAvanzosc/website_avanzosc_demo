@@ -1,0 +1,127 @@
+// =============================================================================
+// _pilares.scss — Estilos del snippet s_avanzosc_pilares (Task 3.1).
+// Scope: 3 cols con número editorial grande + 1-line.
+// Ref: spec §6.2, CLAUDE.md §9.4 (Space Grotesk H1 64px), §9.8 (números),
+//      §5 (animar solo opacity + transform).
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Sección pilares
+// -----------------------------------------------------------------------------
+// Background --neutral-100 (decisión D sesión 2026-04-28): alterno suave
+// vs el hero (sección 1 con --neutral-0). Diferenciación visual sin
+// agresividad — espacio respirado per CLAUDE.md §9.8 «espacio negativo
+// generoso», no una sección densa.
+//
+// Padding 5rem desktop / 3rem mobile (decisión G). Generoso top+bottom
+// para que los números grandes respiren.
+// -----------------------------------------------------------------------------
+.s_avanzosc_pilares {
+    background-color: var(--neutral-100, #F4F5F7);
+    padding: 5rem 0;
+
+    @media (max-width: 767.98px) {  // Bootstrap 4 sm < md
+        padding: 3rem 0;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Items individuales (cada columna)
+// -----------------------------------------------------------------------------
+// Estado base: hidden (opacity 0 + translateY 20px). El JS añade
+// `.is-revealed` al `.s_avanzosc_pilares` padre cuando entra en viewport,
+// disparando la transición CSS hacia visible.
+//
+// Animar SOLO opacity y transform per CLAUDE.md §5 (GPU-accelerated).
+// Stagger 100ms via :nth-child + transition-delay — más simple que JS.
+// -----------------------------------------------------------------------------
+.s_avanzosc_pilares_item {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+                transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    // Padding vertical interno para separar columnas en mobile (cuando
+    // se apilan en col-12).
+    padding: 1rem 0;
+}
+
+// Estado «is-revealed»: opacity 1 + transform identity.
+// Stagger entre columnas: 0ms / 100ms / 200ms (decisión cumple plan
+// §3.1 «stagger 100ms»).
+.s_avanzosc_pilares.is-revealed {
+    .col-12:nth-child(1) .s_avanzosc_pilares_item {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0ms;
+    }
+    .col-12:nth-child(2) .s_avanzosc_pilares_item {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 100ms;
+    }
+    .col-12:nth-child(3) .s_avanzosc_pilares_item {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 200ms;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Número editorial (64px Space Grotesk peso 600)
+// -----------------------------------------------------------------------------
+// Per plan §3.1 («número 64px Space Grotesk») y CLAUDE.md §9.8 («números
+// grandes 80-120px display tipo editorial»). 64px es el sweet spot que
+// equilibra impacto sin dominar la sección — los números mayores
+// (100-120px) están reservados para `s_avanzosc_contador` solo.
+//
+// line-height 1.1 — apretado para que el número se sienta sólido.
+// color --neutral-900 (texto principal) — máximo contraste sobre el bg
+// claro de la sección.
+// -----------------------------------------------------------------------------
+.s_avanzosc_pilares_number {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 64px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;  // CLAUDE.md §9.4 H1 letter-spacing
+    color: var(--neutral-900, #0F1419);
+    margin-bottom: 1rem;
+}
+
+// -----------------------------------------------------------------------------
+// Descripción 1-line bajo el número
+// -----------------------------------------------------------------------------
+// Inter (body font per CLAUDE.md §9.4). Tamaño body (1.125rem ≈ 18px)
+// con line-height confortable. Color --neutral-700 (texto secundario)
+// para crear jerarquía visual con el número (-900 vs -700).
+// -----------------------------------------------------------------------------
+.s_avanzosc_pilares_text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--neutral-700, #3A4149);
+    margin: 0;
+    // max-width acota la frase para que no se estire en col-md-4 anchas
+    // y el texto se mantenga centrado sin parecer disperso.
+    max-width: 16rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+// -----------------------------------------------------------------------------
+// prefers-reduced-motion: estado final directo, sin animación.
+// -----------------------------------------------------------------------------
+.s_avanzosc_pilares {
+    @include reduced-motion {
+        .s_avanzosc_pilares_item {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+        // Bajo reduced-motion no aplican los staggers per :nth-child — el
+        // override de transition: none anula transition-delay también.
+    }
+}
