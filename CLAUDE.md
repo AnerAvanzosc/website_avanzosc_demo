@@ -492,6 +492,16 @@ Las 6 decisiones siguientes (D1-D6) se cerraron en la sesión de revisión del s
 
 ### Decisiones pendientes
 
+- [ ] **Decisiones diferidas a Task 3.10 hero** (snippet `s_avanzosc_hero`). Discovery hecho en sesión 2026-04-28 antes de ejecutar Phase 2; B-G se posponen hasta llegar a 3.10 con contexto acumulado de Phases 2 + 3.1-3.9. Propuestas iniciales documentadas para releer en su momento:
+  - **B — Subtítulo del hero**: plan/spec no lo especifican. Propuesta: «Migración OpenUpgrade, módulos OCA y localización fiscal española. Para industria, distribución, servicios y academias.» (tono per CLAUDE.md §9.2).
+  - **C — Textos + URLs de los 2 CTAs**: plan lista los 6 parámetros pero sin defaults. Propuesta: CTA1 «Ver soluciones» → `#sectores` (anchor a sección 3 home) o `/industrial`; CTA2 «Hablar con nosotros» → `/contacto`.
+  - **D — Background del hero**: spec §5 dice «espacio negativo amplio» sin color. Propuesta: blanco (`--neutral-0`) con headline `--neutral-900` (máxima legibilidad; densidad reservada para timeline+contador per §9.8).
+  - **E — Imagen / SVG / illustration**: spec §9.6 prohíbe stock; CLAUDE.md §9.6 prefiere fotos reales del equipo o industriales. Sin sesión fotográfica ([?] #8 spec). Propuesta: **sin imagen en v1** (solo H1 + subtítulo + 2 CTAs sobre fondo limpio); reversible al cerrar [?] #8.
+  - **F — Altura del hero**: spec sin valor. Propuesta: `min-height: 600px` con padding generoso; NO 100vh (rompe scroll natural y choca con sticky header).
+  - **G — Animación inicial**: plan 3.10 la lista como acceptance, pero teóricamente diferible. Propuesta: **NO diferir** — la entrada letra-por-letra es el «moment of arrival» diferenciador. Implementar completo en 3.10.
+
+  Re-evaluar todas al iniciar 3.10 con la información acumulada de los 9 snippets previos.
+
 - [ ] **Hex exactos del logo** — extraer de `https://avanzosc.es/web/image/website/1/logo/Avanzosc` y actualizar la tabla de 9.3.
 - [ ] **SVG del logo** — vectorizar si no existe ya.
 - [ ] **Portal ERP actual** — ¿el botón "Acceso clientes" apunta a `/web/login` estándar de Odoo o hay una URL custom del portal?
