@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- noupdate omitido deliberadamente: menús gestionados solo por código per
+     CLAUDE.md §10 («NO tocar el Website Builder, todo por código»). El XML es
+     fuente canónica; cada `-u website_avanzosc_demo` re-aplica los records,
+     sobrescribiendo cualquier edición visual hecha desde Settings → Website.
+     Si en el futuro se decide permitir gestión de menús desde el builder,
+     añadir `<data noupdate="1">` envolviendo los records y replantear esta nota. -->
+<odoo>
+    <!-- Menú principal ES — Task 1.1 (C.1: post_init_hook approach).
+         7 top-level. Los 4 hijos del dropdown «Soluciones sectoriales»
+         (Industrial, Distribución, Servicios, Academias) NO se declaran
+         aquí — se crean en post_init_hook (ver hooks.py + CLAUDE.md §11 D7).
+         Razón: el create() del modelo website.menu en Odoo 14 multi-website
+         aplana parent_id al top_menu del website cuando crea las copias
+         per-website desde Default Main Menu, ignorando el parent_id real.
+         Solo respeta parent_id == default_menu.id (raíz). Por eso los
+         top-level (parent=ref(website.main_menu)) sí funcionan, pero los
+         hijos del dropdown no podían vivir en XML. -->
+
+    <record id="menu_inicio" model="website.menu">
+        <field name="name">Inicio</field>
+        <field name="url">/</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="menu_soluciones" model="website.menu">
+        <!-- Padre del dropdown. url=# porque no tiene página propia.
+             Sus 4 hijos (Industrial, Distribución, Servicios, Academias)
+             se crean en post_init_menu_hierarchy (hooks.py). -->
+        <field name="name">Soluciones sectoriales</field>
+        <field name="url">#</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="menu_tienda" model="website.menu">
+        <!-- Slug propio /tienda; redirect 301 a /shop pendiente de Phase 2 (D6 spec). -->
+        <field name="name">Tienda</field>
+        <field name="url">/tienda</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="menu_formacion" model="website.menu">
+        <!-- Slug propio /formacion; redirect 301 a /slides pendiente de Phase 2 (D6 spec). -->
+        <field name="name">Formación</field>
+        <field name="url">/formacion</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="menu_conocenos" model="website.menu">
+        <field name="name">Conócenos</field>
+        <field name="url">/conocenos</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="menu_trabaja" model="website.menu">
+        <field name="name">Trabaja con nosotros</field>
+        <field name="url">/trabaja-con-nosotros</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="menu_contacto" model="website.menu">
+        <field name="name">Contacto</field>
+        <field name="url">/contacto</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">70</field>
+    </record>
+</odoo>
