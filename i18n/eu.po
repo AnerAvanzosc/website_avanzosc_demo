@@ -395,3 +395,67 @@ msgstr "4 sektore, STEM taldea"
 msgid "Industrial, distribución, servicios, academias. Mayoría STEM femenina."
 msgstr "Industria, banaketa, zerbitzuak, akademiak. STEM gehiengo emakumea."
 
+# DRAFT - REVIEW NEEDED — Task 3.9 equipo heading.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_equipo
+#, fuzzy
+msgid "Quiénes lo construyen"
+msgstr "Nork eraikitzen duten"
+
+# DRAFT - REVIEW NEEDED — Task 3.9 equipo párrafo principal.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_equipo
+#, fuzzy
+msgid "Equipo STEM con base en Azkoitia, Gipuzkoa. Mayoría femenina en un sector dominado por hombres. Programadoras, consultoras funcionales y técnicas de soporte. Contribuimos a la OCA y formamos a la siguiente generación a través de las academias."
+msgstr "STEM taldea Azkoitian, Gipuzkoan. Emakume gehiengoa gizonek menderatutako sektore batean. Programatzaileak, kontsultore funtzionalak eta laguntza teknikariak. OCAri ekarpenak egiten ditugu eta hurrengo belaunaldia akademien bidez prestatzen dugu."
+
+# DRAFT - REVIEW NEEDED — Task 3.9 equipo stat label «Equipo».
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_equipo
+#, fuzzy
+msgid "Equipo"
+msgstr "Taldea"
+
+# DRAFT - REVIEW NEEDED — Task 3.9 equipo stat value tamaño equipo.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_equipo
+#, fuzzy
+msgid "15-25 personas"
+msgstr "15-25 pertsona"
+
+# DRAFT - REVIEW NEEDED — Task 3.9 equipo stat label «Composición».
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_equipo
+#, fuzzy
+msgid "Composición"
+msgstr "Konposizioa"
+
+# DRAFT - REVIEW NEEDED — Task 3.9 equipo stat value composición.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_equipo
+#, fuzzy
+msgid "Mayoría STEM femenina"
+msgstr "STEM gehiengo emakumea"
+
+# DRAFT - REVIEW NEEDED — Task 3.9 equipo stat OCA value.
+# Label «OCA» NO se traduce (acrónimo internacional Odoo Community Association).
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_equipo
+#, fuzzy
+msgid "Contribuyentes activos"
+msgstr "Ekarpen aktiboak"
+
+# DRAFT - REVIEW NEEDED — Task 3.9 equipo stat label «Sede».
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_equipo
+#, fuzzy
+msgid "Sede"
+msgstr "Egoitza"
+
+# DRAFT - REVIEW NEEDED — Task 3.9 equipo stat value sede.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_equipo
+#, fuzzy
+msgid "Azkoitia, Gipuzkoa"
+msgstr "Azkoitia, Gipuzkoa"
+

@@ -61,6 +61,8 @@
                         </t>
                         <!-- Task 3.8 — timeline (8 hitos trayectoria). -->
                         <t t-call="website_avanzosc_demo.s_avanzosc_timeline"/>
+                        <!-- Task 3.9 — equipo (SVG abstracto + copy + stats). -->
+                        <t t-call="website_avanzosc_demo.s_avanzosc_equipo"/>
                         <!-- Task 3.4 — CTA Contacto final. -->
                         <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
                     </main>

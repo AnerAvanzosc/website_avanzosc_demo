@@ -30,6 +30,7 @@
         "views/snippets/caso_exito.xml",
         "views/snippets/sector_specifics.xml",
         "views/snippets/timeline_trayectoria.xml",
+        "views/snippets/equipo.xml",
         "data/config_parameters.xml",
         "views/test_snippets.xml",
     ],

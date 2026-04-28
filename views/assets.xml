@@ -64,6 +64,9 @@
                   href="/website_avanzosc_demo/static/src/scss/snippets/_timeline.scss"/>
             <link rel="stylesheet"
                   type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/snippets/_equipo.scss"/>
+            <link rel="stylesheet"
+                  type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/main.scss"/>
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/main.js"/>
