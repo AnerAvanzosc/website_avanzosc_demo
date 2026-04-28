@@ -47,6 +47,10 @@ odoo.define('website_avanzosc_demo.main', function (require) {
                     requestAnimationFrame(raf);
                 }
                 requestAnimationFrame(raf);
+            } else if (typeof window.Lenis === 'undefined') {
+                // CDN failure (network block, ad-blocker, etc.). Sticky header
+                // falls back to native scroll path on `#wrapwrap` per Task 1.3.
+                console.warn('[website_avanzosc_demo] Lenis CDN unavailable, smooth scroll disabled');
             }
 
             // ----------------------------------------------------------------

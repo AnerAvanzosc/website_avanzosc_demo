@@ -33,7 +33,7 @@ header {
     position: sticky;
     top: 0;
     z-index: 1020;  // Bootstrap $zindex-sticky default (entre dropdown y modal-backdrop)
-    background-color: #fff;  // sticky requiere bg opaco para no transparentar el contenido bajo
+    background-color: var(--neutral-0, #fff);  // sticky requiere bg opaco; var del design system con fallback
     transition: box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1);
 
     nav.navbar {
