@@ -42,6 +42,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
+# 0. Pre-check: XML 1.0 comment validity (catches `--` double-hyphen in
+# comments before invoking Odoo). Bug pattern recurrente — Tasks 3.3, 3.9,
+# 3.10 lo dispararon al menos una vez cada una. Ver scripts/check-xml-comments.sh.
+"$SCRIPT_DIR/check-xml-comments.sh" || {
+    echo "[run-smoke] Pre-check failed; aborting smoke." >&2
+    exit 1
+}
+
 LOG_DIR="docs/smoke-tests"
 mkdir -p "$LOG_DIR"
 LOG_FILE="$LOG_DIR/${TASK_ID}.log"
