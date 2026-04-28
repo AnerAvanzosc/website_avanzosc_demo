@@ -24,17 +24,27 @@ Mismo dominio, mismo servidor, mismo Odoo.
 
 Menú principal:
 
+Orden por prioridad de funnel B2B (decisión 2026-04-28): los 5 primeros
+hasta Contacto son los high-conversion items del funnel; los 2 últimos
+(Conócenos, Empleo) son secundarios y caen al overflow `[+]` a 992px
+sin perjuicio de la UX desktop principal (≥1280 entran los 7).
+
 1. **Inicio**
-2. **Soluciones sectoriales** (dropdown):
+2. **Soluciones** (dropdown — renombrado desde «Soluciones sectoriales»;
+   el adjetivo era redundante con el contenido del dropdown y consumía
+   ancho del navbar):
    - Industrial (fabricación, química, alimentaria, mecanizado, textil)
    - Distribución (retail, ecommerce, mayoristas)
    - Servicios (IT, SAT, despachos)
    - Academias y centros educativos
 3. **Tienda**
 4. **Formación** (renombrado de "Cursos")
-5. **Conócenos**
-6. **Trabaja con nosotros**
-7. **Contacto**
+5. **Contacto**
+6. **Conócenos**
+7. **Empleo** (renombrado desde «Trabaja con nosotros»; estándar moderno
+   corporativo, ahorra ancho. Slug interno `/trabaja-con-nosotros` se
+   mantiene — etiqueta visible y URL son decisiones independientes;
+   slug-rename es decisión de SEO posterior).
 
 **Fuera del menú principal**:
 - **Kit Consulting Red.es** → landing en `/kit-consulting`, banner temporal en home.
