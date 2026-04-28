@@ -21,7 +21,11 @@
               inherit_id="website.template_header_default_oe_structure_header_default_1">
         <!-- Reemplazamos el anchor «Contact Us» por «Acceso clientes».
              Se mantiene la estructura oe_structure/section/container para no
-             romper el padding y la grilla del header por defecto. -->
+             romper el padding y la grilla del header por defecto.
+             Asume website usa template_header_default. Variantes
+             (_align_center, _align_right, _hamburger) no se contemplan en v1
+             per CLAUDE.md §10 (sin Website Builder). Si se cambia a otra
+             variante, este xpath no matchea y el botón desaparece sin error. -->
         <xpath expr="//a[@href='/contactus']" position="replace">
             <!-- href provisional /web/login — bloqueo blando [?] #2 spec (URL portal). -->
             <a href="/web/login"
@@ -70,6 +74,10 @@
           Ref: task 1.2 punto 4 (text variant, sin flag). -->
     <record id="website.header_language_selector_flag" model="ir.ui.view">
         <!-- Desactivar variante de bandera: queremos texto limpio, no flags. -->
+        <!-- noupdate omitido: si se ejecuta `-u website` sin nuestro módulo
+             cargado simultáneamente, el flag puede revertir a True. Asumimos
+             que el módulo `website_avanzosc_demo` se mantiene cargado en
+             producción y se actualiza junto con `website` cuando aplique. -->
         <field name="active" eval="False"/>
     </record>
 </odoo>

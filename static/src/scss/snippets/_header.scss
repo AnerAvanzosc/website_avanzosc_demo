@@ -21,17 +21,34 @@
         // Solo transform — per CLAUDE.md §5 (GPU only, no left/top/margin).
         transform: translateY(-1px);
     }
+
+    // Respeto local a prefers-reduced-motion (CLAUDE.md §5).
+    // El reset global vive en _typography.scss, pero acoplar el comportamiento
+    // a orden de carga de assets es frágil — si en el futuro se reordenan los
+    // SCSS, esta protección local sigue valiendo.
+    @include reduced-motion {
+        transition: none;
+    }
 }
 
 // -----------------------------------------------------------------------------
-// Selector de idioma — subrayar idioma activo
+// Selector de idioma
 // El template portal.language_selector renderiza los idiomas como
-// .dropdown-item.js_change_lang dentro de .js_language_selector.
-// El idioma activo NO recibe clase automática desde Odoo — se detecta
-// comparando el href con la URL actual o con t-att-data-url_code.
-// Estrategia v1: subrayamos el item que coincide con el lang actual usando
-// JS mínimo (ver nota abajo). Para el caso sin JS o como fallback CSS puro,
-// aplicamos el estilo al botón toggle (que ya muestra el idioma activo).
+// .dropdown-item.js_change_lang dentro de .js_language_selector. El idioma
+// activo NO recibe clase automática desde Odoo — se detecta comparando href
+// con la URL actual.
+//
+// Intent (decisión sesión 2026-04-28 sobre M3):
+//   - Idioma activo: subrayado permanente como STATUS INDICATOR (no
+//     decoración interactiva). Per spec §8.1 «activo subrayado».
+//   - Idioma inactivo en hover: indicador visual DISTINTO al subrayado
+//     (color brand-primary + bg sutil) para evitar ambigüedad entre
+//     «este es el activo» y «estoy haciendo hover sobre este».
+//
+// El botón toggle del dropdown (.js_language_selector > .btn) muestra el
+// label del idioma activo y por tanto lleva el subrayado permanente.
+// Dentro del dropdown abierto, el item que coincide con el idioma actual
+// recibe la clase .s_avanzosc_lang_active (vía JS mínimo en main.js).
 // -----------------------------------------------------------------------------
 .js_language_selector {
     // Botón que muestra el idioma activo como label del dropdown.
@@ -65,23 +82,26 @@
         }
     }
 
-    // Subrayado del idioma activo: se aplica via JS (ver _header_lang_active.js).
-    // Fallback CSS puro — el item con data-url_code igual al lang activo
-    // recibe la clase .s_avanzosc_lang_active añadida por JS en main.js.
+    // Subrayado del idioma activo dentro del dropdown abierto.
+    // .s_avanzosc_lang_active es añadida por JS (main.js) al item cuyo
+    // data-url_code coincida con la lang actual del request.
+    // Distinción visual vs hover de inactivo: aquí van underline +
+    // peso 600 (status), arriba va color + bg-soft (interactividad).
     .js_change_lang.s_avanzosc_lang_active {
         font-weight: 600;
         text-decoration: underline;
+        text-decoration-thickness: 2px;
         text-underline-offset: 4px;
         color: var(--brand-primary, #E85D2F);
     }
 }
 
-// Subrayado del botón toggle cuando el idioma activo está seleccionado.
-// Odoo no añade clase activa al <button>, pero podemos subrayar el texto.
+// Subrayado permanente del label del botón toggle (que SIEMPRE refleja el
+// idioma activo del request). Coherente con dropdown items: misma thickness
+// + offset, mismo color brand-primary.
 .js_language_selector > .btn .align-middle {
     text-decoration: underline;
-    text-underline-offset: 4px;
-    // text-decoration-color sutil para no ser demasiado agresivo
-    text-decoration-color: var(--brand-primary, #E85D2F);
     text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--brand-primary, #E85D2F);
 }
