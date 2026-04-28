@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Task 3.8 — s_avanzosc_timeline snippet.
+    Ref: spec §6.8, plan §3.8, CLAUDE.md §11 «Trayectoria» (pillar 1
+    diferenciador).
+
+    Timeline horizontal desktop / vertical mobile con 8 hitos clave de la
+    trayectoria Avanzosc desde 2008. Pieza narrativa de «trayectoria
+    técnica real» — uno de los 3 pilares de marca per §9.1.
+
+    8 hitos hardcoded en QWeb (estructura estable, no requieren
+    ir.config_parameter ni dict miggrable). Cada hito: año + título corto
+    + 1-2 líneas de descripción técnica, tono Avanzosc (frases cortas,
+    sin BS, técnico per §9.2).
+
+    Layout:
+      - Desktop (md+): horizontal flex con overflow-x: auto si el ancho
+        total excede el container. Cada hito en column flex con dot en
+        línea horizontal.
+      - Mobile (<md): vertical column, dots en lateral izquierdo, contenido
+        a la derecha.
+
+    Animación reveal: gsap.from() con stagger 100ms ease-out expo,
+    triggered por IntersectionObserver al entrar la sección 30% en viewport.
+    NO ScrollTrigger — habría requerido scroller-proxy + sync con Lenis
+    (~30 líneas de integración para mantener Lenis y ScrollTrigger
+    coordinados sobre #wrapwrap). IO + gsap.from() simpler y suficiente
+    para el caso «reveal una vez al entrar viewport». Si en futuras tareas
+    se necesita scrub-on-scroll progress (línea timeline crece con el
+    scroll), revisitar la integración Lenis-ScrollTrigger en una tarea
+    aparte. Decisión sesión 2026-04-28 documented.
+
+    Reduced-motion: estado final directo; los hitos visibles desde render.
+
+    Anchor `#timeline` accesible (referenciado por Task 3.4 «Ver casos de
+    éxito»). NO en builder (D4).
+-->
+<odoo>
+    <template id="s_avanzosc_timeline" name="Avanzosc · Timeline">
+        <section id="timeline" class="s_avanzosc_timeline" data-name="Avanzosc Timeline">
+            <div class="container">
+                <h2 class="s_avanzosc_timeline_heading">Trayectoria</h2>
+                <p class="s_avanzosc_timeline_intro">Desde 2008, antes incluso de que se llamara Odoo.</p>
+
+                <div class="s_avanzosc_timeline_track">
+                    <ul class="s_avanzosc_timeline_items">
+                        <li class="s_avanzosc_timeline_item">
+                            <span class="s_avanzosc_timeline_dot"/>
+                            <span class="s_avanzosc_timeline_year">2008</span>
+                            <h3 class="s_avanzosc_timeline_title">Fundación en Azkoitia</h3>
+                            <p class="s_avanzosc_timeline_desc">Inicio con OpenERP 5. Primeros desarrollos para industria local.</p>
+                        </li>
+                        <li class="s_avanzosc_timeline_item">
+                            <span class="s_avanzosc_timeline_dot"/>
+                            <span class="s_avanzosc_timeline_year">2011</span>
+                            <h3 class="s_avanzosc_timeline_title">Primeros módulos OCA</h3>
+                            <p class="s_avanzosc_timeline_desc">Módulos de fabricación publicados en la comunidad. Cultura OCA en el equipo.</p>
+                        </li>
+                        <li class="s_avanzosc_timeline_item">
+                            <span class="s_avanzosc_timeline_dot"/>
+                            <span class="s_avanzosc_timeline_year">2014</span>
+                            <h3 class="s_avanzosc_timeline_title">Migración a Odoo 8</h3>
+                            <p class="s_avanzosc_timeline_desc">Salto OpenERP → Odoo 8. Re-escritura de módulos propios al ORM nuevo.</p>
+                        </li>
+                        <li class="s_avanzosc_timeline_item">
+                            <span class="s_avanzosc_timeline_dot"/>
+                            <span class="s_avanzosc_timeline_year">2017</span>
+                            <h3 class="s_avanzosc_timeline_title">Integraciones MES / SCADA</h3>
+                            <p class="s_avanzosc_timeline_desc">Conector PLC vía OCA/connector_mes. Industrial 4.0 deja de ser teoría.</p>
+                        </li>
+                        <li class="s_avanzosc_timeline_item">
+                            <span class="s_avanzosc_timeline_dot"/>
+                            <span class="s_avanzosc_timeline_year">2020</span>
+                            <h3 class="s_avanzosc_timeline_title">Soporte y formación remota</h3>
+                            <p class="s_avanzosc_timeline_desc">Helpdesk remoto a escala. Webinars técnicos. Las academias entran como sector.</p>
+                        </li>
+                        <li class="s_avanzosc_timeline_item">
+                            <span class="s_avanzosc_timeline_dot"/>
+                            <span class="s_avanzosc_timeline_year">2022</span>
+                            <h3 class="s_avanzosc_timeline_title">500+ módulos publicados</h3>
+                            <p class="s_avanzosc_timeline_desc">Cruzamos los 500 módulos contribuidos. Reconocimiento OCA estable.</p>
+                        </li>
+                        <li class="s_avanzosc_timeline_item">
+                            <span class="s_avanzosc_timeline_dot"/>
+                            <span class="s_avanzosc_timeline_year">2024</span>
+                            <h3 class="s_avanzosc_timeline_title">Kit Consulting Red.es</h3>
+                            <p class="s_avanzosc_timeline_desc">Habilitados como asesores oficiales del programa estatal.</p>
+                        </li>
+                        <li class="s_avanzosc_timeline_item">
+                            <span class="s_avanzosc_timeline_dot"/>
+                            <span class="s_avanzosc_timeline_year">Hoy</span>
+                            <h3 class="s_avanzosc_timeline_title">4 sectores, equipo STEM</h3>
+                            <p class="s_avanzosc_timeline_desc">Industrial, distribución, servicios, academias. Mayoría STEM femenina.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

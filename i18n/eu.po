@@ -268,3 +268,130 @@ msgstr "Argitaratutako moduluak."
 msgid "Sectores cubiertos."
 msgstr "Estaltzen diren sektoreak."
 
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline heading.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Trayectoria"
+msgstr "Ibilbidea"
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline intro.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Desde 2008, antes incluso de que se llamara Odoo."
+msgstr "2008tik, Odoo izena hartu aurretik bertaere."
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline year «Hoy».
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Hoy"
+msgstr "Gaur"
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2008 título.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Fundación en Azkoitia"
+msgstr "Sortzea Azkoitian"
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2008 desc.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Inicio con OpenERP 5. Primeros desarrollos para industria local."
+msgstr "OpenERP 5-ekin hasi. Lehen garapenak industria lokalentzat."
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2011 título.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Primeros módulos OCA"
+msgstr "Lehenengo OCA moduluak"
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2011 desc.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Módulos de fabricación publicados en la comunidad. Cultura OCA en el equipo."
+msgstr "Fabrikazio moduluak komunitatean argitaratuta. OCA kultura taldean."
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2014 título.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Migración a Odoo 8"
+msgstr "Odoo 8-ra migratzea"
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2014 desc.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Salto OpenERP → Odoo 8. Re-escritura de módulos propios al ORM nuevo."
+msgstr "OpenERP → Odoo 8 jauzia. Modulu propioen birridazketa ORM berrira."
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2017 título.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Integraciones MES / SCADA"
+msgstr "MES / SCADA integrazioak"
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2017 desc.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Conector PLC vía OCA/connector_mes. Industrial 4.0 deja de ser teoría."
+msgstr "PLC konektorea OCA/connector_mes bidez. Industria 4.0 ez da teoria."
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2020 título.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Soporte y formación remota"
+msgstr "Urruneko laguntza eta prestakuntza"
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2020 desc.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Helpdesk remoto a escala. Webinars técnicos. Las academias entran como sector."
+msgstr "Urruneko helpdesk eskalan. Webinar teknikoak. Akademiak sektore gisa sartzen dira."
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2022 título.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "500+ módulos publicados"
+msgstr "500+ argitaratutako modulu"
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2022 desc.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Cruzamos los 500 módulos contribuidos. Reconocimiento OCA estable."
+msgstr "500 ekarpen modulu gainditu. OCA aitorpen egonkorra."
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline 2024 desc.
+# Heading «Kit Consulting Red.es» NO se traduce (nombre propio del programa).
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Habilitados como asesores oficiales del programa estatal."
+msgstr "Estatuko programaren aholkulari ofizial gisa egiaztatuta."
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline Hoy título.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "4 sectores, equipo STEM"
+msgstr "4 sektore, STEM taldea"
+
+# DRAFT - REVIEW NEEDED — Task 3.8 timeline Hoy desc.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
+#, fuzzy
+msgid "Industrial, distribución, servicios, academias. Mayoría STEM femenina."
+msgstr "Industria, banaketa, zerbitzuak, akademiak. STEM gehiengo emakumea."
+
