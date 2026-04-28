@@ -67,6 +67,9 @@
                   href="/website_avanzosc_demo/static/src/scss/snippets/_equipo.scss"/>
             <link rel="stylesheet"
                   type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/snippets/_hero.scss"/>
+            <link rel="stylesheet"
+                  type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/main.scss"/>
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/main.js"/>
@@ -84,6 +87,8 @@
                     src="/website_avanzosc_demo/static/src/js/snippets/contador.js"/>
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/snippets/timeline.js"/>
+            <script type="text/javascript"
+                    src="/website_avanzosc_demo/static/src/js/snippets/hero.js"/>
         </xpath>
     </template>
 

@@ -31,6 +31,7 @@
         "views/snippets/sector_specifics.xml",
         "views/snippets/timeline_trayectoria.xml",
         "views/snippets/equipo.xml",
+        "views/snippets/hero.xml",
         "data/config_parameters.xml",
         "views/test_snippets.xml",
     ],

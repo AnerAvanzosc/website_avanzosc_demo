@@ -22,10 +22,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# DRAFT - REVIEW NEEDED — claim corporativo (D2)
+# claim corporativo (D2) — VALIDADO, NO DRAFT (per plan §3.10
+# explícito «validados, NO TRANSLATION DRAFT»). Surfaces: footer brand col
+# (Task 1.4) + hero H1 (Task 3.10).
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
-#, fuzzy
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_hero
 msgid "Odoo industrial de verdad, desde 2008."
 msgstr "Benetako Odoo industriala, 2008tik."
 
@@ -458,4 +460,25 @@ msgstr "Egoitza"
 #, fuzzy
 msgid "Azkoitia, Gipuzkoa"
 msgstr "Azkoitia, Gipuzkoa"
+
+# DRAFT - REVIEW NEEDED — Task 3.10 hero subtítulo.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_hero
+#, fuzzy
+msgid "Migración OpenUpgrade, módulos OCA y localización fiscal española. Para industria, distribución, servicios y academias."
+msgstr "OpenUpgrade migrazioa, OCA moduluak eta lokalizazio fiskal espainola. Industria, banaketa, zerbitzuak eta akademiarako."
+
+# DRAFT - REVIEW NEEDED — Task 3.10 hero CTA primary.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_hero
+#, fuzzy
+msgid "Ver soluciones"
+msgstr "Konponbideak ikusi"
+
+# DRAFT - REVIEW NEEDED — Task 3.10 hero CTA secondary.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_hero
+#, fuzzy
+msgid "Hablar con nosotros"
+msgstr "Gurekin hitz egin"
 

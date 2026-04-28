@@ -32,6 +32,9 @@
                         <!-- Phase 3 progressive integration. Cada Task 3.X
                              añade un nuevo `t-call` debajo del anterior. -->
 
+                        <!-- Task 3.10 — hero (PRIMER snippet del funnel home,
+                             insertado al top per orden). -->
+                        <t t-call="website_avanzosc_demo.s_avanzosc_hero"/>
                         <!-- Task 3.1 — pilares. -->
                         <t t-call="website_avanzosc_demo.s_avanzosc_pilares"/>
                         <!-- Task 3.2 — sectores grid 2x2. -->

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Task 3.10 — s_avanzosc_hero snippet.
+    Ref: spec §6.1 §9.2, plan §3.10, CLAUDE.md §11 D2 «Claim de la home»
+    (validado, NO TRANSLATION DRAFT) + decisiones B-G sesión 2026-04-28.
+
+    Primera sección de la home (sección 1 funnel). Captura atención + claim
+    diferenciador + 2 CTAs hacia el funnel.
+
+    Decisiones aplicadas (CLAUDE.md §11 hero deferred B-G):
+      A — claim ES/EU validados D2 (idénticos al footer brand col).
+      B — subtítulo: «Migración OpenUpgrade, módulos OCA y localización
+          fiscal española. Para industria, distribución, servicios y
+          academias.»
+      C — 2 CTAs: «Ver soluciones» → #sectores, «Hablar con nosotros»
+          → /contacto.
+      D — Background blanco neutral-0, headline neutral-900 (CLAUDE.md
+          §9.8 jerarquía por tamaño antes que por color).
+      E — SIN imagen en v1. Comentario TODO #spec-q8 marca el punto donde
+          insertar foto/illustration cuando se cierre la sesión fotográfica.
+      F — min-height: 600px desktop, 480px mobile (en _hero.scss).
+      G — animación completa: Splitting.js letter-split + GSAP timeline.
+
+    NO en builder (D4).
+-->
+<odoo>
+    <template id="s_avanzosc_hero" name="Avanzosc · Hero">
+        <section class="s_avanzosc_hero" data-name="Avanzosc Hero">
+            <div class="container">
+                <div class="s_avanzosc_hero_inner">
+                    <h1 class="s_avanzosc_hero_claim">Odoo industrial de verdad, desde 2008.</h1>
+                    <p class="s_avanzosc_hero_subtitle">Migración OpenUpgrade, módulos OCA y localización fiscal española. Para industria, distribución, servicios y academias.</p>
+                    <div class="s_avanzosc_hero_actions">
+                        <a href="#sectores" class="btn btn-primary btn-lg s_avanzosc_hero_cta_primary">Ver soluciones</a>
+                        <a href="/contacto" class="s_avanzosc_hero_cta_secondary">Hablar con nosotros</a>
+                    </div>
+                    <!-- TODO #spec-q8: evaluar foto/illustration aquí cuando se
+                         cierre sesión fotográfica del equipo Avanzosc. v1 va
+                         sin imagen per CLAUDE.md §9.6 (NO stock photos) y
+                         decisión E sesión 2026-04-28. Punto de inserción
+                         estable: dentro de .s_avanzosc_hero_inner, debajo de
+                         .s_avanzosc_hero_actions o en col paralela. -->
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>
