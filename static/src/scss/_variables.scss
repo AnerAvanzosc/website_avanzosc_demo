@@ -34,3 +34,65 @@ $brand-primary: #E85D2F;
 $brand-primary-dark: #C44015;
 $brand-secondary: #1B2A41;
 $brand-accent: #F5B800;
+
+// -----------------------------------------------------------------------------
+// Bootstrap .btn-primary brand color override (hotfix sesión 2026-04-28)
+// -----------------------------------------------------------------------------
+// Por qué: Odoo 14 deriva el `$primary` de Bootstrap a través de la cadena
+// `$o-color-palettes` → `$o-base-color-palette` → ... en su pipeline
+// `web._assets_primary_variables`. El theme default es teal/turquesa
+// (#00A09D community), no el orange brand de Avanzosc (#E85D2F per §9.3).
+// Override directo del SCSS variable `$primary` antes del import de Bootstrap
+// requiere inyección en `_assets_primary_variables` con orden + dependencias
+// frágiles del chain Odoo, alto riesgo de side-effects en los `o-color-N`
+// que el resto del sitio (snippets oficiales, admin chrome) puede asumir.
+//
+// Solución pragmática (autorizada en briefing): override directo del
+// selector `.btn-primary` aquí, en assets_frontend. Como assets_frontend
+// carga DESPUÉS de la cadena Bootstrap+Odoo, el orden de fuente gana sin
+// necesidad de `!important`.
+//
+// Scope: solo afecta al frontend público (assets_frontend bundle no carga
+// en backend/admin). El admin chrome conserva su teal nativo.
+// -----------------------------------------------------------------------------
+// Compound `.btn.btn-primary` (specificity 0,2,0) en lugar de `.btn-primary`
+// solo (0,1,0) — Odoo define reglas con el mismo bg teal en selectors
+// compuestos como `.navbar-light .btn-primary` (0,2,0) y `.o_cc1 .btn-primary`
+// que ganan por especificidad sobre un `.btn-primary` plano. Con `.btn.btn-primary`
+// igualamos su especificidad y ganamos por orden de carga (assets_frontend
+// nuestro va después en el bundle).
+.btn.btn-primary {
+    background-color: var(--brand-primary, #E85D2F);
+    border-color: var(--brand-primary, #E85D2F);
+
+    &:hover,
+    &:focus {
+        background-color: var(--brand-primary-dark, #C44015);
+        border-color: var(--brand-primary-dark, #C44015);
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+        background-color: var(--brand-primary-dark, #C44015);
+        border-color: var(--brand-primary-dark, #C44015);
+    }
+
+    &:disabled,
+    &.disabled {
+        background-color: var(--brand-primary, #E85D2F);
+        border-color: var(--brand-primary, #E85D2F);
+    }
+}
+
+// .btn-outline-primary: variante outline (consistencia visual).
+.btn.btn-outline-primary {
+    color: var(--brand-primary, #E85D2F);
+    border-color: var(--brand-primary, #E85D2F);
+
+    &:hover,
+    &:focus {
+        background-color: var(--brand-primary, #E85D2F);
+        border-color: var(--brand-primary, #E85D2F);
+        color: var(--neutral-0, #FFFFFF);
+    }
+}
