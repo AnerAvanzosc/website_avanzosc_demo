@@ -3,11 +3,12 @@
 
 Exposes the wrapper `_post_init_main` invoked from __manifest__.py via
 'post_init_hook'. The wrapper composes:
+  - post_init_setup_languages (activate ES + EU, bind to website 1, D10)
   - post_init_menu_hierarchy (Soluciones dropdown children, D7)
   - post_init_remove_odoo_defaults (cleanup of Odoo default top-level
     menus, D8)
 
-See CLAUDE.md §11 D7 and §11 D8 for the architectural reasons.
+See CLAUDE.md §11 D7, D8, D10 for the architectural reasons.
 """
 
 from odoo import api, SUPERUSER_ID
@@ -28,6 +29,12 @@ _SOLUCIONES_NAME = "Soluciones sectoriales"
 # Top-level URLs that Odoo seeds per-website by default and that we don't
 # want in the new site nav. Cleanup goes via Menu.unlink() cascade (D8).
 _ODOO_DEFAULT_MENU_URLS = ("/shop", "/blog", "/slides", "/contactus")
+
+# Languages required by the website per spec D1 (ES + EU). The language
+# setup hook ensures both are activated and bound to website 1 with
+# es_ES as default. See CLAUDE.md §11 D10.
+_REQUIRED_LANG_CODES = ("es_ES", "eu_ES")
+_DEFAULT_LANG_CODE = "es_ES"
 
 
 def post_init_menu_hierarchy(cr, registry):
@@ -173,15 +180,99 @@ def post_init_remove_odoo_defaults(cr, registry):
         dummy.unlink()
 
 
+def post_init_setup_languages(cr, registry):
+    """Activate required languages and bind them to website 1.
+
+    Why this exists (CLAUDE.md §11 D10):
+        Spec D1 requires ES + EU as active site languages. In a fresh
+        install on a new database, `eu_ES` defaults to `active=False`
+        in `res.lang` and `website.language_ids` defaults to whatever
+        was active at website creation time (typically just `en_US`).
+        Without intervention, the site would render only English on
+        a fresh install.
+
+        We set this up imperatively at install time via this hook
+        instead of using a `data/website_config.xml` with
+        `<function model="res.lang" name="load_lang">` because:
+          (a) the rest of our setup-operacional logic already lives
+              in hooks (D7 menu hierarchy, D8 default cleanup) — same
+              hooks.py file is the natural home for «what the website
+              needs to look like after install».
+          (b) `load_lang` xml-data semantics are fragile when the lang
+              is already partially loaded (e.g. on -u after manual
+              shell activation), requiring `noupdate=1` and exception
+              handling. The imperative search-and-write here is
+              idempotent without that fragility.
+
+    Three idempotent steps:
+        1. Activate `es_ES` and `eu_ES` in `res.lang` if not already
+           active. Uses `with_context(active_test=False)` so we find
+           inactive entries (search() with no context filters them out).
+        2. Ensure `website.language_ids` for website 1 includes both
+           langs (no-op if already there).
+        3. Ensure `website.default_lang_id` for website 1 is `es_ES`
+           (no-op if already so).
+
+    Idempotency:
+        - res.lang.write({'active': True}) is no-op if already True.
+        - language_ids is many2many; we union with existing.
+        - default_lang_id is m2o; we only write if differs.
+        Re-running from shell or post_init is safe.
+
+    Limitation:
+        Only website id=1 is configured. If the BBDD has multiple
+        websites, additional ones keep their own config. Acceptable
+        for v1 (single website per CLAUDE.md §11 «Decisión D1»);
+        revisit if multi-website returns in scope.
+    """
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    Lang = env["res.lang"].with_context(active_test=False)
+
+    # Step 1: activate the required languages in res.lang.
+    for code in _REQUIRED_LANG_CODES:
+        lang = Lang.search([("code", "=", code)], limit=1)
+        if lang and not lang.active:
+            lang.write({"active": True})
+        elif not lang:
+            # Lang record doesn't exist yet — load it. Odoo's load_lang
+            # creates the res.lang record with active=True. Defensive:
+            # only invoked if search-then-update path didn't find it.
+            env["res.lang"].load_lang(code)
+
+    # Step 2 + 3: bind to website id=1 (default for the v1 site).
+    website = env["website"].browse(1)
+    if not website.exists():
+        return
+
+    es_lang = Lang.search([("code", "=", _DEFAULT_LANG_CODE)], limit=1)
+    eu_lang = Lang.search([("code", "=", "eu_ES")], limit=1)
+    if not (es_lang and eu_lang):
+        return  # Lang setup failed earlier; bail out.
+
+    target_lang_ids = es_lang | eu_lang
+    current_lang_ids = website.language_ids
+    missing = target_lang_ids - current_lang_ids
+    if missing:
+        website.write({"language_ids": [(4, lang.id) for lang in missing]})
+
+    if website.default_lang_id != es_lang:
+        website.write({"default_lang_id": es_lang.id})
+
+
 def _post_init_main(cr, registry):
     """Wrapper invoked by manifest 'post_init_hook'.
 
-    Composes the two post-init sub-logics in deterministic order:
-      1. post_init_menu_hierarchy — Soluciones dropdown children (D7).
-      2. post_init_remove_odoo_defaults — cleanup of Odoo defaults (D8).
+    Composes the three post-init sub-logics in deterministic order:
+      1. post_init_setup_languages — activate ES + EU and bind to
+         website 1 with ES as default (D10).
+      2. post_init_menu_hierarchy — Soluciones dropdown children (D7).
+      3. post_init_remove_odoo_defaults — cleanup of Odoo defaults (D8).
 
-    Order is independent: Soluciones children live under our own menu;
-    cleanup targets unrelated URLs. Either order yields the same end state.
+    Languages run first because the menu hierarchy hook iterates over
+    `env['website'].search([])` and consults `website.menu_id` per site.
+    Having languages set up first ensures consistent state for any
+    subsequent translation work that the menu hook might trigger.
     """
+    post_init_setup_languages(cr, registry)
     post_init_menu_hierarchy(cr, registry)
     post_init_remove_odoo_defaults(cr, registry)

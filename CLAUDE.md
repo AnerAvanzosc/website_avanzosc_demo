@@ -472,6 +472,24 @@ Las 6 decisiones siguientes (D1-D6) se cerraron en la sesión de revisión del s
 
 - [x] **D7 — Setup de menús vía `post_init_hook` Python**. El XML data declarativo NO funciona para sub-jerarquías de menú en Odoo 14 multi-website. Concretamente: `Menu.create()` en `addons/website/models/website_menu.py:80-99` aplana `parent_id` al `top_menu` de cada website cuando crea las copias per-website desde `Default Main Menu`, ignorando el `parent_id` declarado. Solo respeta el parent si es exactamente `default_menu.id` (raíz). Por tanto, los 7 records top-level con `parent_id=ref(website.main_menu)` SÍ funcionan vía XML; pero los 4 hijos del dropdown «Soluciones sectoriales» (Industrial, Distribución, Servicios, Academias) requieren creación vía `post_init_hook` con `website_id` explícito en `vals` — eso hace que `Menu.create()` tome la primera rama (`if 'website_id' in vals`) que preserva `parent_id` correctamente. Hook idempotente (búsqueda por `name + parent_id + website_id` antes de crear) — múltiples `-u` no duplican. Trade-off aceptado: rompe la promesa «sin `models/` en v1» del spec §3.2 (ahora hay un `hooks.py` ligero), pero la alternativa (XML con búsqueda dinámica del Soluciones-en-website-N) era más frágil. **Validación**: descubierto durante implementación de Task 1.1, decisión de sesión 2026-04-28: «C.1 con cleanup manual». Detalle del bug arquitectural en commit `[REVERT] task 1.1 (c08f3ba)`. Implementación en commit `[FEAT] task 1.1 (C.1)`.
 
+- [x] **D10 — Setup de idiomas vía operación imperativa + `post_init_hook`** (no `data/website_config.xml`). Spec D1 fija ES + EU como idiomas activos. En instalaciones fresh sobre BBDD nuevas, el `post_init_setup_languages` (en `hooks.py`, parte del wrapper `_post_init_main`) se encarga imperativamente de:
+
+  1. Activar `es_ES` y `eu_ES` en `res.lang` si no están activos. Búsqueda con `with_context(active_test=False)` para encontrar registros inactivos. Si el record no existe (lang no instalado), `env['res.lang'].load_lang(code)` lo crea.
+  2. Asegurar que `website.language_ids` del website id=1 incluya ambos langs vía `(4, lang.id)` (m2m union).
+  3. Asegurar que `website.default_lang_id` del website id=1 sea `es_ES` (write only si differs).
+
+  Idempotente: `write({'active': True})` es no-op si ya está True; m2m union no duplica; default_lang write solo se aplica si difiere. Re-runs vía shell o post_init son seguros.
+
+  **Por qué imperativo + hook en lugar de declarativo `data/website_config.xml`**:
+
+  - Coherencia con D7 (menú via hook) y D8 (cleanup defaults via hook): el resto de nuestro «setup operacional del website» ya vive en `hooks.py`. Una sola fuente para «cómo debe quedar el sitio tras instalar».
+  - Robustez: `<function model="res.lang" name="load_lang">` en XML data es frágil cuando el lang ya está parcialmente cargado (e.g. tras `-u` después de activación manual via shell). Requiere `noupdate=1` y manejo de excepciones. La búsqueda imperativa search-and-write aquí es idempotente sin esa fragilidad.
+  - Pre-existencia en BBDD productiva: en sesión 2026-04-28 (Task 1.2 round) se activó EU imperativamente vía `odoo-bin shell` antes de que existiera este hook. Aceptar esa activación retroactivamente y formalizar via hook para futuras instalaciones fresh.
+
+  **Limitación**: solo configura website id=1. Si el BBDD tuviera múltiples websites (no es el caso en v1), los demás conservarían su config. Aceptable per «single website» en v1.
+
+  **Validación**: implementado en Task 2.1 retroactiva (sesión 2026-04-28). El hook se invoca como primer paso del `_post_init_main` antes de `post_init_menu_hierarchy` y `post_init_remove_odoo_defaults`.
+
 - [x] **D9 — Estrategia i18n: ES como source en QWeb, traducciones EU vía `i18n/eu.po`, sin `.pot`**. Spec D1 fija ES + EU como idiomas activos del sitio. Implementación canónica:
 
   - **Source language**: castellano (`es_ES`) hardcoded en los nodos QWeb (e.g. `<h5>Soluciones</h5>`). Odoo extrae automáticamente el contenido textual de los nodos QWeb como traducible (default behavior — no hace falta atributo opt-in tipo `t-translate="on"`). Para neutralizar una string específica de la traducción, usar `t-translation="off"` en ese nodo.
