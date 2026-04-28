@@ -119,3 +119,24 @@ msgstr "Pribatutasun Politika"
 #, fuzzy
 msgid "Política de Cookies"
 msgstr "Cookieen Politika"
+
+# DRAFT - REVIEW NEEDED — Task 2.2: menu top-level (data/menu.xml + paginas)
+#. module: website_avanzosc_demo
+#: model:website.menu,name:website_avanzosc_demo.menu_inicio
+#, fuzzy
+msgid "Inicio"
+msgstr "Hasiera"
+
+# DRAFT - REVIEW NEEDED — Task 2.2: menu top-level
+#. module: website_avanzosc_demo
+#: model:website.menu,name:website_avanzosc_demo.menu_tienda
+#, fuzzy
+msgid "Tienda"
+msgstr "Denda"
+
+# DRAFT - REVIEW NEEDED — Task 2.2: menu top-level
+#. module: website_avanzosc_demo
+#: model:website.menu,name:website_avanzosc_demo.menu_formacion
+#, fuzzy
+msgid "Formación"
+msgstr "Formakuntza"
