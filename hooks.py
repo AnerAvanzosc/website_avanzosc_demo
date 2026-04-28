@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 """Module-level install/upgrade hooks for website_avanzosc_demo.
 
-Currently provides only `post_init_menu_hierarchy`, invoked from
-__manifest__.py via 'post_init_hook'. See CLAUDE.md §11 D7 for the
-architectural reason this exists instead of pure XML data.
+Exposes the wrapper `_post_init_main` invoked from __manifest__.py via
+'post_init_hook'. The wrapper composes:
+  - post_init_menu_hierarchy (Soluciones dropdown children, D7)
+  - post_init_remove_odoo_defaults (cleanup of Odoo default top-level
+    menus, D8)
+
+See CLAUDE.md §11 D7 and §11 D8 for the architectural reasons.
 """
 
 from odoo import api, SUPERUSER_ID
@@ -20,6 +24,10 @@ _SOLUCIONES_CHILDREN = (
 )
 
 _SOLUCIONES_NAME = "Soluciones sectoriales"
+
+# Top-level URLs that Odoo seeds per-website by default and that we don't
+# want in the new site nav. Cleanup goes via Menu.unlink() cascade (D8).
+_ODOO_DEFAULT_MENU_URLS = ("/shop", "/blog", "/slides", "/contactus")
 
 
 def post_init_menu_hierarchy(cr, registry):
@@ -94,3 +102,86 @@ def post_init_menu_hierarchy(cr, registry):
                     "sequence": sequence,
                 }
             )
+
+
+def post_init_remove_odoo_defaults(cr, registry):
+    """Remove Odoo's per-website default top-level menus (Shop, Blog,
+    Courses, Contact us) from each website's nav, while preserving the
+    originals in Default Main Menu (which carry core xml_ids and must
+    stay installable for the parent modules website_sale / website_slides
+    / website to keep working).
+
+    Why this is a Python hook instead of XML data:
+        XML data files cannot delete records they don't own (the per-
+        website copies have no own xml_id; only the Default Main Menu
+        originals do). We therefore use Menu.unlink()'s cascade-by-URL
+        mechanic from a Python hook.
+
+    Cascade mechanic (D8):
+        addons/website/models/website_menu.py:105-113 — when unlink() is
+        called on a menu whose parent is Default Main Menu, the ORM also
+        searches for `website.menu` records matching the same URL with
+        `website_id != False` and unlinks them too. The originals in
+        Default Main Menu have `website_id = False` so they are NEVER
+        matched by the cascade — only the per-website copies are.
+
+    Pattern:
+        For each URL we want gone, create a dummy under Default Main Menu
+        with that URL and immediately unlink it. The cascade then removes
+        every per-website copy sharing the URL.
+
+        Note on Menu.create() side-effect: the create() else branch
+        (website_menu.py:86-97) spawns one record per website (parent =
+        website.menu_id) plus one in Default Main Menu. The unlink()
+        cascade then sweeps every website_id != False match — including
+        the freshly-spawned per-website copies. End state is the same as
+        if no transient copies had been created.
+
+    Idempotency:
+        Skip URLs that have no per-website copy left. Safe to re-run from
+        an Odoo shell without creating-and-deleting transient records.
+
+    Limitation (CLAUDE.md §11 D8):
+        If a future `-u <core_module>` (e.g. `-u website_sale`) runs
+        WITHOUT also updating `website_avanzosc_demo`, Odoo's data files
+        re-create the website-specific copies of /shop etc. and they
+        re-appear. Mitigation: always upgrade `website_avanzosc_demo`
+        together with any of {website, website_sale, website_slides}.
+    """
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    Menu = env["website.menu"]
+    default_menu = env.ref("website.main_menu", raise_if_not_found=False)
+    if not default_menu:
+        return
+
+    for url in _ODOO_DEFAULT_MENU_URLS:
+        # Idempotency guard: only proceed if a per-website copy still exists.
+        existing = Menu.search(
+            [("url", "=", url), ("website_id", "!=", False)],
+            limit=1,
+        )
+        if not existing:
+            continue
+        dummy = Menu.create(
+            {
+                "name": "_avanzosc_cleanup_%s" % url.lstrip("/"),
+                "url": url,
+                "parent_id": default_menu.id,
+            }
+        )
+        # Cascade D8: unlink propagates to all per-website copies of `url`.
+        dummy.unlink()
+
+
+def _post_init_main(cr, registry):
+    """Wrapper invoked by manifest 'post_init_hook'.
+
+    Composes the two post-init sub-logics in deterministic order:
+      1. post_init_menu_hierarchy — Soluciones dropdown children (D7).
+      2. post_init_remove_odoo_defaults — cleanup of Odoo defaults (D8).
+
+    Order is independent: Soluciones children live under our own menu;
+    cleanup targets unrelated URLs. Either order yields the same end state.
+    """
+    post_init_menu_hierarchy(cr, registry)
+    post_init_remove_odoo_defaults(cr, registry)

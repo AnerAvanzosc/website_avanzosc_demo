@@ -54,3 +54,30 @@ el layout `[Logo] [Menú con Soluciones▾] [Español▾] [Acceso clientes]`:
 - **Viewport:** 1280×800 px
 - **Module commit:** Task 1.2 HEAD (ver `git log`)
 - **Date:** 2026-04-28
+
+---
+
+## header-1280-post-defaults-cleanup.png
+
+**What it represents:** Home page del local Odoo 14 tras la **mini-tarea
+operacional de cleanup de menús default Odoo (D8.A.2)**. Comparado con
+`header-1280.png`, ya NO aparecen Shop ni Blog en el navbar de website 1.
+El navbar muestra exclusivamente nuestros 7 top-level: Inicio,
+Soluciones sectoriales (▾), Tienda, Formación, Conócenos + 2 ítems
+(Trabaja con nosotros, Contacto) que colapsan en `o_extra_menu_items`
+(comportamiento Bootstrap responsive a 1280px, pre-existente, no causado
+por la cleanup).
+
+Implementación: `hooks.post_init_remove_odoo_defaults` crea un dummy
+bajo Default Main Menu con la URL a eliminar (/shop, /blog, /slides,
+/contactus) y lo `unlink()`. Odoo dispara cascade-by-URL definida en
+`addons/website/models/website_menu.py:105-113`, que elimina todas las
+copias per-website con esa URL pero PRESERVA los originales en Default
+Main Menu (que tienen `website_id = NULL` y los xml_ids de core
+website_sale, website_blog, website_slides, website). Ver CLAUDE.md
+§11 D8 para el detalle del mecanismo.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px
+- **Module commit:** post-Task-1.2 cleanup HEAD (ver `git log`)
+- **Date:** 2026-04-28

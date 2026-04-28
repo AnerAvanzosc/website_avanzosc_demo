@@ -1,2 +1,2 @@
 from . import models
-from .hooks import post_init_menu_hierarchy
+from .hooks import _post_init_main
