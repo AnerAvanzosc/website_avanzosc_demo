@@ -24,6 +24,7 @@
         # (the QA progressive page) or future `views/pages/*.xml`.
         "views/snippets/pilares.xml",
         "views/snippets/sectores_grid.xml",
+        "views/snippets/cta_kit_consulting.xml",
         "views/test_snippets.xml",
     ],
     "installable": True,

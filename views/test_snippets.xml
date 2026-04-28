@@ -36,6 +36,8 @@
                         <t t-call="website_avanzosc_demo.s_avanzosc_pilares"/>
                         <!-- Task 3.2 — sectores grid 2x2. -->
                         <t t-call="website_avanzosc_demo.s_avanzosc_sectores"/>
+                        <!-- Task 3.3 — CTA Kit Consulting banner. -->
+                        <t t-call="website_avanzosc_demo.s_avanzosc_cta_kit_consulting"/>
                     </main>
                 </div>
             </t>

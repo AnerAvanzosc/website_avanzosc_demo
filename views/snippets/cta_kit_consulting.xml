@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Task 3.3 — s_avanzosc_cta_kit_consulting snippet.
+    Ref: spec §6.8, plan §3.3, CLAUDE.md §2 (Kit Consulting fuera del menú).
+
+    Banner CTA destacado sobre el programa Kit Consulting (subvención
+    Red.es para PYMEs, hasta 24.000€). Vive como sección puntual dentro
+    de la home; la landing /kit-consulting (que NO existe en v1) se crea
+    en Phase 6 como página ES-only per D5 (audiencia hispanohablante,
+    contenido temporal).
+
+    Background: brand-accent (#F5B800 yellow per CLAUDE.md §9.3,
+    «highlights puntuales, badge "Kit Digital"» — el mismo token está
+    pensado para esta familia de programas). Texto neutral-900 para
+    contraste AAA sobre el amarillo. CTA dark (btn-dark) — máximo
+    contraste y diferenciación de la btn-primary del resto del sitio.
+
+    Heading «Kit Consulting» NO se traduce (nombre propio del programa
+    estatal Red.es, idéntico ES/EU per decisión sesión 2026-04-28).
+    Subtítulo SÍ se traduce — DRAFT EU en eu.po per Q1.
+
+    Reveal: fade-in simple (opacity 0→1) sin stagger, 600ms expo.
+    Triggered via widget genérico AvanzoscReveal (`data-avanzosc-reveal`).
+
+    Link `/kit-consulting`: 404 hasta Phase 6 (esperado).
+
+    NO en builder (D4).
+-->
+<odoo>
+    <template id="s_avanzosc_cta_kit_consulting" name="Avanzosc · CTA Kit Consulting">
+        <section class="s_avanzosc_cta_kit" data-name="Avanzosc CTA Kit Consulting" data-avanzosc-reveal="">
+            <div class="container">
+                <div class="s_avanzosc_cta_kit_inner">
+                    <h2 class="s_avanzosc_cta_kit_heading">Kit Consulting</h2>
+                    <p class="s_avanzosc_cta_kit_text">Subvención de hasta 24.000€ para PYMEs. Asesoría especializada en Odoo industrial.</p>
+                    <a href="/kit-consulting" class="btn btn-dark btn-lg s_avanzosc_cta_kit_button">Consultar bases</a>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>
