@@ -60,6 +60,59 @@ odoo.define('website_avanzosc_demo.main', function (require) {
                 window.lucide.createIcons();
             }
 
+            // ----------------------------------------------------------------
+            // Sticky header — clase «is-scrolled» (Task 1.3)
+            // ----------------------------------------------------------------
+            // Sticky position lo proporciona el SCSS (_header.scss). Aquí
+            // solo añadimos/quitamos la clase `is-scrolled` cuando el scroll
+            // pasa de 100px en `#wrapwrap` (el elemento que realmente
+            // scrollea en Odoo 14 — html/body tienen overflow: hidden).
+            //
+            // Listener dual:
+            //   - Lenis activo (no reduced-motion): `lenis.on('scroll', cb)`
+            //     es el patrón canónico per la API de Lenis 1.0.42. El
+            //     callback recibe la instancia y leemos `lenis.scroll`. No
+            //     necesita rAF throttle propio — Lenis ya emite el evento al
+            //     ritmo del rAF interno.
+            //   - Reduced-motion (Lenis no instanciado, ver bloque arriba):
+            //     `#wrapwrap.addEventListener('scroll', ...)` nativo con
+            //     throttle rAF (1 frame ≈ 16ms). Leemos `wrapwrap.scrollTop`.
+            //
+            // Threshold = 100px (briefing 1.3). Transición visual la maneja
+            // el SCSS (padding + box-shadow, 250ms ease-out expo).
+            // ----------------------------------------------------------------
+            var headerEl = document.querySelector('header');
+            if (headerEl && wrapwrap) {
+                var SCROLL_THRESHOLD = 100;
+                var applyScrolledState = function (scrollValue) {
+                    headerEl.classList.toggle(
+                        'is-scrolled',
+                        scrollValue > SCROLL_THRESHOLD
+                    );
+                };
+                if (window.lenis && typeof window.lenis.on === 'function') {
+                    // Lenis canonical event — fires on smooth scroll animation.
+                    window.lenis.on('scroll', function (lenis) {
+                        applyScrolledState(lenis.scroll);
+                    });
+                    applyScrolledState(window.lenis.scroll);
+                } else {
+                    // Reduced-motion fallback: native scroll on wrapwrap with rAF.
+                    var ticking = false;
+                    var checkScroll = function () {
+                        ticking = false;
+                        applyScrolledState(wrapwrap.scrollTop);
+                    };
+                    wrapwrap.addEventListener('scroll', function () {
+                        if (!ticking) {
+                            ticking = true;
+                            window.requestAnimationFrame(checkScroll);
+                        }
+                    }, { passive: true });
+                    applyScrolledState(wrapwrap.scrollTop);
+                }
+            }
+
             return this._super.apply(this, arguments);
         },
     });

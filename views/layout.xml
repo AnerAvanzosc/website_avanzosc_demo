@@ -80,4 +80,35 @@
              producción y se actualiza junto con `website` cuando aplique. -->
         <field name="active" eval="False"/>
     </record>
+
+    <!-- ============================================================
+         Task 1.3 — Sticky header con estado «scrolled»
+         ============================================================ -->
+
+    <!-- Desactivar la opción de Odoo «Header Visibility Standard».
+         Por qué: el template añade la clase `o_header_standard` al header,
+         lo que dispara el widget `publicWidget.registry.StandardAffixedHeader`
+         (addons/website/static/src/js/content/menu.js:238) que aplica un
+         comportamiento incompatible con el spec de Task 1.3 — desliza el
+         header off-screen con `transform: translate(0, -100%)` cuando el
+         scroll supera la altura del header, y lo hace re-aparecer al pasar
+         `scrolledPoint` (300px por defecto). Spec §8.1 + briefing 1.3 piden
+         lo opuesto: el header se mantiene SIEMPRE visible (sticky) y solo
+         compacta padding + añade sombra al pasar ~100px.
+         Sin la clase, ningún widget de header animado matchea el selector,
+         y nuestro position:sticky CSS más el handler de scroll de main.js
+         operan limpiamente sin pelear con el framework.
+
+         Trade-off menor: perdemos `o_top_fixed_element` toggle (lo añade el
+         widget desactivado, lo consume el snippet `s_table_of_content` para
+         compensar el offset al hacer scroll a anchors). En v1 no hay TOC, no
+         impacta. Si en futuras tareas se necesita TOC, replicar la clase
+         desde nuestra propia lógica.
+
+         noupdate omitido por las mismas razones documentadas en
+         header_language_selector_flag (active=False persiste mientras nuestro
+         módulo se mantenga cargado y se actualice junto con `website`). -->
+    <record id="website.header_visibility_standard" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
 </odoo>

@@ -212,3 +212,69 @@ mobile (animaciones de apertura, full-screen overlay, etc.) viene después.
 - **Sesión:** pública (sin login)
 - **Module commit:** post-rename HEAD (ver `git log`)
 - **Date:** 2026-04-28
+
+---
+
+## header-sticky-top.png
+
+**What it represents:** Estado **inicial** del header sticky (Task 1.3) con
+`scroll = 0`. Sesión pública. El header está en su tamaño/aspecto original:
+`padding: 1rem` arriba/abajo, sin `box-shadow`. La clase `is-scrolled` NO
+está aplicada al `<header>`.
+
+**Notas técnicas del setup:**
+
+- `position: sticky; top: 0; z-index: 1020` aplicado al `<header>` vía
+  `_header.scss`. Sticky CSS-only: no necesita JS para mantenerse arriba.
+- Wrapper Odoo: el contenido se scrollea dentro de `#wrapwrap` (no window)
+  porque `html, body` tienen `overflow: hidden`. Lenis fue reconfigurado
+  para targetear `#wrapwrap` (Task 0.6 fix retroactivo).
+- Página de prueba: la home placeholder de Odoo es ~800px (un viewport
+  exacto), insuficiente para scroll real. Para esta verificación se inyectó
+  un spacer de 2000px en `<main>` vía Playwright eval; no es contenido
+  productivo, solo evidencia de comportamiento sticky/scrolled.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px
+- **Sesión:** pública (sin login)
+- **Module commit:** task 1.3 HEAD (ver `git log`)
+- **Date:** 2026-04-28
+
+---
+
+## header-sticky-scrolled.png
+
+**What it represents:** Estado **scrolled** del header sticky (Task 1.3)
+con `scroll = 200`. Sesión pública, mismo viewport y misma página de prueba
+que `header-sticky-top.png`.
+
+**Cambios visuales aplicados** (medidos en computed style tras la
+transición de 250ms):
+
+- `padding-top` y `padding-bottom`: `0.5rem` (= 8px). Era `1rem` (= 16px).
+- `box-shadow`: `0 2px 8px rgba(0, 0, 0, 0.08)`. Era `none`.
+- Tipografía y logo SIN cambios (per briefing Task 1.3 — solo padding y
+  sombra; cambiar font-size en scroll suele verse «cutre»).
+- Clase `is-scrolled` añadida al `<header>` por main.js.
+
+**Listener empleado** (rama según `prefers-reduced-motion`):
+
+- Caso normal (animaciones ON, Lenis instanciado): `lenis.on('scroll', cb)`.
+  El callback recibe la instancia y lee `lenis.scroll`. El throttle es
+  implícito — Lenis emite el evento al ritmo de su rAF interno.
+- Caso reduced-motion (Lenis no se inicializa): `wrapwrap.addEventListener
+  ('scroll', cb, {passive: true})` con throttle rAF (1 frame ≈ 16ms).
+  Lee `wrapwrap.scrollTop`. Verificado funcionando vía
+  `page.emulateMedia({ reducedMotion: 'reduce' })`.
+
+**Transición**: `cubic-bezier(0.16, 1, 0.3, 1)` (ease-out expo per
+CLAUDE.md §5), 250ms. Bajo `prefers-reduced-motion: reduce`, la transición
+se neutraliza vía `@include reduced-motion { transition: none }` →
+cambio de estado instantáneo, sticky sigue funcionando.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px
+- **Sesión:** pública (sin login)
+- **Scroll position:** 200 px (vía `lenis.scrollTo(200, { immediate: true })`)
+- **Module commit:** task 1.3 HEAD (ver `git log`)
+- **Date:** 2026-04-28
