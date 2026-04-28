@@ -22,6 +22,13 @@
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/_typography.scss"/>
+            <!-- Header desktop styles — Task 1.2.
+                 Después de _typography.scss (que define la escala tipográfica)
+                 y antes de main.scss (que puede sobrescribir con utilidades).
+                 Ref: CLAUDE.md §4 (SCSS orden), task 1.2 punto 5. -->
+            <link rel="stylesheet"
+                  type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/snippets/_header.scss"/>
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/main.scss"/>

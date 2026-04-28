@@ -30,3 +30,27 @@ de Industrial/Distribución/etc.
 - **Viewport:** 1280×800 px
 - **Module commit:** Task 1.1 C.1 HEAD (commit del [FEAT] post_init_hook, ver `git log`)
 - **Date:** 2026-04-28
+
+---
+
+## header-1280.png
+
+**What it represents:** Home page del local Odoo 14 tras **Task 1.2 (header
+desktop con botón Acceso clientes y selector ES|EU)**. Muestra el header con
+el layout `[Logo] [Menú con Soluciones▾] [Español▾] [Acceso clientes]`:
+
+- Botón «Acceso clientes» (clase `s_avanzosc_acceso_clientes`) en verde a la
+  derecha, href `/web/login` (provisional, bloqueo blando [?] #2 spec).
+- Selector de idioma «Español» con dropdown texto-solo (sin banderas),
+  activado vía `website.header_language_selector active=True` y
+  `website.header_language_selector_flag active=False`.
+- Sign in y User dropdown del navbar eliminados por xpath sobre
+  `website.template_header_default`.
+- Menu items visibles: Inicio, Shop, Soluciones sectoriales (▾), Tienda,
+  Blog, Formación. (Shop, Blog y los defaults de Odoo siguen en menú hasta
+  que se configuren en tareas posteriores.)
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px
+- **Module commit:** Task 1.2 HEAD (ver `git log`)
+- **Date:** 2026-04-28

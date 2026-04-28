@@ -14,6 +14,7 @@
     "data": [
         "views/assets.xml",
         "data/menu.xml",
+        "views/layout.xml",
     ],
     "installable": True,
     "application": False,

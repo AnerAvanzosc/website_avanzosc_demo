@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================
+         Task 1.2 — Header desktop layout
+         Scope: herencia sobre website.template_header_default para:
+           1. Reemplazar botón "Contact Us" por "Acceso clientes".
+           2. Eliminar Sign in / User dropdown del navbar_nav.
+           3. Activar el selector de idioma (text variant, sin flag).
+         Ref: CLAUDE.md §3, §4, §10; spec §8.1; task 1.2.
+         ============================================================ -->
+
+    <!-- 1. Botón «Acceso clientes» — override de oe_structure_header_default_1.
+         Hereda website.template_header_default_oe_structure_header_default_1,
+         que es el template que rellena la zona oe_structure con el botón
+         "Contact Us" estándar de Odoo. Lo reemplazamos con nuestro botón.
+         La clase s_avanzosc_acceso_clientes sirve de hook CSS en _header.scss.
+         href provisional: /web/login — URL final del portal pendiente [?] #2 spec.
+         Ref: CLAUDE.md §4 (IDs prefijados), task 1.2 punto 2. -->
+    <template id="header_acceso_clientes"
+              name="Header: Acceso clientes button"
+              inherit_id="website.template_header_default_oe_structure_header_default_1">
+        <!-- Reemplazamos el anchor «Contact Us» por «Acceso clientes».
+             Se mantiene la estructura oe_structure/section/container para no
+             romper el padding y la grilla del header por defecto. -->
+        <xpath expr="//a[@href='/contactus']" position="replace">
+            <!-- href provisional /web/login — bloqueo blando [?] #2 spec (URL portal). -->
+            <a href="/web/login"
+               class="btn btn-primary ml-4 s_avanzosc_acceso_clientes">
+                Acceso clientes
+            </a>
+        </xpath>
+    </template>
+
+    <!-- 2. Eliminar Sign in y User dropdown del navbar_nav.
+         Hereda website.template_header_default (que pone esas dos llamadas
+         dentro del bloque <t t-call="website.navbar_nav">).
+         Con «Acceso clientes» ya en la zona oe_structure_header_default_1
+         como botón destacado, no queremos duplicar el acceso al portal dentro
+         del nav. Se eliminan ambas llamadas.
+         Ref: CLAUDE.md §10 (no duplicar accesos), task 1.2 punto 3. -->
+    <template id="header_remove_portal_nav_items"
+              name="Header: remove Sign in and User dropdown from nav"
+              inherit_id="website.template_header_default">
+        <!-- Eliminar placeholder Sign in del navbar. portal.placeholder_user_sign_in
+             muestra el enlace «Sign in» solo cuando el visitante no está
+             autenticado; con el botón «Acceso clientes» cubrimos ese caso. -->
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']"
+               position="replace"/>
+        <!-- Eliminar portal.user_dropdown del navbar: el dropdown de usuario
+             autenticado. Los usuarios con portal tienen acceso desde el menú
+             de My Account vía /web/login o /my/home. -->
+        <xpath expr="//t[@t-call='portal.user_dropdown']"
+               position="replace"/>
+    </template>
+
+    <!-- 3a. Activar header_language_selector (dropdown text variant).
+          El template website.header_language_selector hereda de
+          website.placeholder_header_language_selector y, cuando active=True,
+          inyecta el widget dropdown de idiomas en el header.
+          Estaba active=False en la instalación base. Lo activamos aquí.
+          Ref: CLAUDE.md §4 (record con xml_id externo), task 1.2 punto 4. -->
+    <record id="website.header_language_selector" model="ir.ui.view">
+        <!-- Activar el selector de idioma (dropdown text) en el header. -->
+        <field name="active" eval="True"/>
+    </record>
+
+    <!-- 3b. Desactivar header_language_selector_flag.
+          Este template hijo añade banderas al selector. Con active=False
+          el selector mostrará solo texto (ES / Euskara) sin iconos de bandera.
+          Ref: task 1.2 punto 4 (text variant, sin flag). -->
+    <record id="website.header_language_selector_flag" model="ir.ui.view">
+        <!-- Desactivar variante de bandera: queremos texto limpio, no flags. -->
+        <field name="active" eval="False"/>
+    </record>
+</odoo>
