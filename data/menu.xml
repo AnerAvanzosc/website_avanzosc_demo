@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- noupdate omitido deliberadamente: menús gestionados solo por código per CLAUDE.md §10
-     («NO tocar el Website Builder, todo por código»). El XML es fuente canónica;
-     cada `-u website_avanzosc_demo` re-aplica los records, sobrescribiendo cualquier
-     edición visual hecha desde Settings → Website. Si en el futuro se decide permitir
-     gestión de menús desde el builder, añadir `<data noupdate="1">` envolviendo los
-     records y replantear esta nota. -->
 <odoo>
     <!-- Menu principal ES — Task 1.1 -->
     <!-- 7 items top-level + 4 hijos bajo Soluciones sectoriales = 11 entradas -->
