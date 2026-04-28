@@ -23,6 +23,7 @@
         # template invoked via `t-call` from `views/test_snippets.xml`
         # (the QA progressive page) or future `views/pages/*.xml`.
         "views/snippets/pilares.xml",
+        "views/snippets/sectores_grid.xml",
         "views/test_snippets.xml",
     ],
     "installable": True,

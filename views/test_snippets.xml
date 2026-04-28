@@ -34,6 +34,8 @@
 
                         <!-- Task 3.1 — pilares. -->
                         <t t-call="website_avanzosc_demo.s_avanzosc_pilares"/>
+                        <!-- Task 3.2 — sectores grid 2x2. -->
+                        <t t-call="website_avanzosc_demo.s_avanzosc_sectores"/>
                     </main>
                 </div>
             </t>

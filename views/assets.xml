@@ -43,6 +43,9 @@
                   href="/website_avanzosc_demo/static/src/scss/snippets/_pilares.scss"/>
             <link rel="stylesheet"
                   type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/snippets/_sectores.scss"/>
+            <link rel="stylesheet"
+                  type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/main.scss"/>
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/main.js"/>
@@ -50,6 +53,12 @@
                  se añade tras su SCSS (orden Phase 3 1.X). -->
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/snippets/pilares.js"/>
+            <!-- Generic reveal-on-scroll widget (selector
+                 [data-avanzosc-reveal]). Compartido por 3.2, 3.3, 3.4 y
+                 futuras tareas que solo necesiten toggle de .is-revealed
+                 al entrar en viewport. Ver reveal.js docstring. -->
+            <script type="text/javascript"
+                    src="/website_avanzosc_demo/static/src/js/snippets/reveal.js"/>
         </xpath>
     </template>
 

@@ -51,35 +51,38 @@ msgstr "Enpresa"
 msgid "Legal"
 msgstr "Legala"
 
-# DRAFT - REVIEW NEEDED — link footer columna Soluciones + dropdown child
-# sectorial (xml_id registrado por post_init_menu_hierarchy en hooks.py).
+# DRAFT - REVIEW NEEDED — heading sector + footer link + dropdown child
 #. module: website_avanzosc_demo
 #: model:website.menu,name:website_avanzosc_demo.menu_industrial
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sectores
 #, fuzzy
 msgid "Industrial"
 msgstr "Industriala"
 
-# DRAFT - REVIEW NEEDED — link footer columna Soluciones + dropdown child
+# DRAFT - REVIEW NEEDED — heading sector + footer link + dropdown child
 #. module: website_avanzosc_demo
 #: model:website.menu,name:website_avanzosc_demo.menu_distribucion
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sectores
 #, fuzzy
 msgid "Distribución"
 msgstr "Banaketa"
 
-# DRAFT - REVIEW NEEDED — link footer columna Soluciones + dropdown child
+# DRAFT - REVIEW NEEDED — heading sector + footer link + dropdown child
 #. module: website_avanzosc_demo
 #: model:website.menu,name:website_avanzosc_demo.menu_servicios
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sectores
 #, fuzzy
 msgid "Servicios"
 msgstr "Zerbitzuak"
 
-# DRAFT - REVIEW NEEDED — link footer columna Soluciones + dropdown child
+# DRAFT - REVIEW NEEDED — heading sector + footer link + dropdown child
 #. module: website_avanzosc_demo
 #: model:website.menu,name:website_avanzosc_demo.menu_academias
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sectores
 #, fuzzy
 msgid "Academias"
 msgstr "Akademiak"
@@ -171,4 +174,32 @@ msgstr "Argitaratutako moduluak, asko OCAn."
 #, fuzzy
 msgid "Ingenieras y mayoría femenina."
 msgstr "Ingeniariak eta emakume gehienak."
+
+# DRAFT - REVIEW NEEDED — Task 3.2 sectores 1-line industrial.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sectores
+#, fuzzy
+msgid "Producción, MES, trazabilidad, mantenimiento."
+msgstr "Ekoizpena, MES, trazabilitatea, mantentze-lana."
+
+# DRAFT - REVIEW NEEDED — Task 3.2 sectores 1-line distribución.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sectores
+#, fuzzy
+msgid "Almacenes, picking, rutas, multi-canal."
+msgstr "Biltegiak, picking-a, ibilbideak, multi-kanala."
+
+# DRAFT - REVIEW NEEDED — Task 3.2 sectores 1-line servicios.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sectores
+#, fuzzy
+msgid "Proyectos, partes, facturación recurrente."
+msgstr "Proiektuak, parteak, fakturazio errepikakorra."
+
+# DRAFT - REVIEW NEEDED — Task 3.2 sectores 1-line academias.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sectores
+#, fuzzy
+msgid "Matrículas, calendarios, evaluaciones, formación online."
+msgstr "Matrikulak, egutegiak, ebaluazioak, online prestakuntza."
 

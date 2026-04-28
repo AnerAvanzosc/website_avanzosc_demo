@@ -1,0 +1,148 @@
+// =============================================================================
+// _sectores.scss — Estilos del snippet s_avanzosc_sectores (Task 3.2).
+// Scope: grid 2x2 con cards clickeables + hover lift + reveal IO.
+// Ref: spec §6.3, CLAUDE.md §5 (transform/opacity), §9.4 (Space Grotesk).
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Sección sectores
+// -----------------------------------------------------------------------------
+// Background blanco (--neutral-0). Alterno con --neutral-100 de pilares
+// (sección anterior en home funnel) — ritmo visual claro/levísimo.
+// Padding 5rem desktop / 3rem mobile (mismo ritmo que pilares).
+// -----------------------------------------------------------------------------
+.s_avanzosc_sectores {
+    background-color: var(--neutral-0, #FFFFFF);
+    padding: 5rem 0;
+
+    @media (max-width: 767.98px) {
+        padding: 3rem 0;
+    }
+
+    .row {
+        // gap entre cards horizontal y vertical en mobile (apilado).
+        // Bootstrap row tiene gutter por defecto via cols margin/padding;
+        // aquí añadimos row-gap específico para el caso 2x2 + 1x4.
+        row-gap: 1.5rem;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Card individual (cada celda del grid)
+// -----------------------------------------------------------------------------
+// Card clickeable (anchor wrapping todo el bloque). Padding generoso para
+// crear sensación de bloque sustantivo. Border 1px sutil + radius para
+// definir la card sin agresividad — sobre fondo blanco, el border es la
+// única separación visual.
+//
+// Reset de estilos default del anchor (color, decoration) — el card es la
+// superficie clickeable, no un texto-link visualmente.
+//
+// Estado base: opacity 0 + translateY 20px (initial reveal hidden).
+// Estado .is-revealed: opacity 1 + transform identity, con stagger via
+// :nth-child + transition-delay (mismo patrón que pilares Task 3.1).
+// -----------------------------------------------------------------------------
+.s_avanzosc_sectores_card {
+    display: block;
+    background-color: var(--neutral-0, #FFFFFF);
+    border: 1px solid var(--neutral-300, #D3D7DC);
+    border-radius: 8px;
+    padding: 2rem;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;  // Cards en la misma row tienen igual altura aunque texto difiera.
+
+    // Reveal initial state.
+    opacity: 0;
+    transform: translateY(20px);
+    // Combina las dos transiciones (reveal: opacity+transform 600ms expo,
+    // hover: transform+shadow 200ms expo) en una sola declaración. Las
+    // duraciones difieren entre propiedades — opacity solo en reveal,
+    // shadow solo en hover, transform en ambos.
+    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+                transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
+
+    // Hover: lift + shadow. Solo transform y box-shadow per CLAUDE.md §5
+    // (animación GPU-friendly, no afecta layout).
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        border-color: var(--brand-primary, #E85D2F);
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Reveal staggered (4 cards × 100ms = 0/100/200/300ms total stagger)
+// -----------------------------------------------------------------------------
+.s_avanzosc_sectores.is-revealed {
+    .col-12:nth-child(1) .s_avanzosc_sectores_card {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0ms, 0ms, 0ms, 0ms;
+    }
+    .col-12:nth-child(2) .s_avanzosc_sectores_card {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 100ms, 0ms, 0ms, 0ms;
+    }
+    .col-12:nth-child(3) .s_avanzosc_sectores_card {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 200ms, 0ms, 0ms, 0ms;
+    }
+    .col-12:nth-child(4) .s_avanzosc_sectores_card {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 300ms, 0ms, 0ms, 0ms;
+    }
+    // El transition-delay de 4 valores aplica a las 4 propiedades
+    // listadas en transition (opacity, transform, box-shadow, border-color)
+    // en orden. Solo opacity recibe stagger de entrada; transform/shadow/
+    // border-color en 0ms para que el hover responda inmediato post-reveal.
+}
+
+// -----------------------------------------------------------------------------
+// Heading sector (Space Grotesk 600, ~28px H3 spec)
+// -----------------------------------------------------------------------------
+.s_avanzosc_sectores_heading {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.75rem;  // ~28px (CLAUDE.md §9.4 H3)
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--neutral-900, #0F1419);
+    margin-bottom: 0.75rem;
+}
+
+// -----------------------------------------------------------------------------
+// 1-line descripción
+// -----------------------------------------------------------------------------
+.s_avanzosc_sectores_text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--neutral-700, #3A4149);
+    margin: 0;
+}
+
+// -----------------------------------------------------------------------------
+// prefers-reduced-motion: hover y reveal sin animación.
+// -----------------------------------------------------------------------------
+.s_avanzosc_sectores {
+    @include reduced-motion {
+        .s_avanzosc_sectores_card {
+            opacity: 1;
+            transform: none;
+            transition: none;
+
+            &:hover,
+            &:focus {
+                transform: none;
+            }
+        }
+    }
+}

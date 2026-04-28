@@ -1,0 +1,20 @@
+  for node in self.document.traverse(nodes.system_message):
+ 
+2026-04-28 12:05:07,247 92408 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/assets.xml 
+2026-04-28 12:05:07,292 92408 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/data/menu.xml 
+2026-04-28 12:05:07,314 92408 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/data/redirects.xml 
+2026-04-28 12:05:07,320 92408 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/layout.xml 
+2026-04-28 12:05:07,430 92408 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/snippets/pilares.xml 
+2026-04-28 12:05:07,441 92408 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/snippets/sectores_grid.xml 
+2026-04-28 12:05:07,450 92408 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/test_snippets.xml 
+2026-04-28 12:05:07,452 92408 INFO odoo14_community odoo.modules.loading: Module website_avanzosc_demo: loading demo 
+2026-04-28 12:05:07,456 92408 INFO odoo14_community odoo.addons.base.models.ir_translation: module website_avanzosc_demo: loading base translation file eu for language eu_ES 
+2026-04-28 12:05:07,456 92408 INFO odoo14_community odoo.tools.translate: loading /opt/odoo/v14/workspace/website_avanzosc_demo/i18n/eu.po 
+2026-04-28 12:05:07,467 92408 INFO odoo14_community odoo.addons.base.models.ir_translation: module website_avanzosc_demo: no translation for language eu_ES 
+2026-04-28 12:05:07,467 92408 INFO odoo14_community odoo.addons.base.models.ir_translation: module website_avanzosc_demo: no translation for language es 
+2026-04-28 12:05:07,482 92408 INFO odoo14_community odoo.modules.loading: Module website_avanzosc_demo loaded in 0.70s, 366 queries 
+2026-04-28 12:05:07,482 92408 INFO odoo14_community odoo.modules.loading: 59 modules loaded in 1.12s, 382 queries (+0 extra) 
+2026-04-28 12:05:07,959 92408 INFO odoo14_community odoo.modules.loading: Modules loaded. 
+2026-04-28 12:05:07,962 92408 INFO odoo14_community odoo.service.server: Initiating shutdown 
+2026-04-28 12:05:07,962 92408 INFO odoo14_community odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-04-28 12:05:07,963 92408 INFO odoo14_community odoo.sql_db: ConnectionPool(used=0/count=0/max=64): Closed 1 connections  

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Task 3.2 — s_avanzosc_sectores snippet.
+    Ref: spec §6.3, plan §3.2, CLAUDE.md §3 (4 sectoriales del menú).
+
+    Grid 2x2 desktop / 1x4 mobile via Bootstrap col-12 col-md-6.
+    Cada celda es un card clickeable que linka a la página sectorial
+    correspondiente (el slug ES del menú: /industrial, /distribucion,
+    /servicios, /academias). Las páginas no existen como `website.page`
+    todavía — Phase 5 las crea — por lo que en v1 los links 404. Esperado.
+
+    Hover: lift sutil (translateY(-4px) + shadow), transición 200ms
+    cubic-bezier(0.16, 1, 0.3, 1). Mixin reduced-motion neutraliza.
+
+    Reveal de entrada via widget genérico AvanzoscReveal
+    (`data-avanzosc-reveal` en el <section>): añade `.is-revealed` al
+    entrar 20% en viewport. SCSS aplica stagger 100ms a las 4 cards via
+    :nth-child + transition-delay (mismo patrón que pilares).
+
+    NO en builder (D4).
+-->
+<odoo>
+    <template id="s_avanzosc_sectores" name="Avanzosc · Sectores">
+        <section class="s_avanzosc_sectores" data-name="Avanzosc Sectores" data-avanzosc-reveal="">
+            <div class="container">
+                <div class="row">
+                    <!-- Industrial. -->
+                    <div class="col-12 col-md-6">
+                        <a href="/industrial" class="s_avanzosc_sectores_card">
+                            <h3 class="s_avanzosc_sectores_heading">Industrial</h3>
+                            <p class="s_avanzosc_sectores_text">Producción, MES, trazabilidad, mantenimiento.</p>
+                        </a>
+                    </div>
+                    <!-- Distribución. -->
+                    <div class="col-12 col-md-6">
+                        <a href="/distribucion" class="s_avanzosc_sectores_card">
+                            <h3 class="s_avanzosc_sectores_heading">Distribución</h3>
+                            <p class="s_avanzosc_sectores_text">Almacenes, picking, rutas, multi-canal.</p>
+                        </a>
+                    </div>
+                    <!-- Servicios. -->
+                    <div class="col-12 col-md-6">
+                        <a href="/servicios" class="s_avanzosc_sectores_card">
+                            <h3 class="s_avanzosc_sectores_heading">Servicios</h3>
+                            <p class="s_avanzosc_sectores_text">Proyectos, partes, facturación recurrente.</p>
+                        </a>
+                    </div>
+                    <!-- Academias. -->
+                    <div class="col-12 col-md-6">
+                        <a href="/academias" class="s_avanzosc_sectores_card">
+                            <h3 class="s_avanzosc_sectores_heading">Academias</h3>
+                            <p class="s_avanzosc_sectores_text">Matrículas, calendarios, evaluaciones, formación online.</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>
