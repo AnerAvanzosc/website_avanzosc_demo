@@ -278,3 +278,75 @@ cambio de estado instantáneo, sticky sigue funcionando.
 - **Scroll position:** 200 px (vía `lenis.scrollTo(200, { immediate: true })`)
 - **Module commit:** task 1.3 HEAD (ver `git log`)
 - **Date:** 2026-04-28
+
+---
+
+## footer-1280.png
+
+**What it represents:** Footer Avanzosc tras **Task 1.4** (sustitución del
+footer 3-col default por nuestro 4-col B2B). Captura full-page del estado
+ES — la home placeholder ocupa un viewport (no hay scroll), por lo que el
+PNG abarca header → body vacío → footer en una sola imagen 1280×800.
+
+**Layout del footer (4 columnas):**
+
+1. **Avanzosc**: logo (`<span t-field="res_company.logo">` — sigue
+   placeholder hasta cierre [?] #5 spec) + claim D2 «Odoo industrial de
+   verdad, desde 2008.» (Space Grotesk 500).
+2. **Soluciones**: 4 enlaces sectoriales (Industrial, Distribución,
+   Servicios, Academias) — mismas URLs que el dropdown del header.
+3. **Empresa**: 3 enlaces (Conócenos, Empleo, Contacto). Slug interno
+   de Empleo se mantiene `/trabaja-con-nosotros` (decisión Task 1.3 —
+   etiqueta visible y URL son decisiones independientes).
+4. **Legal**: 3 enlaces (Aviso Legal, Política de Privacidad, Política
+   de Cookies). Apuntan a `/aviso-legal`, `/politica-privacidad`,
+   `/politica-cookies` que **devolverán 404 hasta que se creen las
+   páginas** en una tarea posterior. Esperado, no es bug.
+
+**Bottom strip** (fila bajo las 4 columnas):
+
+- Izquierda: copyright literal `© 2026 Avanzosc S.L. — CIF B20875340`
+  (per spec §13). Sustituye el «Copyright © Company name» que `website.layout`
+  hardcodea, vía `<xpath replace>` sobre `o_footer_copyright_name`.
+- Derecha: switcher idiomas «Español ▾» (text-only, sin bandera —
+  mismo patrón que header per Task 1.2). Reutiliza `portal.footer_language_selector`
+  (sin duplicar lógica) y desactiva `website.footer_language_selector_flag`.
+
+**Estilo visual:**
+
+- Background `var(--neutral-900, #0F1419)`. Strip transparente con
+  `border-top: 1px solid rgba(255,255,255,0.08)`.
+- Headings columna: Space Grotesk 600 0.875rem uppercase, color blanco
+  (Odoo's `.o_cc5 h5` rule wins por especificidad — contraste correcto
+  sobre el fondo oscuro, dejado intencionalmente).
+- Links: `var(--neutral-300, #D3D7DC)` base, `var(--neutral-100, #F4F5F7)`
+  hover + underline con offset 4px. Selector `:not(.btn)` necesario para
+  igualar la especificidad de `.o_footer a:not(.btn)` de Odoo.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px (fullPage)
+- **Sesión:** pública (sin login)
+- **Module commit:** task 1.4 HEAD (ver `git log`)
+- **Date:** 2026-04-28
+
+---
+
+## homepage-full-1280.png
+
+**What it represents:** Estado completo de la home (header + body + footer)
+en este punto de Phase 1. **Idéntica imagen a `footer-1280.png` por ahora**
+porque la home placeholder de Odoo es un solo viewport (~800px) sin
+contenido productivo todavía.
+
+**Por qué duplicar la captura como `homepage-full-1280.png`**: a medida
+que Phase 1 progrese (hero + sectores + casos + equipo + CTAs en Tasks
+1.5+), la home se hará larga y `homepage-full-1280.png` capturará el
+scroll completo (1500-3000px típicamente). Mientras tanto, esta captura
+sirve como baseline antes de añadir contenido.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px (fullPage; coincide con un viewport hasta
+  que se añada contenido en Tasks 1.5+)
+- **Sesión:** pública (sin login)
+- **Module commit:** task 1.4 HEAD (ver `git log`)
+- **Date:** 2026-04-28

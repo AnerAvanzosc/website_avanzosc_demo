@@ -1,0 +1,167 @@
+// =============================================================================
+// _footer.scss — Estilos del footer de Avanzosc
+// Scope: Task 1.4. Ref: CLAUDE.md §3 (estructura), §9 (paleta + tipografía),
+//        spec §8.2 / §13 (datos legales).
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Footer principal — 4 columnas
+// -----------------------------------------------------------------------------
+// Hook: clase .s_avanzosc_footer añadida en views/layout.xml (template
+// footer_avanzosc).
+//
+// Background oscuro (--neutral-900) para diferenciarlo del contenido scroll.
+// Texto claro (--neutral-100) para contraste AAA. Padding generoso para que
+// respire (4rem top, 2rem bottom — el strip de copyright ya añade su propio
+// padding interno via Bootstrap py-3 de website.layout).
+//
+// El styling del strip de copyright (`.o_footer_copyright`) se sobrescribe
+// abajo: Bootstrap por defecto le da `bg-light text-muted` que choca con
+// nuestro fondo oscuro. Lo neutralizamos.
+// -----------------------------------------------------------------------------
+.s_avanzosc_footer {
+    background-color: var(--neutral-900, #0F1419);
+    color: var(--neutral-100, #F4F5F7);
+}
+
+.s_avanzosc_footer_main {
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+}
+
+// -----------------------------------------------------------------------------
+// Columna brand (logo + claim)
+// -----------------------------------------------------------------------------
+// Logo: usa `<span t-field="res_company.logo">` igual que el header — sigue
+// siendo placeholder hasta que el logo final esté listo ([?] #5 spec).
+// max-width acota el logo a un tamaño razonable (~140px) para no dominar
+// la columna.
+//
+// Claim corporativo (per D2): texto destacado, peso medio, line-height
+// confortable. NO body-size (resta jerarquía); pequeño headline.
+// -----------------------------------------------------------------------------
+.s_avanzosc_footer_logo {
+    max-width: 140px;
+    height: auto;
+    // El logo placeholder de Odoo viene en blanco/colores claros — sobre
+    // fondo oscuro debería leerse. Si en el futuro se cambia a un logo
+    // oscuro, esto requerirá un filter: invert() o una variante específica
+    // (decisión [?] #5 spec).
+}
+
+.s_avanzosc_footer_claim {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--neutral-100, #F4F5F7);
+    margin: 0;
+}
+
+// -----------------------------------------------------------------------------
+// Headings de columna ("Soluciones", "Empresa", "Legal")
+// -----------------------------------------------------------------------------
+// Per CLAUDE.md §9.4 (Small: 14px Inter peso 500 + tracking) y briefing 1.4
+// (Space Grotesk 600 ~0.875rem). Coherente con la jerarquía del sitio:
+// los headings del footer son pequeños comparados con los headlines de
+// página, pero suficientemente prominentes para anclar cada columna.
+// -----------------------------------------------------------------------------
+.s_avanzosc_footer_heading {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--neutral-100, #F4F5F7);
+    margin-bottom: 1rem;
+}
+
+// -----------------------------------------------------------------------------
+// Links de las columnas
+// -----------------------------------------------------------------------------
+// Estado base: --neutral-300 (gris claro, levemente atenuado vs el heading
+// para crear jerarquía visual entre rótulo y contenido).
+// Hover/focus: --neutral-100 (subir contraste) + underline con offset 4px
+// (CLAUDE.md §8 patrones de interacción — underline-offset evita el efecto
+// «cinta» de underline pegado a la línea base).
+// Sin transition explícita en color para mantenerlo simple (color es la
+// única propiedad que cambia, default browser behavior es instant).
+// -----------------------------------------------------------------------------
+.s_avanzosc_footer ul {
+    margin: 0;
+    padding: 0;
+
+    li {
+        margin-bottom: 0.5rem;
+    }
+
+    // Selector con `:not(.btn)` para igualar la especificidad de la regla
+    // de Odoo (.o_footer a:not(.btn)) que define un color theme-driven
+    // ('colored combination'). Sin `:not(.btn)` Odoo gana por especificidad
+    // (0,2,1 vs 0,1,2). Con `:not(.btn)` la nuestra es (0,1,2) + (0,1,0)
+    // por el :not = (0,2,2), gana por orden de carga (nuestro SCSS va
+    // después en assets.xml).
+    a:not(.btn) {
+        color: var(--neutral-300, #D3D7DC);
+        text-decoration: none;
+        font-size: 0.9375rem;  // 15px — un punto bajo body para indicar nav-secundaria
+        font-weight: 400;
+
+        &:hover,
+        &:focus {
+            color: var(--neutral-100, #F4F5F7);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            text-decoration-thickness: 1px;
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Strip de copyright + lang switcher (.o_footer_copyright)
+// -----------------------------------------------------------------------------
+// Bootstrap por defecto le pone `bg-light` y `text-muted` (texto gris
+// inviable sobre fondo oscuro). Sobrescribimos:
+//   - background-color transparente para heredar el fondo oscuro del padre.
+//   - color claro.
+//   - top-border sutil que separe visualmente el strip de las 4 columnas
+//     sin agresividad (1px neutral-700 con transparencia).
+// -----------------------------------------------------------------------------
+// Selector específico al footer Avanzosc para no afectar otros lugares.
+// `footer#bottom .o_footer_copyright` matches el strip de copyright que
+// es sibling de `.s_avanzosc_footer` dentro del `<footer id="bottom">`.
+footer#bottom .o_footer_copyright {
+    background-color: transparent !important;  // override Bootstrap bg-light
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--neutral-300, #D3D7DC);
+
+    .o_footer_copyright_name {
+        color: var(--neutral-300, #D3D7DC);
+    }
+
+    // Lang selector dentro del copyright strip: hereda los estilos de
+    // .js_language_selector (definidos en _header.scss) pero los neutros del
+    // base son color: var(--neutral-700) que aquí no se ve sobre oscuro.
+    // Override de color para texto claro.
+    .js_language_selector > .btn {
+        color: var(--neutral-300, #D3D7DC);
+
+        &:hover,
+        &:focus {
+            color: var(--neutral-100, #F4F5F7);
+        }
+    }
+
+    // Subrayado del idioma activo (botón toggle): coherente con el del
+    // header pero color claro.
+    .js_language_selector > .btn .align-middle {
+        text-decoration-color: var(--neutral-100, #F4F5F7);
+    }
+
+    // Hide the brand promotion («Powered by Odoo - The #1 Open Source
+    // eCommerce»). Para v1 corporativo no queremos publicidad de Odoo;
+    // si en el futuro se decide mostrarla, quitar esta regla.
+    .o_brand_promotion {
+        display: none;
+    }
+}

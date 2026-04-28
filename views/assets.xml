@@ -29,6 +29,13 @@
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/snippets/_header.scss"/>
+            <!-- Footer styles — Task 1.4.
+                 Después de _header.scss (mismo nivel «snippets»). Antes de
+                 main.scss para que utilities globales puedan sobrescribir
+                 si hace falta. Ref: spec §8.2, CLAUDE.md §3. -->
+            <link rel="stylesheet"
+                  type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/snippets/_footer.scss"/>
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/main.scss"/>

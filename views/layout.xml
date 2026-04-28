@@ -111,4 +111,121 @@
     <record id="website.header_visibility_standard" model="ir.ui.view">
         <field name="active" eval="False"/>
     </record>
+
+    <!-- ============================================================
+         Task 1.4 — Footer Avanzosc (4 columnas + bottom strip)
+         Spec §8.2, CLAUDE.md §3.
+         ============================================================ -->
+
+    <!-- Desactivar el footer default «footer_custom» (3-col Useful Links /
+         About us / Connect with us). Sustituimos por nuestro propio template
+         `footer_avanzosc` que hereda directamente de `website.layout`, igual
+         patrón que las otras 8 variantes core (template_footer_descriptive,
+         _centered, _links, etc.). Mutuamente excluyente — solo un template
+         de la familia footer puede estar activo a la vez. -->
+    <record id="website.footer_custom" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Desactivar la variante con bandera del switcher de idiomas en footer.
+         Mismo patrón que `header_language_selector_flag` (Task 1.2):
+         queremos texto-only en footer también, coherente con el header.
+         `portal.footer_language_selector` se mantiene activo (es el wrapper
+         canónico que inyecta el selector tras `o_footer_copyright_name`). -->
+    <record id="website.footer_language_selector_flag" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Footer principal — 4 columnas: Avanzosc / Soluciones / Empresa / Legal.
+         Hereda website.layout (no footer_custom) y reemplaza el contenido
+         del placeholder #footer.
+
+         Strings en castellano (idioma fuente per spec D1 ES + EU). Las
+         traducciones EU viven en `i18n/eu.po` y se aplican automáticamente
+         cuando el idioma activo del request es `eu_ES`. NO usamos t-if/else
+         manual por idioma — usamos el sistema canónico de traducciones de
+         Odoo (extracción automática de QWeb, .po files, ir.translation).
+
+         Páginas legales (/aviso-legal, /politica-privacidad,
+         /politica-cookies): los enlaces apuntan a URLs que aún NO existen
+         como `website.page` — devolverán 404 hasta su tarea posterior.
+         Esperado, no es bug. -->
+    <template id="footer_avanzosc"
+              name="Footer Avanzosc"
+              inherit_id="website.layout">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <div id="footer" class="oe_structure oe_structure_solo s_avanzosc_footer" t-ignore="true" t-if="not no_footer">
+                <section class="s_avanzosc_footer_main">
+                    <div class="container">
+                        <div class="row">
+                            <!-- Columna 1: Avanzosc — logo + claim. -->
+                            <div class="col-lg-3 col-md-6 mb-4 s_avanzosc_footer_brand">
+                                <a href="/" class="d-block mb-3">
+                                    <span t-field="res_company.logo"
+                                          t-options="{'widget': 'image', 'class': 'img-fluid s_avanzosc_footer_logo', 'alt-field': 'name'}"/>
+                                </a>
+                                <p class="s_avanzosc_footer_claim">Odoo industrial de verdad, desde 2008.</p>
+                            </div>
+                            <!-- Columna 2: Soluciones (4 sectoriales).
+                                 URLs idénticas a las del dropdown del header
+                                 (data/menu.xml + post_init_hook). -->
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h5 class="s_avanzosc_footer_heading">Soluciones</h5>
+                                <ul class="list-unstyled">
+                                    <li><a href="/industrial">Industrial</a></li>
+                                    <li><a href="/distribucion">Distribución</a></li>
+                                    <li><a href="/servicios">Servicios</a></li>
+                                    <li><a href="/academias">Academias</a></li>
+                                </ul>
+                            </div>
+                            <!-- Columna 3: Empresa. URLs idénticas a los
+                                 menus top-level correspondientes. -->
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h5 class="s_avanzosc_footer_heading">Empresa</h5>
+                                <ul class="list-unstyled">
+                                    <li><a href="/conocenos">Conócenos</a></li>
+                                    <li><a href="/trabaja-con-nosotros">Empleo</a></li>
+                                    <li><a href="/contacto">Contacto</a></li>
+                                </ul>
+                            </div>
+                            <!-- Columna 4: Legal. Las 3 páginas son
+                                 placeholder (404 hasta tarea posterior). -->
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h5 class="s_avanzosc_footer_heading">Legal</h5>
+                                <ul class="list-unstyled">
+                                    <li><a href="/aviso-legal">Aviso Legal</a></li>
+                                    <li><a href="/politica-privacidad">Política de Privacidad</a></li>
+                                    <li><a href="/politica-cookies">Política de Cookies</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Copyright text — sustituye el span hardcoded de `website.layout`
+         (línea 178-179: «Copyright © Company name») por el identificador
+         legal real de Avanzosc S.L. (CIF + razón social). Per spec §13.
+
+         Por qué replace y no edit: `website.layout` ya hace `position="replace"`
+         del span original de `web.layout`. Encadenamos otro replace para
+         tener el último valor. El selector `//footer//span[hasclass(...)]`
+         es idéntico al que usa `website.layout` — match seguro.
+
+         portal.footer_language_selector inserta el switcher mediante
+         `position="after"` sobre el mismo selector — se ejecuta después de
+         nuestro replace y opera sobre nuestro span (mismo class), sin
+         conflicto. Cadena de orden: web.layout (define) → website.layout
+         (replace 1) → website_avanzosc_demo (replace 2) → portal (after).
+
+         Texto NO se traduce (CIF e identificador legal idéntico ES/EU). -->
+    <template id="footer_copyright_avanzosc"
+              name="Footer Copyright Avanzosc"
+              inherit_id="website.layout">
+        <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <span class="o_footer_copyright_name mr-2">© 2026 Avanzosc S.L. — CIF B20875340</span>
+        </xpath>
+    </template>
 </odoo>
