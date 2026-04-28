@@ -17,6 +17,7 @@
     "data": [
         "views/assets.xml",
         "data/menu.xml",
+        "data/redirects.xml",
         "views/layout.xml",
     ],
     "installable": True,

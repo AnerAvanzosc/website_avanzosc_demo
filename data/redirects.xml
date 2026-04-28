@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Task 2.3 — Redirects 301 legacy → new site.
+    Ref: spec §11 (mapeo URLs antiguas), CLAUDE.md §11 D6 (switchover).
+    Mecanismo: <record model="website.rewrite"> con redirect_type='301'.
+    Validado contra addons/website/models/website_rewrite.py:62-66 (Selection
+    de tipos: 404, 301, 302, 308).
+
+    Compromiso v1 sobre /tienda y /formacion (spec §11):
+        El menú v1 expone los slugs «bonitos» /tienda y /formacion en el
+        navbar (data/menu.xml). Al hacer clic, el navegador recibe un 301
+        que le redirige a la URL real del módulo Odoo correspondiente
+        (/shop de website_sale, /slides de website_slides). Tras el redirect
+        la barra de direcciones muestra /shop o /slides — NO /tienda o
+        /formacion. La opción de heredar los controllers de website_sale y
+        website_slides para que las URLs reales sean /tienda y /formacion
+        directamente queda diferida explícitamente a v2.
+
+    Las 3 entradas marcadas TODO están bloqueadas por preguntas abiertas
+    del spec §13 (#5 /blog/*, #6 /page/kit-digital). Comentadas en el
+    fichero pero sin record activo hasta resolución. CI/QA del switchover
+    deberá auditar SEO real (Screaming Frog o equivalente) antes del
+    despliegue para detectar URLs adicionales no listadas aquí.
+-->
+<odoo>
+    <data noupdate="1">
+
+        <!-- =====================================================
+             Slugs «bonitos» del navbar v1 → URLs reales Odoo.
+             ===================================================== -->
+
+        <record id="redirect_tienda_to_shop" model="website.rewrite">
+            <field name="name">Redirect /tienda → /shop (slug bonito → website_sale)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/tienda</field>
+            <field name="url_to">/shop</field>
+        </record>
+
+        <record id="redirect_formacion_to_slides" model="website.rewrite">
+            <field name="name">Redirect /formacion → /slides (slug bonito → website_slides)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/formacion</field>
+            <field name="url_to">/slides</field>
+        </record>
+
+        <!-- =====================================================
+             URLs antiguas del avanzosc.es legacy → nuevas slugs.
+             Spec §11. Verificación SEO real pre-switchover puede
+             añadir más entradas (auditoría con Screaming Frog).
+             ===================================================== -->
+
+        <record id="redirect_legacy_contactenos" model="website.rewrite">
+            <field name="name">Legacy /page/contactenos → /contacto</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/page/contactenos</field>
+            <field name="url_to">/contacto</field>
+        </record>
+
+        <record id="redirect_legacy_sobre_nosotros" model="website.rewrite">
+            <field name="name">Legacy /page/sobre-nosotros → /conocenos</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/page/sobre-nosotros</field>
+            <field name="url_to">/conocenos</field>
+        </record>
+
+        <record id="redirect_legacy_cursos" model="website.rewrite">
+            <field name="name">Legacy /page/cursos → /slides</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/page/cursos</field>
+            <field name="url_to">/slides</field>
+        </record>
+
+        <record id="redirect_legacy_industria" model="website.rewrite">
+            <field name="name">Legacy /page/industria-4-0 → /industrial</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/page/industria-4-0</field>
+            <field name="url_to">/industrial</field>
+        </record>
+
+        <record id="redirect_legacy_retail" model="website.rewrite">
+            <field name="name">Legacy /page/retail → /distribucion</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/page/retail</field>
+            <field name="url_to">/distribucion</field>
+        </record>
+
+        <record id="redirect_legacy_servicios_it" model="website.rewrite">
+            <field name="name">Legacy /page/servicios-it → /servicios</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/page/servicios-it</field>
+            <field name="url_to">/servicios</field>
+        </record>
+
+        <record id="redirect_legacy_educacion" model="website.rewrite">
+            <field name="name">Legacy /page/educacion → /academias</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/page/educacion</field>
+            <field name="url_to">/academias</field>
+        </record>
+
+        <!-- =====================================================
+             TODO — bloqueados por spec §13 #5 y #6.
+             Activar tras resolver las decisiones pendientes en
+             CLAUDE.md §11.
+             =====================================================
+
+             TODO #spec13-5: ¿qué hacer con /blog y /blog/categoria/*?
+             Opciones: 301 a /, 410 Gone, landing «archivado». Decidir
+             tras auditoría SEO real (volumen de tráfico actual del
+             blog) antes del switchover.
+
+             <record id="redirect_legacy_blog" model="website.rewrite">
+                 <field name="name">Legacy /blog → ¿?</field>
+                 <field name="redirect_type">301</field>
+                 <field name="url_from">/blog</field>
+                 <field name="url_to">/</field>
+             </record>
+             <record id="redirect_legacy_blog_categoria" model="website.rewrite">
+                 <field name="name">Legacy /blog/categoria/* → ¿?</field>
+                 <field name="redirect_type">308</field>
+                 <field name="url_from">/blog/categoria/&lt;path:rest&gt;</field>
+                 <field name="url_to">/</field>
+             </record>
+
+             TODO #spec13-6: ¿/page/kit-digital activa o redirige a
+             /kit-consulting? Depende del estado real del programa
+             Red.es a fecha del switchover.
+
+             <record id="redirect_legacy_kit_digital" model="website.rewrite">
+                 <field name="name">Legacy /page/kit-digital → /kit-consulting</field>
+                 <field name="redirect_type">301</field>
+                 <field name="url_from">/page/kit-digital</field>
+                 <field name="url_to">/kit-consulting</field>
+             </record>
+        -->
+
+    </data>
+</odoo>
