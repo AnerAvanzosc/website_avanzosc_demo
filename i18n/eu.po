@@ -29,8 +29,9 @@ msgstr ""
 msgid "Odoo industrial de verdad, desde 2008."
 msgstr "Benetako Odoo industriala, 2008tik."
 
-# DRAFT - REVIEW NEEDED — heading columna 2
+# DRAFT - REVIEW NEEDED — heading columna 2 footer + menú top-level
 #. module: website_avanzosc_demo
+#: model:website.menu,name:website_avanzosc_demo.menu_soluciones
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
 #, fuzzy
 msgid "Soluciones"
@@ -78,22 +79,26 @@ msgstr "Zerbitzuak"
 msgid "Academias"
 msgstr "Akademiak"
 
-# DRAFT - REVIEW NEEDED — link columna Empresa
+# DRAFT - REVIEW NEEDED — link footer columna Empresa + menú top-level
 #. module: website_avanzosc_demo
+#: model:website.menu,name:website_avanzosc_demo.menu_conocenos
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
 #, fuzzy
 msgid "Conócenos"
 msgstr "Ezagutu gaitzazu"
 
-# DRAFT - REVIEW NEEDED — link columna Empresa (per pre-decisión Task 1.3)
+# DRAFT - REVIEW NEEDED — link footer columna Empresa + menú top-level
+# (per pre-decisión Task 1.3)
 #. module: website_avanzosc_demo
+#: model:website.menu,name:website_avanzosc_demo.menu_trabaja
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
 #, fuzzy
 msgid "Empleo"
 msgstr "Lana"
 
-# DRAFT - REVIEW NEEDED — link columna Empresa
+# DRAFT - REVIEW NEEDED — link footer columna Empresa + menú top-level
 #. module: website_avanzosc_demo
+#: model:website.menu,name:website_avanzosc_demo.menu_contacto
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
 #, fuzzy
 msgid "Contacto"
