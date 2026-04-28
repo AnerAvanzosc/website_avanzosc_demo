@@ -51,29 +51,34 @@ msgstr "Enpresa"
 msgid "Legal"
 msgstr "Legala"
 
-# DRAFT - REVIEW NEEDED — link columna Soluciones
+# DRAFT - REVIEW NEEDED — link footer columna Soluciones + dropdown child
+# sectorial (xml_id registrado por post_init_menu_hierarchy en hooks.py).
 #. module: website_avanzosc_demo
+#: model:website.menu,name:website_avanzosc_demo.menu_industrial
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
 #, fuzzy
 msgid "Industrial"
 msgstr "Industriala"
 
-# DRAFT - REVIEW NEEDED — link columna Soluciones
+# DRAFT - REVIEW NEEDED — link footer columna Soluciones + dropdown child
 #. module: website_avanzosc_demo
+#: model:website.menu,name:website_avanzosc_demo.menu_distribucion
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
 #, fuzzy
 msgid "Distribución"
 msgstr "Banaketa"
 
-# DRAFT - REVIEW NEEDED — link columna Soluciones
+# DRAFT - REVIEW NEEDED — link footer columna Soluciones + dropdown child
 #. module: website_avanzosc_demo
+#: model:website.menu,name:website_avanzosc_demo.menu_servicios
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
 #, fuzzy
 msgid "Servicios"
 msgstr "Zerbitzuak"
 
-# DRAFT - REVIEW NEEDED — link columna Soluciones
+# DRAFT - REVIEW NEEDED — link footer columna Soluciones + dropdown child
 #. module: website_avanzosc_demo
+#: model:website.menu,name:website_avanzosc_demo.menu_academias
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
 #, fuzzy
 msgid "Academias"
@@ -145,3 +150,4 @@ msgstr "Denda"
 #, fuzzy
 msgid "Formación"
 msgstr "Formakuntza"
+
