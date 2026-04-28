@@ -127,3 +127,88 @@ cambio SCSS en este snapshot — queda como input para decisión del usuario:
 - **Sesión:** pública (sin login)
 - **Module commit:** post-Task-1.2 cleanup HEAD (ver `git log`)
 - **Date:** 2026-04-28
+
+---
+
+## header-1280-final-v2.png
+
+**What it represents:** Header tras la intervención de **rename + reorden +
+container max-width 1320px** (sesión 2026-04-28). Estado canónico de cierre
+del round de header desktop. Sesión pública, sin admin chrome.
+
+**Cambios respecto a `header-1280-public-1280.png`:**
+
+- **Renombre:** «Soluciones sectoriales» → **Soluciones**; «Trabaja con
+  nosotros» → **Empleo**. Slugs `/trabaja-con-nosotros` y `#` no cambian
+  (etiqueta visible y URL son decisiones independientes).
+- **Reorden por funnel B2B:** Contacto sube a posición 5 (era 7);
+  Conócenos pasa a 6 (era 5); Empleo se queda 7 (era 6). Razón: los 5
+  primeros son los high-conversion items; Conócenos/Empleo son secundarios.
+- **SCSS:** `header nav.navbar > .container { max-width: 1320px; width: 100% }`
+  (sweet spot xxl de Bootstrap 5, ya que Odoo 14 ships Bootstrap 4.6 sin
+  ese breakpoint).
+
+**Conteo a 1280px (público):** 7 top-level visibles, 0 en overflow.
+
+`Inicio · Soluciones (▾) · Tienda · Formación · Contacto · Conócenos · Empleo`
++ carrito · «Español ▾» · botón `Acceso clientes`. El elemento
+`o_extra_menu_items` ni siquiera se inyecta en el DOM.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px
+- **Sesión:** pública (sin login)
+- **Module commit:** post-rename HEAD (ver `git log`)
+- **Date:** 2026-04-28
+
+---
+
+## header-992-final-v2.png
+
+**What it represents:** Mismo build que `header-1280-final-v2.png` capturado
+a viewport 992 (último ancho desktop antes del switch a hamburger). Confirma
+el comportamiento responsive aceptado en la decisión **(A)** del round.
+
+**Conteo a 992px (público):** 4 visibles + 3 en overflow `[+]`.
+
+- **Visibles (4):** Inicio · Soluciones (▾) · Tienda · Formación.
+- **En overflow `[+]` (3):** Contacto · Conócenos · Empleo.
+
+Nota: la expectativa inicial era 5+2 (Contacto visible, Conócenos+Empleo
+en overflow). El conteo real es 4+3 porque Contacto tampoco encaja en el
+`navbar-collapse` que a 992px mide ~515px tras descontar logo (150) +
+lang (77) + CTA (156) + paddings del flex `.container` (960). Aceptado
+como no bloqueante per decisión **(A)**: comportamiento estándar moderno
+del navbar responsive (todos al hamburger en mobile, descomposición
+gradual en desktop estrecho).
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 992×800 px
+- **Sesión:** pública (sin login)
+- **Module commit:** post-rename HEAD (ver `git log`)
+- **Date:** 2026-04-28
+
+---
+
+## header-991-hamburger.png
+
+**What it represents:** Snapshot de evidencia del **switchover a hamburger
+en el breakpoint lg** (Bootstrap `navbar-expand-lg` → 992px). A 991 (1px
+por debajo del breakpoint) el botón `.navbar-toggler` (☰) se hace visible
+y `.navbar-collapse` colapsa con `display: none` por defecto (espera al
+toggle del usuario para abrir).
+
+Visible en el screenshot: Logo · ☰ · «Español ▾» · botón `Acceso clientes`.
+Los 7 menu items NO se renderizan visualmente — están en el DOM dentro de
+`.navbar-collapse` colapsada y aparecen al toggle.
+
+**Limitación**: la apariencia del menú abierto en hamburger NO está
+estilizada según spec — esa estilización es scope de **Task 7.x** (mobile).
+Esta captura sirve solo como evidencia de que el switchover de breakpoint
+funciona correctamente con la herencia actual del header. La UX completa
+mobile (animaciones de apertura, full-screen overlay, etc.) viene después.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 991×800 px
+- **Sesión:** pública (sin login)
+- **Module commit:** post-rename HEAD (ver `git log`)
+- **Date:** 2026-04-28

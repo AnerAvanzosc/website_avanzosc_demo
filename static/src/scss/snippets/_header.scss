@@ -5,6 +5,29 @@
 // =============================================================================
 
 // -----------------------------------------------------------------------------
+// Header container — extender max-width hasta 1320px
+// -----------------------------------------------------------------------------
+// Bootstrap 4 (que ships con Odoo 14) cap-ea `.container` en 1140px en su
+// breakpoint xl, y NO incluye el breakpoint xxl/1320px de Bootstrap 5. Sin
+// override, en cualquier viewport ≥1200px el `.container` del header se
+// queda en 1140 → el `navbar-collapse` recibe ~695px reales tras descontar
+// logo + selector de idioma + CTA + paddings, insuficiente para los 7 ítems
+// top-level. El handler `o_extra_menu_items` empuja sistemáticamente los
+// últimos 2 al overflow [+], viewport-agnostic (probado a 2560px, idem).
+//
+// Forzamos max-width: 1320px (sweet spot xxl de Bootstrap 5) + width: 100%
+// para que en viewports más estrechos siga adaptándose. Selector restringido
+// al header para no afectar a `.container` en otras zonas del sitio.
+// Alternativa descartada: xpath en views/layout.xml swap de
+// `<div class="container">` a `<div class="container-fluid">` con max-width
+// en SCSS — más invasivo (depende de la estructura interna de
+// `template_header_default`) sin mejora funcional.
+header nav.navbar > .container {
+    max-width: 1320px;
+    width: 100%;
+}
+
+// -----------------------------------------------------------------------------
 // Botón «Acceso clientes»
 // Hook: clase .s_avanzosc_acceso_clientes añadida en layout.xml.
 // Personalización mínima v1: border-radius y hover. Los colores base

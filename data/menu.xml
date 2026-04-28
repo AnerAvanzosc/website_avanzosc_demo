@@ -26,9 +26,12 @@
 
     <record id="menu_soluciones" model="website.menu">
         <!-- Padre del dropdown. url=# porque no tiene página propia.
-             Sus 4 hijos (Industrial, Distribución, Servicios, Academias)
-             se crean en post_init_menu_hierarchy (hooks.py). -->
-        <field name="name">Soluciones sectoriales</field>
+             Label «Soluciones» (no «Soluciones sectoriales»): el adjetivo
+             «sectoriales» es redundante con el contenido del dropdown
+             (Industrial / Distribución / Servicios / Academias) y aporta
+             ancho innecesario al item del navbar. UX modernization.
+             Sus 4 hijos se crean en post_init_menu_hierarchy (hooks.py). -->
+        <field name="name">Soluciones</field>
         <field name="url">#</field>
         <field name="parent_id" ref="website.main_menu"/>
         <field name="sequence">20</field>
@@ -50,23 +53,33 @@
         <field name="sequence">40</field>
     </record>
 
-    <record id="menu_conocenos" model="website.menu">
-        <field name="name">Conócenos</field>
-        <field name="url">/conocenos</field>
-        <field name="parent_id" ref="website.main_menu"/>
-        <field name="sequence">50</field>
-    </record>
-
-    <record id="menu_trabaja" model="website.menu">
-        <field name="name">Trabaja con nosotros</field>
-        <field name="url">/trabaja-con-nosotros</field>
-        <field name="parent_id" ref="website.main_menu"/>
-        <field name="sequence">60</field>
-    </record>
+    <!-- Reorden por prioridad de funnel B2B (sesión 2026-04-28):
+         los 5 primeros (hasta Contacto) son los high-conversion items;
+         los 2 últimos (Conócenos, Empleo) son secundarios. xml_ids y
+         URLs no cambian — solo `sequence`. -->
 
     <record id="menu_contacto" model="website.menu">
         <field name="name">Contacto</field>
         <field name="url">/contacto</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="menu_conocenos" model="website.menu">
+        <field name="name">Conócenos</field>
+        <field name="url">/conocenos</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="menu_trabaja" model="website.menu">
+        <!-- Label «Empleo» (no «Trabaja con nosotros»): estándar moderno
+             corporativo, ahorra ancho en navbar. Slug interno
+             /trabaja-con-nosotros se mantiene — etiqueta visible y URL son
+             decisiones independientes (slug-rename = SEO posterior). El
+             xml_id `menu_trabaja` también permanece estable. -->
+        <field name="name">Empleo</field>
+        <field name="url">/trabaja-con-nosotros</field>
         <field name="parent_id" ref="website.main_menu"/>
         <field name="sequence">70</field>
     </record>
