@@ -44,6 +44,21 @@
                         <!-- Task 3.6 — caso de éxito (archetype activo via
                              config_parameter, default ID 1). -->
                         <t t-call="website_avanzosc_demo.s_avanzosc_caso_exito"/>
+                        <!-- Task 3.7 — sector_specifics, las 4 variantes apiladas
+                             para QA visual de cada sector. Las páginas sectoriales
+                             reales (Phase 5) usan UNA variante cada una. -->
+                        <t t-call="website_avanzosc_demo.s_avanzosc_sector_specifics">
+                            <t t-set="sector_key" t-value="'industrial'"/>
+                        </t>
+                        <t t-call="website_avanzosc_demo.s_avanzosc_sector_specifics">
+                            <t t-set="sector_key" t-value="'distribucion'"/>
+                        </t>
+                        <t t-call="website_avanzosc_demo.s_avanzosc_sector_specifics">
+                            <t t-set="sector_key" t-value="'servicios'"/>
+                        </t>
+                        <t t-call="website_avanzosc_demo.s_avanzosc_sector_specifics">
+                            <t t-set="sector_key" t-value="'academias'"/>
+                        </t>
                         <!-- Task 3.4 — CTA Contacto final. -->
                         <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
                     </main>

@@ -58,6 +58,9 @@
                   href="/website_avanzosc_demo/static/src/scss/snippets/_caso_exito.scss"/>
             <link rel="stylesheet"
                   type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/snippets/_sector_specifics.scss"/>
+            <link rel="stylesheet"
+                  type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/main.scss"/>
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/main.js"/>

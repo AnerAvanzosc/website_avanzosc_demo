@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Task 3.7 — s_avanzosc_sector_specifics snippet.
+    Ref: spec §6.7 §7.2, plan §3.7, CLAUDE.md §11 D1 «Estructura común
+    páginas sectoriales».
+
+    Bloque genérico parametrizado que muestra capacidades específicas del
+    sector. Reutilizado en cada página sectorial (Phase 5) — Industrial,
+    Distribución, Servicios, Academias — pasando un `sector_key` por
+    `t-call`.
+
+    SECTOR PAYLOADS DICT: 4 entradas, una por sector, cada una con
+      {title, intro, items: [str, ...]}
+    El render lee `sector_key` y pinta el payload correspondiente.
+
+    Default fallback si `sector_key` no se pasa o no existe en el dict:
+    el primer payload (industrial) — útil en /test-snippets para ver la
+    variante sin parámetros explícitos. Las páginas sectoriales reales
+    de Phase 5 SIEMPRE pasarán sector_key.
+
+    Reveal IO simple via widget genérico (data-avanzosc-reveal).
+    Sin hover, sin animación específica per item.
+
+    NO en builder (D4).
+-->
+<odoo>
+    <template id="s_avanzosc_sector_specifics" name="Avanzosc · Sector Specifics">
+        <section class="s_avanzosc_sector_specifics" data-name="Avanzosc Sector Specifics" data-avanzosc-reveal="">
+            <div class="container">
+                <!-- SECTOR PAYLOADS DICT inline. Estructura espejo de un futuro
+                     `website.avanzosc.sector` model si crece (v2). -->
+                <t t-set="sector_payloads" t-value="{
+                    'industrial': {
+                        'title': 'Capacidades industriales',
+                        'intro': 'Lo que el sector industrial necesita de Odoo cuando deja de ser un ERP genérico.',
+                        'items': [
+                            'MES y MRP de capacidad finita.',
+                            'Trazabilidad lote/serie consultable end-to-end.',
+                            'Calidad: ensayos por orden con criterios pasa/no-pasa.',
+                            'Mantenimiento preventivo y correctivo conectado a producción.',
+                            'Integración con PLCs y balanzas (OCA/connector_mes).',
+                            'Compliance sectorial (ADR, AECOC, SILICIE).',
+                        ],
+                    },
+                    'distribucion': {
+                        'title': 'Capacidades de distribución',
+                        'intro': 'Multialmacén, multicanal y multicliente sin que se rompa el stock real.',
+                        'items': [
+                            'WMS con picking por voz / por luz / multi-orden.',
+                            'Rutas de reparto optimizadas con geolocalización.',
+                            'POS Odoo multitienda con central de compras.',
+                            'Sync con marketplaces (Amazon, eBay) y ecommerce externos.',
+                            'EDI con cadenas de retail (formato EDIFACT).',
+                            'Listas de precios por cliente, volumen y temporada.',
+                        ],
+                    },
+                    'servicios': {
+                        'title': 'Capacidades para empresas de servicios',
+                        'intro': 'Proyectos, partes de horas y facturación recurrente sin Excel intermedio.',
+                        'items': [
+                            'Gestión de proyectos con tareas, milestones y dependencias.',
+                            'Partes de horas firmados desde móvil con aprobación.',
+                            'Facturación recurrente por contrato (mensual/trimestral/anual).',
+                            'Helpdesk con SLA por cliente y prioridad.',
+                            'Planning geolocalizado de técnicos en ruta.',
+                            'Reportería de rentabilidad por proyecto y por persona.',
+                        ],
+                    },
+                    'academias': {
+                        'title': 'Capacidades para academias y centros',
+                        'intro': 'Comunicación con familias y gestión académica sin fricción burocrática.',
+                        'items': [
+                            'Matriculación online con generación automática de docs.',
+                            'Calendarios académicos por curso, centro y aula.',
+                            'Evaluaciones y reportes a familias por trimestre.',
+                            'Portal familias con comunicación bidireccional.',
+                            'Pagos recurrentes (mensualidad, comedor, extraescolares).',
+                            'Integración con plataformas e-learning externas.',
+                        ],
+                    },
+                }"/>
+
+                <!-- Resolver payload activo. sector_key viene via t-call;
+                     fallback a 'industrial' si no se pasa o no existe. -->
+                <t t-set="payload" t-value="sector_payloads.get(sector_key or 'industrial', sector_payloads.get('industrial'))"/>
+
+                <div class="row">
+                    <div class="col-12 col-lg-10 offset-lg-1">
+                        <h2 class="s_avanzosc_sector_specifics_title" t-esc="payload.get('title')"/>
+                        <p class="s_avanzosc_sector_specifics_intro" t-esc="payload.get('intro')"/>
+                        <ul class="s_avanzosc_sector_specifics_items">
+                            <t t-foreach="payload.get('items', [])" t-as="item">
+                                <li t-esc="item"/>
+                            </t>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>
