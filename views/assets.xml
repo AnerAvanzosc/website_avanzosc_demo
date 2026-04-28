@@ -49,6 +49,9 @@
                   href="/website_avanzosc_demo/static/src/scss/snippets/_cta_kit_consulting.scss"/>
             <link rel="stylesheet"
                   type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/snippets/_cta_contacto.scss"/>
+            <link rel="stylesheet"
+                  type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/main.scss"/>
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/main.js"/>

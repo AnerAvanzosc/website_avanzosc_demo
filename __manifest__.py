@@ -25,6 +25,7 @@
         "views/snippets/pilares.xml",
         "views/snippets/sectores_grid.xml",
         "views/snippets/cta_kit_consulting.xml",
+        "views/snippets/cta_contacto.xml",
         "views/test_snippets.xml",
     ],
     "installable": True,

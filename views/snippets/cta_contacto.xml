@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Task 3.4 — s_avanzosc_cta_contacto snippet.
+    Ref: spec §6.5 / §6.9, plan §3.4 (adaptado per briefing sesión
+    2026-04-28: 2 CTAs en lugar del form HTML5 del plan original; el
+    form vive en /contacto que es la landing de Phase 6).
+
+    CTA final de la home, antes del footer. Empuja al funnel «habla con
+    nosotros». Background neutral-900 oscuro — contraste con secciones
+    blancas previas y mismo tono que el footer, preparando el cierre
+    visual de la home.
+
+    2 CTAs:
+      - Primary: «Contactar» linkeando a /contacto (la landing form
+        Phase 6 cubre el form HTML5 del plan original).
+      - Secondary: «Ver casos de éxito» linkeando a #timeline (anchor
+        del snippet timeline cuando exista en Task 3.8). Mientras el
+        timeline no esté en página, el anchor scrollea al top de la
+        página actual (graceful — no es error).
+
+    Heading y subtítulo SÍ se traducen — DRAFT EU en eu.po per Q1.
+
+    Reveal: simple fade+translateY igual que pilares (decisión sesión
+    2026-04-28: Splitting.js letter stagger reservado para 3.10 hero,
+    donde es la animación estrella). Stagger entre heading / subtítulo
+    / actions: 0/200/400ms via :nth-child + transition-delay en SCSS.
+
+    NO en builder (D4).
+-->
+<odoo>
+    <template id="s_avanzosc_cta_contacto" name="Avanzosc · CTA Contacto">
+        <section class="s_avanzosc_cta_contacto" data-name="Avanzosc CTA Contacto" data-avanzosc-reveal="">
+            <div class="container">
+                <div class="s_avanzosc_cta_contacto_inner">
+                    <h2 class="s_avanzosc_cta_contacto_heading">¿Hablamos?</h2>
+                    <p class="s_avanzosc_cta_contacto_text">Cuéntanos tu caso. Respondemos en 24h laborables.</p>
+                    <div class="s_avanzosc_cta_contacto_actions">
+                        <a href="/contacto" class="btn btn-primary btn-lg s_avanzosc_cta_contacto_primary">Contactar</a>
+                        <a href="#timeline" class="s_avanzosc_cta_contacto_secondary">Ver casos de éxito</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

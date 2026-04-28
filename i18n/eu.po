@@ -219,3 +219,31 @@ msgstr "24.000€ arteko diru-laguntza ETEentzat. Aholkularitza espezializatua O
 msgid "Consultar bases"
 msgstr "Oinarriak kontsultatu"
 
+# DRAFT - REVIEW NEEDED — Task 3.4 CTA Contacto heading.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_cta_contacto
+#, fuzzy
+msgid "¿Hablamos?"
+msgstr "Hitz egingo dugu?"
+
+# DRAFT - REVIEW NEEDED — Task 3.4 CTA Contacto subtítulo.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_cta_contacto
+#, fuzzy
+msgid "Cuéntanos tu caso. Respondemos en 24h laborables."
+msgstr "Konta iezaguzu zure kasua. 24 ordu lanetan erantzuten dugu."
+
+# DRAFT - REVIEW NEEDED — Task 3.4 CTA Contacto primary button.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_cta_contacto
+#, fuzzy
+msgid "Contactar"
+msgstr "Kontaktatu"
+
+# DRAFT - REVIEW NEEDED — Task 3.4 CTA Contacto secondary link.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_cta_contacto
+#, fuzzy
+msgid "Ver casos de éxito"
+msgstr "Ikusi arrakasta-kasuak"
+
