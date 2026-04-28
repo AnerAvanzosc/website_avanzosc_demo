@@ -81,3 +81,49 @@ website_sale, website_blog, website_slides, website). Ver CLAUDE.md
 - **Viewport:** 1280×800 px
 - **Module commit:** post-Task-1.2 cleanup HEAD (ver `git log`)
 - **Date:** 2026-04-28
+
+---
+
+## header-1280-public-1280.png
+
+**What it represents:** Misma vista que `header-1280-post-defaults-cleanup.png`
+pero en **sesión pública (sin login admin)** — no aparece la barra de admin
+chrome del editor de Odoo arriba. Es el screenshot relevante para validar
+cómo lo ve el visitante real del sitio.
+
+**Conteo de items en navbar a 1280px (sesión pública):**
+
+- **Visibles (5):** Inicio · Soluciones sectoriales (▾) · Tienda · Formación · Conócenos.
+- **En overflow `o_extra_menu_items` (▼ "+", 2):** Trabaja con nosotros · Contacto.
+- **Otros del header:** carrito (`o_wsale_my_cart`, icono solo) · selector de idioma «Español ▾» · botón `Acceso clientes`.
+
+**Probe de viewport — ¿en qué ancho mínimo entran los 7?**
+
+Probado en sesión pública, recargando la página tras cada resize (el handler
+`o_extra_menu_items` solo recalcula en load). Resultado: **los 2 ítems
+permanecen en overflow en TODOS los anchos probados (1280, 1366, 1440,
+1520, 1600, 1760, 1920, 2560).**
+
+Causa raíz medida: el wrapper Bootstrap `.container` está **capeado a 1140px**
+incluso con viewport 2560px (no hay breakpoint xxl en Bootstrap 4 — Odoo 14
+ships Bootstrap 4.6, no 5). Dentro de ese contenedor, `navbar-collapse`
+recibe ~695px reales para los 7 ítems + caret del dropdown (los demás
+flex-siblings del header — logo, lang, CTA — consumen el resto). 695px no
+basta para los 7, así que el handler push-ea los últimos 2 al overflow
+sistemáticamente, viewport-agnostic.
+
+**Implicación de decisión:** el conteo no mejora subiendo el viewport.
+Para que entren los 7 sin overflow se necesitaría intervención SCSS:
+ampliar el wrapper a `container-fluid` (o `container-lg`/breakpoint
+custom), reducir paddings/font-size del nav, o acortar labels (p. ej.
+«Trabaja» en vez de «Trabaja con nosotros»). NO se ha aplicado ningún
+cambio SCSS en este snapshot — queda como input para decisión del usuario:
+
+  - **(A)** Aceptar overflow [+] permanente como diseño responsive válido.
+  - **(B)** Forzar los 7 visibles ≥992px ajustando container/padding/labels.
+
+- **URL:** `http://localhost:14070/`
+- **Viewport:** 1280×800 px
+- **Sesión:** pública (sin login)
+- **Module commit:** post-Task-1.2 cleanup HEAD (ver `git log`)
+- **Date:** 2026-04-28
