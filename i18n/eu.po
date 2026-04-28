@@ -247,3 +247,24 @@ msgstr "Kontaktatu"
 msgid "Ver casos de éxito"
 msgstr "Ikusi arrakasta-kasuak"
 
+# DRAFT - REVIEW NEEDED — Task 3.5 contador años trayectoria.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_contador
+#, fuzzy
+msgid "Años en el ecosistema Odoo."
+msgstr "Urte Odoo ekosisteman."
+
+# DRAFT - REVIEW NEEDED — Task 3.5 contador módulos publicados.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_contador
+#, fuzzy
+msgid "Módulos publicados."
+msgstr "Argitaratutako moduluak."
+
+# DRAFT - REVIEW NEEDED — Task 3.5 contador sectores.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_contador
+#, fuzzy
+msgid "Sectores cubiertos."
+msgstr "Estaltzen diren sektoreak."
+

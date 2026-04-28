@@ -1,0 +1,127 @@
+// =============================================================================
+// _contador.scss — Estilos del snippet s_avanzosc_contador (Task 3.5).
+// Scope: 3 contadores con número editorial grande + 1-line.
+// Ref: spec §6.6, CLAUDE.md §9.8 (números grandes 80-120px), §5 reveal.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Sección contador
+// -----------------------------------------------------------------------------
+// Background blanco (--neutral-0). Alterno con --neutral-100 de pilares
+// y con yellow del Kit Consulting que cae a continuación. Padding 5rem
+// desktop / 3rem mobile (mismo ritmo de Phase 3).
+//
+// Reveal del bloque (no de los counters individuales) via widget genérico
+// AvanzoscReveal. La animación de cuenta progresiva la maneja contador.js
+// independientemente, vía su propio IntersectionObserver con threshold 0.5.
+// -----------------------------------------------------------------------------
+.s_avanzosc_contador {
+    background-color: var(--neutral-0, #FFFFFF);
+    padding: 5rem 0;
+
+    @media (max-width: 767.98px) {
+        padding: 3rem 0;
+    }
+
+    .row {
+        row-gap: 2rem;  // En mobile las 3 columnas se apilan; gap entre ellas.
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Item individual (cada columna)
+// -----------------------------------------------------------------------------
+// Reveal initial state: opacity 0 + translateY 20px. El widget
+// AvanzoscReveal añade `.is-revealed` al padre cuando entra en viewport.
+//
+// Stagger 100ms entre los 3 items via :nth-child + transition-delay
+// (mismo patrón que pilares). NOTA: la animación de cuenta progresiva
+// del número es independiente del reveal — el número va de 0 a target
+// regardless del state visible/hidden, controlado por contador.js.
+// -----------------------------------------------------------------------------
+.s_avanzosc_contador_item {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+                transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 1rem 0;
+}
+
+.s_avanzosc_contador.is-revealed {
+    .col-12:nth-child(1) .s_avanzosc_contador_item {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0ms;
+    }
+    .col-12:nth-child(2) .s_avanzosc_contador_item {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 100ms;
+    }
+    .col-12:nth-child(3) .s_avanzosc_contador_item {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 200ms;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Número editorial (~96px Space Grotesk peso 600)
+// -----------------------------------------------------------------------------
+// Per CLAUDE.md §9.8 «80-120px display tipo editorial», eligen 96px
+// (sweet spot entre los 64px de pilares y el extremo 120px). Aquí los
+// números son el activo conceptual del bloque (volumen técnico real),
+// merecen tamaño máximo dentro del rango §9.8.
+//
+// font-feature-settings: "tnum" — tabular numbers. Importante para que
+// los dígitos no se reajusten de ancho durante la animación de cuenta
+// (0 → 600 cambia el ancho del span si los dígitos no son tabular).
+// Resultado: animación visualmente estable.
+//
+// Color --neutral-900 (texto principal) sobre fondo blanco — máximo
+// contraste, look editorial.
+// -----------------------------------------------------------------------------
+.s_avanzosc_contador_number {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 6rem;  // 96px
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--neutral-900, #0F1419);
+    margin-bottom: 1rem;
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+}
+
+// -----------------------------------------------------------------------------
+// Descripción 1-line bajo el número
+// -----------------------------------------------------------------------------
+.s_avanzosc_contador_text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--neutral-700, #3A4149);
+    margin: 0;
+    max-width: 16rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+// -----------------------------------------------------------------------------
+// prefers-reduced-motion: reveal sin animación; números visibles directo.
+// -----------------------------------------------------------------------------
+.s_avanzosc_contador {
+    @include reduced-motion {
+        .s_avanzosc_contador_item {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+        // El JS contador.js detecta reduced-motion y rinde target sin
+        // animar (no se hace rAF loop). El SCSS solo necesita neutralizar
+        // el reveal del bloque.
+    }
+}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Task 3.5 — s_avanzosc_contador snippet.
+    Ref: spec §6.6, plan §3.5, CLAUDE.md §9.8 (números grandes 80-120px
+    display tipo editorial).
+
+    3 contadores en una fila (col-12 col-md-4 desktop, stack mobile):
+      - 17  + «Años en el ecosistema Odoo.»  (calculado dinámicamente
+        desde 2008; hardcoded por simpleza — actualizar manualmente
+        cada año o convertir a expression con res_partner.creation
+        cuando crezca el alcance).
+      - 600 + «Módulos publicados.» (suffix «+» renderizado tras la
+        animación; el target numérico es 600).
+      - 4   + «Sectores cubiertos.» (Industrial, Distribución,
+        Servicios, Academias).
+
+    Cuenta progresiva 0 → target en 1500ms ease-out cubic. Disparada por
+    IntersectionObserver al entrar 50% del elemento en viewport (threshold
+    0.5 en lugar de 0.2 — los contadores tienen más impacto si la animación
+    arranca cuando el bloque está bien centrado).
+
+    JS específico: `static/src/js/snippets/contador.js`. Patrón rAF loop
+    con interpolación easeOutCubic. One-shot per instancia (flag
+    `data-counted="true"` tras animar).
+
+    Reduced-motion: estado final directo (target visible inmediato sin
+    animación) — gestionado en el JS leyendo
+    `window.matchMedia('(prefers-reduced-motion: reduce)').matches`.
+
+    NO en builder (D4).
+-->
+<odoo>
+    <template id="s_avanzosc_contador" name="Avanzosc · Contador">
+        <section class="s_avanzosc_contador" data-name="Avanzosc Contador" data-avanzosc-reveal="">
+            <div class="container">
+                <div class="row">
+                    <!-- Pilar 1: años trayectoria. -->
+                    <div class="col-12 col-md-4">
+                        <div class="s_avanzosc_contador_item">
+                            <span class="s_avanzosc_contador_number"
+                                  data-target="17"
+                                  data-suffix="">0</span>
+                            <p class="s_avanzosc_contador_text">Años en el ecosistema Odoo.</p>
+                        </div>
+                    </div>
+                    <!-- Pilar 2: módulos publicados. Sufijo «+» tras animar. -->
+                    <div class="col-12 col-md-4">
+                        <div class="s_avanzosc_contador_item">
+                            <span class="s_avanzosc_contador_number"
+                                  data-target="600"
+                                  data-suffix="+">0</span>
+                            <p class="s_avanzosc_contador_text">Módulos publicados.</p>
+                        </div>
+                    </div>
+                    <!-- Pilar 3: sectores cubiertos. -->
+                    <div class="col-12 col-md-4">
+                        <div class="s_avanzosc_contador_item">
+                            <span class="s_avanzosc_contador_number"
+                                  data-target="4"
+                                  data-suffix="">0</span>
+                            <p class="s_avanzosc_contador_text">Sectores cubiertos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>
