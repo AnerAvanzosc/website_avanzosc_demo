@@ -13,10 +13,16 @@
     2 CTAs:
       - Primary: «Contactar» linkeando a /contacto (la landing form
         Phase 6 cubre el form HTML5 del plan original).
-      - Secondary: «Ver casos de éxito» linkeando a #timeline (anchor
-        del snippet timeline cuando exista en Task 3.8). Mientras el
-        timeline no esté en página, el anchor scrollea al top de la
-        página actual (graceful — no es error).
+      - Secondary: «Ver casos de éxito» linkeando a #timeline. El
+        snippet s_avanzosc_timeline solo vive en home; el snippet
+        cta_contacto se incluye en home + 4 sectoriales + /contacto.
+        Detección dinámica: si el path actual es la home (ES `/` o
+        EU `/eu_ES/` resuelto vía url_for('/')) usamos same-page
+        anchor `#timeline` y el smooth scroll del Commit 1 sub-bloque
+        A lo lleva ahí. En cualquier otro path usamos cross-page
+        anchor `<home>#timeline` (con prefijo de lang preservado por
+        url_for) — el bootstrap del Commit 1 hace el scroll suave al
+        cargar la home destino. Decisión post-v1 sub-bloque A bonus.
 
     Heading y subtítulo SÍ se traducen — DRAFT EU en eu.po per Q1.
 
@@ -29,6 +35,18 @@
 -->
 <odoo>
     <template id="s_avanzosc_cta_contacto" name="Avanzosc · CTA Contacto">
+        <!-- Detección de home robusta entre ES y EU. En Odoo 14 con lang
+             routing, request.httprequest.path puede ser '/' (Odoo strippea
+             el prefijo lang antes de routear) o '/eu_ES/' (con prefijo
+             literal). url_for('/') siempre devuelve la home con prefijo
+             aplicado: '/' en ES, '/eu_ES/' en EU. is_home cubre ambos
+             casos: path raw '/' o path coincidente con url_for. Same-page
+             usa '#timeline'; cross-page prepende url_for('/') para
+             preservar el idioma al navegar a la home. -->
+        <t t-set="path" t-value="request.httprequest.path"/>
+        <t t-set="home_url" t-value="url_for('/')"/>
+        <t t-set="is_home" t-value="path == '/' or path == home_url"/>
+        <t t-set="timeline_href" t-value="'#timeline' if is_home else home_url + '#timeline'"/>
         <section class="s_avanzosc_cta_contacto" data-name="Avanzosc CTA Contacto" data-avanzosc-reveal="">
             <div class="container">
                 <div class="s_avanzosc_cta_contacto_inner">
@@ -36,7 +54,7 @@
                     <p class="s_avanzosc_cta_contacto_text">Cuéntanos tu caso. Respondemos en 24h laborables.</p>
                     <div class="s_avanzosc_cta_contacto_actions">
                         <a href="/contacto" class="btn btn-primary btn-lg s_avanzosc_cta_contacto_primary">Contactar</a>
-                        <a href="#timeline" class="s_avanzosc_cta_contacto_secondary">Ver casos de éxito</a>
+                        <a t-att-href="timeline_href" class="s_avanzosc_cta_contacto_secondary">Ver casos de éxito</a>
                     </div>
                 </div>
             </div>
