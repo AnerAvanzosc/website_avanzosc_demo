@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Phase 6 — Página /kit-consulting.
+    Ref: plan 6.4, CLAUDE.md §11 D5 (ES-only).
+
+    ES-ONLY per D5: programa Red.es estatal, audiencia hispanohablante,
+    contenido temporal. NO crear versión EU.
+
+    Decisión sesión 2026-04-29 (F): copy genérico con disclaimer
+    «requisitos pueden variar, consulta kitconsulting.es». CTA único
+    a /contacto (NO form aquí — coherente con C3 de /contacto).
+
+    NO se enlaza desde menú principal (CLAUDE.md §2: «Fuera del menú
+    principal: Kit Consulting Red.es → landing en /kit-consulting,
+    banner temporal en home»). El snippet `s_avanzosc_cta_kit_consulting`
+    en home dirige aquí.
+-->
+<odoo>
+    <data noupdate="1">
+
+        <template id="page_kit_consulting" name="Avanzosc · Kit Consulting">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <main>
+                        <section class="s_avanzosc_kit_hero" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-10 offset-lg-1">
+                                        <h1 class="s_avanzosc_kit_claim">Kit Consulting</h1>
+                                        <p class="s_avanzosc_kit_subtitle">Subvención Red.es para asesoría especializada en digitalización.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_kit_descripcion" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_kit_heading">El programa</h2>
+                                        <p class="s_avanzosc_kit_paragraph">Programa de ayudas Red.es para PYMEs en consultoría especializada de digitalización. El asesoramiento se presta por un consultor adherido al programa — Avanzosc es consultor adherido para Odoo en sectores industrial, distribución, servicios y educativo.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_kit_requisitos" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_kit_heading">Requisitos generales</h2>
+                                        <ul class="s_avanzosc_kit_lista">
+                                            <li>Ser PYME según definición UE.</li>
+                                            <li>Estar dada de alta en CIRCE.</li>
+                                            <li>No haber recibido ayuda previa de Kit Consulting.</li>
+                                            <li>Tener el Kit Digital implantado o en proceso.</li>
+                                            <li>Cumplir los segmentos y umbrales de plantilla y facturación publicados por Red.es.</li>
+                                        </ul>
+                                        <p class="s_avanzosc_kit_disclaimer">Los requisitos pueden variar. Consulta condiciones actualizadas en <a href="https://www.kitconsulting.es" target="_blank" rel="noopener">kitconsulting.es</a>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_kit_cta" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2 text-center">
+                                        <a href="/contacto" class="btn btn-primary btn-lg">Hablar con Avanzosc</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </t>
+        </template>
+
+        <record id="page_kit_consulting_record" model="website.page">
+            <field name="name">Kit Consulting</field>
+            <field name="type">qweb</field>
+            <field name="url">/kit-consulting</field>
+            <field name="view_id" ref="page_kit_consulting"/>
+            <field name="is_published" eval="True"/>
+            <field name="website_indexed" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

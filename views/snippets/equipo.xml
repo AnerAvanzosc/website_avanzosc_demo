@@ -27,7 +27,7 @@
 -->
 <odoo>
     <template id="s_avanzosc_equipo" name="Avanzosc · Equipo">
-        <section class="s_avanzosc_equipo" data-name="Avanzosc Equipo" data-avanzosc-reveal="">
+        <section id="equipo" class="s_avanzosc_equipo" data-name="Avanzosc Equipo" data-avanzosc-reveal="">
             <div class="container">
                 <div class="row align-items-center">
                     <!-- Col izquierda: SVG abstracto del equipo. -->

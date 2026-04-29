@@ -45,6 +45,19 @@
         "views/pages/distribucion.xml",
         "views/pages/servicios.xml",
         "views/pages/academias.xml",
+        # Phase 6 — 7 páginas estáticas restantes:
+        # 4 corporativas (conocenos, trabaja_con_nosotros, contacto,
+        # kit_consulting) + 3 legales (aviso, privacidad, cookies). Las
+        # legales llevan marker `LEGAL DRAFT - REVIEW NEEDED BY LEGAL
+        # ADVISOR` y bloquean switchover hasta gate Q3. Kit Consulting es
+        # ES-only per D5. Slugs EU registrados en eu.po como DRAFT (Q1).
+        "views/pages/conocenos.xml",
+        "views/pages/trabaja_con_nosotros.xml",
+        "views/pages/contacto.xml",
+        "views/pages/kit_consulting.xml",
+        "views/pages/legal_aviso.xml",
+        "views/pages/legal_privacidad.xml",
+        "views/pages/legal_cookies.xml",
     ],
     "installable": True,
     "application": False,

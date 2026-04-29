@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Phase 6 — Página /contacto.
+    Ref: spec §13 [?] #1 (slug EU DRAFT), plan 6.3, CLAUDE.md §11 D9.
+
+    Decisión sesión 2026-04-29: enfoque C3 (sin form). Solo CTAs
+    directos: email + teléfono + dirección + mapa OSM. Form
+    completo (website_form + crm.lead) diferido a v2 si se valida
+    necesidad real.
+
+    Mapa: OpenStreetMap embed iframe centrado en Azkoitia (NO Google
+    Maps por GDPR — decisión plan 6.3 mantenida). bbox aprox alrededor
+    de Av. Julio Urkijo 34 bajo, 20720 Azkoitia.
+
+    Slug EU `/eu/kontaktua` registrado en eu.po como DRAFT (gate Q1).
+-->
+<odoo>
+    <data noupdate="1">
+
+        <template id="page_contacto" name="Avanzosc · Contacto">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <main>
+                        <section class="s_avanzosc_contacto_hero" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-10 offset-lg-1">
+                                        <h1 class="s_avanzosc_contacto_claim">¿Hablamos?</h1>
+                                        <p class="s_avanzosc_contacto_subtitle">Cuéntanos tu caso técnicamente. Respondemos en 24h laborables.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_contacto_canales" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 s_avanzosc_contacto_canal">
+                                        <h2 class="s_avanzosc_contacto_canal_label">Email</h2>
+                                        <a class="s_avanzosc_contacto_canal_value" href="mailto:comercial@avanzosc.es">comercial@avanzosc.es</a>
+                                    </div>
+                                    <div class="col-12 col-md-4 s_avanzosc_contacto_canal">
+                                        <h2 class="s_avanzosc_contacto_canal_label">Teléfono</h2>
+                                        <a class="s_avanzosc_contacto_canal_value" href="tel:+34943026902">943 026 902</a>
+                                    </div>
+                                    <div class="col-12 col-md-4 s_avanzosc_contacto_canal">
+                                        <h2 class="s_avanzosc_contacto_canal_label">Dirección</h2>
+                                        <address class="s_avanzosc_contacto_canal_value">
+                                            Av. Julio Urkijo 34 bajo<br/>
+                                            20720 Azkoitia, Gipuzkoa
+                                        </address>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_contacto_mapa" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2 class="s_avanzosc_contacto_mapa_heading">Cómo llegar</h2>
+                                        <div class="s_avanzosc_contacto_mapa_wrapper">
+                                            <iframe class="s_avanzosc_contacto_mapa_iframe"
+                                                    src="https://www.openstreetmap.org/export/embed.html?bbox=-2.3185%2C43.1748%2C-2.2929%2C43.1869&amp;layer=mapnik&amp;marker=43.18085%2C-2.30566"
+                                                    title="Mapa de Avanzosc en Azkoitia (OpenStreetMap)"
+                                                    loading="lazy"
+                                                    referrerpolicy="no-referrer-when-downgrade">
+                                            </iframe>
+                                            <p class="s_avanzosc_contacto_mapa_credit">
+                                                <a href="https://www.openstreetmap.org/?mlat=43.18085&amp;mlon=-2.30566#map=17/43.18085/-2.30566" target="_blank" rel="noopener">Ver mapa más grande en OpenStreetMap</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </t>
+        </template>
+
+        <record id="page_contacto_record" model="website.page">
+            <field name="name">Contacto</field>
+            <field name="type">qweb</field>
+            <field name="url">/contacto</field>
+            <field name="view_id" ref="page_contacto"/>
+            <field name="is_published" eval="True"/>
+            <field name="website_indexed" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

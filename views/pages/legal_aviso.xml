@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    LEGAL DRAFT - REVIEW NEEDED BY LEGAL ADVISOR
+    ============================================
+    Phase 6 — Página /aviso-legal.
+    Ref: plan 6.5, CLAUDE.md §11 Q3 gate (revisión legal antes
+    de switchover).
+
+    Borrador inicial basado en plantilla estándar S.L. española
+    (AEPD adaptada). Datos reales:
+        - Razón social: Avanzosc S.L.
+        - CIF: B20875340
+        - Dirección: Av. Julio Urkijo 34 bajo, 20720 Azkoitia, Gipuzkoa
+        - Email contacto legal: comercial@avanzosc.es (placeholder
+          hasta que se confirme dpo@ específico)
+        - Jurisdicción: Tribunales de Azkoitia / Donostia
+
+    GATE Q3: NO switchover sin revisión por asesoría legal de
+    Avanzosc. El texto puede requerir adaptación a la actividad real
+    contratada (datos sobre formación regulada, condiciones de
+    contratación electrónica si se activan, etc.).
+
+    Slug EU `/eu/lege-oharra` registrado en eu.po como DRAFT (Q1
+    + Q3 — doble gate).
+-->
+<odoo>
+    <data noupdate="1">
+
+        <template id="page_aviso_legal" name="Avanzosc · Aviso Legal">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <main class="s_avanzosc_legal">
+                        <section class="s_avanzosc_legal_hero">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-10 offset-lg-1">
+                                        <h1 class="s_avanzosc_legal_title">Aviso Legal</h1>
+                                        <p class="s_avanzosc_legal_subtitle">Información legal del titular del sitio web.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">1. Titular del sitio</h2>
+                                        <p>De acuerdo con el artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), se informa de que el titular del presente sitio web es:</p>
+                                        <ul class="s_avanzosc_legal_data">
+                                            <li><strong>Razón social:</strong> Avanzosc S.L.</li>
+                                            <li><strong>CIF:</strong> B20875340</li>
+                                            <li><strong>Domicilio:</strong> Av. Julio Urkijo 34 bajo, 20720 Azkoitia, Gipuzkoa.</li>
+                                            <li><strong>Teléfono:</strong> 943 026 902</li>
+                                            <li><strong>Email de contacto:</strong> comercial@avanzosc.es</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">2. Finalidad del sitio</h2>
+                                        <p>Este sitio web tiene como finalidad principal informar sobre los servicios de consultoría e implantación de Odoo prestados por Avanzosc S.L., así como facilitar el contacto con clientes y prospectos. La navegación por el sitio es libre y gratuita, sin perjuicio de los servicios concretos que puedan estar sujetos a contrato específico fuera de este canal.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">3. Condiciones de uso</h2>
+                                        <p>El acceso a este sitio web atribuye al usuario la condición de tal e implica la aceptación de las presentes condiciones. El usuario se compromete a hacer un uso adecuado de los contenidos y servicios ofrecidos y a no emplearlos para incurrir en actividades ilícitas o contrarias a la buena fe y al ordenamiento legal.</p>
+                                        <p>Avanzosc S.L. se reserva el derecho a modificar, suspender, cancelar o restringir el contenido del sitio, los enlaces o la información obtenida a través de él, sin necesidad de previo aviso.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">4. Propiedad intelectual e industrial</h2>
+                                        <p>Todos los contenidos del sitio (textos, imágenes, gráficos, diseños, código fuente, logotipos, marcas y demás signos distintivos) son titularidad de Avanzosc S.L. o de terceros que han autorizado su uso, y están protegidos por la legislación de propiedad intelectual e industrial aplicable.</p>
+                                        <p>Queda prohibida la reproducción, distribución, comunicación pública, transformación o cualquier otra forma de explotación, total o parcial, de los contenidos sin autorización expresa por escrito de Avanzosc S.L., salvo en los supuestos legalmente permitidos.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">5. Responsabilidad</h2>
+                                        <p>Avanzosc S.L. no se responsabiliza de los daños que pudieran derivarse de interferencias, omisiones, interrupciones, virus informáticos, averías telefónicas o desconexiones en el funcionamiento operativo del sitio motivadas por causas ajenas a su control. Tampoco será responsable de los contenidos ni de la disponibilidad de sitios externos enlazados desde este sitio.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">6. Legislación aplicable y jurisdicción</h2>
+                                        <p>Las presentes condiciones se rigen por la legislación española. Para cualquier controversia derivada del acceso o uso de este sitio, las partes se someten a los Juzgados y Tribunales de Azkoitia o, en su caso, de Donostia (Gipuzkoa), con renuncia expresa a cualquier otro fuero que pudiera corresponderles.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </t>
+        </template>
+
+        <record id="page_aviso_legal_record" model="website.page">
+            <field name="name">Aviso Legal</field>
+            <field name="type">qweb</field>
+            <field name="url">/aviso-legal</field>
+            <field name="view_id" ref="page_aviso_legal"/>
+            <field name="is_published" eval="True"/>
+            <field name="website_indexed" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

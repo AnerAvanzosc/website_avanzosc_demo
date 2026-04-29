@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Phase 6 — Página /conocenos.
+    Ref: spec §13 [?] #1 (slug EU DRAFT), plan 6.1, CLAUDE.md §11 D9.
+
+    Estructura (decisión sesión 2026-04-29):
+        1. Hero adaptado (misión claim + subtítulo).
+        2. Sección «Valores» (4 valores en grid 2 cols).
+        3. Sección «Historia» (1 párrafo no redundante con timeline).
+        4. Sección «Equipo» (párrafo + link a /#equipo home).
+
+    Slug EU `/eu/ezagutu-gaitzazu` registrado en eu.po como DRAFT
+    (gate Q1 lingüístico). Aliasing real diferido a Phase 7 (mismo
+    patrón que sectoriales).
+
+    Anchor `/#equipo` apunta al snippet s_avanzosc_equipo en home,
+    con `id="equipo"` añadido en Phase 6 a equipo.xml.
+-->
+<odoo>
+    <data noupdate="1">
+
+        <template id="page_conocenos" name="Avanzosc · Conócenos">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <main>
+                        <t t-call="website_avanzosc_demo.s_avanzosc_hero">
+                            <t t-set="hero_claim">Implantamos Odoo en empresas industriales y de servicios, desde 2008.</t>
+                            <t t-set="hero_subtitle">Sin teatros. Con resultados medibles.</t>
+                            <t t-set="hero_cta_primary_text">Ver valores</t>
+                            <t t-set="hero_cta_primary_url">#valores</t>
+                            <t t-set="hero_cta_secondary_text">Hablar con nosotros</t>
+                            <t t-set="hero_cta_secondary_url">/contacto</t>
+                        </t>
+
+                        <section id="valores" class="s_avanzosc_conocenos_valores" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-10 offset-lg-1">
+                                        <h2 class="s_avanzosc_conocenos_heading">Valores</h2>
+                                        <div class="row s_avanzosc_conocenos_valores_grid">
+                                            <div class="col-12 col-md-6 s_avanzosc_conocenos_valor">
+                                                <h3 class="s_avanzosc_conocenos_valor_title">Honestidad técnica</h3>
+                                                <p class="s_avanzosc_conocenos_valor_text">Si Odoo no es la solución, lo decimos.</p>
+                                            </div>
+                                            <div class="col-12 col-md-6 s_avanzosc_conocenos_valor">
+                                                <h3 class="s_avanzosc_conocenos_valor_title">Comunidad OCA</h3>
+                                                <p class="s_avanzosc_conocenos_valor_text">Devolvemos lo que aprendemos. 600+ módulos publicados.</p>
+                                            </div>
+                                            <div class="col-12 col-md-6 s_avanzosc_conocenos_valor">
+                                                <h3 class="s_avanzosc_conocenos_valor_title">Equipo STEM mayoritariamente femenino</h3>
+                                                <p class="s_avanzosc_conocenos_valor_text">Ingenieras que programan, configuran y forman.</p>
+                                            </div>
+                                            <div class="col-12 col-md-6 s_avanzosc_conocenos_valor">
+                                                <h3 class="s_avanzosc_conocenos_valor_title">Local pero conectado</h3>
+                                                <p class="s_avanzosc_conocenos_valor_text">Azkoitia como base, OCA Days como punto de encuentro.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_conocenos_historia" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_conocenos_heading">Historia</h2>
+                                        <p class="s_avanzosc_conocenos_paragraph">Avanzosc nació en 2008 en Azkoitia (Gipuzkoa) cuando OpenERP era todavía una alternativa minoritaria. Hoy seguimos en el mismo sitio, con más experiencia y un equipo más grande, pero la misma forma de trabajar.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_conocenos_equipo" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_conocenos_heading">Equipo</h2>
+                                        <p class="s_avanzosc_conocenos_paragraph">Equipo STEM con base en Azkoitia. Mayoría femenina. Ingenieras, consultoras y técnicas que han pasado por planta, almacén y aula.</p>
+                                        <a href="/#equipo" class="s_avanzosc_conocenos_link">Conoce al equipo →</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
+                    </main>
+                </div>
+            </t>
+        </template>
+
+        <record id="page_conocenos_record" model="website.page">
+            <field name="name">Conócenos</field>
+            <field name="type">qweb</field>
+            <field name="url">/conocenos</field>
+            <field name="view_id" ref="page_conocenos"/>
+            <field name="is_published" eval="True"/>
+            <field name="website_indexed" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

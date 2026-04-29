@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    LEGAL DRAFT - REVIEW NEEDED BY LEGAL ADVISOR
+    ============================================
+    Phase 6 — Página /politica-privacidad.
+    Ref: plan 6.6, CLAUDE.md §11 Q3 gate.
+
+    Borrador inicial RGPD (Reglamento UE 2016/679) y LOPDGDD
+    (Ley Orgánica 3/2018) basado en plantilla AEPD adaptada.
+    Datos reales del responsable + canal único de derechos
+    (comercial@avanzosc.es como placeholder hasta confirmar dpo@).
+
+    GATE Q3: NO switchover sin revisión por asesoría legal de
+    Avanzosc. La descripción de tratamientos puede requerir
+    actualización si se activan formularios CRM, newsletters,
+    mecanismos analytics, etc.
+
+    Slug EU `/eu/pribatutasun-politika` registrado en eu.po como
+    DRAFT (Q1 + Q3 — doble gate).
+-->
+<odoo>
+    <data noupdate="1">
+
+        <template id="page_politica_privacidad" name="Avanzosc · Política de Privacidad">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <main class="s_avanzosc_legal">
+                        <section class="s_avanzosc_legal_hero">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-10 offset-lg-1">
+                                        <h1 class="s_avanzosc_legal_title">Política de Privacidad</h1>
+                                        <p class="s_avanzosc_legal_subtitle">Información sobre el tratamiento de datos personales conforme al RGPD y la LOPDGDD.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">1. Responsable del tratamiento</h2>
+                                        <ul class="s_avanzosc_legal_data">
+                                            <li><strong>Razón social:</strong> Avanzosc S.L.</li>
+                                            <li><strong>CIF:</strong> B20875340</li>
+                                            <li><strong>Domicilio:</strong> Av. Julio Urkijo 34 bajo, 20720 Azkoitia, Gipuzkoa.</li>
+                                            <li><strong>Email de contacto en materia de protección de datos:</strong> comercial@avanzosc.es</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">2. Datos que tratamos</h2>
+                                        <p>En el marco de la navegación por este sitio web y de la relación comercial con Avanzosc S.L. podemos tratar los siguientes datos personales:</p>
+                                        <ul>
+                                            <li>Datos identificativos y de contacto facilitados voluntariamente al escribirnos por email o teléfono (nombre, empresa, email, teléfono, mensaje).</li>
+                                            <li>Datos técnicos derivados de la navegación (dirección IP, fecha y hora de acceso, páginas visitadas), recogidos en los registros del servidor por motivos de seguridad y diagnóstico operativo.</li>
+                                            <li>Cookies estrictamente técnicas necesarias para el funcionamiento de la plataforma Odoo (ver Política de Cookies).</li>
+                                        </ul>
+                                        <p>Avanzosc S.L. no recoge categorías especiales de datos personales (origen racial o étnico, creencias, salud, etc.) a través de este sitio.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">3. Finalidad del tratamiento</h2>
+                                        <ul>
+                                            <li>Atender consultas comerciales o técnicas remitidas por los interesados.</li>
+                                            <li>Mantener la relación comercial con clientes y prospectos.</li>
+                                            <li>Garantizar el correcto funcionamiento, la seguridad y el diagnóstico técnico del sitio web.</li>
+                                            <li>Cumplir las obligaciones legales aplicables a Avanzosc S.L.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">4. Base legal</h2>
+                                        <p>Las bases que legitiman el tratamiento son:</p>
+                                        <ul>
+                                            <li><strong>Consentimiento</strong> del interesado al iniciar el contacto a través de los canales publicados (email, teléfono).</li>
+                                            <li><strong>Interés legítimo</strong> de Avanzosc S.L. para mantener la seguridad operativa del sitio y la continuidad de la relación comercial con clientes.</li>
+                                            <li><strong>Ejecución de un contrato o aplicación de medidas precontractuales</strong> cuando el contacto se enmarca en una relación contractual existente o solicitada.</li>
+                                            <li><strong>Cumplimiento de obligaciones legales</strong> aplicables a Avanzosc S.L.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">5. Conservación</h2>
+                                        <p>Los datos facilitados se conservarán durante un máximo de 12 meses desde el último contacto efectivo, salvo que la relación derive en una contratación, en cuyo caso se conservarán durante el plazo legalmente exigible para el cumplimiento de las obligaciones contables, fiscales y mercantiles aplicables.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">6. Destinatarios</h2>
+                                        <p>Los datos no se ceden a terceros, salvo obligación legal. Pueden ser tratados por encargados de tratamiento (proveedores de hosting o herramientas de gestión interna) con quienes Avanzosc S.L. mantiene los correspondientes contratos de encargo conforme al artículo 28 del RGPD.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_legal_section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_legal_heading">7. Derechos de los interesados</h2>
+                                        <p>Cualquier persona puede ejercer en todo momento los derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad de sus datos, así como retirar el consentimiento prestado. Para ejercerlos, basta con remitir un correo electrónico a <a href="mailto:comercial@avanzosc.es">comercial@avanzosc.es</a> indicando el derecho que desea ejercer y acompañando, si procede, copia de un documento que acredite la identidad.</p>
+                                        <p>El interesado tiene asimismo derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>) cuando considere que el tratamiento no se ajusta a la normativa vigente.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </t>
+        </template>
+
+        <record id="page_politica_privacidad_record" model="website.page">
+            <field name="name">Política de Privacidad</field>
+            <field name="type">qweb</field>
+            <field name="url">/politica-privacidad</field>
+            <field name="view_id" ref="page_politica_privacidad"/>
+            <field name="is_published" eval="True"/>
+            <field name="website_indexed" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

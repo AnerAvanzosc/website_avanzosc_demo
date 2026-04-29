@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Phase 6 — Página /trabaja-con-nosotros.
+    Ref: spec §13 [?] #1 (slug EU DRAFT), plan 6.2, CLAUDE.md §11 D9.
+
+    Estructura (D1+D2 combinada per decisión sesión 2026-04-29):
+        1. Hero (Trabaja con nosotros + subtítulo).
+        2. Sección «Por qué Avanzosc» (1 párrafo).
+        3. Sección «Perfiles que buscamos siempre» (5 perfiles, 1 línea c/u).
+        4. Sección «Vacantes activas» (placeholder + email).
+
+    Slug interno /trabaja-con-nosotros (decisión CLAUDE.md §2: slug se
+    mantiene aunque label visible sea «Empleo»). Slug EU
+    `/eu/lan-egin-gurekin` registrado en eu.po como DRAFT (gate Q1).
+-->
+<odoo>
+    <data noupdate="1">
+
+        <template id="page_trabaja_con_nosotros" name="Avanzosc · Trabaja con nosotros">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <main>
+                        <t t-call="website_avanzosc_demo.s_avanzosc_hero">
+                            <t t-set="hero_claim">Trabaja con nosotros</t>
+                            <t t-set="hero_subtitle">Equipo STEM en Azkoitia. Odoo, OCA, planta y aula.</t>
+                            <t t-set="hero_cta_primary_text">Ver perfiles</t>
+                            <t t-set="hero_cta_primary_url">#perfiles</t>
+                            <t t-set="hero_cta_secondary_text">Enviar CV</t>
+                            <t t-set="hero_cta_secondary_url">mailto:comercial@avanzosc.es</t>
+                        </t>
+
+                        <section class="s_avanzosc_empleo_porque" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_empleo_heading">Por qué Avanzosc</h2>
+                                        <p class="s_avanzosc_empleo_paragraph">Trabajamos con Odoo desde 2008. Cliente real, problemas reales, soluciones técnicas. Equipo mayoritariamente femenino en sector dominado por hombres. Contribución activa a OCA y formación interna continua. Sede en Azkoitia, presencial preferente con flexibilidad.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="perfiles" class="s_avanzosc_empleo_perfiles" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-10 offset-lg-1">
+                                        <h2 class="s_avanzosc_empleo_heading">Perfiles que buscamos siempre</h2>
+                                        <ul class="s_avanzosc_empleo_perfiles_list">
+                                            <li><strong>Desarrolladora/or Odoo Python</strong> — backend, módulos custom, contribuciones OCA.</li>
+                                            <li><strong>Consultora/or funcional industrial</strong> — MES, MRP, trazabilidad, integración planta.</li>
+                                            <li><strong>Consultora/or funcional distribución</strong> — WMS, picking, multi-canal.</li>
+                                            <li><strong>Técnica/o de soporte L2</strong> — debugging, comunicación cliente, formación.</li>
+                                            <li><strong>Practicantes (ingenierías STEM)</strong> — bootcamp interno + proyectos reales.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="s_avanzosc_empleo_vacantes" data-avanzosc-reveal="">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2">
+                                        <h2 class="s_avanzosc_empleo_heading">Vacantes activas</h2>
+                                        <p class="s_avanzosc_empleo_paragraph">Actualmente sin vacantes formales abiertas. Si tu perfil encaja con los anteriores, escríbenos a <a href="mailto:comercial@avanzosc.es">comercial@avanzosc.es</a> con tu CV y 3 líneas sobre por qué te interesa Avanzosc.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </t>
+        </template>
+
+        <record id="page_trabaja_con_nosotros_record" model="website.page">
+            <field name="name">Trabaja con nosotros</field>
+            <field name="type">qweb</field>
+            <field name="url">/trabaja-con-nosotros</field>
+            <field name="view_id" ref="page_trabaja_con_nosotros"/>
+            <field name="is_published" eval="True"/>
+            <field name="website_indexed" eval="True"/>
+        </record>
+
+    </data>
+</odoo>
