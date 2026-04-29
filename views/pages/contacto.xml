@@ -1,79 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Phase 6 — Página /contacto.
-    Ref: spec §13 [?] #1 (slug EU DRAFT), plan 6.3, CLAUDE.md §11 D9.
+    Post-v1 sub-bloque B — Rediseño completo de /contacto.
+    Reemplaza la versión Phase 6 C3 (sin form, solo CTAs + iframe OSM).
 
-    Decisión sesión 2026-04-29: enfoque C3 (sin form). Solo CTAs
-    directos: email + teléfono + dirección + mapa OSM. Form
-    completo (website_form + crm.lead) diferido a v2 si se valida
-    necesidad real.
+    Decisiones cerradas (briefing post-v1):
+      - Form fields: nombre*, email*, empresa*, telefono (opcional),
+        mensaje*, checkbox privacidad* (linkea a /aviso-legal).
+        Sin opt-in marketing en v1 (gate Q3 legal).
+      - Layout desktop: info izq col-lg-5 / form der col-lg-7. Stack
+        vertical en mobile (col-12 cada uno).
+      - Submit POST → controller /contacto/submit (B.1) → 303 redirect
+        a /contacto/gracias (PRG idiomático Odoo).
+      - Sin CRM. Email vía mail.mail (handled en B.1). Honeypot + CSRF.
+      - Hero con letter-stagger (GSAP + Splitting.js, igual que hero
+        principal). Sin CTA en hero — la CTA es el form.
+      - Iconos Lucide en columna info. Mapa OSM eliminado a favor del
+        link externo «Ver en Google Maps» en la dirección.
 
-    Mapa: OpenStreetMap embed iframe centrado en Azkoitia (NO Google
-    Maps por GDPR — decisión plan 6.3 mantenida). bbox aprox alrededor
-    de Av. Julio Urkijo 34 bajo, 20720 Azkoitia.
-
-    Slug EU `/eu/kontaktua` registrado en eu.po como DRAFT (gate Q1).
+    Slug EU `/contacto` (sin slug literal eu en v1; gate Q1).
+    DRAFT EU strings registradas en i18n/eu.po.
 -->
 <odoo>
-    <!-- Two `<data>` blocks: template (no noupdate, so `-u` updates arch_db
-         from disk) + page record (noupdate="1", so admin edits survive
-         `-u`). Standard Odoo pattern, ref plan §7.5.2. -->
     <data>
 
         <template id="page_contacto" name="Avanzosc · Contacto">
             <t t-call="website.layout">
                 <div id="wrap">
                     <main>
-                        <section class="s_avanzosc_contacto_hero" data-avanzosc-reveal="">
+                        <!-- Hero compacto: H1 grande con letter-stagger + 1 línea
+                             técnico-cercana. Sin CTA: la CTA es el form de abajo. -->
+                        <section class="s_avanzosc_contacto_hero">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-lg-10 offset-lg-1">
-                                        <h1 class="s_avanzosc_contacto_claim">¿Hablamos?</h1>
-                                        <p class="s_avanzosc_contacto_subtitle">Cuéntanos tu caso técnicamente. Respondemos en 24h laborables.</p>
+                                        <h1 class="s_avanzosc_contacto_hero_claim">Hablemos de lo tuyo.</h1>
+                                        <p class="s_avanzosc_contacto_hero_subtitle">Cuéntanos qué Odoo te haría falta. Respondemos en 24-48h laborables.</p>
                                     </div>
                                 </div>
                             </div>
                         </section>
 
-                        <section class="s_avanzosc_contacto_canales" data-avanzosc-reveal="">
+                        <!-- Cuerpo principal: info izq (col-lg-5) + form der (col-lg-7).
+                             Stack vertical mobile (col-12 cada uno). data-avanzosc-reveal
+                             → reveal.js añade .is-revealed en viewport (patrón Phase 3). -->
+                        <section class="s_avanzosc_contacto_body">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-12 col-md-4 s_avanzosc_contacto_canal">
-                                        <h2 class="s_avanzosc_contacto_canal_label">Email</h2>
-                                        <a class="s_avanzosc_contacto_canal_value" href="mailto:comercial@avanzosc.es">comercial@avanzosc.es</a>
-                                    </div>
-                                    <div class="col-12 col-md-4 s_avanzosc_contacto_canal">
-                                        <h2 class="s_avanzosc_contacto_canal_label">Teléfono</h2>
-                                        <a class="s_avanzosc_contacto_canal_value" href="tel:+34943026902">943 026 902</a>
-                                    </div>
-                                    <div class="col-12 col-md-4 s_avanzosc_contacto_canal">
-                                        <h2 class="s_avanzosc_contacto_canal_label">Dirección</h2>
-                                        <address class="s_avanzosc_contacto_canal_value">
-                                            Av. Julio Urkijo 34 bajo<br/>
-                                            20720 Azkoitia, Gipuzkoa
-                                        </address>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
 
-                        <section class="s_avanzosc_contacto_mapa" data-avanzosc-reveal="">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h2 class="s_avanzosc_contacto_mapa_heading">Cómo llegar</h2>
-                                        <div class="s_avanzosc_contacto_mapa_wrapper">
-                                            <iframe class="s_avanzosc_contacto_mapa_iframe"
-                                                    src="https://www.openstreetmap.org/export/embed.html?bbox=-2.3185%2C43.1748%2C-2.2929%2C43.1869&amp;layer=mapnik&amp;marker=43.18085%2C-2.30566"
-                                                    title="Mapa de Avanzosc en Azkoitia (OpenStreetMap)"
-                                                    loading="lazy"
-                                                    referrerpolicy="no-referrer-when-downgrade">
-                                            </iframe>
-                                            <p class="s_avanzosc_contacto_mapa_credit">
-                                                <a href="https://www.openstreetmap.org/?mlat=43.18085&amp;mlon=-2.30566#map=17/43.18085/-2.30566" target="_blank" rel="noopener">Ver mapa más grande en OpenStreetMap</a>
-                                            </p>
+                                    <!-- ==========================================================
+                                         Columna info: email, teléfono, dirección, cómo llegar, horario.
+                                         Iconos Lucide via <i data-lucide="..."/> (resueltos por
+                                         lucide.createIcons() en main.js).
+                                         ========================================================== -->
+                                    <div class="col-12 col-lg-5 s_avanzosc_contacto_info" data-avanzosc-reveal="">
+                                        <h2 class="s_avanzosc_contacto_info_heading">Canales directos</h2>
+
+                                        <div class="s_avanzosc_contacto_info_item">
+                                            <i data-lucide="mail" class="s_avanzosc_contacto_info_icon"/>
+                                            <div class="s_avanzosc_contacto_info_content">
+                                                <span class="s_avanzosc_contacto_info_label">Email</span>
+                                                <a href="mailto:comercial@avanzosc.es" class="s_avanzosc_contacto_info_value">comercial@avanzosc.es</a>
+                                            </div>
+                                        </div>
+
+                                        <div class="s_avanzosc_contacto_info_item">
+                                            <i data-lucide="phone" class="s_avanzosc_contacto_info_icon"/>
+                                            <div class="s_avanzosc_contacto_info_content">
+                                                <span class="s_avanzosc_contacto_info_label">Teléfono</span>
+                                                <a href="tel:+34943026902" class="s_avanzosc_contacto_info_value">943 026 902</a>
+                                            </div>
+                                        </div>
+
+                                        <div class="s_avanzosc_contacto_info_item">
+                                            <i data-lucide="map-pin" class="s_avanzosc_contacto_info_icon"/>
+                                            <div class="s_avanzosc_contacto_info_content">
+                                                <span class="s_avanzosc_contacto_info_label">Dirección</span>
+                                                <address class="s_avanzosc_contacto_info_value">
+                                                    Av. Julio Urkijo 34 bajo<br/>
+                                                    20720 Azkoitia, Gipuzkoa
+                                                </address>
+                                                <a href="https://maps.google.com/?q=Av.+Julio+Urkijo+34,+Azkoitia"
+                                                   target="_blank" rel="noopener noreferrer"
+                                                   class="s_avanzosc_contacto_info_link">Ver en Google Maps</a>
+                                                <!-- DRAFT humano: referencias urbanas / parking / transporte -->
+                                                <p class="s_avanzosc_contacto_info_directions">En el centro de Azkoitia, a 5 min andando del Ayuntamiento. Aparcamiento en zona azul.</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- DRAFT humano: horario real -->
+                                        <div class="s_avanzosc_contacto_info_item">
+                                            <i data-lucide="clock" class="s_avanzosc_contacto_info_icon"/>
+                                            <div class="s_avanzosc_contacto_info_content">
+                                                <span class="s_avanzosc_contacto_info_label">Horario</span>
+                                                <table class="s_avanzosc_contacto_info_horario">
+                                                    <tr><th>L-V</th><td>8:30 - 14:00</td></tr>
+                                                    <tr><th></th><td>15:00 - 17:30</td></tr>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <!-- ==========================================================
+                                         Columna form: 5 campos + checkbox privacidad + submit.
+                                         action=/contacto/submit (controller B.1). Method POST.
+                                         CSRF token nativo Odoo. Honeypot 'website' oculto.
+                                         HTML5 required en cliente; controller server-side
+                                         re-valida (defense-in-depth).
+                                         ========================================================== -->
+                                    <div class="col-12 col-lg-7 s_avanzosc_contacto_form_wrap" data-avanzosc-reveal="">
+                                        <form action="/contacto/submit" method="POST" class="s_avanzosc_contacto_form" novalidate="novalidate">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                            <!-- Honeypot: campo trampa con name='website'. Bots
+                                                 autollenan campos cuyo name parezca un dato común;
+                                                 humanos no lo ven (oculto vía SCSS clip-path +
+                                                 aria-hidden + tabindex=-1). El controller (B.1)
+                                                 silencia el envío si llega relleno. -->
+                                            <div class="s_avanzosc_contacto_honeypot" aria-hidden="true">
+                                                <label for="contacto_website">No rellenar este campo:</label>
+                                                <input type="text" id="contacto_website" name="website" tabindex="-1" autocomplete="off"/>
+                                            </div>
+
+                                            <div class="s_avanzosc_contacto_form_field">
+                                                <label for="contacto_nombre">Nombre <span class="s_avanzosc_contacto_form_required">*</span></label>
+                                                <input type="text" id="contacto_nombre" name="nombre" required="required" autocomplete="name"/>
+                                            </div>
+
+                                            <div class="s_avanzosc_contacto_form_field">
+                                                <label for="contacto_email">Email <span class="s_avanzosc_contacto_form_required">*</span></label>
+                                                <input type="email" id="contacto_email" name="email" required="required" autocomplete="email"/>
+                                            </div>
+
+                                            <div class="s_avanzosc_contacto_form_field">
+                                                <label for="contacto_empresa">Empresa <span class="s_avanzosc_contacto_form_required">*</span></label>
+                                                <input type="text" id="contacto_empresa" name="empresa" required="required" autocomplete="organization"/>
+                                            </div>
+
+                                            <div class="s_avanzosc_contacto_form_field">
+                                                <label for="contacto_telefono">Teléfono <span class="s_avanzosc_contacto_form_optional">(opcional)</span></label>
+                                                <input type="tel" id="contacto_telefono" name="telefono" autocomplete="tel"/>
+                                            </div>
+
+                                            <div class="s_avanzosc_contacto_form_field">
+                                                <label for="contacto_mensaje">Mensaje <span class="s_avanzosc_contacto_form_required">*</span></label>
+                                                <textarea id="contacto_mensaje" name="mensaje" rows="6" required="required"></textarea>
+                                            </div>
+
+                                            <div class="s_avanzosc_contacto_form_field s_avanzosc_contacto_form_consent">
+                                                <input type="checkbox" id="contacto_privacidad" name="privacidad" required="required" value="1"/>
+                                                <label for="contacto_privacidad">He leído y acepto la <a href="/politica-privacidad" target="_blank" rel="noopener">política de privacidad</a>. <span class="s_avanzosc_contacto_form_required">*</span></label>
+                                            </div>
+
+                                            <div class="s_avanzosc_contacto_form_actions">
+                                                <button type="submit" class="btn btn-primary btn-lg s_avanzosc_contacto_form_submit">Enviar consulta</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
                                 </div>
                             </div>
                         </section>

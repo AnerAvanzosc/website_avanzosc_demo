@@ -1468,3 +1468,154 @@ msgstr "Lote/serie trazabilitatea + EDI bezeroekin."
 msgid "Multidivisa con tipo de cambio diario automático."
 msgstr "Dibisa anitza, eguneroko kanbio-tasa automatikoarekin."
 
+
+# ============================================================================
+# Post-v1 sub-bloque B — /contacto rediseño + /contacto/gracias
+# ============================================================================
+
+# DRAFT - REVIEW NEEDED — Hero claim /contacto.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Hablemos de lo tuyo."
+msgstr "Hitz egin dezagun zureaz."
+
+# DRAFT - REVIEW NEEDED — Hero subtitle /contacto.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Cuéntanos qué Odoo te haría falta. Respondemos en 24-48h laborables."
+msgstr "Esan iezaguzu zer Odoo behar duzun. 24-48 ordu laburren barruan erantzungo dizugu."
+
+# DRAFT - REVIEW NEEDED — Info column heading.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Canales directos"
+msgstr "Kanal zuzenak"
+
+# DRAFT - REVIEW NEEDED — Email label.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Email"
+msgstr "Posta elektronikoa"
+
+# DRAFT - REVIEW NEEDED — Phone label.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Teléfono"
+msgstr "Telefonoa"
+
+# DRAFT - REVIEW NEEDED — Address label.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Dirección"
+msgstr "Helbidea"
+
+# DRAFT - REVIEW NEEDED — Google Maps external link.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Ver en Google Maps"
+msgstr "Google Maps-en ikusi"
+
+# DRAFT humano — referencias urbanas (placeholder, requiere dato real).
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "En el centro de Azkoitia, a 5 min andando del Ayuntamiento. Aparcamiento en zona azul."
+msgstr "Azkoitiaren erdigunean, Udaletxetik 5 minutura oinez. Aparkalekua zona urdinean."
+
+# DRAFT - REVIEW NEEDED — Schedule label.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Horario"
+msgstr "Ordutegia"
+
+# DRAFT - REVIEW NEEDED — Days range L-V.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "L-V"
+msgstr "A-O"
+
+# DRAFT - REVIEW NEEDED — Form field name.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Nombre"
+msgstr "Izena"
+
+# DRAFT - REVIEW NEEDED — Form field empresa.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Empresa"
+msgstr "Enpresa"
+
+# DRAFT - REVIEW NEEDED — Optional marker on form field.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "(opcional)"
+msgstr "(aukerakoa)"
+
+# DRAFT - REVIEW NEEDED — Form field message.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Mensaje"
+msgstr "Mezua"
+
+# DRAFT - REVIEW NEEDED — Honeypot legend (a11y, never shown to humans).
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "No rellenar este campo:"
+msgstr "Ez bete eremu hau:"
+
+# DRAFT - REVIEW NEEDED — Privacy consent + link to /politica-privacidad.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "He leído y acepto la <a href=\"/politica-privacidad\" target=\"_blank\" rel=\"noopener\">política de privacidad</a>. <span class=\"s_avanzosc_contacto_form_required\">*</span>"
+msgstr "Irakurri dut eta onartzen dut <a href=\"/politica-privacidad\" target=\"_blank\" rel=\"noopener\">pribatutasun-politika</a>. <span class=\"s_avanzosc_contacto_form_required\">*</span>"
+
+# DRAFT - REVIEW NEEDED — Submit button.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Enviar consulta"
+msgstr "Bidali kontsulta"
+
+# DRAFT - REVIEW NEEDED — Gracias hero heading.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto_gracias
+#, fuzzy
+msgid "¡Gracias!"
+msgstr "Eskerrik asko!"
+
+# DRAFT - REVIEW NEEDED — Gracias confirmation text.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto_gracias
+#, fuzzy
+msgid "Hemos recibido tu consulta. Te responderemos en 24-48h laborables."
+msgstr "Zure kontsulta jaso dugu. 24-48 ordu laburren barruan erantzungo dizugu."
+
+# DRAFT - REVIEW NEEDED — Gracias action: back to home.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto_gracias
+#, fuzzy
+msgid "Volver al inicio"
+msgstr "Hasierara itzuli"
+
+# DRAFT - REVIEW NEEDED — Gracias action: see solutions.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto_gracias
+#, fuzzy
+msgid "Ver soluciones"
+msgstr "Soluzioak ikusi"

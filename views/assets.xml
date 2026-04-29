@@ -72,6 +72,10 @@
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/snippets/_page_transition.scss"/>
+            <!-- Post-v1 sub-bloque B — /contacto y /contacto/gracias. -->
+            <link rel="stylesheet"
+                  type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/snippets/_contacto.scss"/>
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/main.scss"/>
@@ -101,6 +105,10 @@
                  docstring para detalles. -->
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/snippets/header.js"/>
+            <!-- Post-v1 sub-bloque B — /contacto hero letter-stagger
+                 (selector específico .s_avanzosc_contacto_hero). -->
+            <script type="text/javascript"
+                    src="/website_avanzosc_demo/static/src/js/snippets/contacto.js"/>
         </xpath>
     </template>
 
