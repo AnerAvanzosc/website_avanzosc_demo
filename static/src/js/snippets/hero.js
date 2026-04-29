@@ -98,6 +98,18 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
             // state final visible especificado en el args. Patrón coherente
             // con el resto de Phase 3 (pilares, sectores, etc. que usan
             // class-toggle CSS-only).
+            // Audit 8.1 (sesión 2026-04-29 vs spec §9.2):
+            //   - claim chars duration 400ms → dentro 300-600ms micro.
+            //   - claim fallback duration 600ms → techo del rango micro.
+            //   - subtítulo + CTAs duration 300ms → suelo del rango micro.
+            //   - escena total ≈ 1300ms (claim 400 + 25ms × 38 chars + delays
+            //     hasta 900ms para CTAs) → ~100ms por encima del techo de
+            //     entradas grandes (800-1200ms). Aceptable: la entrada
+            //     orquestada del hero es el «moment of arrival» del sitio
+            //     (CLAUDE.md §5 patrones aprobados); compromise stagger 25ms
+            //     vs 30ms ya documentado en docstring superior — mantiene
+            //     impacto sin volverse tedioso.
+            //   - ease expo.out coincide con cubic-bezier(0.16, 1, 0.3, 1).
             if (hasSplitting) {
                 var chars = claim.querySelectorAll('.char');
                 if (chars.length > 0) {

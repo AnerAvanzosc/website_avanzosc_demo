@@ -14,6 +14,8 @@
 
     // Reveal initial (todo el bloque): opacity 0 → 1 simple, sin stagger
     // (el contenido es una unidad narrativa).
+    // Audit 8.1: 600ms = techo del rango micro 300-600ms (spec §9.2). Ease
+    // cubic-bezier expo coincide con entradas. ✓
     opacity: 0;
     transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
 

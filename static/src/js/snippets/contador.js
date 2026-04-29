@@ -37,6 +37,13 @@ odoo.define('website_avanzosc_demo.snippets.contador', function (require) {
 
     var publicWidget = require('web.public.widget');
 
+    // 1500ms intencional, excede rango spec §9.2 (800-1200ms entradas grandes).
+    // Los contadores numéricos requieren tiempo extra de lectura para que el
+    // usuario procese el valor final con confort. La curva easeOutCubic
+    // descelera en los últimos ~400ms, dando tiempo suficiente para que
+    // los dígitos sean leídos a medida que se aproximan al target. Decisión
+    // consciente del implementer Phase 3.5; auditoría 8.1 (sesión 2026-04-29)
+    // mantiene el valor.
     var DURATION_MS = 1500;
     var THRESHOLD = 0.5;
 

@@ -55,6 +55,14 @@
     // Reveal initial state.
     opacity: 0;
     transform: translateY(20px);
+    // Audit 8.1 vs spec §9.2:
+    //   - reveal duration 600ms = techo del rango micro 300-600ms ✓
+    //   - reveal stagger 100ms × 4 ítems = 300ms total → escena total
+    //     ~900ms, dentro entradas grandes 800-1200ms ✓
+    //   - hover transform 200ms = 100ms por debajo del rango micro,
+    //     justificado igual que el botón Acceso clientes (estándar
+    //     industria hover feedback)
+    //   - ease cubic-bezier expo coincide con spec ✓
     // Combina las dos transiciones (reveal: opacity+transform 600ms expo,
     // hover: transform+shadow 200ms expo) en una sola declaración. Las
     // duraciones difieren entre propiedades — opacity solo en reveal,

@@ -58,6 +58,16 @@ odoo.define('website_avanzosc_demo.snippets.timeline', function (require) {
             function reveal() {
                 if (revealed) return;
                 revealed = true;
+                // Audit 8.1 (sesión 2026-04-29 vs spec §9.2):
+                //   - duration 600ms per ítem → dentro de 300-600ms (techo).
+                //   - stagger 100ms × 8 ítems = 700ms total → escena total
+                //     ≈ 1300ms, ~100ms por encima del techo de entradas
+                //     grandes (800-1200ms). Aceptable: la timeline cronológica
+                //     se diseña para que el usuario lea cada hito a medida
+                //     que aparece — un stagger más rápido haría que los
+                //     primeros ítems se solapen visualmente con los siguientes.
+                //   - ease expo.out coincide con cubic-bezier(0.16, 1, 0.3, 1)
+                //     de spec §9.2 (entradas).
                 window.gsap.from(items, {
                     opacity: 0,
                     y: 20,

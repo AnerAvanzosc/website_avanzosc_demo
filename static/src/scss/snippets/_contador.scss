@@ -43,6 +43,11 @@
     text-align: center;
     opacity: 0;
     transform: translateY(20px);
+    // Audit 8.1: reveal CSS 600ms + stagger 100ms × 3 ítems ≈ 800ms escena.
+    // Per ítem techo del rango micro 300-600ms; escena total dentro entradas
+    // grandes 800-1200ms. Ease expo coincide con spec §9.2. ✓ El count-up
+    // numérico (1500ms) corre dentro del item revelado y es independiente —
+    // ver justificación en `contador.js`.
     transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
                 transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
     padding: 1rem 0;
