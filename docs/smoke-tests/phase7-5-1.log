@@ -1,0 +1,20 @@
+2026-04-29 09:14:09,874 52118 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/pages/servicios.xml 
+2026-04-29 09:14:09,876 52118 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/pages/academias.xml 
+2026-04-29 09:14:09,878 52118 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/pages/conocenos.xml 
+2026-04-29 09:14:09,880 52118 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/pages/trabaja_con_nosotros.xml 
+2026-04-29 09:14:09,882 52118 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/pages/contacto.xml 
+2026-04-29 09:14:09,884 52118 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/pages/kit_consulting.xml 
+2026-04-29 09:14:09,887 52118 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/pages/legal_aviso.xml 
+2026-04-29 09:14:09,889 52118 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/pages/legal_privacidad.xml 
+2026-04-29 09:14:09,892 52118 INFO odoo14_community odoo.modules.loading: loading website_avanzosc_demo/views/pages/legal_cookies.xml 
+2026-04-29 09:14:09,904 52118 INFO odoo14_community odoo.modules.loading: Module website_avanzosc_demo: loading demo 
+2026-04-29 09:14:09,907 52118 INFO odoo14_community odoo.addons.base.models.ir_translation: module website_avanzosc_demo: loading base translation file eu for language eu_ES 
+2026-04-29 09:14:09,907 52118 INFO odoo14_community odoo.tools.translate: loading /opt/odoo/v14/workspace/website_avanzosc_demo/i18n/eu.po 
+2026-04-29 09:14:09,929 52118 INFO odoo14_community odoo.addons.base.models.ir_translation: module website_avanzosc_demo: no translation for language eu_ES 
+2026-04-29 09:14:09,929 52118 INFO odoo14_community odoo.addons.base.models.ir_translation: module website_avanzosc_demo: no translation for language es 
+2026-04-29 09:14:09,958 52118 INFO odoo14_community odoo.modules.loading: Module website_avanzosc_demo loaded in 0.90s, 685 queries 
+2026-04-29 09:14:09,958 52118 INFO odoo14_community odoo.modules.loading: 59 modules loaded in 1.31s, 701 queries (+0 extra) 
+2026-04-29 09:14:10,440 52118 INFO odoo14_community odoo.modules.loading: Modules loaded. 
+2026-04-29 09:14:10,444 52118 INFO odoo14_community odoo.service.server: Initiating shutdown 
+2026-04-29 09:14:10,444 52118 INFO odoo14_community odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-04-29 09:14:10,444 52118 INFO odoo14_community odoo.sql_db: ConnectionPool(used=0/count=0/max=64): Closed 1 connections  

@@ -134,5 +134,117 @@
              </record>
         -->
 
+        <!-- =====================================================
+             Task 7.5.1 — Slugs URL EU directos (301 source-EU → source-ES).
+             =====================================================
+             Hallazgo Phase 5/6: Odoo 14 registra slugs traducidos en
+             ir.translation pero el dispatcher solo enruta source-lang.
+             `/eu_ES/industrial` resuelve (200), pero `/eu_ES/industriala`
+             devuelve 404. Estos rewrites cierran el gap.
+
+             Cada record redirige `/eu_ES/<slug-EU>` → `/eu_ES/<slug-ES>`,
+             preservando lang=eu_ES vía el prefijo `/eu_ES/` del
+             destino. El dispatcher de Odoo procesa el destino con
+             `request.lang.code = 'eu_ES'` y aplica la traducción
+             completa del template per spec D1.
+
+             NOTA TÉCNICA SOBRE EL `url_from` SIN PREFIJO LANG:
+             Odoo 14 despoja el lang prefix de `request.httprequest.path`
+             ANTES de consultar `website.rewrite` en `_serve_redirect`
+             (cf. `addons/website/models/ir_http.py:_serve_redirect`).
+             Por tanto, una request a `/eu_ES/industriala` llega al
+             handler con `req_page = '/industriala'` (sin `/eu_ES/`).
+             El `url_from` de los rewrites debe ser la forma sin
+             prefijo `/<slug-EU>`. Esto tiene un efecto secundario
+             intencional: una request a `/industriala` (sin prefijo
+             lang) también dispara el rewrite y cae a `/eu_ES/industrial`
+             — comportamiento aceptable porque el slug EU sólo lo
+             escriben usuarios con intención EU, y el destino preserva
+             el lang correcto.
+
+             Ningún rewrite para `kit-consulting` per D5 (ES-only).
+
+             DRAFT - EU SLUGS PENDING LINGUISTIC REVIEW
+             ==========================================
+             Los 10 slugs EU son borradores per Q1 (validación
+             lingüística por equipo Avanzosc bloqueante switchover).
+             Hasta entonces, las URLs son funcionales en QA pero
+             pueden cambiar antes de prod. Cuando Q1 cierre:
+             - Si los slugs validados son idénticos: levantar el flag
+               DRAFT del bloque, no se requieren más cambios.
+             - Si cambian: actualizar `url_from` aquí + correspondiente
+               msgstr en `i18n/eu.po`.
+             ===================================================== -->
+
+        <record id="redirect_eu_slug_industrial" model="website.rewrite">
+            <field name="name">EU slug /industriala → /eu_ES/industrial (DRAFT Q1)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/industriala</field>
+            <field name="url_to">/eu_ES/industrial</field>
+        </record>
+
+        <record id="redirect_eu_slug_distribucion" model="website.rewrite">
+            <field name="name">EU slug /banaketa → /eu_ES/distribucion (DRAFT Q1)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/banaketa</field>
+            <field name="url_to">/eu_ES/distribucion</field>
+        </record>
+
+        <record id="redirect_eu_slug_servicios" model="website.rewrite">
+            <field name="name">EU slug /zerbitzuak → /eu_ES/servicios (DRAFT Q1)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/zerbitzuak</field>
+            <field name="url_to">/eu_ES/servicios</field>
+        </record>
+
+        <record id="redirect_eu_slug_academias" model="website.rewrite">
+            <field name="name">EU slug /akademiak → /eu_ES/academias (DRAFT Q1)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/akademiak</field>
+            <field name="url_to">/eu_ES/academias</field>
+        </record>
+
+        <record id="redirect_eu_slug_conocenos" model="website.rewrite">
+            <field name="name">EU slug /ezagutu-gaitzazu → /eu_ES/conocenos (DRAFT Q1)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/ezagutu-gaitzazu</field>
+            <field name="url_to">/eu_ES/conocenos</field>
+        </record>
+
+        <record id="redirect_eu_slug_trabaja_con_nosotros" model="website.rewrite">
+            <field name="name">EU slug /lan-egin-gurekin → /eu_ES/trabaja-con-nosotros (DRAFT Q1)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/lan-egin-gurekin</field>
+            <field name="url_to">/eu_ES/trabaja-con-nosotros</field>
+        </record>
+
+        <record id="redirect_eu_slug_contacto" model="website.rewrite">
+            <field name="name">EU slug /kontaktua → /eu_ES/contacto (DRAFT Q1)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/kontaktua</field>
+            <field name="url_to">/eu_ES/contacto</field>
+        </record>
+
+        <record id="redirect_eu_slug_aviso_legal" model="website.rewrite">
+            <field name="name">EU slug /lege-oharra → /eu_ES/aviso-legal (DRAFT Q1)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/lege-oharra</field>
+            <field name="url_to">/eu_ES/aviso-legal</field>
+        </record>
+
+        <record id="redirect_eu_slug_politica_privacidad" model="website.rewrite">
+            <field name="name">EU slug /pribatutasun-politika → /eu_ES/politica-privacidad (DRAFT Q1)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/pribatutasun-politika</field>
+            <field name="url_to">/eu_ES/politica-privacidad</field>
+        </record>
+
+        <record id="redirect_eu_slug_politica_cookies" model="website.rewrite">
+            <field name="name">EU slug /cookien-politika → /eu_ES/politica-cookies (DRAFT Q1)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/cookien-politika</field>
+            <field name="url_to">/eu_ES/politica-cookies</field>
+        </record>
+
     </data>
 </odoo>
