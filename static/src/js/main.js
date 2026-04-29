@@ -81,11 +81,23 @@ odoo.define('website_avanzosc_demo.main', function (require) {
                 // Browser hace jump nativo dentro de #wrapwrap — aceptado per
                 // CLAUDE.md §5 (skip animation).
                 // ----------------------------------------------------------------
-                var HEADER_OFFSET = 80;
+                // El offset se deriva dinámicamente de la altura real del
+                // header al momento del click. Header en EU mide ~100 px
+                // (navbar wrappea a 2 líneas por etiquetas más largas)
+                // mientras que en ES mide ~62 px. Un offset fijo de 80 px
+                // dejaría el target tras el header en EU (overlap de 36 px).
+                // Lenis suma además ~+16 px de bias residual en scrollTo;
+                // restamos 20 px adicionales como aire visual sobre el header
+                // para compensar y dejar el target con clearance ≥30 px en
+                // ambos idiomas.
+                var BREATHING = 20;
                 var easeOutExpo = function (t) { return 1 - Math.pow(2, -10 * t); };
                 var SCROLL_OPTS = { duration: 0.8, easing: easeOutExpo };
                 var scrollToElement = function (el) {
-                    var top = Math.max(0, el.offsetTop - HEADER_OFFSET);
+                    var headerEl = document.querySelector('header');
+                    var headerHeight = headerEl ? headerEl.offsetHeight : 80;
+                    var offset = headerHeight + BREATHING;
+                    var top = Math.max(0, el.offsetTop - offset);
                     lenis.scrollTo(top, SCROLL_OPTS);
                 };
                 document.addEventListener('click', function (e) {
