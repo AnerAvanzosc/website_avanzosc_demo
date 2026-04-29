@@ -25,14 +25,45 @@
 -->
 <odoo>
     <template id="s_avanzosc_hero" name="Avanzosc · Hero">
+        <!--
+            Parametrización (Phase 5): cada llamador puede sobrescribir
+            los 6 fragmentos de copy via `<t t-call>` body con `<t t-set>`.
+            Forma t-set body (no t-value) preserva el contenido como
+            QWeb-rendered text, lo que mantiene la traducibilidad
+            automática en eu.po (extracción del extractor de Odoo
+            recoge el texto del body como msgid).
+
+            Defaults aquí = los valores de la home Phase 4. Cualquier
+            llamador sin body usa los defaults. Sectoriales (Phase 5)
+            sobrescriben con copy específico por sector.
+        -->
+        <t t-if="not hero_claim">
+            <t t-set="hero_claim">Odoo industrial de verdad, desde 2008.</t>
+        </t>
+        <t t-if="not hero_subtitle">
+            <t t-set="hero_subtitle">Migración OpenUpgrade, módulos OCA y localización fiscal española. Para industria, distribución, servicios y academias.</t>
+        </t>
+        <t t-if="not hero_cta_primary_text">
+            <t t-set="hero_cta_primary_text">Ver soluciones</t>
+        </t>
+        <t t-if="not hero_cta_primary_url">
+            <t t-set="hero_cta_primary_url">#sectores</t>
+        </t>
+        <t t-if="not hero_cta_secondary_text">
+            <t t-set="hero_cta_secondary_text">Hablar con nosotros</t>
+        </t>
+        <t t-if="not hero_cta_secondary_url">
+            <t t-set="hero_cta_secondary_url">/contacto</t>
+        </t>
+
         <section class="s_avanzosc_hero" data-name="Avanzosc Hero">
             <div class="container">
                 <div class="s_avanzosc_hero_inner">
-                    <h1 class="s_avanzosc_hero_claim">Odoo industrial de verdad, desde 2008.</h1>
-                    <p class="s_avanzosc_hero_subtitle">Migración OpenUpgrade, módulos OCA y localización fiscal española. Para industria, distribución, servicios y academias.</p>
+                    <h1 class="s_avanzosc_hero_claim"><t t-esc="hero_claim"/></h1>
+                    <p class="s_avanzosc_hero_subtitle"><t t-esc="hero_subtitle"/></p>
                     <div class="s_avanzosc_hero_actions">
-                        <a href="#sectores" class="btn btn-primary btn-lg s_avanzosc_hero_cta_primary">Ver soluciones</a>
-                        <a href="/contacto" class="s_avanzosc_hero_cta_secondary">Hablar con nosotros</a>
+                        <a t-att-href="hero_cta_primary_url" class="btn btn-primary btn-lg s_avanzosc_hero_cta_primary"><t t-esc="hero_cta_primary_text"/></a>
+                        <a t-att-href="hero_cta_secondary_url" class="s_avanzosc_hero_cta_secondary"><t t-esc="hero_cta_secondary_text"/></a>
                     </div>
                     <!-- TODO #spec-q8: evaluar foto/illustration aquí cuando se
                          cierre sesión fotográfica del equipo Avanzosc. v1 va

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Phase 5 — Página sectorial /servicios.
+    Ref: spec §7, plan Phase 5.
+
+    Archetype destacado: id=7 (Servicio IT/SAT con técnicos en ruta).
+
+    URL EU `/zerbitzuak` (validated D2).
+-->
+<odoo>
+    <data noupdate="1">
+
+        <template id="page_servicios" name="Avanzosc · Servicios">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <main>
+                        <t t-call="website_avanzosc_demo.s_avanzosc_hero">
+                            <t t-set="hero_claim">Proyectos, partes y facturación recurrente.</t>
+                            <t t-set="hero_subtitle">Helpdesk, contratos, partes de horas, facturación recurrente. Para empresas de servicios profesionales que necesitan trazabilidad real.</t>
+                            <t t-set="hero_cta_primary_text">Ver capacidades</t>
+                            <t t-set="hero_cta_primary_url">#capabilities</t>
+                            <t t-set="hero_cta_secondary_text">Hablar con un técnico</t>
+                            <t t-set="hero_cta_secondary_url">/contacto</t>
+                        </t>
+
+                        <t t-call="website_avanzosc_demo.s_avanzosc_sector_specifics">
+                            <t t-set="sector_key" t-value="'servicios'"/>
+                        </t>
+
+                        <t t-call="website_avanzosc_demo.s_avanzosc_caso_exito">
+                            <t t-set="archetype_id" t-value="7"/>
+                        </t>
+
+                        <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
+                    </main>
+                </div>
+            </t>
+        </template>
+
+        <record id="page_servicios_record" model="website.page">
+            <field name="name">Servicios</field>
+            <field name="type">qweb</field>
+            <field name="url">/servicios</field>
+            <field name="view_id" ref="page_servicios"/>
+            <field name="is_published" eval="True"/>
+            <field name="website_indexed" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

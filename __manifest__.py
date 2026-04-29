@@ -37,6 +37,14 @@
         # funnel. La view extiende `website.homepage` via xpath
         # inheritance.
         "views/pages/home.xml",
+        # Phase 5 — 4 páginas sectoriales con copy específico, archetype
+        # destacado y sector_specifics filtrado. Cada una hereda directamente
+        # de `website.layout` (no extiende otra view) y crea un `website.page`
+        # record propio. URLs ES + EU translatable per spec D2.
+        "views/pages/industrial.xml",
+        "views/pages/distribucion.xml",
+        "views/pages/servicios.xml",
+        "views/pages/academias.xml",
     ],
     "installable": True,
     "application": False,

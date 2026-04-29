@@ -1,98 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Task 3.7 — s_avanzosc_sector_specifics snippet.
-    Ref: spec §6.7 §7.2, plan §3.7, CLAUDE.md §11 D1 «Estructura común
-    páginas sectoriales».
+    Refactored Phase 5: dict literal en t-value cambiado a t-if/t-elif con
+    text content traducible. Fix de la limitación documentada en Task 3.7
+    commit body (strings dentro de Python dict NO se extraen como
+    traducibles por Odoo i18n).
 
-    Bloque genérico parametrizado que muestra capacidades específicas del
-    sector. Reutilizado en cada página sectorial (Phase 5) — Industrial,
-    Distribución, Servicios, Academias — pasando un `sector_key` por
-    `t-call`.
+    Ref: spec §6.7 §7.2, plan §3.7, CLAUDE.md §11 D1.
 
-    SECTOR PAYLOADS DICT: 4 entradas, una por sector, cada una con
-      {title, intro, items: [str, ...]}
-    El render lee `sector_key` y pinta el payload correspondiente.
+    4 variantes per sector_key (industrial / distribucion / servicios /
+    academias). Cada variante: h2 título + p intro + ul de 6 items.
+    sector_key viene via t-call. Fallback `industrial` si no se pasa.
 
-    Default fallback si `sector_key` no se pasa o no existe en el dict:
-    el primer payload (industrial) — útil en /test-snippets para ver la
-    variante sin parámetros explícitos. Las páginas sectoriales reales
-    de Phase 5 SIEMPRE pasarán sector_key.
+    `id="capabilities"` en el section para anchor desde hero CTA primary
+    de las páginas sectoriales (Phase 5).
 
-    Reveal IO simple via widget genérico (data-avanzosc-reveal).
-    Sin hover, sin animación específica per item.
+    Reveal IO simple via widget genérico (data-avanzosc-reveal). Sin hover.
 
     NO en builder (D4).
 -->
 <odoo>
     <template id="s_avanzosc_sector_specifics" name="Avanzosc · Sector Specifics">
-        <section class="s_avanzosc_sector_specifics" data-name="Avanzosc Sector Specifics" data-avanzosc-reveal="">
+        <section id="capabilities" class="s_avanzosc_sector_specifics" data-name="Avanzosc Sector Specifics" data-avanzosc-reveal="">
             <div class="container">
-                <!-- SECTOR PAYLOADS DICT inline. Estructura espejo de un futuro
-                     `website.avanzosc.sector` model si crece (v2). -->
-                <t t-set="sector_payloads" t-value="{
-                    'industrial': {
-                        'title': 'Capacidades industriales',
-                        'intro': 'Lo que el sector industrial necesita de Odoo cuando deja de ser un ERP genérico.',
-                        'items': [
-                            'MES y MRP de capacidad finita.',
-                            'Trazabilidad lote/serie consultable end-to-end.',
-                            'Calidad: ensayos por orden con criterios pasa/no-pasa.',
-                            'Mantenimiento preventivo y correctivo conectado a producción.',
-                            'Integración con PLCs y balanzas (OCA/connector_mes).',
-                            'Compliance sectorial (ADR, AECOC, SILICIE).',
-                        ],
-                    },
-                    'distribucion': {
-                        'title': 'Capacidades de distribución',
-                        'intro': 'Multialmacén, multicanal y multicliente sin que se rompa el stock real.',
-                        'items': [
-                            'WMS con picking por voz / por luz / multi-orden.',
-                            'Rutas de reparto optimizadas con geolocalización.',
-                            'POS Odoo multitienda con central de compras.',
-                            'Sync con marketplaces (Amazon, eBay) y ecommerce externos.',
-                            'EDI con cadenas de retail (formato EDIFACT).',
-                            'Listas de precios por cliente, volumen y temporada.',
-                        ],
-                    },
-                    'servicios': {
-                        'title': 'Capacidades para empresas de servicios',
-                        'intro': 'Proyectos, partes de horas y facturación recurrente sin Excel intermedio.',
-                        'items': [
-                            'Gestión de proyectos con tareas, milestones y dependencias.',
-                            'Partes de horas firmados desde móvil con aprobación.',
-                            'Facturación recurrente por contrato (mensual/trimestral/anual).',
-                            'Helpdesk con SLA por cliente y prioridad.',
-                            'Planning geolocalizado de técnicos en ruta.',
-                            'Reportería de rentabilidad por proyecto y por persona.',
-                        ],
-                    },
-                    'academias': {
-                        'title': 'Capacidades para academias y centros',
-                        'intro': 'Comunicación con familias y gestión académica sin fricción burocrática.',
-                        'items': [
-                            'Matriculación online con generación automática de docs.',
-                            'Calendarios académicos por curso, centro y aula.',
-                            'Evaluaciones y reportes a familias por trimestre.',
-                            'Portal familias con comunicación bidireccional.',
-                            'Pagos recurrentes (mensualidad, comedor, extraescolares).',
-                            'Integración con plataformas e-learning externas.',
-                        ],
-                    },
-                }"/>
-
-                <!-- Resolver payload activo. sector_key viene via t-call;
-                     fallback a 'industrial' si no se pasa o no existe. -->
-                <t t-set="payload" t-value="sector_payloads.get(sector_key or 'industrial', sector_payloads.get('industrial'))"/>
+                <!-- Fallback: si sector_key no se pasa o no matchea, default a 'industrial'. -->
+                <t t-set="_sector_key" t-value="sector_key or 'industrial'"/>
 
                 <div class="row">
                     <div class="col-12 col-lg-10 offset-lg-1">
-                        <h2 class="s_avanzosc_sector_specifics_title" t-esc="payload.get('title')"/>
-                        <p class="s_avanzosc_sector_specifics_intro" t-esc="payload.get('intro')"/>
-                        <ul class="s_avanzosc_sector_specifics_items">
-                            <t t-foreach="payload.get('items', [])" t-as="item">
-                                <li t-esc="item"/>
-                            </t>
-                        </ul>
+
+                        <!-- Variante: industrial -->
+                        <t t-if="_sector_key == 'industrial'">
+                            <h2 class="s_avanzosc_sector_specifics_title">Capacidades industriales</h2>
+                            <p class="s_avanzosc_sector_specifics_intro">Lo que el sector industrial necesita de Odoo cuando deja de ser un ERP genérico.</p>
+                            <ul class="s_avanzosc_sector_specifics_items">
+                                <li>MES y MRP de capacidad finita.</li>
+                                <li>Trazabilidad lote/serie consultable end-to-end.</li>
+                                <li>Calidad: ensayos por orden con criterios pasa/no-pasa.</li>
+                                <li>Mantenimiento preventivo y correctivo conectado a producción.</li>
+                                <li>Integración con PLCs y balanzas (OCA/connector_mes).</li>
+                                <li>Compliance sectorial (ADR, AECOC, SILICIE).</li>
+                            </ul>
+                        </t>
+
+                        <!-- Variante: distribucion -->
+                        <t t-elif="_sector_key == 'distribucion'">
+                            <h2 class="s_avanzosc_sector_specifics_title">Capacidades de distribución</h2>
+                            <p class="s_avanzosc_sector_specifics_intro">Multialmacén, multicanal y multicliente sin que se rompa el stock real.</p>
+                            <ul class="s_avanzosc_sector_specifics_items">
+                                <li>WMS con picking por voz / por luz / multi-orden.</li>
+                                <li>Rutas de reparto optimizadas con geolocalización.</li>
+                                <li>POS Odoo multitienda con central de compras.</li>
+                                <li>Sync con marketplaces (Amazon, eBay) y ecommerce externos.</li>
+                                <li>EDI con cadenas de retail (formato EDIFACT).</li>
+                                <li>Listas de precios por cliente, volumen y temporada.</li>
+                            </ul>
+                        </t>
+
+                        <!-- Variante: servicios -->
+                        <t t-elif="_sector_key == 'servicios'">
+                            <h2 class="s_avanzosc_sector_specifics_title">Capacidades para empresas de servicios</h2>
+                            <p class="s_avanzosc_sector_specifics_intro">Proyectos, partes de horas y facturación recurrente sin Excel intermedio.</p>
+                            <ul class="s_avanzosc_sector_specifics_items">
+                                <li>Gestión de proyectos con tareas, milestones y dependencias.</li>
+                                <li>Partes de horas firmados desde móvil con aprobación.</li>
+                                <li>Facturación recurrente por contrato (mensual/trimestral/anual).</li>
+                                <li>Helpdesk con SLA por cliente y prioridad.</li>
+                                <li>Planning geolocalizado de técnicos en ruta.</li>
+                                <li>Reportería de rentabilidad por proyecto y por persona.</li>
+                            </ul>
+                        </t>
+
+                        <!-- Variante: academias -->
+                        <t t-elif="_sector_key == 'academias'">
+                            <h2 class="s_avanzosc_sector_specifics_title">Capacidades para academias y centros</h2>
+                            <p class="s_avanzosc_sector_specifics_intro">Comunicación con familias y gestión académica sin fricción burocrática.</p>
+                            <ul class="s_avanzosc_sector_specifics_items">
+                                <li>Matriculación online con generación automática de docs.</li>
+                                <li>Calendarios académicos por curso, centro y aula.</li>
+                                <li>Evaluaciones y reportes a familias por trimestre.</li>
+                                <li>Portal familias con comunicación bidireccional.</li>
+                                <li>Pagos recurrentes (mensualidad, comedor, extraescolares).</li>
+                                <li>Integración con plataformas e-learning externas.</li>
+                            </ul>
+                        </t>
+
                     </div>
                 </div>
             </div>

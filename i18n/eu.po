@@ -482,3 +482,339 @@ msgstr "Konponbideak ikusi"
 msgid "Hablar con nosotros"
 msgstr "Gurekin hitz egin"
 
+# ===========================================================================
+# Phase 5 — Páginas sectoriales (industrial, distribucion, servicios, academias)
+# ===========================================================================
+
+# Slug URL EU sectorial — VALIDADO D2, NO DRAFT.
+#. module: website_avanzosc_demo
+#: model:website.page,url:website_avanzosc_demo.page_industrial_record
+msgid "/industrial"
+msgstr "/industriala"
+
+# Slug URL EU sectorial — VALIDADO D2, NO DRAFT.
+#. module: website_avanzosc_demo
+#: model:website.page,url:website_avanzosc_demo.page_distribucion_record
+msgid "/distribucion"
+msgstr "/banaketa"
+
+# Slug URL EU sectorial — VALIDADO D2, NO DRAFT.
+#. module: website_avanzosc_demo
+#: model:website.page,url:website_avanzosc_demo.page_servicios_record
+msgid "/servicios"
+msgstr "/zerbitzuak"
+
+# Slug URL EU sectorial — VALIDADO D2, NO DRAFT.
+#. module: website_avanzosc_demo
+#: model:website.page,url:website_avanzosc_demo.page_academias_record
+msgid "/academias"
+msgstr "/akademiak"
+
+# DRAFT - REVIEW NEEDED — Phase 5 CTA primary text (anchor #capabilities).
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_industrial
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_distribucion
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_servicios
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_academias
+#, fuzzy
+msgid "Ver capacidades"
+msgstr "Gaitasunak ikusi"
+
+# DRAFT - REVIEW NEEDED — Phase 5 CTA secondary text (link a /contacto).
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_industrial
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_distribucion
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_servicios
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_academias
+#, fuzzy
+msgid "Hablar con un técnico"
+msgstr "Teknikari batekin hitz egin"
+
+# DRAFT - REVIEW NEEDED — Industrial hero claim.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_industrial
+#, fuzzy
+msgid "Odoo industrial en planta, no en PowerPoint."
+msgstr "Odoo industriala lantegian, ez PowerPoint-en."
+
+# DRAFT - REVIEW NEEDED — Industrial hero subtítulo.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_industrial
+#, fuzzy
+msgid "MES, MRP, trazabilidad y mantenimiento. Integración con PLCs, SCADA y balanzas. Equipo con experiencia real en planta."
+msgstr "MES, MRP, trazabilitatea eta mantentze-lana. PLC, SCADA eta balantzekin integrazioa. Lantegian benetako esperientzia duen taldea."
+
+# DRAFT - REVIEW NEEDED — Distribución hero claim.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_distribucion
+#, fuzzy
+msgid "Almacén, picking y rutas. Sin Excel intermedios."
+msgstr "Biltegia, picking-a eta ibilbideak. Excel-ik gabe."
+
+# DRAFT - REVIEW NEEDED — Distribución hero subtítulo.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_distribucion
+#, fuzzy
+msgid "WMS, multi-canal, EDI y marketplaces. Integraciones con balanzas, lectores y SGV. Operativa optimizada en almacenes reales."
+msgstr "WMS, multi-kanala, EDI eta marketplace-ak. Balantzak, irakurgailuak eta SGV integrazioak. Biltegi errealetan eragiketa optimizatua."
+
+# DRAFT - REVIEW NEEDED — Servicios hero claim.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_servicios
+#, fuzzy
+msgid "Proyectos, partes y facturación recurrente."
+msgstr "Proiektuak, parteak eta fakturazio errepikakorra."
+
+# DRAFT - REVIEW NEEDED — Servicios hero subtítulo.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_servicios
+#, fuzzy
+msgid "Helpdesk, contratos, partes de horas, facturación recurrente. Para empresas de servicios profesionales que necesitan trazabilidad real."
+msgstr "Helpdesk, kontratuak, ordu-parteak, fakturazio errepikakorra. Trazabilitate erreala behar duten zerbitzu profesionaleko enpresentzat."
+
+# DRAFT - REVIEW NEEDED — Academias hero claim.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_academias
+#, fuzzy
+msgid "Matrículas, calendarios y evaluaciones. En un solo Odoo."
+msgstr "Matrikulak, egutegiak eta ebaluazioak. Odoo bakarrean."
+
+# DRAFT - REVIEW NEEDED — Academias hero subtítulo.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_academias
+#, fuzzy
+msgid "Gestión integral de academias y formación: matrículas online, calendarios, evaluaciones, comunicación con familias y formación a distancia."
+msgstr "Akademia eta prestakuntzaren kudeaketa integrala: online matrikulak, egutegiak, ebaluazioak, familiekin komunikazioa eta urruneko prestakuntza."
+
+# ----------------------------------------------------------------------------
+# s_avanzosc_sector_specifics — 4 variantes × (1 título + 1 intro + 6 items).
+# Refactorizado en Phase 5 desde dict literal `t-value` (no traducible) a
+# `t-if/t-elif` con texto contenido en nodo (sí traducible). Las 32 entradas
+# siguen están como DRAFT — requieren revisión lingüística por equipo Avanzosc
+# antes de levantar el flag fuzzy.
+# ----------------------------------------------------------------------------
+
+# DRAFT - REVIEW NEEDED — Sector specifics título industrial.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Capacidades industriales"
+msgstr "Industria-gaitasunak"
+
+# DRAFT - REVIEW NEEDED — Sector specifics intro industrial.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Lo que el sector industrial necesita de Odoo cuando deja de ser un ERP genérico."
+msgstr "Sektore industrialak Odoo-tik behar duena ERP generikoa izateari uzten dionean."
+
+# DRAFT - REVIEW NEEDED — Sector specifics industrial item 1.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "MES y MRP de capacidad finita."
+msgstr "MES eta MRP ahalmen mugatuarekin."
+
+# DRAFT - REVIEW NEEDED — Sector specifics industrial item 2.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Trazabilidad lote/serie consultable end-to-end."
+msgstr "Lote/serie trazabilitatea muturretik muturrera kontsultagarria."
+
+# DRAFT - REVIEW NEEDED — Sector specifics industrial item 3.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Calidad: ensayos por orden con criterios pasa/no-pasa."
+msgstr "Kalitatea: aginduzko entseguak pasatu/ez-pasatu irizpideekin."
+
+# DRAFT - REVIEW NEEDED — Sector specifics industrial item 4.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Mantenimiento preventivo y correctivo conectado a producción."
+msgstr "Mantentze prebentibo eta zuzentzailea ekoizpenarekin konektatua."
+
+# DRAFT - REVIEW NEEDED — Sector specifics industrial item 5.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Integración con PLCs y balanzas (OCA/connector_mes)."
+msgstr "PLC eta balantzekin integrazioa (OCA/connector_mes)."
+
+# DRAFT - REVIEW NEEDED — Sector specifics industrial item 6.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Compliance sectorial (ADR, AECOC, SILICIE)."
+msgstr "Sektoreko compliance (ADR, AECOC, SILICIE)."
+
+# DRAFT - REVIEW NEEDED — Sector specifics título distribución.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Capacidades de distribución"
+msgstr "Banaketa-gaitasunak"
+
+# DRAFT - REVIEW NEEDED — Sector specifics intro distribución.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Multialmacén, multicanal y multicliente sin que se rompa el stock real."
+msgstr "Biltegi anitz, kanal anitz eta bezero anitz, benetako stocka hautsi gabe."
+
+# DRAFT - REVIEW NEEDED — Sector specifics distribución item 1.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "WMS con picking por voz / por luz / multi-orden."
+msgstr "WMS, ahotsezko / argizko / agindu anitzeko picking-ekin."
+
+# DRAFT - REVIEW NEEDED — Sector specifics distribución item 2.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Rutas de reparto optimizadas con geolocalización."
+msgstr "Banaketa-ibilbideak optimizatuak geolokalizazioarekin."
+
+# DRAFT - REVIEW NEEDED — Sector specifics distribución item 3.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "POS Odoo multitienda con central de compras."
+msgstr "POS Odoo denda anitz, erosketa zentralarekin."
+
+# DRAFT - REVIEW NEEDED — Sector specifics distribución item 4.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Sync con marketplaces (Amazon, eBay) y ecommerce externos."
+msgstr "Marketplace-ekin sync (Amazon, eBay) eta kanpoko ecommerce-ekin."
+
+# DRAFT - REVIEW NEEDED — Sector specifics distribución item 5.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "EDI con cadenas de retail (formato EDIFACT)."
+msgstr "EDI retail kateekin (EDIFACT formatua)."
+
+# DRAFT - REVIEW NEEDED — Sector specifics distribución item 6.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Listas de precios por cliente, volumen y temporada."
+msgstr "Prezio-zerrendak bezeroka, bolumenez eta sasoiz."
+
+# DRAFT - REVIEW NEEDED — Sector specifics título servicios.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Capacidades para empresas de servicios"
+msgstr "Zerbitzu-enpresentzako gaitasunak"
+
+# DRAFT - REVIEW NEEDED — Sector specifics intro servicios.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Proyectos, partes de horas y facturación recurrente sin Excel intermedio."
+msgstr "Proiektuak, ordu-parteak eta fakturazio errepikakorra, tarteko Excel-ik gabe."
+
+# DRAFT - REVIEW NEEDED — Sector specifics servicios item 1.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Gestión de proyectos con tareas, milestones y dependencias."
+msgstr "Proiektuen kudeaketa atazak, milestone-ak eta menpekotasunekin."
+
+# DRAFT - REVIEW NEEDED — Sector specifics servicios item 2.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Partes de horas firmados desde móvil con aprobación."
+msgstr "Ordu-parteak mugikorretik sinatuak onarpenarekin."
+
+# DRAFT - REVIEW NEEDED — Sector specifics servicios item 3.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Facturación recurrente por contrato (mensual/trimestral/anual)."
+msgstr "Kontratu bidezko fakturazio errepikakorra (hilekoa/hiruhilekoa/urtekoa)."
+
+# DRAFT - REVIEW NEEDED — Sector specifics servicios item 4.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Helpdesk con SLA por cliente y prioridad."
+msgstr "Helpdesk SLArekin bezeroka eta lehentasunez."
+
+# DRAFT - REVIEW NEEDED — Sector specifics servicios item 5.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Planning geolocalizado de técnicos en ruta."
+msgstr "Bidean dauden teknikarien planning geolokalizatua."
+
+# DRAFT - REVIEW NEEDED — Sector specifics servicios item 6.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Reportería de rentabilidad por proyecto y por persona."
+msgstr "Errentagarritasun-txostenak proiektuka eta pertsonaka."
+
+# DRAFT - REVIEW NEEDED — Sector specifics título academias.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Capacidades para academias y centros"
+msgstr "Akademia eta zentroentzako gaitasunak"
+
+# DRAFT - REVIEW NEEDED — Sector specifics intro academias.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Comunicación con familias y gestión académica sin fricción burocrática."
+msgstr "Familiekin komunikazioa eta kudeaketa akademikoa, izapide burokratikorik gabe."
+
+# DRAFT - REVIEW NEEDED — Sector specifics academias item 1.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Matriculación online con generación automática de docs."
+msgstr "Online matrikulazioa dokumentu automatikoekin."
+
+# DRAFT - REVIEW NEEDED — Sector specifics academias item 2.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Calendarios académicos por curso, centro y aula."
+msgstr "Egutegi akademikoak ikasturteka, zentroka eta gelaka."
+
+# DRAFT - REVIEW NEEDED — Sector specifics academias item 3.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Evaluaciones y reportes a familias por trimestre."
+msgstr "Ebaluazioak eta familientzako txostenak hiruhilekoz."
+
+# DRAFT - REVIEW NEEDED — Sector specifics academias item 4.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Portal familias con comunicación bidireccional."
+msgstr "Familien ataria komunikazio bidirekzionalarekin."
+
+# DRAFT - REVIEW NEEDED — Sector specifics academias item 5.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Pagos recurrentes (mensualidad, comedor, extraescolares)."
+msgstr "Ordainketa errepikakorrak (hileroko kuota, jangela, eskolaz kanpokoak)."
+
+# DRAFT - REVIEW NEEDED — Sector specifics academias item 6.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
+#, fuzzy
+msgid "Integración con plataformas e-learning externas."
+msgstr "Kanpoko e-learning plataformekin integrazioa."
+

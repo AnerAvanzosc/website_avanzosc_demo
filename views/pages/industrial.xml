@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Phase 5 — Página sectorial /industrial.
+    Ref: spec §7, plan Phase 5.
+
+    Estructura común D1 sectoriales:
+      Hero adaptado → sector_specifics (sector_key=industrial) →
+      caso_exito (archetype_id=1, fabricante metal-mecánico) →
+      cta_contacto.
+
+    Hero parametrizado via t-call body con copy específico industrial.
+    Anchor #capabilities apunta a la sección sector_specifics.
+
+    URL EU `/industriala` (validated D2, no DRAFT) — translation en
+    `i18n/eu.po` model:website.page,url:.
+-->
+<odoo>
+    <data noupdate="1">
+
+        <template id="page_industrial" name="Avanzosc · Industrial">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <main>
+                        <!-- Hero industrial: claim + subtítulo + 2 CTAs sector-specific. -->
+                        <t t-call="website_avanzosc_demo.s_avanzosc_hero">
+                            <t t-set="hero_claim">Odoo industrial en planta, no en PowerPoint.</t>
+                            <t t-set="hero_subtitle">MES, MRP, trazabilidad y mantenimiento. Integración con PLCs, SCADA y balanzas. Equipo con experiencia real en planta.</t>
+                            <t t-set="hero_cta_primary_text">Ver capacidades</t>
+                            <t t-set="hero_cta_primary_url">#capabilities</t>
+                            <t t-set="hero_cta_secondary_text">Hablar con un técnico</t>
+                            <t t-set="hero_cta_secondary_url">/contacto</t>
+                        </t>
+
+                        <!-- Capacidades específicas del sector industrial. -->
+                        <t t-call="website_avanzosc_demo.s_avanzosc_sector_specifics">
+                            <t t-set="sector_key" t-value="'industrial'"/>
+                        </t>
+
+                        <!-- Caso de éxito: archetype 1 (Fabricante metal-mecánico
+                             exportador) — el ancla del sector industrial per
+                             CLAUDE.md §11. -->
+                        <t t-call="website_avanzosc_demo.s_avanzosc_caso_exito">
+                            <t t-set="archetype_id" t-value="1"/>
+                        </t>
+
+                        <!-- CTA Contacto cierre. -->
+                        <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
+                    </main>
+                </div>
+            </t>
+        </template>
+
+        <record id="page_industrial_record" model="website.page">
+            <field name="name">Industrial</field>
+            <field name="type">qweb</field>
+            <field name="url">/industrial</field>
+            <field name="view_id" ref="page_industrial"/>
+            <field name="is_published" eval="True"/>
+            <field name="website_indexed" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

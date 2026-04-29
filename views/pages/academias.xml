@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Phase 5 — Página sectorial /academias.
+    Ref: spec §7, plan Phase 5.
+
+    Archetype destacado: id=8 (Grupo educativo multicentro).
+
+    URL EU `/akademiak` (validated D2).
+-->
+<odoo>
+    <data noupdate="1">
+
+        <template id="page_academias" name="Avanzosc · Academias">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <main>
+                        <t t-call="website_avanzosc_demo.s_avanzosc_hero">
+                            <t t-set="hero_claim">Matrículas, calendarios y evaluaciones. En un solo Odoo.</t>
+                            <t t-set="hero_subtitle">Gestión integral de academias y formación: matrículas online, calendarios, evaluaciones, comunicación con familias y formación a distancia.</t>
+                            <t t-set="hero_cta_primary_text">Ver capacidades</t>
+                            <t t-set="hero_cta_primary_url">#capabilities</t>
+                            <t t-set="hero_cta_secondary_text">Hablar con un técnico</t>
+                            <t t-set="hero_cta_secondary_url">/contacto</t>
+                        </t>
+
+                        <t t-call="website_avanzosc_demo.s_avanzosc_sector_specifics">
+                            <t t-set="sector_key" t-value="'academias'"/>
+                        </t>
+
+                        <t t-call="website_avanzosc_demo.s_avanzosc_caso_exito">
+                            <t t-set="archetype_id" t-value="8"/>
+                        </t>
+
+                        <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
+                    </main>
+                </div>
+            </t>
+        </template>
+
+        <record id="page_academias_record" model="website.page">
+            <field name="name">Academias</field>
+            <field name="type">qweb</field>
+            <field name="url">/academias</field>
+            <field name="view_id" ref="page_academias"/>
+            <field name="is_published" eval="True"/>
+            <field name="website_indexed" eval="True"/>
+        </record>
+
+    </data>
+</odoo>
