@@ -212,6 +212,8 @@ Estructura común D1: hero sectorial → subsectores QWeb estático → sector_s
 
 **9.6 — Smoke final + gate.** Deps: 9.5.
 
+**9.7 — Refactor sticky header `padding` transition (deuda Phase 8.3).** Files: modify `static/src/scss/snippets/_header.scss`. Ref: hallazgo Phase 8.3 audit estático sesión 2026-04-29. Acceptance: el sticky header (`header { transition: padding-top, padding-bottom 250ms ... }`) es la ÚNICA animación layout-property del módulo. Decisión Phase 1.3 lo documentó como excepción explícita per CLAUDE.md §5 («padding y box-shadow son aceptables como excepciones específicas y limitadas porque (a) la transición es de 250ms, (b) la altura final cambia ~16px sin layout shift propagado, (c) la alternativa transform: scaleY introduciría distorsión»). Phase 8.3 audit confirmó que esta es la única excepción y aporta ~22 layout events/sec durante scroll active del estado scrolled (medido vía CDP Tracing). Migrar a un patrón GPU-only (e.g. `min-height` fijo + child wrapper con `transform: scaleY` + compensación de contenido vertical via `transform: translateY` para texto y logo) requiere repensar la estructura interna del navbar y la compensación del box-shadow. Trabajo NO trivial con riesgo cruzado (sticky behavior + navbar-collapse mobile + 3 transitions co-localizadas). Diferido a Phase 9 cuando el set completo de viewports + estados ya esté en QA y el diseño visual del header esté congelado. Deps: 9.6.
+
 ---
 
 ## Phase 10 — Pre-switchover checklist
