@@ -4,11 +4,12 @@
     Ref: spec §6.6 §10, plan §3.6, CLAUDE.md §11 D3 «Caso de éxito en home
     selección configurable» + Q2 cerrada (anonymous-first hardcoded en QWeb).
 
-    ARCHETYPE DICT: estructura espejo del futuro modelo
-    `website.avanzosc.archetype` (v2). Migrable sin tocar markup — basta con
-    sustituir el `t-set` literal por una query al modelo.
-    Campos: {id, title, sector, subsector, capability_summary,
-             capability_details: [str, ...]}.
+    Refactor 7.5.3 (sesión 2026-04-29): mismo patrón que se aplicó a
+    `s_avanzosc_sector_specifics` en Phase 5. El dict literal Python en
+    `<t t-set t-value="{...}"/>` NO es traducible (Odoo i18n solo extrae
+    nodos QWeb con texto contenido). Reescrito a `<t t-if/t-elif>` blocks
+    por archetype_id con cada string como texto contenido de nodo
+    (h3, p, span, li). Resultado: las strings son extraíbles por i18n.
 
     8 archetypes anónimos per CLAUDE.md §11 («Casos de éxito destacados»):
       1-4: Industrial (mecanizado / química / alimentaria / textil)
@@ -35,8 +36,16 @@
     (`data-avanzosc-reveal`). Sin parallax (decisión sesión 2026-04-28
     simplificación del plan §3.6 que mencionaba parallax sutil).
 
-    EU NO en v1 — diferido a tarea posterior cuando se elija el archetype
-    activo definitivo y se traduzca solo ese. Documentado en commit body.
+    EU NO en v1 — diferido per [?] #7 spec (selección final del archetype
+    activo en producción aún pendiente). Cuando #7 cierre, traducir solo
+    el subset realmente publicado. Mientras tanto las 72 strings ES son
+    extraíbles automáticamente por i18n al smoke `-u`, pero NO se añaden
+    a `i18n/eu.po` para evitar EU drafts que vayan al cubo cuando el
+    archetype activo final cambie.
+
+    Fallback: si `archetype_id` no matchea ningún case (1-8), el último
+    `<t t-else>` renderiza archetype 1 (Industrial mecanizado). Garantiza
+    que la sección siempre rendea contenido válido.
 
     NO en builder (D4).
 -->
@@ -44,121 +53,17 @@
     <template id="s_avanzosc_caso_exito" name="Avanzosc · Caso de éxito">
         <section class="s_avanzosc_caso_exito" data-name="Avanzosc Caso de éxito" data-avanzosc-reveal="">
             <div class="container">
-                <!-- ARCHETYPE DICT inline. Estructura espejo del futuro modelo
-                     website.avanzosc.archetype (v2). Migrable sin tocar markup. -->
-                <t t-set="archetypes" t-value="{
-                    1: {
-                        'title': 'Fabricante metal-mecánico (50-200 empleados)',
-                        'sector': 'Industrial',
-                        'subsector': 'Mecanizado / metalúrgico exportador',
-                        'capability_summary': 'Migración completa Excel → Odoo MRP con trazabilidad y multidivisa.',
-                        'capability_details': [
-                            'MRP por capacidad finita y planificación por taller.',
-                            'Configurador multivariante para exportación.',
-                            'Integración con PLCs vía OCA/connector_mes.',
-                            'Trazabilidad por lote/serie + EDI con clientes.',
-                            'Multidivisa con tipo de cambio diario automático.',
-                        ],
-                    },
-                    2: {
-                        'title': 'Industria química media (~150 empleados)',
-                        'sector': 'Industrial',
-                        'subsector': 'Química con producción por batch + ADR',
-                        'capability_summary': 'Trazabilidad batch + cumplimiento ADR + presentación SILICIE automatizada.',
-                        'capability_details': [
-                            'Vencimientos automáticos por lote y producto.',
-                            'Fichas de seguridad versionadas y publicación web.',
-                            'Etiquetado ADR con códigos UN y cantidades.',
-                            'Presentación SILICIE mensual sin intervención manual.',
-                            'Calidad: ensayos por batch con criterios pasa/no-pasa.',
-                        ],
-                    },
-                    3: {
-                        'title': 'Productor alimentario (4 plantas)',
-                        'sector': 'Industrial',
-                        'subsector': 'Alimentaria con AECOC + balanzas',
-                        'capability_summary': 'Trazabilidad lote y alérgenos en milisegundos. Integración nativa con balanzas de envasado.',
-                        'capability_details': [
-                            'Etiquetado AECOC con compliance retail.',
-                            'Trazabilidad lote consultable de cliente final → materia prima.',
-                            'Alérgenos validados por receta y allergen-cross con BOM.',
-                            'Conexión TCP/IP con balanzas de envasado.',
-                            'Lectura/grabación de pesos automática a OF.',
-                        ],
-                    },
-                    4: {
-                        'title': 'Marca textil con producción para terceros',
-                        'sector': 'Industrial',
-                        'subsector': 'Textil con temporadas y OEMs',
-                        'capability_summary': 'Variantes talla-color con grid editable + planificación PV/OI + producción para terceros.',
-                        'capability_details': [
-                            'Grid talla-color editable como matriz Excel.',
-                            'Planificación por temporada (Primavera-Verano / Otoño-Invierno).',
-                            'Producción para OEMs con escandallos diferenciados.',
-                            'Integraciones con tiendas online del cliente.',
-                            'Reportería por colección con margen unitario.',
-                        ],
-                    },
-                    5: {
-                        'title': 'Cadena retail multitienda + ecommerce (8 puntos físicos)',
-                        'sector': 'Distribución',
-                        'subsector': 'Retail con omnicanal',
-                        'capability_summary': 'POS multitienda + sync ecommerce + multialmacén con devoluciones omnicanal.',
-                        'capability_details': [
-                            'POS Odoo en cada tienda + central de compras.',
-                            'Sync con ecommerce externo vía webhooks.',
-                            'Multialmacén con stock real consolidado.',
-                            'Devolución cross-tienda y vía web.',
-                            'Cierre de caja diario con conciliación bancaria.',
-                        ],
-                    },
-                    6: {
-                        'title': 'Distribuidor mayorista (catálogo +50.000 referencias)',
-                        'sector': 'Distribución',
-                        'subsector': 'B2B mayorista con configurador',
-                        'capability_summary': 'Configurador masivo + listas de precios por cliente + EDI + packs.',
-                        'capability_details': [
-                            'Configurador para producto con variantes y compatibilidad.',
-                            'Listas de precios por cliente y por volumen.',
-                            'EDI con clientes-cadena (formato EDIFACT).',
-                            'Packs y kits con cálculo automático de coste.',
-                            'Catálogo importable desde excel del proveedor.',
-                        ],
-                    },
-                    7: {
-                        'title': 'Servicio IT/SAT con técnicos en ruta',
-                        'sector': 'Servicios',
-                        'subsector': 'Soporte técnico con SLA',
-                        'capability_summary': 'Helpdesk + planning geolocalizado + facturación recurrente con SLA por contrato.',
-                        'capability_details': [
-                            'Tickets con SLA por cliente y prioridad.',
-                            'Planning de técnicos con vista calendario y geo.',
-                            'Partes de horas firmados desde móvil.',
-                            'Facturación recurrente por contrato + horas extra.',
-                            'Reportes de cumplimiento de SLA mensuales.',
-                        ],
-                    },
-                    8: {
-                        'title': 'Grupo educativo multicentro (4 colegios)',
-                        'sector': 'Academias',
-                        'subsector': 'Educación con comunicación familias',
-                        'capability_summary': 'Matriculación online + gestión académica multicentro + comunicación con familias.',
-                        'capability_details': [
-                            'Matriculación online con generación automática de docs.',
-                            'Calendarios y horarios por curso/centro.',
-                            'Evaluaciones con reportes a familias.',
-                            'Comunicación bidireccional vía portal familias.',
-                            'Pagos recurrentes (mensualidad, comedor, extraescolares).',
-                        ],
-                    },
-                }"/>
 
-                <!-- Resolver archetype activo. archetype_id puede venir via t-call;
-                     si no, leemos el config_parameter (default '1'). -->
+                <!-- Resolver archetype activo. archetype_id puede venir via t-call
+                     (sectoriales Phase 5); si no, leemos el config_parameter. -->
                 <t t-if="not archetype_id"
                    t-set="archetype_id"
                    t-value="int(request.env['ir.config_parameter'].sudo().get_param('website_avanzosc_demo.featured_archetype_id', '1'))"/>
-                <t t-set="archetype" t-value="archetypes.get(archetype_id, archetypes.get(1))"/>
+                <!-- Cast a int defensivo: archetype_id puede venir como string si
+                     el valor llegó via config_parameter (que no se cast en la
+                     línea anterior si ya estaba `truthy`) o como int si el sectorial
+                     lo seteó. La comparación `t-if x == 1` requiere int idéntico. -->
+                <t t-set="_aid" t-value="int(archetype_id)"/>
 
                 <!-- Header sección -->
                 <div class="row mb-4">
@@ -170,23 +75,177 @@
                 <!-- Card principal -->
                 <div class="row">
                     <div class="col-12 col-lg-7 s_avanzosc_caso_exito_text">
-                        <p class="s_avanzosc_caso_exito_meta">
-                            <span t-esc="archetype.get('sector')"/>
-                            ·
-                            <span t-esc="archetype.get('subsector')"/>
-                        </p>
-                        <h3 class="s_avanzosc_caso_exito_title" t-esc="archetype.get('title')"/>
-                        <p class="s_avanzosc_caso_exito_summary" t-esc="archetype.get('capability_summary')"/>
-                        <ul class="s_avanzosc_caso_exito_details">
-                            <t t-foreach="archetype.get('capability_details', [])" t-as="detail">
-                                <li t-esc="detail"/>
-                            </t>
-                        </ul>
+
+                        <!-- Archetype 1 — Industrial / Mecanizado metalúrgico exportador -->
+                        <t t-if="_aid == 1">
+                            <p class="s_avanzosc_caso_exito_meta">
+                                <span class="s_avanzosc_caso_exito_sector">Industrial</span>
+                                <span class="s_avanzosc_caso_exito_separator"> · </span>
+                                <span class="s_avanzosc_caso_exito_subsector">Mecanizado / metalúrgico exportador</span>
+                            </p>
+                            <h3 class="s_avanzosc_caso_exito_title">Fabricante metal-mecánico (50-200 empleados)</h3>
+                            <p class="s_avanzosc_caso_exito_summary">Migración completa Excel → Odoo MRP con trazabilidad y multidivisa.</p>
+                            <ul class="s_avanzosc_caso_exito_details">
+                                <li>MRP por capacidad finita y planificación por taller.</li>
+                                <li>Configurador multivariante para exportación.</li>
+                                <li>Integración con PLCs vía OCA/connector_mes.</li>
+                                <li>Trazabilidad por lote/serie + EDI con clientes.</li>
+                                <li>Multidivisa con tipo de cambio diario automático.</li>
+                            </ul>
+                        </t>
+
+                        <!-- Archetype 2 — Industrial / Química con producción por batch + ADR -->
+                        <t t-elif="_aid == 2">
+                            <p class="s_avanzosc_caso_exito_meta">
+                                <span class="s_avanzosc_caso_exito_sector">Industrial</span>
+                                <span class="s_avanzosc_caso_exito_separator"> · </span>
+                                <span class="s_avanzosc_caso_exito_subsector">Química con producción por batch + ADR</span>
+                            </p>
+                            <h3 class="s_avanzosc_caso_exito_title">Industria química media (~150 empleados)</h3>
+                            <p class="s_avanzosc_caso_exito_summary">Trazabilidad batch + cumplimiento ADR + presentación SILICIE automatizada.</p>
+                            <ul class="s_avanzosc_caso_exito_details">
+                                <li>Vencimientos automáticos por lote y producto.</li>
+                                <li>Fichas de seguridad versionadas y publicación web.</li>
+                                <li>Etiquetado ADR con códigos UN y cantidades.</li>
+                                <li>Presentación SILICIE mensual sin intervención manual.</li>
+                                <li>Calidad: ensayos por batch con criterios pasa/no-pasa.</li>
+                            </ul>
+                        </t>
+
+                        <!-- Archetype 3 — Industrial / Alimentaria con AECOC + balanzas -->
+                        <t t-elif="_aid == 3">
+                            <p class="s_avanzosc_caso_exito_meta">
+                                <span class="s_avanzosc_caso_exito_sector">Industrial</span>
+                                <span class="s_avanzosc_caso_exito_separator"> · </span>
+                                <span class="s_avanzosc_caso_exito_subsector">Alimentaria con AECOC + balanzas</span>
+                            </p>
+                            <h3 class="s_avanzosc_caso_exito_title">Productor alimentario (4 plantas)</h3>
+                            <p class="s_avanzosc_caso_exito_summary">Trazabilidad lote y alérgenos en milisegundos. Integración nativa con balanzas de envasado.</p>
+                            <ul class="s_avanzosc_caso_exito_details">
+                                <li>Etiquetado AECOC con compliance retail.</li>
+                                <li>Trazabilidad lote consultable de cliente final → materia prima.</li>
+                                <li>Alérgenos validados por receta y allergen-cross con BOM.</li>
+                                <li>Conexión TCP/IP con balanzas de envasado.</li>
+                                <li>Lectura/grabación de pesos automática a OF.</li>
+                            </ul>
+                        </t>
+
+                        <!-- Archetype 4 — Industrial / Textil con temporadas y OEMs -->
+                        <t t-elif="_aid == 4">
+                            <p class="s_avanzosc_caso_exito_meta">
+                                <span class="s_avanzosc_caso_exito_sector">Industrial</span>
+                                <span class="s_avanzosc_caso_exito_separator"> · </span>
+                                <span class="s_avanzosc_caso_exito_subsector">Textil con temporadas y OEMs</span>
+                            </p>
+                            <h3 class="s_avanzosc_caso_exito_title">Marca textil con producción para terceros</h3>
+                            <p class="s_avanzosc_caso_exito_summary">Variantes talla-color con grid editable + planificación PV/OI + producción para terceros.</p>
+                            <ul class="s_avanzosc_caso_exito_details">
+                                <li>Grid talla-color editable como matriz Excel.</li>
+                                <li>Planificación por temporada (Primavera-Verano / Otoño-Invierno).</li>
+                                <li>Producción para OEMs con escandallos diferenciados.</li>
+                                <li>Integraciones con tiendas online del cliente.</li>
+                                <li>Reportería por colección con margen unitario.</li>
+                            </ul>
+                        </t>
+
+                        <!-- Archetype 5 — Distribución / Retail con omnicanal -->
+                        <t t-elif="_aid == 5">
+                            <p class="s_avanzosc_caso_exito_meta">
+                                <span class="s_avanzosc_caso_exito_sector">Distribución</span>
+                                <span class="s_avanzosc_caso_exito_separator"> · </span>
+                                <span class="s_avanzosc_caso_exito_subsector">Retail con omnicanal</span>
+                            </p>
+                            <h3 class="s_avanzosc_caso_exito_title">Cadena retail multitienda + ecommerce (8 puntos físicos)</h3>
+                            <p class="s_avanzosc_caso_exito_summary">POS multitienda + sync ecommerce + multialmacén con devoluciones omnicanal.</p>
+                            <ul class="s_avanzosc_caso_exito_details">
+                                <li>POS Odoo en cada tienda + central de compras.</li>
+                                <li>Sync con ecommerce externo vía webhooks.</li>
+                                <li>Multialmacén con stock real consolidado.</li>
+                                <li>Devolución cross-tienda y vía web.</li>
+                                <li>Cierre de caja diario con conciliación bancaria.</li>
+                            </ul>
+                        </t>
+
+                        <!-- Archetype 6 — Distribución / B2B mayorista con configurador -->
+                        <t t-elif="_aid == 6">
+                            <p class="s_avanzosc_caso_exito_meta">
+                                <span class="s_avanzosc_caso_exito_sector">Distribución</span>
+                                <span class="s_avanzosc_caso_exito_separator"> · </span>
+                                <span class="s_avanzosc_caso_exito_subsector">B2B mayorista con configurador</span>
+                            </p>
+                            <h3 class="s_avanzosc_caso_exito_title">Distribuidor mayorista (catálogo +50.000 referencias)</h3>
+                            <p class="s_avanzosc_caso_exito_summary">Configurador masivo + listas de precios por cliente + EDI + packs.</p>
+                            <ul class="s_avanzosc_caso_exito_details">
+                                <li>Configurador para producto con variantes y compatibilidad.</li>
+                                <li>Listas de precios por cliente y por volumen.</li>
+                                <li>EDI con clientes-cadena (formato EDIFACT).</li>
+                                <li>Packs y kits con cálculo automático de coste.</li>
+                                <li>Catálogo importable desde excel del proveedor.</li>
+                            </ul>
+                        </t>
+
+                        <!-- Archetype 7 — Servicios / Soporte técnico con SLA -->
+                        <t t-elif="_aid == 7">
+                            <p class="s_avanzosc_caso_exito_meta">
+                                <span class="s_avanzosc_caso_exito_sector">Servicios</span>
+                                <span class="s_avanzosc_caso_exito_separator"> · </span>
+                                <span class="s_avanzosc_caso_exito_subsector">Soporte técnico con SLA</span>
+                            </p>
+                            <h3 class="s_avanzosc_caso_exito_title">Servicio IT/SAT con técnicos en ruta</h3>
+                            <p class="s_avanzosc_caso_exito_summary">Helpdesk + planning geolocalizado + facturación recurrente con SLA por contrato.</p>
+                            <ul class="s_avanzosc_caso_exito_details">
+                                <li>Tickets con SLA por cliente y prioridad.</li>
+                                <li>Planning de técnicos con vista calendario y geo.</li>
+                                <li>Partes de horas firmados desde móvil.</li>
+                                <li>Facturación recurrente por contrato + horas extra.</li>
+                                <li>Reportes de cumplimiento de SLA mensuales.</li>
+                            </ul>
+                        </t>
+
+                        <!-- Archetype 8 — Academias / Educación con comunicación familias -->
+                        <t t-elif="_aid == 8">
+                            <p class="s_avanzosc_caso_exito_meta">
+                                <span class="s_avanzosc_caso_exito_sector">Academias</span>
+                                <span class="s_avanzosc_caso_exito_separator"> · </span>
+                                <span class="s_avanzosc_caso_exito_subsector">Educación con comunicación familias</span>
+                            </p>
+                            <h3 class="s_avanzosc_caso_exito_title">Grupo educativo multicentro (4 colegios)</h3>
+                            <p class="s_avanzosc_caso_exito_summary">Matriculación online + gestión académica multicentro + comunicación con familias.</p>
+                            <ul class="s_avanzosc_caso_exito_details">
+                                <li>Matriculación online con generación automática de docs.</li>
+                                <li>Calendarios y horarios por curso/centro.</li>
+                                <li>Evaluaciones con reportes a familias.</li>
+                                <li>Comunicación bidireccional vía portal familias.</li>
+                                <li>Pagos recurrentes (mensualidad, comedor, extraescolares).</li>
+                            </ul>
+                        </t>
+
+                        <!-- Fallback — archetype_id desconocido. Renderiza archetype 1
+                             (industrial mecanizado) idéntico al case 1, para que la
+                             sección siempre tenga contenido. -->
+                        <t t-else="">
+                            <p class="s_avanzosc_caso_exito_meta">
+                                <span class="s_avanzosc_caso_exito_sector">Industrial</span>
+                                <span class="s_avanzosc_caso_exito_separator"> · </span>
+                                <span class="s_avanzosc_caso_exito_subsector">Mecanizado / metalúrgico exportador</span>
+                            </p>
+                            <h3 class="s_avanzosc_caso_exito_title">Fabricante metal-mecánico (50-200 empleados)</h3>
+                            <p class="s_avanzosc_caso_exito_summary">Migración completa Excel → Odoo MRP con trazabilidad y multidivisa.</p>
+                            <ul class="s_avanzosc_caso_exito_details">
+                                <li>MRP por capacidad finita y planificación por taller.</li>
+                                <li>Configurador multivariante para exportación.</li>
+                                <li>Integración con PLCs vía OCA/connector_mes.</li>
+                                <li>Trazabilidad por lote/serie + EDI con clientes.</li>
+                                <li>Multidivisa con tipo de cambio diario automático.</li>
+                            </ul>
+                        </t>
+
                     </div>
                     <div class="col-12 col-lg-5 s_avanzosc_caso_exito_visual">
                         <!-- SVG dashboard placeholder. Wireframe-style genérico —
                              NO datos reales (anonymous-first per Q2). 600×400 viewBox
-                             escalable, mantiene aspect ratio. -->
+                             escalable, mantiene aspect ratio. Idéntico para todos
+                             los archetypes (no varía con archetype_id). -->
                         <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" class="s_avanzosc_caso_exito_svg" role="img" aria-label="Dashboard placeholder">
                             <!-- Frame del dashboard -->
                             <rect x="10" y="10" width="580" height="380" rx="8" fill="#FFFFFF" stroke="#D3D7DC" stroke-width="2"/>
