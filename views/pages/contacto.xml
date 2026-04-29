@@ -15,7 +15,10 @@
     Slug EU `/eu/kontaktua` registrado en eu.po como DRAFT (gate Q1).
 -->
 <odoo>
-    <data noupdate="1">
+    <!-- Two `<data>` blocks: template (no noupdate, so `-u` updates arch_db
+         from disk) + page record (noupdate="1", so admin edits survive
+         `-u`). Standard Odoo pattern, ref plan §7.5.2. -->
+    <data>
 
         <template id="page_contacto" name="Avanzosc · Contacto">
             <t t-call="website.layout">
@@ -78,6 +81,10 @@
                 </div>
             </t>
         </template>
+
+    </data>
+
+    <data noupdate="1">
 
         <record id="page_contacto_record" model="website.page">
             <field name="name">Contacto</field>

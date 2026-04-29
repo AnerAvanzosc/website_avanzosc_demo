@@ -15,7 +15,11 @@
     `i18n/eu.po` model:website.page,url:.
 -->
 <odoo>
-    <data noupdate="1">
+    <!-- Two `<data>` blocks: template (no noupdate, so `-u` updates arch_db
+         from disk) + page record (noupdate="1", so admin edits in
+         is_published/url/etc. survive `-u`). Standard Odoo pattern, ref
+         hallazgo cookies fix sesión 2026-04-29 + plan §7.5.2. -->
+    <data>
 
         <template id="page_industrial" name="Avanzosc · Industrial">
             <t t-call="website.layout">
@@ -49,6 +53,10 @@
                 </div>
             </t>
         </template>
+
+    </data>
+
+    <data noupdate="1">
 
         <record id="page_industrial_record" model="website.page">
             <field name="name">Industrial</field>

@@ -16,7 +16,10 @@
     en home dirige aquí.
 -->
 <odoo>
-    <data noupdate="1">
+    <!-- Two `<data>` blocks: template (no noupdate, so `-u` updates arch_db
+         from disk) + page record (noupdate="1", so admin edits survive
+         `-u`). Standard Odoo pattern, ref plan §7.5.2. -->
+    <data>
 
         <template id="page_kit_consulting" name="Avanzosc · Kit Consulting">
             <t t-call="website.layout">
@@ -75,6 +78,10 @@
                 </div>
             </t>
         </template>
+
+    </data>
+
+    <data noupdate="1">
 
         <record id="page_kit_consulting_record" model="website.page">
             <field name="name">Kit Consulting</field>
