@@ -1,0 +1,39 @@
+// Page transition fade overlay.
+// Activado por click en links internos (mismo origen, no anchor-only,
+// no mailto/tel). El JS añade `body.is-leaving` justo antes de invocar
+// window.location.href; esa clase pone la overlay a opacity:1 con un
+// fade-out de 200ms, blanco (--neutral-0) per decisión sub-bloque A.
+// Tras el commit del navegador, la página nueva carga y la overlay
+// arranca a opacity:0 (default) — no hay fade-in, decisión explícita.
+//
+// z-index 9999 sobre header sticky (1020) y modal-backdrop (1040) para
+// cubrir cualquier UI durante la transición. pointer-events:none
+// cuando inactiva (no roba clicks); pointer-events:auto en is-leaving
+// (bloquea interacción durante el fade-out).
+//
+// Reduced-motion: la overlay se oculta totalmente (display:none). El
+// listener JS también hace bypass — la navegación es nativa instantánea.
+//
+// Ref: CLAUDE.md §5 (animación 300-600ms aceptable, prefers-reduced-motion
+// respetado), spec post-v1 sub-bloque A (fade-out only, blanco).
+
+.s_avanzosc_page_transition {
+    position: fixed;
+    inset: 0;
+    background: var(--neutral-0);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: opacity 200ms cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+body.is-leaving .s_avanzosc_page_transition {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .s_avanzosc_page_transition {
+        display: none;
+    }
+}

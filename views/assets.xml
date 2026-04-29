@@ -68,6 +68,10 @@
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/snippets/_hero.scss"/>
+            <!-- Post-v1 sub-bloque A — page transition fade overlay. -->
+            <link rel="stylesheet"
+                  type="text/scss"
+                  href="/website_avanzosc_demo/static/src/scss/snippets/_page_transition.scss"/>
             <link rel="stylesheet"
                   type="text/scss"
                   href="/website_avanzosc_demo/static/src/scss/main.scss"/>

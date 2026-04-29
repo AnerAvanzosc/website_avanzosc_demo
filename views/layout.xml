@@ -348,6 +348,30 @@
         </xpath>
     </template>
 
+    <!-- ============================================================
+         Post-v1 sub-bloque A — Page transition fade overlay
+         Overlay full-screen (fixed inset:0) que aparece con fade-out
+         de 200ms cuando el usuario hace click en un link interno.
+         Decisión sub-bloque A: fade-out only (no fade-in en la página
+         destino), color var(neutral-0) blanco.
+
+         Inserción al final de <body> via xpath after //footer (el
+         último elemento estructural dentro de #wrapwrap). z-index
+         9999 en SCSS la pone sobre header sticky / modal-backdrop.
+         pointer-events:none cuando inactiva; auto durante is-leaving
+         (bloquea interacción durante el fade-out).
+
+         JS: static/src/js/snippets/page_transition.js
+         SCSS: static/src/scss/snippets/_page_transition.scss
+         ============================================================ -->
+    <template id="layout_page_transition_overlay"
+              name="Layout: page transition fade overlay"
+              inherit_id="website.layout">
+        <xpath expr="//footer" position="after">
+            <div class="s_avanzosc_page_transition" aria-hidden="true"/>
+        </xpath>
+    </template>
+
     <!-- Copyright text — sustituye el span hardcoded de `website.layout`
          (línea 178-179: «Copyright © Company name») por el identificador
          legal real de Avanzosc S.L. (CIF + razón social). Per spec §13.

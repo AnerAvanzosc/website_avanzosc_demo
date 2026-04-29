@@ -153,6 +153,77 @@ odoo.define('website_avanzosc_demo.main', function (require) {
             }
 
             // ----------------------------------------------------------------
+            // Page transition fade overlay (sub-bloque A post-v1).
+            // Listener delegado en document a clicks de <a href> internos.
+            // Cuando el click cumple los filtros, e.preventDefault() bloquea
+            // la navegación nativa, body.is-leaving activa el fade-in CSS de
+            // la overlay (200ms), y tras setTimeout(200) ejecutamos
+            // window.location.href = href. La overlay queda visible hasta que
+            // la nueva página carga; el CSS default la pone a opacity 0 sin
+            // fade-in (decisión sub-bloque A: fade-out only).
+            //
+            // Filtros (skip → comportamiento nativo del browser):
+            //  - Modifier keys / button distinto del izquierdo (cmd/ctrl/shift/alt
+            //    abren en pestaña/ventana nueva — respetar UX nativa).
+            //  - target=_blank, [download].
+            //  - mailto:, tel:, javascript:.
+            //  - Externos (origin distinto): si interceptáramos, la overlay
+            //    quedaría visible permanentemente al salir del sitio.
+            //  - Hash-only same-page: lo maneja el listener anchor de arriba.
+            //  - Misma URL exacta sin cambio significativo (no-op).
+            //  - prefers-reduced-motion: bypass total (CLAUDE.md §5).
+            //
+            // pageshow + event.persisted=true: limpia body.is-leaving cuando
+            // el browser restaura desde back-forward cache (sin esto, al
+            // volver con back button la overlay quedaría visible).
+            //
+            // Vivimos dentro de AvanzoscRoot.start() (selector #wrap, ya
+            // funcionando) en lugar de un widget propio porque publicWidget
+            // con selector body no se auto-instanciaba en este módulo
+            // (verificado empíricamente sesión post-v1).
+            // ----------------------------------------------------------------
+            var reducedMotionPT = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            document.addEventListener('click', function (e) {
+                if (reducedMotionPT) return;
+                if (e.defaultPrevented) return;
+                if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                var a = e.target.closest && e.target.closest('a[href]');
+                if (!a) return;
+                if (a.target === '_blank' || a.hasAttribute('download')) return;
+                var href = a.getAttribute('href');
+                if (!href) return;
+                var lowered = href.toLowerCase();
+                if (lowered.indexOf('mailto:') === 0 ||
+                    lowered.indexOf('tel:') === 0 ||
+                    lowered.indexOf('javascript:') === 0) {
+                    return;
+                }
+                if (href.charAt(0) === '#') return;
+                var url;
+                try {
+                    url = new URL(href, window.location.href);
+                } catch (err) {
+                    return;
+                }
+                if (url.origin !== window.location.origin) return;
+                if (url.pathname === window.location.pathname &&
+                    url.search === window.location.search &&
+                    (!url.hash || url.hash === window.location.hash)) {
+                    return;
+                }
+                e.preventDefault();
+                document.body.classList.add('is-leaving');
+                window.setTimeout(function () {
+                    window.location.href = href;
+                }, 200);
+            });
+            window.addEventListener('pageshow', function (e) {
+                if (e.persisted) {
+                    document.body.classList.remove('is-leaving');
+                }
+            });
+
+            // ----------------------------------------------------------------
             // Lucide Icons: reemplaza todos los elementos con atributo
             // data-lucide por el SVG correspondiente.
             // La librería CDN lucide.min.js se carga desde <head> vía
