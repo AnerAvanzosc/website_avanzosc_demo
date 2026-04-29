@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Post-v1 sub-bloque B — Página /contacto/gracias.
+    Confirmación tras el POST del form de /contacto. Accesible solo
+    via redirect 303 desde el controller (sin entrada de menú); el
+    usuario llega aquí con el form ya enviado.
+
+    website_indexed=False: no queremos que Google indexe la página de
+    gracias (boilerplate sin valor SEO; además daría CTR ruido si
+    aparece en SERP).
+
+    Hero compacto (sin letter-stagger del /contacto): la animación
+    elaborada queda fuera de tono para una página de confirmación;
+    queremos que el usuario lea la confirmación sin que el sitio
+    «celebre» el envío. Solo título + 1 línea + 2 botones secundarios.
+
+    No incluye datos de contacto duplicados — ya los vio en /contacto.
+
+    Slug EU /contacto/gracias se traduce vía url_code en la URL final;
+    no necesitamos slug literal en EU per spec D2 (validación lingüística
+    Q1 cubrirá si Avanzosc decide un slug-corto en euskera tipo /eskerrik).
+-->
+<odoo>
+    <data>
+
+        <template id="page_contacto_gracias" name="Avanzosc · Gracias">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <main>
+                        <section class="s_avanzosc_contacto_gracias">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-8 offset-lg-2 s_avanzosc_contacto_gracias_inner">
+                                        <h1 class="s_avanzosc_contacto_gracias_heading">¡Gracias!</h1>
+                                        <p class="s_avanzosc_contacto_gracias_text">Hemos recibido tu consulta. Te responderemos en 24-48h laborables.</p>
+                                        <div class="s_avanzosc_contacto_gracias_actions">
+                                            <a href="/" class="btn btn-primary btn-lg">Volver al inicio</a>
+                                            <a href="/#sectores" class="s_avanzosc_contacto_gracias_secondary">Ver soluciones</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </t>
+        </template>
+
+    </data>
+
+    <data noupdate="1">
+
+        <record id="page_contacto_gracias_record" model="website.page">
+            <field name="name">Gracias</field>
+            <field name="type">qweb</field>
+            <field name="url">/contacto/gracias</field>
+            <field name="view_id" ref="page_contacto_gracias"/>
+            <field name="is_published" eval="True"/>
+            <field name="website_indexed" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

@@ -29,9 +29,16 @@ hreflang alternates: cada URL ES declara su equivalente EU (excepto
 a Google entender que son la misma página en idiomas distintos sin
 penalizar como duplicate content.
 """
+import logging
+from datetime import datetime
+
+from markupsafe import escape
+
 from odoo import http
 from odoo.http import request
 from odoo.addons.website.controllers.main import Website
+
+_logger = logging.getLogger(__name__)
 
 
 class WebsiteAvanzoscSitemap(Website):
@@ -146,3 +153,114 @@ class WebsiteAvanzoscSitemap(Website):
             'Sitemap: ' + url_root + '/sitemap.xml\n'
         )
         return request.make_response(body, headers=[('Content-Type', 'text/plain; charset=utf-8')])
+
+
+class WebsiteAvanzoscContact(http.Controller):
+    """Form handler for /contacto (post-v1 sub-bloque B).
+
+    Diseño:
+      - POST /contacto/submit recibe los 5 campos del form (nombre,
+        email, empresa, telefono opcional, mensaje) + checkbox privacidad
+        + campo honeypot 'website'.
+      - Honeypot: si llega relleno → silencioso 303 a /gracias (sin
+        enviar email ni dar pistas al bot).
+      - Required server-side: nombre, email, empresa, mensaje, privacidad.
+        HTML5 required cubre el 99% en cliente; el server-side es
+        defense-in-depth contra clientes sin JS o requests forjados.
+        Si falla, redirect a /contacto sin email (sin prefill: el browser
+        suele preservar el form via back button).
+      - CSRF: csrf=True en el route + token hidden en el form (Odoo
+        valida nativamente; rechaza con 400 si missing/inválido).
+      - Email vía mail.mail con email_from=email_to=comercial@avanzosc.es,
+        reply_to=email del usuario para que «Reply» en Inbox responda al
+        usuario directamente. Subject incluye nombre + empresa para
+        triage rápido en bandeja.
+      - Redirección final con Post-Redirect-Get (303): /contacto/gracias
+        en ES, /eu_ES/contacto/gracias en EU. No bloqueante con SMTP no
+        configurado (try/except en send): aunque el mail falle internamente,
+        UX al usuario es la misma — el log captura el error para post-mortem.
+
+    Sin CRM (rompe Phase 6 C3 conscientemente per briefing post-v1).
+    Sin captcha v1.
+    """
+
+    @http.route('/contacto/submit', type='http', auth='public',
+                methods=['POST'], website=True, csrf=True, sitemap=False)
+    def contacto_submit(self, **post):
+        # 1. Honeypot — campo trampa 'website' oculto vía CSS y aria-hidden.
+        # Bots autollenan campos con name="website"/"url"; humanos no lo ven.
+        # Silencioso → bots no aprenden que falló y no reintentan.
+        if post.get('website'):
+            _logger.info('[contacto] honeypot triggered, silenced')
+            return request.redirect(self._gracias_url())
+
+        # 2. Required fields server-side.
+        required = ('nombre', 'email', 'empresa', 'mensaje')
+        if not all((post.get(f) or '').strip() for f in required):
+            return request.redirect(self._contacto_url())
+        if not post.get('privacidad'):
+            return request.redirect(self._contacto_url())
+
+        # 3. Compose + send email.
+        nombre = (post.get('nombre') or '').strip()
+        email = (post.get('email') or '').strip()
+        empresa = (post.get('empresa') or '').strip()
+        telefono = (post.get('telefono') or '').strip()
+        mensaje = (post.get('mensaje') or '').strip()
+        lang_code = request.lang.code if request.lang else 'es_ES'
+
+        body_html = self._format_body(nombre, email, empresa, telefono, mensaje, lang_code)
+        subject = u'[Web] Consulta de %s – %s' % (nombre, empresa)
+
+        try:
+            mail = request.env['mail.mail'].sudo().create({
+                'subject': subject,
+                'body_html': body_html,
+                'email_to': 'comercial@avanzosc.es',
+                'email_from': 'comercial@avanzosc.es',
+                'reply_to': email,
+            })
+            mail.send()
+        except Exception:
+            _logger.exception('[contacto] mail.mail send failed (form submission still confirmed to user)')
+
+        return request.redirect(self._gracias_url())
+
+    def _contacto_url(self):
+        if request.lang and request.lang.code != 'es_ES':
+            return '/' + request.lang.url_code + '/contacto'
+        return '/contacto'
+
+    def _gracias_url(self):
+        if request.lang and request.lang.code != 'es_ES':
+            return '/' + request.lang.url_code + '/contacto/gracias'
+        return '/contacto/gracias'
+
+    def _format_body(self, nombre, email, empresa, telefono, mensaje, lang_code):
+        """HTML body de la notificación interna a comercial@.
+
+        markupsafe.escape evita inyección HTML desde inputs del usuario
+        (XSS sobre el cliente de mail si el atacante escribe <script> en
+        cualquier campo). El body se monta a partir de strings escapados
+        + tags fijos del template.
+        """
+        telefono_display = escape(telefono) if telefono else u'<em>(no facilitado)</em>'
+        return (
+            u'<p><strong>Nombre:</strong> %s</p>'
+            u'<p><strong>Email:</strong> %s</p>'
+            u'<p><strong>Empresa:</strong> %s</p>'
+            u'<p><strong>Teléfono:</strong> %s</p>'
+            u'<p><strong>Idioma:</strong> %s</p>'
+            u'<p><strong>Recibido:</strong> %s UTC</p>'
+            u'<hr/>'
+            u'<p><strong>Mensaje:</strong></p>'
+            u'<pre style="white-space: pre-wrap; font-family: inherit;">%s</pre>'
+        ) % (
+            escape(nombre),
+            escape(email),
+            escape(empresa),
+            telefono_display,
+            escape(lang_code),
+            escape(datetime.utcnow().isoformat(timespec='seconds')),
+            escape(mensaje),
+        )

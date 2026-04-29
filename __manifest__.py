@@ -54,6 +54,8 @@
         "views/pages/conocenos.xml",
         "views/pages/trabaja_con_nosotros.xml",
         "views/pages/contacto.xml",
+        # Post-v1 sub-bloque B — confirmación tras submit del form /contacto.
+        "views/pages/contacto_gracias.xml",
         "views/pages/kit_consulting.xml",
         "views/pages/legal_aviso.xml",
         "views/pages/legal_privacidad.xml",
