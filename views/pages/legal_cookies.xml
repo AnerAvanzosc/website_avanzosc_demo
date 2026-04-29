@@ -9,25 +9,50 @@
     sin tracking de terceros». Compatible con la posición «no GA4 / no
     Plausible / no Matomo» de la decisión [?] #4 pendiente.
 
-    Cookies declaradas:
-        - `session_id`: cookie técnica de sesión Odoo, necesaria para
-          mantener el estado del usuario (incluido el visitante anónimo)
-          durante la navegación.
-        - `frontend_lang`: cookie técnica de Odoo que recuerda el
-          idioma seleccionado (ES / EU) entre páginas y visitas.
-        - `fileToken`: cookie técnica auxiliar emitida por Odoo en
-          procesos de descarga / generación de PDFs.
+    Cookies declaradas (verificadas con `curl -I` sobre el sitio real
+    en sesión anónima — fuente de verdad para esta lista):
+        - `session_id`: cookie técnica Odoo, mantiene el estado de la
+          sesión (incluido visitante anónimo). Max-Age=7776000s
+          (≈90 días), HttpOnly.
+        - `frontend_lang`: cookie técnica Odoo, recuerda el idioma
+          seleccionado (es_ES / eu_ES). Sin Expires → sesión.
+        - `visitor_uuid`: cookie de análisis propio agregado, owned
+          por `website.visitor` (Odoo core). Identificador anónimo
+          que permite estadística agregada de visitantes únicos
+          (no perfilado individual). expires=now()+timedelta(days=365)
+          per `addons/website/models/website_visitor.py:209-211`.
+          Persiste 1 año.
 
-    GATE Q3: NO switchover sin revisión por asesoría legal.
+    NOTA: `fileToken` (declarado en versión inicial Phase 6) NO se
+    emite en sesión pública anónima — eliminado de la lista por no
+    coincidir con la realidad técnica.
+
+    GATE Q3: NO switchover sin revisión por asesoría legal. Atención
+    especial al status legal de `visitor_uuid` — la AEPD considera
+    cookies de análisis propio sujetas a consentimiento informado
+    salvo configuraciones específicas. Si la asesoría exige opt-out
+    o desactivación, requeriría intervención técnica (monkey-patch
+    `_handle_webpage_dispatch` o config Odoo) — fuera de scope v1.
+
     GATE [?] #4 spec: si en algún momento se decide integrar GA4,
     Plausible o Matomo, esta página debe actualizarse y, en función
     de la herramienta, podrá requerirse banner de consentimiento.
 
     Slug EU `/eu/cookien-politika` registrado en eu.po como DRAFT
     (Q1 + Q3 — doble gate).
+
+    Estructura del file (corregida en este fix): dos `<data>` blocks
+    separados — template SIN `noupdate` para que `-u` actualice el
+    arch tras edits del code, record CON `noupdate="1"` para preservar
+    cambios del admin (is_published, etc.). Patrón estándar Odoo
+    (cf. `addons/website/data/*.xml`). El bloque previo unificado
+    bloqueaba la actualización de arch_db en `-u` y obligaba a
+    intervención manual via shell — deuda heredada del setup Phase 6
+    inicial; idealmente el resto de páginas Phase 4-6 migran al mismo
+    patrón en una iteración posterior (deuda Phase 7+).
 -->
 <odoo>
-    <data noupdate="1">
+    <data>
 
         <template id="page_politica_cookies" name="Avanzosc · Política de Cookies">
             <t t-call="website.layout">
@@ -60,13 +85,13 @@
                                 <div class="row">
                                     <div class="col-12 col-lg-8 offset-lg-2">
                                         <h2 class="s_avanzosc_legal_heading">2. Cookies utilizadas en este sitio</h2>
-                                        <p>Este sitio web utiliza únicamente cookies técnicas y de sesión propias, estrictamente necesarias para su funcionamiento. <strong>No utilizamos cookies de terceros, de publicidad, de analítica web ni de seguimiento (tracking).</strong></p>
-                                        <p>Conforme al artículo 22.2 LSSI-CE, las cookies estrictamente necesarias para la prestación del servicio quedan exentas del deber de obtener consentimiento previo del usuario.</p>
+                                        <p>Este sitio web utiliza únicamente cookies propias: dos cookies técnicas estrictamente necesarias para el funcionamiento (<code>session_id</code>, <code>frontend_lang</code>) y una cookie de análisis propio agregado (<code>visitor_uuid</code>) emitida por la plataforma Odoo para contabilizar visitantes únicos de forma anónima, sin perfilado individual. <strong>No utilizamos cookies de terceros, de publicidad ni de seguimiento conductual con perfilado individual.</strong></p>
+                                        <p>Conforme al artículo 22.2 LSSI-CE, las cookies estrictamente necesarias para la prestación del servicio quedan exentas del deber de obtener consentimiento previo. Las cookies de análisis propio agregado se incluyen en esta política de forma transparente; la decisión final sobre el modelo de consentimiento aplicable a <code>visitor_uuid</code> queda sujeta a la revisión legal previa al lanzamiento.</p>
                                         <p>Las cookies utilizadas son:</p>
                                         <ul>
-                                            <li><strong>session_id</strong> — Cookie técnica de sesión emitida por la plataforma Odoo. Permite mantener el estado de la sesión del usuario (incluido el visitante anónimo) mientras navega por el sitio. Caducidad: sesión.</li>
-                                            <li><strong>frontend_lang</strong> — Cookie técnica de Odoo que recuerda el idioma seleccionado por el usuario (castellano o euskera) entre páginas y visitas. Caducidad: hasta su eliminación manual o tras un periodo prolongado sin uso.</li>
-                                            <li><strong>fileToken</strong> — Cookie técnica auxiliar emitida por Odoo en operaciones puntuales de descarga o generación de documentos. Caducidad: sesión.</li>
+                                            <li><strong>session_id</strong> — Cookie técnica emitida por Odoo. Mantiene el estado de la sesión (incluido el visitante anónimo) durante la navegación. Caducidad: 90 días. <code>HttpOnly</code>.</li>
+                                            <li><strong>frontend_lang</strong> — Cookie técnica de Odoo que recuerda el idioma seleccionado (castellano o euskera) entre peticiones. Caducidad: sesión (se elimina al cerrar el navegador).</li>
+                                            <li><strong>visitor_uuid</strong> — Cookie de análisis propio agregado emitida por Odoo (módulo <code>website</code>). Asigna un identificador anónimo al visitante para contabilizar visitantes únicos de forma agregada; no se utiliza para perfilado individual ni se cruza con datos personales identificativos. Caducidad: 1 año.</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -105,6 +130,10 @@
                 </div>
             </t>
         </template>
+
+    </data>
+
+    <data noupdate="1">
 
         <record id="page_politica_cookies_record" model="website.page">
             <field name="name">Política de Cookies</field>

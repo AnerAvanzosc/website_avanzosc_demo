@@ -203,20 +203,27 @@ CRM, newsletters o mecanismos analytics.
 **What it represents:** página `/politica-cookies` en castellano.
 **LEGAL DRAFT — REVIEW NEEDED BY LEGAL ADVISOR.**
 
-Borrador versión «sólo cookies técnicas y de sesión Odoo, sin
-tracking de terceros». Coherente con la posición «no GA4 / no
-Plausible / no Matomo» (decisión [?] #4 spec aún pendiente). 4
-secciones:
+Captura actualizada en sesión 2026-04-29 tras fix de la lista de
+cookies para alinearla con la realidad técnica verificada (`curl -I
+http://localhost:14070/`). Sin GA4 / Plausible / Matomo (decisión
+[?] #4 spec aún pendiente, no bloqueante). 4 secciones:
 1. Qué es una cookie.
-2. Cookies utilizadas en este sitio: `session_id`, `frontend_lang`,
-   `fileToken` (cookies técnicas frontend Odoo 14 default).
+2. Cookies utilizadas en este sitio: `session_id` (técnica, 90 días,
+   `HttpOnly`), `frontend_lang` (técnica, sesión), `visitor_uuid`
+   (análisis propio agregado emitido por `addons/website/models/
+   website_visitor.py`, 1 año, identificador anónimo, sin perfilado
+   individual). `fileToken` declarado en versión inicial Phase 6 fue
+   eliminado por NO emitirse en sesión pública anónima.
 3. Configuración por parte del usuario (links a navegadores).
 4. Cambios futuros (frase «se actualizará si se incorporan herramientas
    no estrictamente técnicas»).
 
-Gate Q3 + Gate [?] #4: NO switchover sin revisión legal. Si en el
-futuro se activa GA4/Plausible/Matomo, esta página debe actualizarse
-y, según herramienta, podrá requerir banner de consentimiento.
+Gate Q3 + Gate [?] #4: NO switchover sin revisión legal. Atención
+especial al status legal de `visitor_uuid` — la AEPD considera cookies
+de análisis propio sujetas a consentimiento informado salvo
+configuraciones específicas. Si la asesoría exige opt-out o desactivación,
+requeriría intervención técnica (monkey-patch `_handle_webpage_dispatch`
+o config Odoo) — fuera de scope v1.
 
 - **URL:** `http://localhost:14070/politica-cookies`
 - **Viewport:** 1280×800 px (fullPage extended)
