@@ -192,3 +192,354 @@ header nav.navbar > .container {
     text-underline-offset: 4px;
     text-decoration-color: var(--brand-primary, #E85D2F);
 }
+
+// =============================================================================
+// Phase 7 — Header mobile (<992px)
+// Tareas 7.1 + 7.3: hamburger + user icon below 992px.
+// Tarea 7.2: overlay con menú vertical + acordeón Soluciones + switcher.
+// Ref: spec §8.1, plan §7, CLAUDE.md §5 (solo transform/opacity).
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// 7.1 — Estados desktop / mobile del header
+// -----------------------------------------------------------------------------
+// Bootstrap ships con la clase `.navbar-toggler` que muestra/oculta el menú
+// nativo de Bootstrap colapsable. NO la usamos (queremos UX custom mobile);
+// se neutraliza siempre.
+//
+// Breakpoint Bootstrap-`lg` = 992px. Bootstrap `navbar-expand-lg` ya hace
+// que `.navbar-collapse` se colapse debajo de ese breakpoint. Aprovechamos
+// ese comportamiento para esconder el menú desktop sin tocar el HTML
+// generado por Odoo, y añadimos NUESTROS botones mobile (hamburger + user
+// icon) que existen siempre en el DOM y se controlan por viewport con
+// `display`.
+// -----------------------------------------------------------------------------
+
+// Neutralizar el navbar-toggler nativo de Bootstrap. Usamos hamburger custom.
+header nav.navbar .navbar-toggler {
+    display: none !important;
+}
+
+// Botones mobile (hamburger + user icon). Por defecto OCULTOS — se muestran
+// solo debajo de 992px via @media query abajo. Vivien en el header en flex
+// flow; `align-items: center` los centra verticalmente con el logo.
+.s_avanzosc_header_mobile_actions {
+    display: none;  // override en @media (max-width: 991.98px)
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;  // empuja a la derecha junto al logo cuando navbar colapsa
+}
+
+// Hamburger button — Lucide `menu` icon.
+.s_avanzosc_hamburger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--neutral-900, #0F1419);
+    cursor: pointer;
+    transition: color 200ms ease-out;
+
+    &:hover,
+    &:focus {
+        color: var(--brand-primary, #E85D2F);
+    }
+
+    [data-lucide] {
+        width: 32px;
+        height: 32px;
+    }
+
+    @include reduced-motion {
+        transition: none;
+    }
+}
+
+// «Acceso clientes» mobile — Lucide `user` icon link.
+// Hereda hover style del hamburger; comparten color baseline.
+.s_avanzosc_acceso_clientes_mobile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    color: var(--neutral-900, #0F1419);
+    text-decoration: none;
+    transition: color 200ms ease-out;
+
+    &:hover,
+    &:focus {
+        color: var(--brand-primary, #E85D2F);
+        text-decoration: none;
+    }
+
+    [data-lucide] {
+        width: 32px;
+        height: 32px;
+    }
+
+    @include reduced-motion {
+        transition: none;
+    }
+}
+
+// Sólo en mobile (<992px): mostrar nuestros botones, ocultar el botón
+// «Acceso clientes» desktop (ya en navbar-collapse, oculto por Bootstrap).
+@media (max-width: 991.98px) {
+    .s_avanzosc_header_mobile_actions {
+        display: inline-flex;
+    }
+
+    // El botón desktop «Acceso clientes» vive dentro del navbar-collapse →
+    // Bootstrap `navbar-expand-lg` ya lo oculta debajo de 992px (clase
+    // `.collapse` está activa por defecto sin `.show`). Por seguridad
+    // añadimos override explícito por si Odoo lo sirve fuera del collapse
+    // en algún variant del header.
+    .s_avanzosc_acceso_clientes {
+        display: none !important;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// 7.2 — Overlay mobile
+// -----------------------------------------------------------------------------
+// `position: fixed` por encima de TODO (z-index alto), `inset: 0` cubre el
+// viewport. Estado por defecto: oculto via opacity:0 + visibility:hidden +
+// pointer-events:none. Estado abierto: clase `.is-open` añadida por JS,
+// transición fade 200ms (sólo opacity per CLAUDE.md §5).
+//
+// Body scroll lock: cuando overlay abierto, body recibe clase
+// `s_avanzosc_mobile_overlay_open` (set por JS) que bloquea el scroll
+// del documento detrás del overlay.
+// -----------------------------------------------------------------------------
+
+.s_avanzosc_mobile_overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;  // por encima de header sticky (1020) y modal-backdrop (1040)
+    background-color: var(--neutral-0, #fff);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 200ms ease-out, visibility 0s linear 200ms;
+    overflow-y: auto;  // scroll interno del overlay si el menú es largo
+
+    &.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition: opacity 200ms ease-out, visibility 0s linear 0s;
+    }
+
+    @include reduced-motion {
+        transition: none;
+    }
+}
+
+.s_avanzosc_mobile_overlay_inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 1.5rem 2rem 2rem;
+}
+
+// Cabecera del overlay: solo botón X (cierre).
+.s_avanzosc_mobile_overlay_header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.s_avanzosc_mobile_overlay_close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--neutral-900, #0F1419);
+    cursor: pointer;
+    transition: color 200ms ease-out;
+
+    &:hover,
+    &:focus {
+        color: var(--brand-primary, #E85D2F);
+    }
+
+    [data-lucide] {
+        width: 32px;
+        height: 32px;
+    }
+
+    @include reduced-motion {
+        transition: none;
+    }
+}
+
+// Lista de items top-level en el overlay (los 7 menús + sub-sectoriales).
+.s_avanzosc_mobile_overlay_nav {
+    flex-grow: 1;
+    margin: 0;
+
+    > ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    > ul > li {
+        border-bottom: 1px solid var(--neutral-300, #D3D7DC);
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    > ul > li > a,
+    > ul > li > button {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 1rem 0;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--neutral-900, #0F1419);
+        text-decoration: none;
+        background: transparent;
+        border: none;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    > ul > li > a:hover,
+    > ul > li > a:focus,
+    > ul > li > button:hover,
+    > ul > li > button:focus {
+        color: var(--brand-primary, #E85D2F);
+        text-decoration: none;
+    }
+}
+
+// Acordeón Soluciones — contenedor del submenu colapsable.
+// Estado cerrado por defecto (decisión B1 sesión 2026-04-29). Toggle vía clase
+// `.is-expanded` añadida por JS. NO animamos `height` (CLAUDE.md §5);
+// el toggle es un display:none / display:block — sin animación, patrón
+// estándar mobile (la decisión per usuario: «el acordeón sin animación
+// también es estándar mobile»).
+.s_avanzosc_mobile_overlay_dropdown {
+    .s_avanzosc_mobile_overlay_dropdown_toggle [data-lucide="chevron-down"] {
+        width: 20px;
+        height: 20px;
+        transition: transform 200ms ease-out;
+    }
+
+    &.is-expanded {
+        .s_avanzosc_mobile_overlay_dropdown_toggle [data-lucide="chevron-down"] {
+            transform: rotate(180deg);
+        }
+
+        .s_avanzosc_mobile_overlay_submenu {
+            display: block;
+        }
+    }
+
+    .s_avanzosc_mobile_overlay_submenu {
+        display: none;
+        list-style: none;
+        padding: 0 0 0.5rem 1rem;
+        margin: 0;
+
+        li a {
+            display: block;
+            padding: 0.5rem 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 400;
+            color: var(--neutral-700, #3A4149);
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+                color: var(--brand-primary, #E85D2F);
+                text-decoration: none;
+            }
+        }
+    }
+
+    @include reduced-motion {
+        .s_avanzosc_mobile_overlay_dropdown_toggle [data-lucide="chevron-down"] {
+            transition: none;
+        }
+    }
+}
+
+// Switcher idioma dentro del overlay — flat list (no dropdown).
+.s_avanzosc_mobile_overlay_lang {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--neutral-300, #D3D7DC);
+
+    .s_avanzosc_mobile_overlay_lang_item {
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--neutral-700, #3A4149);
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            color: var(--brand-primary, #E85D2F);
+            text-decoration: none;
+        }
+
+        &.is-active {
+            color: var(--brand-primary, #E85D2F);
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+    }
+}
+
+// Body scroll lock — clase añadida por JS al body cuando overlay abierto.
+body.s_avanzosc_mobile_overlay_open {
+    overflow: hidden;
+}
+
+// Solo cargamos el overlay en mobile. En desktop (>992px), si el JS lo
+// abriera por error, queda fuera del flow visible. Garantía adicional:
+// ocultamos siempre el overlay en desktop independientemente del estado
+// de la clase `.is-open`. El JS también debe respetar el viewport pero
+// esto es defensa CSS-side.
+@media (min-width: 992px) {
+    .s_avanzosc_mobile_overlay {
+        display: none !important;
+    }
+}
+
+// `.sr-only` — utility class para screen reader only text. Bootstrap 4 (que
+// ships con Odoo 14) ya la incluye; redeclaramos por si alguna purga la
+// quita. Soporta todos los browsers modernos vía la combinación clip-path
+// + clip + position absolute + tamaño 1px. Pattern HTML5 Boilerplate.
+.s_avanzosc_sr_only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

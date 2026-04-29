@@ -89,6 +89,14 @@
                     src="/website_avanzosc_demo/static/src/js/snippets/timeline.js"/>
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/snippets/hero.js"/>
+            <!-- Phase 7.2 — mobile overlay controller (hamburger,
+                 close, accordion, body scroll lock, Escape). El widget
+                 monta sobre `.s_avanzosc_hamburger`, presente en el
+                 header en todos los viewports (CSS oculta debajo de
+                 992px solo el botón visible, no el DOM). Ver header.js
+                 docstring para detalles. -->
+            <script type="text/javascript"
+                    src="/website_avanzosc_demo/static/src/js/snippets/header.js"/>
         </xpath>
     </template>
 

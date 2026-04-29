@@ -205,6 +205,149 @@
         </xpath>
     </template>
 
+    <!-- ============================================================
+         Phase 7 (Tasks 7.1 + 7.3) — Mobile header buttons
+         Inyectamos hamburger Lucide menu + Acceso clientes Lucide user
+         dentro del header. Se muestran solo en `<992px` (Bootstrap-`lg`)
+         vía media query en `_header.scss`. En desktop quedan
+         `display: none`.
+
+         Inyección con xpath `inside` al final del navbar (último hijo)
+         para que con `margin-left: auto` se empujen a la derecha. La
+         estructura del navbar default es:
+            <nav>
+              <a class="navbar-brand">logo</a>
+              <button class="navbar-toggler">...</button>
+              <div class="collapse navbar-collapse">menu + acceso btn</div>
+            </nav>
+         Nuestros botones quedan al lado del navbar-toggler nativo (que
+         además ocultamos con SCSS — no lo usamos).
+
+         ARIA: <span class="s_avanzosc_sr_only"> contiene el texto
+         accesible — extraíble por i18n de Odoo (texto contenido en
+         nodo). aria-label hardcoded ES como fallback (Odoo no extrae
+         aria-label por defecto en QWeb). EU vía DRAFT en eu.po.
+
+         Ref: spec §8.1, plan §7.1 + §7.3, decisión sesión 2026-04-29
+         (B1 acordeón cerrado, fade 200ms, switcher cierra+navega).
+         Q2 spec sigue abierta como soft (URL portal); /web/login default.
+         ============================================================ -->
+    <template id="header_mobile_buttons"
+              name="Header: mobile hamburger and user icon (&lt;992px)"
+              inherit_id="website.template_header_default">
+        <xpath expr="//nav[hasclass('navbar')]" position="inside">
+            <div class="s_avanzosc_header_mobile_actions">
+                <button type="button"
+                        class="s_avanzosc_hamburger"
+                        aria-label="Abrir menú"
+                        aria-expanded="false"
+                        aria-controls="s_avanzosc_mobile_overlay">
+                    <i data-lucide="menu"/>
+                    <span class="s_avanzosc_sr_only">Abrir menú</span>
+                </button>
+                <a href="/web/login"
+                   class="s_avanzosc_acceso_clientes_mobile"
+                   aria-label="Acceso clientes">
+                    <i data-lucide="user"/>
+                    <span class="s_avanzosc_sr_only">Acceso clientes</span>
+                </a>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- ============================================================
+         Phase 7 (Task 7.2) — Mobile overlay
+         Overlay full-screen activado por hamburger. Vivien fuera del
+         <header> sticky, hijo directo de <body> a través de inserción
+         en `website.layout` después del header. z-index 1050 (sobre
+         header sticky 1020 y modal-backdrop 1040).
+
+         Estructura del overlay:
+           - Header del overlay con botón close (X).
+           - Nav vertical con 7 items top-level. Item «Soluciones»
+             es un `<button>` que toggles el submenu (acordeón cerrado
+             por defecto).
+           - Switcher idioma flat list (ES / EU) — usa el helper
+             `url_for(..., lang_code=...)` para generar URL traducida
+             de la página actual + cookie set automáticamente.
+
+         JS (`static/src/js/snippets/header.js`) gestiona open/close,
+         body scroll lock, accordion toggle, Escape key, link clicks.
+
+         Ref: spec §8.1, plan §7.2.
+         ============================================================ -->
+    <template id="layout_mobile_overlay"
+              name="Layout: mobile overlay menu"
+              inherit_id="website.layout">
+        <xpath expr="//header" position="after">
+            <div id="s_avanzosc_mobile_overlay"
+                 class="s_avanzosc_mobile_overlay"
+                 aria-hidden="true"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-label="Menú principal">
+                <div class="s_avanzosc_mobile_overlay_inner">
+
+                    <div class="s_avanzosc_mobile_overlay_header">
+                        <button type="button"
+                                class="s_avanzosc_mobile_overlay_close"
+                                aria-label="Cerrar menú">
+                            <i data-lucide="x"/>
+                            <span class="s_avanzosc_sr_only">Cerrar menú</span>
+                        </button>
+                    </div>
+
+                    <nav class="s_avanzosc_mobile_overlay_nav"
+                         aria-label="Navegación principal">
+                        <ul>
+                            <li><a href="/">Inicio</a></li>
+                            <li class="s_avanzosc_mobile_overlay_dropdown">
+                                <button type="button"
+                                        class="s_avanzosc_mobile_overlay_dropdown_toggle"
+                                        aria-expanded="false"
+                                        aria-controls="s_avanzosc_mobile_overlay_submenu_soluciones">
+                                    <span>Soluciones</span>
+                                    <i data-lucide="chevron-down"/>
+                                </button>
+                                <ul id="s_avanzosc_mobile_overlay_submenu_soluciones"
+                                    class="s_avanzosc_mobile_overlay_submenu">
+                                    <li><a href="/industrial">Industrial</a></li>
+                                    <li><a href="/distribucion">Distribución</a></li>
+                                    <li><a href="/servicios">Servicios</a></li>
+                                    <li><a href="/academias">Academias</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/tienda">Tienda</a></li>
+                            <li><a href="/formacion">Formación</a></li>
+                            <li><a href="/contacto">Contacto</a></li>
+                            <li><a href="/conocenos">Conócenos</a></li>
+                            <li><a href="/trabaja-con-nosotros">Empleo</a></li>
+                        </ul>
+                    </nav>
+
+                    <!-- Switcher idioma — flat list. Usamos `url_for` con
+                         `lang_code` igual que `portal.language_selector`
+                         para que la URL traducida se compute correctamente
+                         (incluye query string actual via keep_query).
+                         Idioma activo: clase `.is-active` cuando coincide
+                         con `request.context['lang']`. -->
+                    <div class="s_avanzosc_mobile_overlay_lang"
+                         t-if="len(request.website.language_ids) &gt; 1">
+                        <t t-foreach="request.website.language_ids" t-as="lg">
+                            <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang_code=lg.code)"
+                               t-att-data-url_code="lg.url_code"
+                               t-att-data-lang="lg.code"
+                               t-attf-class="s_avanzosc_mobile_overlay_lang_item js_change_lang #{lg.code == (request.context.get('lang') or request.lang.code) and 'is-active' or ''}">
+                                <t t-esc="lg.name.split('/').pop().strip()"/>
+                            </a>
+                        </t>
+                    </div>
+
+                </div>
+            </div>
+        </xpath>
+    </template>
+
     <!-- Copyright text — sustituye el span hardcoded de `website.layout`
          (línea 178-179: «Copyright © Company name») por el identificador
          legal real de Avanzosc S.L. (CIF + razón social). Per spec §13.
