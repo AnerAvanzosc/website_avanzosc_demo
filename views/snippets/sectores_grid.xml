@@ -21,7 +21,7 @@
 -->
 <odoo>
     <template id="s_avanzosc_sectores" name="Avanzosc · Sectores">
-        <section class="s_avanzosc_sectores" data-name="Avanzosc Sectores" data-avanzosc-reveal="">
+        <section id="sectores" class="s_avanzosc_sectores" data-name="Avanzosc Sectores" data-avanzosc-reveal="">
             <div class="container">
                 <div class="row">
                     <!-- Industrial. -->

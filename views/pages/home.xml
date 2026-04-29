@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Phase 4 — Composición de la home en /.
+    Ref: spec §5 (estructura home), CLAUDE.md §3 «Estructura de navegación»,
+    plan Phase 4.
+
+    Estrategia: extender la view core `website.homepage` via xpath
+    inheritance, reemplazando el placeholder `<div id="wrap">` vacío con
+    nuestros 9 t-calls en orden funnel B2B.
+
+    Por qué herencia (no substitución del page record):
+      - Las páginas core de Odoo `website.page` con url='/' (id 1
+        global + id 3 per website 1) usan la view `website.homepage`
+        compartida. Si solo queremos contenido distinto, basta reemplazar
+        el contenido de la view — los page records se actualizan
+        automáticamente.
+      - Crear NUESTRA propia website.page con url='/' colisionaría con
+        las existentes (Odoo permite duplicados pero el routing es
+        ambiguo). Heredar y reemplazar es más limpio.
+      - Una sola edición declarativa cubre ES (`/`) y EU (`/eu_ES/`) —
+        Odoo route resolves both URLs to the same view.
+
+    Orden funnel home (per spec §5 + CLAUDE.md §3):
+      1. Hero (s_avanzosc_hero) — captar atención + claim diferenciador.
+      2. Pilares (s_avanzosc_pilares) — 3 razones para seguir leyendo.
+      3. Sectores (s_avanzosc_sectores) — self-selection del visitante.
+      4. CTA Kit Consulting (s_avanzosc_cta_kit_consulting) — banner
+         destacado del programa Red.es.
+      5. Contador (s_avanzosc_contador) — cuantificar volumen técnico.
+      6. Caso éxito (s_avanzosc_caso_exito) — prueba social anonymous.
+      7. Timeline (s_avanzosc_timeline) — trayectoria con hitos.
+      8. Equipo (s_avanzosc_equipo) — diferenciador único STEM.
+      9. CTA Contacto (s_avanzosc_cta_contacto) — cierre del funnel.
+
+    NO incluido: s_avanzosc_sector_specifics (solo en páginas sectoriales
+    Phase 5, NO en home).
+-->
+<odoo>
+    <template id="homepage_avanzosc"
+              name="Home — Avanzosc"
+              inherit_id="website.homepage">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <div id="wrap">
+                <!-- Sección 1: Hero. -->
+                <t t-call="website_avanzosc_demo.s_avanzosc_hero"/>
+                <!-- Sección 2: Pilares (trayectoria, OCA, equipo). -->
+                <t t-call="website_avanzosc_demo.s_avanzosc_pilares"/>
+                <!-- Sección 3: Sectores (4 sectoriales). -->
+                <t t-call="website_avanzosc_demo.s_avanzosc_sectores"/>
+                <!-- Sección 4: CTA Kit Consulting. -->
+                <t t-call="website_avanzosc_demo.s_avanzosc_cta_kit_consulting"/>
+                <!-- Sección 5: Contador (17 / 600+ / 4). -->
+                <t t-call="website_avanzosc_demo.s_avanzosc_contador"/>
+                <!-- Sección 6: Caso de éxito (archetype activo via config_parameter). -->
+                <t t-call="website_avanzosc_demo.s_avanzosc_caso_exito"/>
+                <!-- Sección 7: Timeline (8 hitos trayectoria). -->
+                <t t-call="website_avanzosc_demo.s_avanzosc_timeline"/>
+                <!-- Sección 8: Equipo (SVG abstracto + copy + 4 stats). -->
+                <t t-call="website_avanzosc_demo.s_avanzosc_equipo"/>
+                <!-- Sección 9: CTA Contacto (cierre del funnel). -->
+                <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

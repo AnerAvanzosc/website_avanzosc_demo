@@ -33,7 +33,10 @@
         "views/snippets/equipo.xml",
         "views/snippets/hero.xml",
         "data/config_parameters.xml",
-        "views/test_snippets.xml",
+        # Phase 4 — composición de la home / con los 9 snippets en orden
+        # funnel. La view extiende `website.homepage` via xpath
+        # inheritance.
+        "views/pages/home.xml",
     ],
     "installable": True,
     "application": False,
