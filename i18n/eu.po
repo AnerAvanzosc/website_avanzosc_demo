@@ -8,6 +8,29 @@
 # Odoo aplica las traducciones aunque sean fuzzy, pero el flag sirve como
 # señal a los maintainers humanos.
 #
+# ============================================================================
+# Q1 GATE — Validación lingüística pendiente
+# ============================================================================
+# Estado actual sesión 2026-04-29 (Phase 9.5):
+#   - Total msgid en este file: 192 (tras añadir archetype 1 EU drafts;
+#     una entrada se mergó al «Industrial» pre-existente añadiendo la
+#     referencia a `s_avanzosc_caso_exito`, no se duplicó).
+#   - Strings VALIDADAS (sin flag fuzzy, sin DRAFT marker): 10.
+#     - Claim corporativo (D2): «Odoo industrial de verdad, desde 2008.»
+#       → «Benetako Odoo industriala, 2008tik.»
+#     - 4 slugs URL sectoriales validados (D2): industriala, banaketa,
+#       zerbitzuak, akademiak.
+#     - Strings legales fijas no traducibles (CIF, dirección, etc. — no
+#       aparecen en este file por ser idénticas ES/EU).
+#   - Strings DRAFT (flag fuzzy + comentario `# DRAFT - REVIEW NEEDED`):
+#     resto del file. Pendientes de revisión por equipo Avanzosc.
+#
+# Procedimiento de revisión: ver `docs/q1-validation-runbook.md`.
+# Gate Phase 9.5: bloqueante switchover (Phase 10) hasta que las 182
+# strings DRAFT pasen revisión. Phase 9 entrega documentación;
+# validación humana fuera del alcance v1 implementer.
+# ============================================================================
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
@@ -54,10 +77,12 @@ msgid "Legal"
 msgstr "Legala"
 
 # DRAFT - REVIEW NEEDED — heading sector + footer link + dropdown child
+# + caso éxito archetype 1 sector (Phase 9.5).
 #. module: website_avanzosc_demo
 #: model:website.menu,name:website_avanzosc_demo.menu_industrial
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sectores
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_caso_exito
 #, fuzzy
 msgid "Industrial"
 msgstr "Industriala"
@@ -1371,4 +1396,75 @@ msgstr "3. Erabiltzailearen konfigurazioa"
 #, fuzzy
 msgid "4. Cambios futuros"
 msgstr "4. Etorkizuneko aldaketak"
+
+# ============================================================================
+# Phase 9.5 — Caso éxito archetype 1 (EU drafts).
+# ============================================================================
+# Per decisión C2 sesión 2026-04-29 (Phase 9): añadir EU drafts solo del
+# archetype 1 (default actual del config_parameter). Cuando [?] #7 spec
+# cierre con la elección final del archetype activo en producción, ajustar
+# si difiere. Los archetypes 2-8 quedan sin EU draft hasta esa decisión.
+# 9 strings: 1 sector + 1 subsector + 1 title + 1 summary + 5 detail items.
+# ============================================================================
+
+# Caso éxito archetype 1 sector → ya existe arriba (compartido con
+# footer/menu/sectores). Añadida la referencia a `s_avanzosc_caso_exito`
+# en el entry original para que Odoo aplique la misma traducción aquí.
+# NO duplicar `msgid "Industrial"` — `.po` no acepta duplicados.
+
+# DRAFT - REVIEW NEEDED — Caso éxito archetype 1 subsector.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_caso_exito
+#, fuzzy
+msgid "Mecanizado / metalúrgico exportador"
+msgstr "Mekanizatua / metalurgiko esportatzailea"
+
+# DRAFT - REVIEW NEEDED — Caso éxito archetype 1 title.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_caso_exito
+#, fuzzy
+msgid "Fabricante metal-mecánico (50-200 empleados)"
+msgstr "Metal-mekanikoaren ekoizlea (50-200 langile)"
+
+# DRAFT - REVIEW NEEDED — Caso éxito archetype 1 summary.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_caso_exito
+#, fuzzy
+msgid "Migración completa Excel → Odoo MRP con trazabilidad y multidivisa."
+msgstr "Excel → Odoo MRP migrazio osoa, trazabilitatearekin eta dibisa anitzekin."
+
+# DRAFT - REVIEW NEEDED — Caso éxito archetype 1 detail 1.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_caso_exito
+#, fuzzy
+msgid "MRP por capacidad finita y planificación por taller."
+msgstr "MRP ahalmen mugatuarekin eta tailerreko plangintza."
+
+# DRAFT - REVIEW NEEDED — Caso éxito archetype 1 detail 2.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_caso_exito
+#, fuzzy
+msgid "Configurador multivariante para exportación."
+msgstr "Esportaziorako konfiguratzaile aldakor anitza."
+
+# DRAFT - REVIEW NEEDED — Caso éxito archetype 1 detail 3.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_caso_exito
+#, fuzzy
+msgid "Integración con PLCs vía OCA/connector_mes."
+msgstr "PLCekin integrazioa OCA/connector_mes bidez."
+
+# DRAFT - REVIEW NEEDED — Caso éxito archetype 1 detail 4.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_caso_exito
+#, fuzzy
+msgid "Trazabilidad por lote/serie + EDI con clientes."
+msgstr "Lote/serie trazabilitatea + EDI bezeroekin."
+
+# DRAFT - REVIEW NEEDED — Caso éxito archetype 1 detail 5.
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_caso_exito
+#, fuzzy
+msgid "Multidivisa con tipo de cambio diario automático."
+msgstr "Dibisa anitza, eguneroko kanbio-tasa automatikoarekin."
 

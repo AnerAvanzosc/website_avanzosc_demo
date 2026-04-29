@@ -432,6 +432,8 @@ Detalle íntegro de cada decisión (validaciones literales, justificaciones téc
 
 ### Decisiones pendientes
 
+- [ ] **Q1 — Validación lingüística DRAFTs**: 182 strings DRAFT en `i18n/eu.po` pendientes de revisión por equipo Avanzosc per runbook `docs/q1-validation-runbook.md`. Gate Phase 9.5 abierto, bloqueante switchover Phase 10. Sub-gate Q3 (23 LEGAL DRAFT entradas en legales) requiere también revisión por asesoría legal.
+- [ ] **v2 deuda: refactor sticky header `padding` transition** — la única animación layout-property del módulo (`_header.scss:51`). Phase 8.3 audit + Phase 9 QA visual confirmaron que el comportamiento actual es funcional sin artefactos visibles, ~22 layout events/sec scroll active. Diferido a v2 per decisión condicional D3 (sesión 2026-04-29 Phase 9.7) — refactor a `transform: scaleY` con child wrapper requiere repensar la estructura interna del navbar (sticky + navbar-collapse mobile + box-shadow + 3 transitions co-localizadas). Pre-existente justificación Phase 1.3 mantenida.
 - [ ] **Hex exactos del logo** — extraer de `https://avanzosc.es/web/image/website/1/logo/Avanzosc` y actualizar tabla §9.3.
 - [ ] **SVG del logo** — vectorizar si no existe ya.
 - [ ] **Portal ERP actual** — ¿«Acceso clientes» apunta a `/web/login` estándar o URL custom?
