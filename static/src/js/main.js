@@ -47,6 +47,105 @@ odoo.define('website_avanzosc_demo.main', function (require) {
                     requestAnimationFrame(raf);
                 }
                 requestAnimationFrame(raf);
+
+                // ----------------------------------------------------------------
+                // Smooth anchor scroll. Lenis 1.0.42 NO expone la opción
+                // `anchors` del constructor (verificado contra
+                // cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42 — solo
+                // expone `scrollTo`; la opción `anchors` aparece en versiones
+                // posteriores y por eso aparecía en docs Lenis sin pin de
+                // versión). Implementación manual: listener delegado en
+                // document para clicks a `<a href="#…">` same-page que delega
+                // a Lenis con:
+                //   - duration: 0.8s, alineado con CLAUDE.md §5 «800-1200ms
+                //     entradas grandes»; un anchor scroll es entrada grande.
+                //   - easing: ease-out expo `(t) => 1 - 2^(-10t)`. Equivalente
+                //     funcional al cubic-bezier(0.16,1,0.3,1) de CLAUDE.md §5.
+                // HEADER_OFFSET: header sticky scrolled ~62px alto. Restando
+                // 80px de el.offsetTop el target queda ~64px del viewport top
+                // (Lenis añade ~+16px de bias residual sobre scrollTo). Ese
+                // margen sitúa el border-box justo bajo el header sin overlap;
+                // el contenido visible (h2) cae naturalmente con aire gracias
+                // al padding-top interno de cada snippet.
+                //
+                // Calculamos el pixel target manualmente (`el.offsetTop -
+                // HEADER_OFFSET`) en lugar de pasar `{offset:-80, target:el}`
+                // a lenis.scrollTo: la firma element-based suma sesgos
+                // adicionales que pueden mover el target detrás del header
+                // (verificado empíricamente en Phase post-v1).
+                //
+                // history.pushState mantiene la URL compartible y respeta back
+                // button (state=null, title vacío — comportamiento nativo).
+                //
+                // Reduced-motion: rama no entra (Lenis no se instancia).
+                // Browser hace jump nativo dentro de #wrapwrap — aceptado per
+                // CLAUDE.md §5 (skip animation).
+                // ----------------------------------------------------------------
+                var HEADER_OFFSET = 80;
+                var easeOutExpo = function (t) { return 1 - Math.pow(2, -10 * t); };
+                var SCROLL_OPTS = { duration: 0.8, easing: easeOutExpo };
+                var scrollToElement = function (el) {
+                    var top = Math.max(0, el.offsetTop - HEADER_OFFSET);
+                    lenis.scrollTo(top, SCROLL_OPTS);
+                };
+                document.addEventListener('click', function (e) {
+                    if (e.defaultPrevented) return;
+                    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                    var a = e.target.closest && e.target.closest('a[href]');
+                    if (!a) return;
+                    var href = a.getAttribute('href');
+                    if (!href || href.charAt(0) !== '#' || href.length < 2) return;
+                    var target;
+                    try {
+                        target = document.querySelector(href);
+                    } catch (err) {
+                        return;
+                    }
+                    if (!target) return;
+                    e.preventDefault();
+                    if (window.history && typeof window.history.pushState === 'function') {
+                        window.history.pushState(null, '', href);
+                    }
+                    scrollToElement(target);
+                });
+
+                // ----------------------------------------------------------------
+                // Cross-page anchor bootstrap. Cuando el usuario navega a
+                // `/#equipo` (link cross-page desde Conócenos) o equivalente,
+                // el browser intentará saltar nativamente al elemento con
+                // ese id en el primer paint de la nueva página, antes de que
+                // Lenis tome control del scroll. Resultado: jump nativo sin
+                // smooth, contradiciendo el comportamiento same-page.
+                //
+                // Patrón: tras inicializar Lenis, si hay hash en la URL,
+                // suprimir la restauración nativa del browser
+                // (history.scrollRestoration = 'manual'), volver al top y
+                // delegar a Lenis con las mismas opciones. requestAnimationFrame
+                // garantiza que el target ya está layouteado antes del scrollTo.
+                // ----------------------------------------------------------------
+                if (window.location.hash && window.location.hash.length > 1) {
+                    try {
+                        var bootstrapTarget = document.querySelector(window.location.hash);
+                        if (bootstrapTarget) {
+                            if ('scrollRestoration' in window.history) {
+                                window.history.scrollRestoration = 'manual';
+                            }
+                            // rAF callback runs DESPUÉS del native scroll-to-hash
+                            // del browser. Reseteamos wrap.scrollTop a 0 y
+                            // delegamos a scrollToElement (que calcula el
+                            // pixel value `el.offsetTop - HEADER_OFFSET`,
+                            // evitando la varianza element-based de Lenis).
+                            window.requestAnimationFrame(function () {
+                                wrapwrap.scrollTop = 0;
+                                scrollToElement(bootstrapTarget);
+                            });
+                        }
+                    } catch (e) {
+                        // querySelector lanza si el hash no es selector CSS
+                        // válido (e.g. `#1foo`). Silenciar — comportamiento
+                        // nativo del browser sirve de fallback aceptable.
+                    }
+                }
             } else if (typeof window.Lenis === 'undefined') {
                 // CDN failure (network block, ad-blocker, etc.). Sticky header
                 // falls back to native scroll path on `#wrapwrap` per Task 1.3.
