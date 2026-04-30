@@ -88,11 +88,41 @@
                                         <p>Este sitio web utiliza únicamente cookies propias: dos cookies técnicas estrictamente necesarias para el funcionamiento (<code>session_id</code>, <code>frontend_lang</code>) y una cookie de análisis propio agregado (<code>visitor_uuid</code>) emitida por la plataforma Odoo para contabilizar visitantes únicos de forma anónima, sin perfilado individual. <strong>No utilizamos cookies de terceros, de publicidad ni de seguimiento conductual con perfilado individual.</strong></p>
                                         <p>Conforme al artículo 22.2 LSSI-CE, las cookies estrictamente necesarias para la prestación del servicio quedan exentas del deber de obtener consentimiento previo. Las cookies de análisis propio agregado se incluyen en esta política de forma transparente; la decisión final sobre el modelo de consentimiento aplicable a <code>visitor_uuid</code> queda sujeta a la revisión legal previa al lanzamiento.</p>
                                         <p>Las cookies utilizadas son:</p>
-                                        <ul>
-                                            <li><strong>session_id</strong> — Cookie técnica emitida por Odoo. Mantiene el estado de la sesión (incluido el visitante anónimo) durante la navegación. Caducidad: 90 días. <code>HttpOnly</code>.</li>
-                                            <li><strong>frontend_lang</strong> — Cookie técnica de Odoo que recuerda el idioma seleccionado (castellano o euskera) entre peticiones. Caducidad: sesión (se elimina al cerrar el navegador).</li>
-                                            <li><strong>visitor_uuid</strong> — Cookie de análisis propio agregado emitida por Odoo (módulo <code>website</code>). Asigna un identificador anónimo al visitante para contabilizar visitantes únicos de forma agregada; no se utiliza para perfilado individual ni se cruza con datos personales identificativos. Caducidad: 1 año.</li>
-                                        </ul>
+                                        <table class="table table-striped s_avanzosc_legal_cookies_table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nombre</th>
+                                                    <th>Propósito</th>
+                                                    <th>Duración</th>
+                                                    <th>Tipo</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><code>session_id</code></td>
+                                                    <td>Mantiene el estado de la sesión de navegación (incluido el visitante anónimo). Emitida por Odoo. <code>HttpOnly</code>.</td>
+                                                    <td>90 días</td>
+                                                    <td>Técnica</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>frontend_lang</code></td>
+                                                    <td>Recuerda el idioma seleccionado (castellano o euskera) entre peticiones. Emitida por Odoo.</td>
+                                                    <td>Sesión (se elimina al cerrar el navegador)</td>
+                                                    <td>Técnica</td>
+                                                </tr>
+                                                <!-- visitor_uuid: clasificación «Análisis propio agregado» pendiente
+                                                     decisión de la asesoría legal (gate Q3). La AEPD considera análisis
+                                                     propio sujeto a consentimiento informado salvo configuraciones
+                                                     específicas. Si la asesoría exige opt-out o re-clasificación
+                                                     (técnica vs análisis), actualizar esta fila. -->
+                                                <tr>
+                                                    <td><code>visitor_uuid</code></td>
+                                                    <td>Asigna un identificador anónimo al visitante para contabilizar visitantes únicos de forma agregada. No se utiliza para perfilado individual ni se cruza con datos personales identificativos. Emitida por el módulo <code>website</code> de Odoo.</td>
+                                                    <td>1 año</td>
+                                                    <td>Análisis propio agregado</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>

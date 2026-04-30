@@ -14,7 +14,7 @@
 | Teléfono | `943 026 902` | aviso §1 | ☐ |
 | Email contacto general | `comercial@avanzosc.es` | aviso §1, privacidad §1 (como email DPO de facto), privacidad §7 (canal ARCO+) | ☐ |
 | Jurisdicción | `Tribunales de Azkoitia o Donostia (Gipuzkoa)` | aviso §6 | ☐ |
-| AEPD URL | `https://www.aepd.es` | privacidad §7 | ☐ (ahora apunta a www.aepd.es; verificar si está canónica o si Avanzosc prefiere `aepd.es` sin www) |
+| AEPD URL | `https://www.aepd.es/` | privacidad §7 | ✅ canónica verificada — `aepd.es` redirige 301 a `www.aepd.es/` (curl HEAD). Aplicado en commit del fix dev (ver sección «Aplicado» abajo). |
 
 ## Datos NO encontrados que la asesoría puede pedir
 
@@ -51,26 +51,39 @@
 | LSSI art. 22.2 | `Conforme al artículo 22.2 LSSI-CE...` (cookies §2) | ☐ |
 | RGPD art. 28 | `...conforme al artículo 28 del RGPD` (privacidad §6) | ☐ |
 
-## Cosas que el dev puede arreglar SIN asesoría
+## Aplicado en commit (fix dev pre-asesoría)
 
-Detectadas durante la extracción. Anotadas para que el dev evalúe si vale la pena fixearlas antes de mandar a asesoría:
+Los 5 issues fixeables sin asesoría detectados en la pre-revisión inicial se resolvieron en un commit posterior `[IMP] q3: apply 5 dev-fixable legal issues identified in pre-review`. Mantenidos aquí como histórico de lo aplicado:
 
-1. **LOPDGDD solo en comentario XML, no en render**. Privacidad §subtítulo dice «conforme al RGPD y la LOPDGDD» pero la cita literal de `Ley Orgánica 3/2018` solo aparece en el comentario interno. Considerar añadirla al subtítulo o sección 1.
+1. ✅ **LOPDGDD añadida al body de privacidad §1**. Párrafo introductorio antes del listado de datos del responsable: «En cumplimiento del Reglamento (UE) 2016/679 del Parlamento Europeo y del Consejo, de 27 de abril de 2016... y de la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD), se informa de que el responsable del tratamiento es:».
 
-2. **Política de Cookies sin tabla estructurada**. Las 3 cookies se listan en `<ul>` con bullets, no en tabla. Algunas asesorías prefieren tabla `<table>` con columnas Cookie / Tipo / Finalidad / Caducidad. No es obligatorio pero estructura mejor.
+2. ✅ **Política de Cookies §2: `<ul>` reemplazado por `<table class="table table-striped">`** con columnas Nombre / Propósito / Duración / Tipo. Fila `visitor_uuid` lleva comentario QWeb interno indicando que su clasificación (Análisis propio agregado) está pendiente decisión asesoría Q3 — gate explícito si la asesoría exige re-clasificación o consentimiento.
 
-3. **`/politica-cookies` referenciada con texto plano «(ver Política de Cookies)»** en privacidad §2. No es link `<a href="/politica-cookies">`. Mejor convertirlo en link clickable.
+3. ✅ **Link clickable a /politica-cookies en privacidad §2**: `(ver Política de Cookies)` → `(ver <a href="/politica-cookies">Política de Cookies</a>)`.
 
-4. **Email contacto sin `mailto:` en aviso §1** vs privacidad §7 que sí lo tiene como `<a href="mailto:...">`. Coherencia visual: añadir mailto en aviso §1.
+4. ✅ **mailto: en aviso §1**: `comercial@avanzosc.es` → `<a href="mailto:comercial@avanzosc.es">comercial@avanzosc.es</a>`. Coherencia con privacidad §7.
+
+5. ✅ **AEPD URL canónica**: `https://www.aepd.es` → `https://www.aepd.es/` (con barra final). Verificación previa: `curl -I https://aepd.es` → 301 → `https://www.aepd.es/`. La canónica per redirect oficial es la versión con `www` y barra final.
+
+### Strings nuevas no en `i18n/eu.po` todavía
+
+Los fixes 1 y 2 introducen strings nuevas en los templates QWeb que NO están en el `.po` actual (ni el script genérico Odoo las extrajo en `-u`). Lista de strings nuevas pendientes de extraer en una próxima fase de preparación del paquete asesoría (Q3 fase 2):
+
+- Párrafo «En cumplimiento del Reglamento (UE) 2016/679... LOPDGDD...».
+- Cabeceras tabla cookies: `Nombre`, `Propósito`, `Duración`, `Tipo`.
+- Reorganización del cuerpo de las 3 filas de cookies (textos similares al `<ul>` previo pero recortados en celdas).
+- Valores `Técnica`, `Análisis propio agregado`, `90 días`, `1 año`, `Sesión (se elimina al cerrar el navegador)`.
+
+Estas strings serán visibles en los PDFs regenerados (fuente principal para el dev en esta fase). Para el XLSX prereview Q3 actual (23 entries del `.po`) se mantiene el conteo previo. Cuando se prepare el paquete formal a asesoría (Q3 fase 2), ejecutar `i18n_export` o añadirlas manualmente al `.po` con marker `LEGAL DRAFT - REVIEW NEEDED` y regenerar XLSX.
 
 ## Cosas que SOLO la asesoría puede decidir
 
-5. **Decisión sobre DPO**: necesario o no, qué email/persona, si se publica.
-6. **Inclusión Registro Mercantil**: sí/no según obligación legal de Avanzosc.
-7. **Status legal `visitor_uuid`**: opt-out, banner consentimiento, o eximir.
-8. **Cláusula de menores**: no presente; aplicable solo si Avanzosc trata datos de menores 14 años.
-9. **Transferencias internacionales**: no presentes; aplicable solo si Avanzosc usa proveedores fuera EEE (e.g., AWS US, GCP US).
-10. **Plazo conservación 12 meses**: privacidad §5 dice «máximo 12 meses desde último contacto». La asesoría debe confirmar si encaja con la actividad real de Avanzosc.
+1. **Decisión sobre DPO**: necesario o no, qué email/persona, si se publica.
+2. **Inclusión Registro Mercantil**: sí/no según obligación legal de Avanzosc.
+3. **Status legal `visitor_uuid`**: opt-out, banner consentimiento, o eximir. La tabla de cookies §2 ya marca esa fila como «Análisis propio agregado» pendiente de validación, con comentario QWeb interno indicando el gate.
+4. **Cláusula de menores**: no presente; aplicable solo si Avanzosc trata datos de menores 14 años.
+5. **Transferencias internacionales**: no presentes; aplicable solo si Avanzosc usa proveedores fuera EEE (e.g., AWS US, GCP US).
+6. **Plazo conservación 12 meses**: privacidad §5 dice «máximo 12 meses desde último contacto». La asesoría debe confirmar si encaja con la actividad real de Avanzosc.
 
 ---
 
