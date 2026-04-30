@@ -331,6 +331,23 @@ Sesión 2026-04-30 tras inventario empírico de avanzosc.es legacy:
 
 **Validación final**: 15/15 URLs blog específicas + raw `/blog` + EU `/eu_ES/blog` + `/page/kit-digital` ES + EU + `/blog/travel-1*` (ya 301 a `/` por wildcard, demo data desaparecida). Smoke verde. Implementación en commits `f39d62b` (entries + Q6 inicial) + `[FIX] post-v1: uninstall website_blog (resolves Q5 hijack on /blog/odoo-1) + repoint Q6 to /kit-consulting dedicated page`.
 
+<a id="d22"></a>
+### D22 — Q2 cerrada: alias público `/clientes` para botón «Acceso clientes»
+
+Sesión 2026-04-30. Bloqueo blando spec §13 #2 («URL final del portal pendiente») se cierra.
+
+**Decisión**: el botón «Acceso clientes» del header apunta a `/clientes` como URL pública. Esa URL redirige 301 a `/web/login` (módulo Odoo core). La URL canónica `/web/login` queda como detalle de implementación interno; el visitante ve `/clientes` en la barra de direcciones al hacer hover/click, mejor branding y memoria de URL.
+
+**Implementación**:
+- `views/layout.xml` L31 (botón desktop) y L247 (mobile overlay): href `/web/login` → `/clientes`. La clase `s_avanzosc_acceso_clientes` y `s_avanzosc_acceso_clientes_mobile` no cambian.
+- `data/redirects.xml`: 2 entries `website.rewrite` con `redirect_type='301'`:
+  - `/clientes` → `/web/login` (`redirect_clientes_to_login_es`)
+  - `/eu_ES/clientes` → `/web/login` (`redirect_clientes_to_login_eu`)
+
+**Hallazgo render EU**: Odoo lang-routing añade prefijo `/eu_ES/` automáticamente al render del href del template (`<a href="/clientes">` → renderizado como `/eu_ES/clientes` cuando `request.lang.code='eu_ES'`). La entry redirect EU explícita cubre exactamente ese caso. Resultado: el visitante en EU ve `/eu_ES/clientes` en hover y al click es 301 a `/web/login` (login Odoo core ES-only por design — Odoo aplica lang-detect en el form de login según preferencias del usuario, no via URL prefix).
+
+**Validación**: `curl -I /clientes` → 301 → `/web/login`. `curl -I /eu_ES/clientes` → 301 → `/web/login`. `curl -I /web/login` → 200 (login intacto). `curl /` HTML contiene `href="/clientes"`. `curl /eu_ES/` HTML contiene `href="/eu_ES/clientes"`. Smoke verde. Implementación en commit `[FEAT] post-v1: add /clientes alias for "Acceso clientes" header button (Q2 closed)`.
+
 ---
 
 ## 6. Decisiones diferidas con criterio de reapertura

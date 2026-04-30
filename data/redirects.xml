@@ -246,6 +246,34 @@
         </record>
 
         <!-- =====================================================
+             Q2 cerrada (post-v1 sesión 2026-04-30): alias público
+             /clientes → /web/login para el botón «Acceso clientes»
+             del header. La URL canónica /web/login del módulo Odoo
+             core queda como detalle de implementación interno; el
+             visitante ve /clientes como URL pública del flujo de
+             acceso al portal ERP.
+
+             ES + EU separados por consistencia con redirect_eu_slug_*.
+             Destino /web/login es el mismo en ambos: el login Odoo es
+             ES-only por design (no /eu_ES/web/login); Odoo aplicará el
+             lang-detect en el form de login según preferencias del
+             usuario.
+             ===================================================== -->
+        <record id="redirect_clientes_to_login_es" model="website.rewrite">
+            <field name="name">/clientes → /web/login (Q2 alias público portal)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/clientes</field>
+            <field name="url_to">/web/login</field>
+        </record>
+
+        <record id="redirect_clientes_to_login_eu" model="website.rewrite">
+            <field name="name">/eu_ES/clientes → /web/login (Q2 alias público portal, EU)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/eu_ES/clientes</field>
+            <field name="url_to">/web/login</field>
+        </record>
+
+        <!-- =====================================================
              Task 7.5.1 — Slugs URL EU directos (301 source-EU → source-ES).
              =====================================================
              Hallazgo Phase 5/6: Odoo 14 registra slugs traducidos en

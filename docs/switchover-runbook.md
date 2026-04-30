@@ -26,6 +26,10 @@ exactos, verificación posterior y tiempo estimado.
   - Verificación: `grep -c "# LEGAL DRAFT - REVIEW NEEDED" i18n/eu.po` → **0**.
   - Verificación: `grep -rn "LEGAL DRAFT - REVIEW NEEDED BY LEGAL ADVISOR" views/pages/legal_*.xml` → **0**.
   - Responsable: asesoría legal Avanzosc.
+- [x] **Q2 cerrada — URL pública del botón «Acceso clientes»** (sesión 2026-04-30)
+  - Decisión: alias público `/clientes` (ES) y `/eu_ES/clientes` (EU) → 301 a `/web/login`. La URL canónica de Odoo core queda como detalle interno; el visitante ve la URL pública en la barra al hacer hover/click.
+  - Implementación: 2 entries `website.rewrite` en `data/redirects.xml` + href del botón `<a href="/clientes">` en `views/layout.xml` (desktop L31 + mobile overlay L247). Odoo lang-routing añade prefijo `/eu_ES/` automáticamente al render EU.
+  - Verificación: `curl -I /clientes` → 301 → `/web/login`. `curl -I /eu_ES/clientes` → 301 → `/web/login`.
 - [ ] **Q4 cerrada — Analytics**
   - Decisión: GA4 / Plausible / Matomo / ninguno.
   - Si analytics activado: `views/pages/legal_cookies.xml` actualizado con la cookie correspondiente; banner de consentimiento implementado si aplica.

@@ -472,6 +472,7 @@ Sub-bloques A (transiciones suaves) + B (rediseño /contacto) + iteración A6 (l
 | D19 | Page transition Propuesta A descartada por FOFC en stack lazy bundle | [decisions-log#d19](docs/decisions-log.md#d19) |
 | D20 | Page transition fade recortado 200→100 ms (Propuesta D); B diferida | [decisions-log#d20](docs/decisions-log.md#d20) |
 | D21 | Q5/Q6 cerrados: redirects 301 legacy `/blog/*` → home + `/page/kit-digital` → `/#kit-consulting` | [decisions-log#d21](docs/decisions-log.md#d21) |
+| D22 | Q2 cerrada: alias público `/clientes` → 301 a `/web/login` (URL canónica Odoo como detalle interno) | [decisions-log#d22](docs/decisions-log.md#d22) |
 
 ### Decisiones pendientes
 

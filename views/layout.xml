@@ -14,7 +14,8 @@
          que es el template que rellena la zona oe_structure con el botón
          "Contact Us" estándar de Odoo. Lo reemplazamos con nuestro botón.
          La clase s_avanzosc_acceso_clientes sirve de hook CSS en _header.scss.
-         href provisional: /web/login — URL final del portal pendiente [?] #2 spec.
+         href: /clientes (alias público redirige 301 a /web/login per Q2,
+         sesión 2026-04-30; ver data/redirects.xml).
          Ref: CLAUDE.md §4 (IDs prefijados), task 1.2 punto 2. -->
     <template id="header_acceso_clientes"
               name="Header: Acceso clientes button"
@@ -27,8 +28,9 @@
              per CLAUDE.md §10 (sin Website Builder). Si se cambia a otra
              variante, este xpath no matchea y el botón desaparece sin error. -->
         <xpath expr="//a[@href='/contactus']" position="replace">
-            <!-- href provisional /web/login — bloqueo blando [?] #2 spec (URL portal). -->
-            <a href="/web/login"
+            <!-- href: /clientes — URL pública alias, redirect 301 a /web/login
+                 vía data/redirects.xml (Q2 cerrada sesión 2026-04-30). -->
+            <a href="/clientes"
                class="btn btn-primary ml-4 s_avanzosc_acceso_clientes">
                 Acceso clientes
             </a>
@@ -229,7 +231,8 @@
 
          Ref: spec §8.1, plan §7.1 + §7.3, decisión sesión 2026-04-29
          (B1 acordeón cerrado, fade 200ms, switcher cierra+navega).
-         Q2 spec sigue abierta como soft (URL portal); /web/login default.
+         Q2 cerrada sesión 2026-04-30: alias público /clientes → /web/login
+         vía redirect 301 en data/redirects.xml.
          ============================================================ -->
     <template id="header_mobile_buttons"
               name="Header: mobile hamburger and user icon (&lt;992px)"
@@ -244,7 +247,7 @@
                     <i data-lucide="menu"/>
                     <span class="s_avanzosc_sr_only">Abrir menú</span>
                 </button>
-                <a href="/web/login"
+                <a href="/clientes"
                    class="s_avanzosc_acceso_clientes_mobile"
                    aria-label="Acceso clientes">
                     <i data-lucide="user"/>
