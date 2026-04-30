@@ -259,7 +259,45 @@ Cuando 4.3 + 4.4 estén en 0, actualizar:
 
 **ID estable**: cada string tiene un identificador `Q1-{6-hex-uppercase}` derivado de `sha1(msgid).hexdigest()[:6].upper()`. Ventaja: independiente del orden del .po — si en futuro reordenamos o añadimos entries, los IDs existentes no cambian. El revisor escribe en EU FINAL/Notas; el dev al merge usa el ID para localizar la entry en el .po (via msgid o re-derivar hash).
 
-### 5.1 — Procedimiento del dev al recibir el XLSX devuelto
+### 5.1 — Requisitos técnicos del generador
+
+El XLSX se genera con un script Python autocontenido en
+`docs/q1-eu-validation/tools/gen_q1_xlsx.py`. Dependencias:
+
+| Paquete | Origen | Notas |
+|---|---|---|
+| Python 3.10+ | venv Odoo `/opt/odoo/v14/venv` | Ya disponible. |
+| `polib` | venv Odoo | Ya disponible (versión 1.2.0 en sesión 2026-04-30). |
+| `openpyxl` 3.1+ | **instalación manual** | NO viene con el venv por default. |
+| LibreOffice (`libreoffice`) | sistema | Opcional, solo para preview a PNG/PDF. |
+| Poppler (`pdftoppm`, `pdfinfo`) | sistema | Opcional, mismo propósito. |
+
+Comando explícito de instalación de `openpyxl`:
+
+```bash
+/opt/odoo/v14/venv/bin/pip install openpyxl
+```
+
+**Importante**: `openpyxl` es dependencia del SCRIPT, **no del módulo Odoo**.
+El módulo `website_avanzosc_demo` no importa openpyxl en runtime; sysadmin
+en producción no necesita instalarlo. Solo el dev que regenera el paquete
+de validación lo usa.
+
+Si el sysadmin reinstala el venv (e.g. tras upgrade de Odoo o migración
+de servidor), `openpyxl` desaparece. El script aún se referencia en este
+runbook; reinstalar con el comando arriba antes de re-ejecutarlo.
+
+Para regenerar el XLSX (típicamente al cerrar un round de revisión y
+abrir otro):
+
+```bash
+/opt/odoo/v14/venv/bin/python docs/q1-eu-validation/tools/gen_q1_xlsx.py
+```
+
+Ajustar `OUT_PATH` dentro del script con la fecha actual antes de
+ejecutar para no sobrescribir el paquete previo.
+
+### 5.2 — Procedimiento del dev al recibir el XLSX devuelto
 
 Cuando el equipo de Avanzosc devuelva el XLSX con la columna EU FINAL rellena en las strings que necesiten cambios:
 
