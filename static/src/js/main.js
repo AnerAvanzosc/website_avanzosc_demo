@@ -165,14 +165,23 @@ odoo.define('website_avanzosc_demo.main', function (require) {
             }
 
             // ----------------------------------------------------------------
-            // Page transition fade overlay (sub-bloque A post-v1).
+            // Page transition fade overlay (sub-bloque A post-v1, ajustado A6).
             // Listener delegado en document a clicks de <a href> internos.
             // Cuando el click cumple los filtros, e.preventDefault() bloquea
             // la navegación nativa, body.is-leaving activa el fade-in CSS de
-            // la overlay (200ms), y tras setTimeout(200) ejecutamos
-            // window.location.href = href. La overlay queda visible hasta que
-            // la nueva página carga; el CSS default la pone a opacity 0 sin
-            // fade-in (decisión sub-bloque A: fade-out only).
+            // la overlay (100ms duración) y tras setTimeout(90) ejecutamos
+            // window.location.href = href. Nav se dispara ~10ms antes de
+            // que el overlay termine de pintarse para que el render del
+            // destino empiece bajo el final del overlay sin gap blanco. La
+            // overlay queda visible hasta que la nueva página carga; el CSS
+            // default la pone a opacity 0 sin fade-in (decisión sub-bloque A:
+            // fade-out only).
+            //
+            // Recorte 200→100 / 200→90 (Propuesta D, post-v1 A6): el fade
+            // más corto evita que el usuario forme la expectativa
+            // «transición completa, ya estoy» seguida de blanco residual
+            // durante el JS lazy parse (70-150 ms post-paint). Recortado, la
+            // transición se siente como una carga normal del browser.
             //
             // Filtros (skip → comportamiento nativo del browser):
             //  - Modifier keys / button distinto del izquierdo (cmd/ctrl/shift/alt
@@ -227,7 +236,7 @@ odoo.define('website_avanzosc_demo.main', function (require) {
                 document.body.classList.add('is-leaving');
                 window.setTimeout(function () {
                     window.location.href = href;
-                }, 200);
+                }, 90);
             });
             window.addEventListener('pageshow', function (e) {
                 if (e.persisted) {

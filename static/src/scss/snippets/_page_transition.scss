@@ -2,7 +2,13 @@
 // Activado por click en links internos (mismo origen, no anchor-only,
 // no mailto/tel). El JS añade `body.is-leaving` justo antes de invocar
 // window.location.href; esa clase pone la overlay a opacity:1 con un
-// fade-out de 200ms, blanco (--neutral-0) per decisión sub-bloque A.
+// fade-out de 100ms, blanco (--neutral-0) per decisión sub-bloque A.
+//
+// Duración 100ms (recortada desde 200ms en post-v1 sub-bloque A6,
+// Propuesta D): el fade más corto evita la expectativa «transición
+// completa, ya estoy» seguida del blanco residual durante el JS lazy
+// parse (70-150 ms post-paint). Recortado, la transición se siente
+// como una carga normal del browser que el usuario ya tolera.
 // Tras el commit del navegador, la página nueva carga y la overlay
 // arranca a opacity:0 (default) — no hay fade-in, decisión explícita.
 //
@@ -24,7 +30,7 @@
     opacity: 0;
     pointer-events: none;
     z-index: 9999;
-    transition: opacity 200ms cubic-bezier(0.7, 0, 0.84, 0);
+    transition: opacity 100ms cubic-bezier(0.7, 0, 0.84, 0);
 }
 
 body.is-leaving .s_avanzosc_page_transition {
