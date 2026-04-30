@@ -302,6 +302,28 @@ Tras descartar A (D19), iteración LOW-cost: **recortar la duración del fade pa
 
 **Propuesta B (hold overlay until JS ready) — diferida con criterio de reapertura**: si tras switchover a producción real el TTFB resulta >300 ms (medible vía `curl -w '%{time_starttransfer}\n'` contra `https://avanzosc.es/`), la latencia se hace dominante en server-render y no en JS init; en ese caso D20 es insuficiente y B reabre como segunda iteración. La condición de reapertura: **mediciones reales en producción tras switchover, no localhost**.
 
+<a id="d21"></a>
+### D21 — Q5/Q6 cerrados: redirects 301 legacy avanzosc.es
+
+Sesión 2026-04-30 tras inventario empírico de avanzosc.es legacy:
+
+**Q5 — `/blog/*` redirects**:
+- avanzosc.es legacy tiene 16 URLs `/blog*` indexadas en sitemap.xml (1 categoría `/blog/odoo-1` + 14 artículos `/blog/odoo-1/<slug>` + `/blog/odoo-1/feed`). ES-only (no `/eu*` legacy verificado curl).
+- Decisión: 301 a `/` (lang-aware). El blog v1 está fuera del sitio per D pre-spec «Blog» — todas las URLs blog redirigen a la home equivalente.
+- Implementación: doble cobertura.
+  - **Custom HTTP controller** `WebsiteAvanzoscBlogRedirect` en `controllers/main.py` cubre `/blog` raw + `/blog/<path:rest>` (3+ segments) lang-aware con 301 puro. Ruta lang-aware via `request.lang.code` (patrón D18).
+  - **15 entries `website.rewrite`** en `data/redirects.xml` específicas para los URLs reales del sitemap legacy. Razón: `website_blog` (Odoo, instalado pero invisible per D pre-spec «Blog») tiene routes con converters específicos `<model('blog.blog')>/<model('blog.post')>` que hijack las URLs `/blog/<2 segments>` antes que el custom controller. Cuando esos lookups model fallan (slug `odoo-1` no existe como blog real en BD), Odoo cae a `_serve_redirect` que SÍ procesa los entries literales de website.rewrite.
+- Por qué no `redirect_type=308` con `<path:rest>` werkzeug syntax: 308 emite status 308, no 301. Briefing exige 301 puro para coherencia SEO con resto de redirects del módulo.
+- Trade-offs conocidos: 2 URLs sitemap específicas (`/blog/odoo-1`, `/blog/odoo-1/feed`) hacen hop intermedio a `/blog/travel-1*` (blog default Odoo demo) por hijack pre-_serve_redirect; URLs no críticas (categoría + feed RSS), aceptado v1. `/blog/` con trailing slash hace 2-hop chain por Odoo strip-trailing-slash, SEO leve aceptado.
+
+**Q6 — `/page/kit-digital`**:
+- avanzosc.es legacy NO tiene `/page/kit-digital` (curl 404, ausente de sitemap.xml). Redirect defensivo para bookmarks externos hipotéticos.
+- Decisión: 301 a `/#kit-consulting` (anchor home, snippet `s_avanzosc_cta_kit_consulting`).
+- Implementación: 2 entries `website.rewrite` (ES + EU separados, patrón consistente con `redirect_eu_slug_*`). Anchor `id="kit-consulting"` añadido al `<section>` del snippet en mismo commit.
+- URL legacy nunca existió en producción → no preserva tráfico SEO real, solo defensivo.
+
+**Validación**: 13/15 URLs blog específicas + raw `/blog` + EU `/eu_ES/blog` + `/page/kit-digital` ES + EU verificados con `curl -o /dev/null -w '%{http_code} %{redirect_url}'` post-restart. Smoke verde. Implementación en commit `[FEAT] post-v1: add Q5/Q6 legacy redirects`.
+
 ---
 
 ## 6. Decisiones diferidas con criterio de reapertura

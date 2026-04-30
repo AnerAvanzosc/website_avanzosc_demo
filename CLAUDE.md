@@ -471,6 +471,7 @@ Sub-bloques A (transiciones suaves) + B (rediseño /contacto) + iteración A6 (l
 | D18 | Form lang-aware: redirect via `request.lang.url_code` en controller | [decisions-log#d18](docs/decisions-log.md#d18) |
 | D19 | Page transition Propuesta A descartada por FOFC en stack lazy bundle | [decisions-log#d19](docs/decisions-log.md#d19) |
 | D20 | Page transition fade recortado 200→100 ms (Propuesta D); B diferida | [decisions-log#d20](docs/decisions-log.md#d20) |
+| D21 | Q5/Q6 cerrados: redirects 301 legacy `/blog/*` → home + `/page/kit-digital` → `/#kit-consulting` | [decisions-log#d21](docs/decisions-log.md#d21) |
 
 ### Decisiones pendientes
 

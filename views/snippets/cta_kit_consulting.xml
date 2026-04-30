@@ -28,7 +28,10 @@
 -->
 <odoo>
     <template id="s_avanzosc_cta_kit_consulting" name="Avanzosc · CTA Kit Consulting">
-        <section class="s_avanzosc_cta_kit" data-name="Avanzosc CTA Kit Consulting" data-avanzosc-reveal="">
+        <!-- id="kit-consulting" anchor target para redirect Q6 desde
+             /page/kit-digital (legacy avanzosc.es) → /#kit-consulting.
+             Añadido sesión 2026-04-30 al cerrar Q6. Stable per scope. -->
+        <section id="kit-consulting" class="s_avanzosc_cta_kit" data-name="Avanzosc CTA Kit Consulting" data-avanzosc-reveal="">
             <div class="container">
                 <div class="s_avanzosc_cta_kit_inner">
                     <h2 class="s_avanzosc_cta_kit_heading">Kit Consulting</h2>

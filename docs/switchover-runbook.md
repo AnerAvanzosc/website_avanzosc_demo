@@ -30,15 +30,19 @@ exactos, verificación posterior y tiempo estimado.
   - Decisión: GA4 / Plausible / Matomo / ninguno.
   - Si analytics activado: `views/pages/legal_cookies.xml` actualizado con la cookie correspondiente; banner de consentimiento implementado si aplica.
   - Responsable: dirección Avanzosc.
-- [ ] **Q5 cerrada — `/blog/*` redirects**
-  - Decisión: 301 a `/`, 410 Gone, o landing «archivado».
-  - Implementación en `data/redirects.xml` (TODO comentado actualmente).
-  - Verificación: `curl -I https://nueva.avanzosc.es/blog` devuelve la respuesta esperada.
-  - Responsable: SEO Avanzosc tras auditoría 10.3.
-- [ ] **Q6 cerrada — `/page/kit-digital` antiguo**
-  - Decisión: 301 a `/kit-consulting`, mantener activa, o 410 Gone.
-  - Implementación en `data/redirects.xml` (TODO comentado actualmente).
-  - Responsable: dirección Avanzosc.
+- [x] **Q5 cerrada — `/blog/*` redirects** (sesión 2026-04-30)
+  - Decisión: 301 a `/` (lang-aware ES → `/`, EU → `/eu_ES/`).
+  - Implementación: doble cobertura.
+    1. Custom controller `WebsiteAvanzoscBlogRedirect` en `controllers/main.py` cubre `/blog` raw + `/blog/<path:rest>` (3+ segments) lang-aware.
+    2. 15 entries `website.rewrite` específicas en `data/redirects.xml` para los URLs reales del sitemap legacy avanzosc.es (1 categoría `/blog/odoo-1` + 14 artículos `/blog/odoo-1/<slug>`). Necesarias porque `website_blog` (Odoo, instalado pero invisible per CLAUDE.md §11) hijack rutas con converters específicos.
+  - Verificación post-switchover: `curl -I https://avanzosc.es/blog` → 301 → `/`. `curl -I https://avanzosc.es/blog/odoo-1/contabilidad-en-odoo-80` → 301 → `/`.
+  - Trade-offs conocidos: 2 URLs específicas (`/blog/odoo-1`, `/blog/odoo-1/feed`) hacen hop intermedio a `/blog/travel-1*` (blog default Odoo demo) por hijack de website_blog before `_serve_redirect`. URLs no críticas (categoría + feed RSS), aceptado v1. `/blog/` (trailing slash) hace 2-hop chain `/blog/→/blog→/` por strip de Odoo. SEO leve, aceptado.
+- [x] **Q6 cerrada — `/page/kit-digital` antiguo** (sesión 2026-04-30)
+  - Decisión: 301 a `/#kit-consulting` (anchor en home, snippet `s_avanzosc_cta_kit_consulting`).
+  - Hallazgo de inventario: `/page/kit-digital` NO existe en avanzosc.es legacy (curl 404, ausente de sitemap.xml). Redirect defensivo para bookmarks externos hipotéticos.
+  - Implementación: 2 entries `website.rewrite` en `data/redirects.xml` (ES + EU separados, patrón consistente con `redirect_eu_slug_*`).
+  - Anchor `id="kit-consulting"` añadido al `<section>` del snippet en mismo commit.
+  - Verificación: `curl -I /page/kit-digital` → 301 → `/#kit-consulting`. `curl -I /eu_ES/page/kit-digital` → 301 → `/eu_ES/#kit-consulting`.
 - [ ] **Q8 cerrada — Sesión fotográfica equipo (no bloqueante v1)**
   - Si decidida: SVG abstract en `views/snippets/equipo.xml` reemplazado por foto real.
   - Si no decidida: aceptado, placeholder SVG se mantiene.

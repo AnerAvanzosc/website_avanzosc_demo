@@ -99,40 +99,143 @@
         </record>
 
         <!-- =====================================================
-             TODO — bloqueados por spec §13 #5 y #6.
-             Activar tras resolver las decisiones pendientes en
-             CLAUDE.md §11.
-             =====================================================
+             Q5/Q6 cerrados (post-v1 sesión 2026-04-30).
+             ===================================================== -->
 
-             TODO #spec13-5: ¿qué hacer con /blog y /blog/categoria/*?
-             Opciones: 301 a /, 410 Gone, landing «archivado». Decidir
-             tras auditoría SEO real (volumen de tráfico actual del
-             blog) antes del switchover.
+        <!-- Q5 — /blog/* → home (post-v1 sesión 2026-04-30).
 
-             <record id="redirect_legacy_blog" model="website.rewrite">
-                 <field name="name">Legacy /blog → ¿?</field>
-                 <field name="redirect_type">301</field>
-                 <field name="url_from">/blog</field>
-                 <field name="url_to">/</field>
-             </record>
-             <record id="redirect_legacy_blog_categoria" model="website.rewrite">
-                 <field name="name">Legacy /blog/categoria/* → ¿?</field>
-                 <field name="redirect_type">308</field>
-                 <field name="url_from">/blog/categoria/&lt;path:rest&gt;</field>
-                 <field name="url_to">/</field>
-             </record>
+             Doble cobertura por capas:
+               1. controllers/main.py WebsiteAvanzoscBlogRedirect cubre
+                  `/blog` raw + `/blog/<path:rest>` con 3+ segments
+                  (lang-aware, 301 puro). Para URLs futuras desconocidas
+                  o URLs con 3+ segmentos no servidas por website_blog.
+               2. Las entries específicas abajo cubren los 15 URLs
+                  realmente indexadas en avanzosc.es/sitemap.xml legacy
+                  (1 categoría + 14 artículos `/blog/odoo-1/*`).
+                  Estas son necesarias porque website_blog (Odoo, módulo
+                  instalado pero invisible per CLAUDE.md §11) hijack los
+                  routes /blog/<X>/<Y> con converters más específicos
+                  (<model('blog.blog')>, <model('blog.post')>) y devuelve
+                  404 cuando los slugs no existen como records BD.
+                  El 404 dispara `_serve_redirect`, que sí encuentra el
+                  match literal aquí y emite 301 limpio.
 
-             TODO #spec13-6: ¿/page/kit-digital activa o redirige a
-             /kit-consulting? Depende del estado real del programa
-             Red.es a fecha del switchover.
+             Solo bloque ES: avanzosc.es legacy es ES-only (sitemap.xml
+             sin URLs `/eu*` ni hreflang verificado curl 2026-04-30). EU
+             solo necesita `/eu_ES/blog` raw, ya cubierto por el
+             controller. -->
 
-             <record id="redirect_legacy_kit_digital" model="website.rewrite">
-                 <field name="name">Legacy /page/kit-digital → /kit-consulting</field>
-                 <field name="redirect_type">301</field>
-                 <field name="url_from">/page/kit-digital</field>
-                 <field name="url_to">/kit-consulting</field>
-             </record>
-        -->
+        <record id="redirect_legacy_blog_categoria" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1 (categoría) → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_5puntos" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/5-puntos-clave-para-arrancar-83 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/5-puntos-clave-para-arrancar-83</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_contabilidad" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/contabilidad-en-odoo-80 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/contabilidad-en-odoo-80</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_ecosistema" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/el-ecosistema-de-odoo-81 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/el-ecosistema-de-odoo-81</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_faqs" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/faqs-odoo-115 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/faqs-odoo-115</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_feed" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/feed → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/feed</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_5claves" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/las-5-claves-para-el-exito-de-una-implantacion-de-erp-88 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/las-5-claves-para-el-exito-de-una-implantacion-de-erp-88</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_metodologia" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/metodologia-de-implantacion-odoo-avanzosc-89 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/metodologia-de-implantacion-odoo-avanzosc-89</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_odoo79" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/odoo-79 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/odoo-79</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_appswebsite" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/odoo-apps-website-110 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/odoo-apps-website-110</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_2000modulos" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/odoo-mas-de-2000-modulos-a-disposicion-de-las-empresas-97 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/odoo-mas-de-2000-modulos-a-disposicion-de-las-empresas-97</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_industriales" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/odoo-para-empresas-industriales-99 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/odoo-para-empresas-industriales-99</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_versiones" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/odoo-versiones-y-licencias-71 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/odoo-versiones-y-licencias-71</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_practicas" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/practicas-desarrollo-controlado-y-validacion-85 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/practicas-desarrollo-controlado-y-validacion-85</field>
+            <field name="url_to">/</field>
+        </record>
+        <record id="redirect_legacy_blog_post_tipos" model="website.rewrite">
+            <field name="name">Legacy /blog/odoo-1/tipos-de-instalacion-y-modulos-de-odoo-78 → / (Q5)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/blog/odoo-1/tipos-de-instalacion-y-modulos-de-odoo-78</field>
+            <field name="url_to">/</field>
+        </record>
+
+        <!-- Q6 — /page/kit-digital → /#kit-consulting (anchor home).
+             URL legacy NO existente en avanzosc.es actual (verificado
+             curl HEAD y ausente de sitemap.xml); redirect defensivo
+             para bookmarks externos hipotéticos. ES + EU separados
+             porque website.rewrite es lang-agnostic (multilang=False
+             por design en este modelo) — patrón consistente con
+             redirect_eu_slug_* del bloque anterior. -->
+        <record id="redirect_legacy_kit_digital_es" model="website.rewrite">
+            <field name="name">Legacy /page/kit-digital → /#kit-consulting (Q6 cerrada)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/page/kit-digital</field>
+            <field name="url_to">/#kit-consulting</field>
+        </record>
+
+        <record id="redirect_legacy_kit_digital_eu" model="website.rewrite">
+            <field name="name">Legacy /eu_ES/page/kit-digital → /eu_ES/#kit-consulting (Q6 cerrada)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/eu_ES/page/kit-digital</field>
+            <field name="url_to">/eu_ES/#kit-consulting</field>
+        </record>
 
         <!-- =====================================================
              Task 7.5.1 — Slugs URL EU directos (301 source-EU → source-ES).

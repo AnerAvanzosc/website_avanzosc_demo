@@ -265,3 +265,45 @@ class WebsiteAvanzoscContact(http.Controller):
             escape(datetime.utcnow().isoformat(timespec='seconds')),
             escape(mensaje),
         )
+
+
+class WebsiteAvanzoscBlogRedirect(http.Controller):
+    """Q5 — Legacy /blog/* → home redirect (post-v1 sesión 2026-04-30).
+
+    El sitio legacy avanzosc.es tiene un blog activo (16+ URLs `/blog*`
+    en sitemap.xml verificado: `/blog`, `/blog/odoo-1`, `/blog/odoo-1/<slug>`).
+    Decisión D11 «Blog» (CLAUDE.md §11): blog FUERA del sitio v1. Para
+    preservar enlaces externos y SEO acumulado, todas las URLs `/blog*`
+    redirigen 301 a la home (lang-preserved).
+
+    Por qué controller HTTP y no `website.rewrite`:
+      - `website.rewrite` con `redirect_type=301` solo soporta MATCH LITERAL
+        de `url_from` (verificado en `addons/website/models/ir_http.py`
+        `_serve_redirect`). No hay sintaxis wildcard nativa para 301.
+      - `redirect_type=308` SÍ soporta `<path:rest>` werkzeug, pero genera
+        308 status code (no 301). El briefing Q5 exige 301 puro para
+        coherencia SEO con el resto de redirects del módulo.
+      - Listar 16 entries individuales sería frágil (cualquier URL legacy
+        no listada hoy daría 404 mañana). Wildcard via controller cubre
+        cualquier URL `/blog/...` futura.
+
+    Lang-aware: ES request redirige a `/`, EU request a `/eu_ES/`. Patrón
+    D18 (CLAUDE.md §11): `request.lang.code` decide el prefijo del
+    redirect target.
+    """
+
+    def _home_url(self):
+        if request.lang and request.lang.code != 'es_ES':
+            return '/' + request.lang.url_code + '/'
+        return '/'
+
+    @http.route(['/blog', '/blog/<path:rest>'], type='http', auth='public',
+                website=True, sitemap=False, csrf=False)
+    def blog_legacy_redirect(self, rest=None, **kwargs):
+        """Captura /blog (raw) y /blog/foo/bar/baz (wildcard via path:rest).
+        En ambos casos 301 a la home lang-correspondiente.
+
+        Trailing slash (/blog/ → /blog) lo gestiona Odoo automáticamente
+        antes de despachar a este controller per `_match_request`.
+        """
+        return request.redirect(self._home_url(), code=301)
