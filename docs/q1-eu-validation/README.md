@@ -45,15 +45,23 @@ mergear las correcciones de vuelta a `i18n/eu.po`): ver
 
 **Fecha**: 2026-04-30
 **Archivo**: `avanzosc-eu-validation-2026-04-30.xlsx` · 8 pestañas (INSTRUCCIONES + 7 bloques)
-**Preview PNGs**: [`screenshots/2026-04-30/`](screenshots/2026-04-30/) · 8 imágenes · 100 dpi A3 landscape · ~1.6 MB total · **v3 post-eliminación /trabaja-con-nosotros** (ver historial abajo)
+**Preview PNGs**: [`screenshots/2026-04-30/`](screenshots/2026-04-30/) · 11 imágenes · 100 dpi A3 landscape · ~2.1 MB total · **v3.1 multi-page previews** (ver historial abajo)
 **Strings totales**: 180 (157 Q1 + 23 Q3)
 **Bloques**: ver tabla en runbook §5 — Entrega 2026-04-30.
+
+### Convención de naming de previews PNG
+
+Pestañas que ocupan 1 sola página A3 landscape: `<NN>-<slug>.png` (sin sufijo).
+Pestañas que ocupan 2+ páginas: `<NN>-<slug>-p<N>.png` (sufijo `-p1`, `-p2`, ...).
+
+Cambio aplicado a partir de v3.1 — antes (v1-v3) todas las pestañas se rasterizaban a página 1 representativa, lo cual truncaba el contenido visible para INSTRUCCIONES y otras pestañas largas.
 
 ### Historial de versiones
 
 | Versión | Fecha | Commit | Cambio |
 |---|---|---|---|
-| v3 | 2026-04-30 | (este commit) | Página /trabaja-con-nosotros eliminada del sitio: 21 strings retiradas del .po (20 exclusivas + 1 «Empleo» que pierde sus 2 referentes — menu_trabaja borrado, footer link borrado). Total: 201 → 180. Pestaña B4 renombrada de «Conócenos / Equipo / Empleo» a «Conócenos / Equipo» (47 → 27 strings). Pestaña B2 «Navegación & Footer» también baja: 12 → 11 strings. URL antigua `/trabaja-con-nosotros` redirige 301 a `/conocenos`. |
+| v3.1 | 2026-04-30 | (este commit) | Previews PNG ahora cubren TODAS las páginas del PDF (multi-page si la pestaña se desborda). INSTRUCCIONES (2 págs) + Soluciones (3 págs) + Hero & Home (2 págs) ya no truncan contenido. Convención de naming `-pN` introducida. XLSX sin cambios respecto a v3 (verificado integridad — secciones 7/8/9 estaban presentes en el .xlsx, solo se truncaban en el preview). |
+| v3 | 2026-04-30 | `4ecd0e1` | Página /trabaja-con-nosotros eliminada del sitio: 21 strings retiradas del .po (20 exclusivas + 1 «Empleo» que pierde sus 2 referentes — menu_trabaja borrado, footer link borrado). Total: 201 → 180. Pestaña B4 renombrada de «Conócenos / Equipo / Empleo» a «Conócenos / Equipo» (47 → 27 strings). Pestaña B2 «Navegación & Footer» también baja: 12 → 11 strings. URL antigua `/trabaja-con-nosotros` redirige 301 a `/conocenos`. |
 | v2 | 2026-04-30 | `d20a33a` | Row heights calculadas para evitar text overlap visible en filas con strings largas (>50 chars en columnas ES/EU/Contexto). XLSX y PNGs regenerados. IDs Q1-XXXXXX estables. |
 | v1 | 2026-04-30 | `37870e7` | Versión inicial. Row heights = None (default openpyxl) → wrapText desbordaba detrás de la fila siguiente. PNGs entregadas en `350a4f0` documentaban el problema. |
 
