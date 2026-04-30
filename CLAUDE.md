@@ -429,7 +429,7 @@ Detalle íntegro de cada decisión (validaciones literales, justificaciones téc
 
 | Decisión | Resumen | Detalle |
 |---|---|---|
-| Módulos website-* | `website`, `website_sale`, `website_slides` instalados; `website_blog` residual fuera de `depends`. | [decisions-log#pre-modules](docs/decisions-log.md#pre-modules) |
+| Módulos website-* | `website`, `website_sale`, `website_slides` instalados; `website_blog` **desinstalado** post-v1 (sesión 2026-04-30, hijack converters bloqueaba Q5 redirects); fuera de `depends`. | [decisions-log#pre-modules](docs/decisions-log.md#pre-modules) |
 | Arquitectura | Todo dentro del mismo Odoo, tema custom sobre `website`. | [decisions-log#pre-arch](docs/decisions-log.md#pre-arch) |
 | Nombre del módulo | `website_avanzosc_demo`. | [decisions-log#pre-name](docs/decisions-log.md#pre-name) |
 | Repo y ruta | `github.com/AnerAvanzosc/website_avanzosc_demo`, `/opt/odoo/v14/workspace/website_avanzosc_demo`. | [decisions-log#pre-repo](docs/decisions-log.md#pre-repo) |

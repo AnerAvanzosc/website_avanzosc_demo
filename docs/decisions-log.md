@@ -18,7 +18,7 @@ Estructura:
 
 `website`, `website_sale`, `website_slides`. `portal`, `mail` y `web_editor` entran como dependencias automáticas. **Ya instalados en `odoo14_community`.**
 
-`website_blog` quedó instalado en BD de la ronda anterior pero NO se declara en `depends` de `website_avanzosc_demo`. Queda residual e invisible al no tener menú ni enlaces; si en v2 se decide retomar el canal, basta con reactivar.
+`website_blog` quedó instalado en BD de la ronda anterior pero NO se declara en `depends` de `website_avanzosc_demo`. Quedaba residual e invisible al no tener menú ni enlaces. **Post-v1 sesión 2026-04-30: DESINSTALADO** — el hijack de sus converters `<model('blog.blog')>` sobre rutas `/blog/<slug>` impedía Q5 redirects limpios (entries `website.rewrite` literales nunca llegaban a `_serve_redirect` porque el converter falla con redirect a default blog, no con 404). Pre-check 0 dependencias instaladas; `button_immediate_uninstall()` vía `odoo-bin shell`. Reversible: el día que Avanzosc decida activar el canal blog con persona dedicada, basta con `-i website_blog` y añadirlo a `depends`. Detalle en D21.
 
 <a id="pre-arch"></a>
 ### Arquitectura
@@ -303,7 +303,7 @@ Tras descartar A (D19), iteración LOW-cost: **recortar la duración del fade pa
 **Propuesta B (hold overlay until JS ready) — diferida con criterio de reapertura**: si tras switchover a producción real el TTFB resulta >300 ms (medible vía `curl -w '%{time_starttransfer}\n'` contra `https://avanzosc.es/`), la latencia se hace dominante en server-render y no en JS init; en ese caso D20 es insuficiente y B reabre como segunda iteración. La condición de reapertura: **mediciones reales en producción tras switchover, no localhost**.
 
 <a id="d21"></a>
-### D21 — Q5/Q6 cerrados: redirects 301 legacy avanzosc.es
+### D21 — Q5/Q6 cerrados: redirects 301 legacy avanzosc.es + uninstall `website_blog`
 
 Sesión 2026-04-30 tras inventario empírico de avanzosc.es legacy:
 
@@ -318,11 +318,18 @@ Sesión 2026-04-30 tras inventario empírico de avanzosc.es legacy:
 
 **Q6 — `/page/kit-digital`**:
 - avanzosc.es legacy NO tiene `/page/kit-digital` (curl 404, ausente de sitemap.xml). Redirect defensivo para bookmarks externos hipotéticos.
-- Decisión: 301 a `/#kit-consulting` (anchor home, snippet `s_avanzosc_cta_kit_consulting`).
-- Implementación: 2 entries `website.rewrite` (ES + EU separados, patrón consistente con `redirect_eu_slug_*`). Anchor `id="kit-consulting"` añadido al `<section>` del snippet en mismo commit.
-- URL legacy nunca existió en producción → no preserva tráfico SEO real, solo defensivo.
+- Decisión inicial (commit `f39d62b`): 301 a `/#kit-consulting` (anchor en home, snippet teaser).
+- Decisión final (commit fix posterior): **301 a `/kit-consulting`** (página dedicada, 24KB contenido, H1 + 6 secciones). Razón: visitante con bookmark legacy busca info real del programa, no el teaser de 1 párrafo en home. Adicionalmente Odoo strippea fragment del `url_to` por design — el `#` original era no-op.
+- Implementación: 2 entries `website.rewrite` (ES + EU separados, patrón consistente con `redirect_eu_slug_*`). Anchor `id="kit-consulting"` se mantiene en el `<section>` del snippet (deuda mínima sin coste, podría reusarse en futuro para link interno al teaser).
 
-**Validación**: 13/15 URLs blog específicas + raw `/blog` + EU `/eu_ES/blog` + `/page/kit-digital` ES + EU verificados con `curl -o /dev/null -w '%{http_code} %{redirect_url}'` post-restart. Smoke verde. Implementación en commit `[FEAT] post-v1: add Q5/Q6 legacy redirects`.
+**Uninstall `website_blog` post-fix Q5**:
+- `f39d62b` aplicó 15 entries específicas + custom controller, pero 2 URLs (`/blog/odoo-1` y `/blog/odoo-1/feed`) seguían hijack-eadas por `website_blog` (Odoo demo) que devolvía 301 a `/blog/travel-1*` con artículos sobre Sierra Tarahumara — peor que 404 (daño reputacional real).
+- Verificación previa: el converter `<model('blog.blog')>` para 1-segment URLs tiene fallback al primer blog activo; el flow nunca devuelve 404 → `_serve_redirect` nunca se evalúa → entry literal no aplicable.
+- Decisión: desinstalar `website_blog`. Pre-check: `SELECT m.name FROM ir_module_module_dependency d JOIN ir_module_module m ON d.module_id = m.id WHERE d.name='website_blog' AND m.state='installed'` → 0 dependencias → safe uninstall. Ejecutado vía `odoo-bin shell` con `mod.button_immediate_uninstall()`.
+- Pre-spec «Blog» (sesión 2026-04-27) ya marcaba `website_blog` como «residual e invisible»; este uninstall ejecuta esa decisión diferida y resuelve hijack.
+- Las 15 entries específicas + controller wildcard se MANTIENEN: defensa en profundidad si `website_blog` se reinstala en v2 (escenario explícitamente reservado en pre-spec «Blog»: «si en v2 se decide retomar el canal, basta con reactivar»).
+
+**Validación final**: 15/15 URLs blog específicas + raw `/blog` + EU `/eu_ES/blog` + `/page/kit-digital` ES + EU + `/blog/travel-1*` (ya 301 a `/` por wildcard, demo data desaparecida). Smoke verde. Implementación en commits `f39d62b` (entries + Q6 inicial) + `[FIX] post-v1: uninstall website_blog (resolves Q5 hijack on /blog/odoo-1) + repoint Q6 to /kit-consulting dedicated page`.
 
 ---
 

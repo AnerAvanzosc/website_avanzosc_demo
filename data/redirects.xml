@@ -216,25 +216,33 @@
             <field name="url_to">/</field>
         </record>
 
-        <!-- Q6 — /page/kit-digital → /#kit-consulting (anchor home).
+        <!-- Q6 — /page/kit-digital → /kit-consulting (página dedicada).
              URL legacy NO existente en avanzosc.es actual (verificado
              curl HEAD y ausente de sitemap.xml); redirect defensivo
              para bookmarks externos hipotéticos. ES + EU separados
              porque website.rewrite es lang-agnostic (multilang=False
              por design en este modelo) — patrón consistente con
-             redirect_eu_slug_* del bloque anterior. -->
+             redirect_eu_slug_* del bloque anterior.
+
+             Sesión 2026-04-30 reapuntó destino de /#kit-consulting
+             (anchor home, snippet teaser de 1 párrafo) a /kit-consulting
+             (página dedicada con 24KB de contenido, H1 + 6 secciones
+             del programa). Razón: visitante con bookmark legacy busca
+             info real del programa, no teaser. Adicionalmente Odoo
+             strippea fragment de url_to por design — el `#` en este
+             campo era no-op. -->
         <record id="redirect_legacy_kit_digital_es" model="website.rewrite">
-            <field name="name">Legacy /page/kit-digital → /#kit-consulting (Q6 cerrada)</field>
+            <field name="name">Legacy /page/kit-digital → /kit-consulting (Q6 cerrada)</field>
             <field name="redirect_type">301</field>
             <field name="url_from">/page/kit-digital</field>
-            <field name="url_to">/#kit-consulting</field>
+            <field name="url_to">/kit-consulting</field>
         </record>
 
         <record id="redirect_legacy_kit_digital_eu" model="website.rewrite">
-            <field name="name">Legacy /eu_ES/page/kit-digital → /eu_ES/#kit-consulting (Q6 cerrada)</field>
+            <field name="name">Legacy /eu_ES/page/kit-digital → /eu_ES/kit-consulting (Q6 cerrada)</field>
             <field name="redirect_type">301</field>
             <field name="url_from">/eu_ES/page/kit-digital</field>
-            <field name="url_to">/eu_ES/#kit-consulting</field>
+            <field name="url_to">/eu_ES/kit-consulting</field>
         </record>
 
         <!-- =====================================================
