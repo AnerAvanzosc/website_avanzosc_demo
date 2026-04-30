@@ -230,6 +230,12 @@ Conexión local sin password: `psql -d odoo14_community` (usuario `avanzosc` per
 
 **SCSS pre-anim opacity:0 es deliberado en este stack.** Los heros animados están en `opacity: 0` por default y el JS los revela. **NO invertir ese patrón** (intentado y descartado en D19): el lazy bundle Odoo carga post-load y el JS init corre 70-150 ms tras el primer paint, demasiado tarde para evitar FOFC visible. La escape valve es `prefers-reduced-motion` (que sí revela el contenido sin esperar JS).
 
+**`website.rewrite` solo soporta wildcards con `redirect_type=308`.** Para 301 con wildcard hace falta controller HTTP custom con `<path:rest>` werkzeug. Verificado en source `addons/website/models/ir_http.py:_serve_redirect` — el lookup es exact-match `url_from = req_page` literal. Detalle del workaround en D21 (Q5 controller `WebsiteAvanzoscBlogRedirect`).
+
+**Odoo strippea fragment (`#anchor`) del `url_to` en `website.rewrite`** al cargar XML a BD. Si el destino debe llevar anchor, repensar el approach (apuntar a la página dedicada en lugar del home con anchor) — verificado empíricamente en D21+D22 al pasar Q6 de `/#kit-consulting` a `/kit-consulting`.
+
+**`url_for` aplica lang prefix automáticamente al render** bajo `request.lang.code`. No hay que duplicar templates ni usar `t-att-href` lang-aware: con `href` literal sin prefijo (e.g. `<a href="/clientes">`), Odoo emite el HTML correcto para cada idioma (`/clientes` en ES, `/eu_ES/clientes` en EU). Patrón verificado en D22 (Q2 alias).
+
 ### Git
 
 - **Repo activo (fase experimental)**: `github.com/AnerAvanzosc/website_avanzosc_demo` (público, fork personal). El repo oficial `github.com/avanzosc/odoo-addons` **NO se toca** durante esta fase.
@@ -473,10 +479,12 @@ Sub-bloques A (transiciones suaves) + B (rediseño /contacto) + iteración A6 (l
 | D20 | Page transition fade recortado 200→100 ms (Propuesta D); B diferida | [decisions-log#d20](docs/decisions-log.md#d20) |
 | D21 | Q5/Q6 cerrados: redirects 301 legacy `/blog/*` → home + `/page/kit-digital` → `/#kit-consulting` | [decisions-log#d21](docs/decisions-log.md#d21) |
 | D22 | Q2 cerrada: alias público `/clientes` → 301 a `/web/login` (URL canónica Odoo como detalle interno) | [decisions-log#d22](docs/decisions-log.md#d22) |
+| D23 | Eliminada página `/trabaja-con-nosotros`: menú ahora 6 items + redirect 301 a `/conocenos`, 21 strings retiradas de `eu.po`. Commit `4ecd0e1`. | [decisions-log#d23](docs/decisions-log.md#d23) |
+| D24 | Q3 fase 1: paquete pre-revisión legal (PDFs + XLSX 23 strings + datos sensibles MD) + 5 fixes obvios aplicados (LOPDGDD body, cookies tabla, link `/politica-cookies`, mailto aviso, AEPD canónica). Commits `0e152e7` + `12a742a`. | [decisions-log#d24](docs/decisions-log.md#d24) |
 
 ### Decisiones pendientes
 
-- [ ] **Q1 — Validación lingüística DRAFTs**: 182 strings DRAFT en `i18n/eu.po` pendientes de revisión por equipo Avanzosc per runbook `docs/q1-validation-runbook.md`. Gate Phase 9.5 abierto, bloqueante switchover Phase 10. Sub-gate Q3 (23 LEGAL DRAFT entradas en legales) requiere también revisión por asesoría legal.
+- [ ] **Q1 — Validación lingüística DRAFTs**: 180 strings DRAFT en `i18n/eu.po` (post eliminación /trabaja-con-nosotros — D23) pendientes de revisión por equipo Avanzosc per runbook `docs/q1-validation-runbook.md`. Gate Phase 9.5 abierto, bloqueante switchover Phase 10. Sub-gate Q3 (23 LEGAL DRAFT entradas en legales) requiere también revisión por asesoría legal.
 - [ ] **v2 deuda: refactor sticky header `padding` transition** — la única animación layout-property del módulo (`_header.scss:51`). Phase 8.3 audit + Phase 9 QA visual confirmaron que el comportamiento actual es funcional sin artefactos visibles, ~22 layout events/sec scroll active. Diferido a v2 per decisión condicional D3 (sesión 2026-04-29 Phase 9.7) — refactor a `transform: scaleY` con child wrapper requiere repensar la estructura interna del navbar (sticky + navbar-collapse mobile + box-shadow + 3 transitions co-localizadas). Pre-existente justificación Phase 1.3 mantenida.
 - [ ] **Hex exactos del logo** — extraer de `https://avanzosc.es/web/image/website/1/logo/Avanzosc` y actualizar tabla §9.3.
 - [ ] **SVG del logo** — vectorizar si no existe ya.

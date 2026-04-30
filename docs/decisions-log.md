@@ -348,6 +348,71 @@ Sesión 2026-04-30. Bloqueo blando spec §13 #2 («URL final del portal pendient
 
 **Validación**: `curl -I /clientes` → 301 → `/web/login`. `curl -I /eu_ES/clientes` → 301 → `/web/login`. `curl -I /web/login` → 200 (login intacto). `curl /` HTML contiene `href="/clientes"`. `curl /eu_ES/` HTML contiene `href="/eu_ES/clientes"`. Smoke verde. Implementación en commit `[FEAT] post-v1: add /clientes alias for "Acceso clientes" header button (Q2 closed)`.
 
+<a id="d23"></a>
+### D23 — Eliminación de la página `/trabaja-con-nosotros` («Empleo»)
+
+Sesión 2026-04-30. La página corporativa `/trabaja-con-nosotros` (etiquetada «Empleo» en el menú) se elimina del sitio. Esta entrada consolida la decisión que estaba dispersa entre commit `4ecd0e1`, comentarios inline en `data/menu.xml` / `views/layout.xml`, y secciones §2 + §8 de CLAUDE.md.
+
+**Decisión**: eliminar template, record `website.page`, entrada de menú top-level, link en footer Empresa, link en mobile overlay, entry de sitemap canónico (controllers/main.py), 21 strings exclusivas de `eu.po`. URL legacy redirige 301 a `/conocenos` para preservar enlaces externos. Slug EU vanity `/lan-egin-gurekin` reapuntado al destino correcto.
+
+**Racional**: decisión de producto (orquestador humano) — la página tenía contenido genérico (perfiles abiertos genéricos, sin vacantes formales activas) que no aportaba diferenciación frente a un email directo a `comercial@avanzosc.es`. Mantenerla obligaba a actualizarla cada vez que la situación de contratación cambiara (drift inevitable). Eliminación radical + redirect → simplificación operativa.
+
+**Implementación** (commit `4ecd0e1`):
+- Borrado de `views/pages/trabaja_con_nosotros.xml` (92 líneas).
+- `data/menu.xml`: record `menu_trabaja` retirado; comentario actualizado de «los 2 últimos secundarios» a «el último secundario».
+- `data/redirects.xml`: 3 entries 301 nuevas (`/trabaja-con-nosotros` ES, `/eu_ES/trabaja-con-nosotros` EU, `/lan-egin-gurekin` vanity → `/eu_ES/conocenos`).
+- `data/cleanup_empleo_removal.xml`: `<delete search>` declarativo idempotente para records con `noupdate=1` que persistían en BD tras retirar el xml_id (patrón análogo a D8).
+- `views/layout.xml` L187 (footer Empresa) + L324 (mobile overlay): links retirados.
+- `controllers/main.py:_CANONICAL_PAGES`: entry `/trabaja-con-nosotros` retirada (sitemap baja de 23 a 21 URLs).
+- `i18n/eu.po`: 21 entries removidas (20 exclusivas del template + 1 «Empleo» compartida que perdió sus 2 referentes — menu+footer). Total fuzzy: 201 → 180.
+- `docs/q1-eu-validation/`: XLSX regenerado (180 entries), 8 PNGs regeneradas, README versionado v3.
+
+**Trade-offs**:
+- Decisión irreversible salvo recreación manual del template; per scope v1 acceptable.
+- Si la asesoría laboral de Avanzosc requiere que la web liste perfiles abiertos por compliance, hay que reabrir esto. No identificado como obligación a fecha.
+
+**Validación**: smoke verde, 6/6 verificaciones curl post-fix (redirects 301 ES+EU+vanity, /conocenos 200 ES+EU, sitemap 21 URLs, HTML home sin «Empleo»). Detalle en commit message.
+
+<a id="d24"></a>
+### D24 — Q3 fase 1: paquete dev pre-revisión legal + 5 fixes obvios aplicados
+
+Sesión 2026-04-30. Q3 (revisión legal páginas /aviso-legal, /politica-privacidad, /politica-cookies por asesoría externa) sigue siendo gate humano bloqueante para switchover. Esta entrada documenta el progreso intermedio: paquete pre-revisión interno del dev + 5 fixes detectados que se pueden aplicar sin competencia legal.
+
+**Fase 1 — Paquete pre-revisión** (commit `0e152e7`):
+
+Generado en `docs/q3-legal-validation/dev-prereview-2026-04-30/`:
+- `pdfs/01-aviso-legal-es.pdf`, `02-politica-privacidad-es.pdf`, `03-politica-cookies-es.pdf` — render desktop ES con Chrome headless, fuente principal para revisión humana visual.
+- `avanzosc-q3-legal-prereview-2026-04-30.xlsx` — 23 strings LEGAL DRAFT del `.po`, columnas reducidas (ID Q3-XXXXXX + ES + Notas dev + Contexto). Pestaña 0 INSTRUCCIONES con banner rojo «NO sustituye revisión legal profesional».
+- `tools/gen_q3_prereview_xlsx.py` — script generador autocontenido derivado del flujo Q1, reusa `compute_row_height` para evitar text overlap.
+- `datos-sensibles-extraidos.md` — tabla con todos los datos identificativos (CIF, dirección, email, teléfono, jurisdicción), datos NO presentes que la asesoría puede pedir (Reg. Mercantil, DPO específico), cookies declaradas, marcos normativos referenciados, + 6 decisiones que solo la asesoría puede tomar.
+
+**Fase 1 — 5 fixes obvios aplicados** (commit `12a742a`):
+
+Detectados durante la extracción del paquete; arreglables sin competencia legal:
+
+1. **LOPDGDD body cite** en `/politica-privacidad` §1 (`views/pages/legal_privacidad.xml`): párrafo introductorio nuevo que cita explícitamente RGPD (Reglamento UE 2016/679) Y LOPDGDD (Ley Orgánica 3/2018) antes del listado de datos del responsable. Resuelve incoherencia subtítulo (que decía «RGPD y LOPDGDD») vs body (que solo citaba RGPD).
+
+2. **Cookies tabla estructurada** en `/politica-cookies` §2 (`views/pages/legal_cookies.xml`): `<ul>` reemplazado por `<table class="table table-striped">` con cabeceras Nombre / Propósito / Duración / Tipo. Fila `visitor_uuid` lleva comentario QWeb interno marcando que la clasificación «Análisis propio agregado» queda pendiente decisión asesoría Q3.
+
+3. **Link clickable a /politica-cookies** en `/politica-privacidad` §2 (`views/pages/legal_privacidad.xml`): «(ver Política de Cookies)» → «(ver `<a href="/politica-cookies">`Política de Cookies`</a>`)».
+
+4. **mailto: en aviso §1** (`views/pages/legal_aviso.xml`): `comercial@avanzosc.es` → `<a href="mailto:comercial@avanzosc.es">`. Coherencia con privacidad §7 que ya lo tenía.
+
+5. **AEPD URL canónica** en `/politica-privacidad` §7 (`views/pages/legal_privacidad.xml`): `https://www.aepd.es` → `https://www.aepd.es/` (con barra final). Verificación previa: `curl -I https://aepd.es` → 301 → `https://www.aepd.es/`. La canónica per redirect oficial es la versión con `www` y barra final.
+
+**Strings nuevas no propagadas a `eu.po`**: los fixes 1 y 2 introducen ~10-12 strings nuevas en QWeb (párrafo LOPDGDD + cabeceras tabla cookies + reorganización celdas) que NO están en el `.po`. El flujo `-u` aplica traducciones existentes pero no extrae nuevas. Para Q3 fase 2 (paquete formal a asesoría) se ejecutará `i18n_export` o se añadirán manualmente al `.po` con marker LEGAL DRAFT y se regenerará el XLSX prereview. En esta fase 1 los PDFs son fuente principal y las strings nuevas son visibles ahí.
+
+**Próximos pasos Q3**:
+1. Dev pre-revisión humana: marcar checkboxes en `datos-sensibles-extraidos.md`, anotar issues en columna «Notas dev» del XLSX.
+2. Aplicar correcciones del dev (si las hay) en otro commit.
+3. Generar paquete Fase 2 formal a asesoría externa en `docs/q3-legal-validation/for-legal-advisor-YYYY-MM-DD/`.
+4. Trigger Q3 humano externo.
+5. Aplicar correcciones de la asesoría.
+6. Levantar markers `LEGAL DRAFT - REVIEW NEEDED` del `.po`.
+7. Switchover desbloqueado (también pendiente Q1).
+
+**Validación**: smoke verde post-`12a742a`. 5 fixes verificados visibles en HTML pre-render via curl (mailto, LOPDGDD, link cookies, AEPD canonical, table.table-striped). Detalle en commit messages.
+
 ---
 
 ## 6. Decisiones diferidas con criterio de reapertura
@@ -377,3 +442,36 @@ Pendientes que no requieren acción inmediata pero deben re-evaluarse cuando se 
 | /contacto | 22-27 | 60-91 | 69-102 | 1587 |
 | /industrial | 23 | 64 | 67 | 1587 |
 | /conocenos | 25 | 68 | 76 | 1587 |
+
+<a id="deferred-anchor-kit-consulting-orphan"></a>
+### Anchor `id="kit-consulting"` huérfano en home — reusar o cleanup
+
+**Estado**: añadido en commit `f39d62b` al `<section>` del snippet `s_avanzosc_cta_kit_consulting` como target del redirect Q6 inicial (`/page/kit-digital → /#kit-consulting`). Tras cambio de destino Q6 a `/kit-consulting` (página dedicada) en commit `ded3240`, el anchor quedó funcionalmente huérfano: ningún link interno o redirect lo usa actualmente.
+
+**Decisión diferida**: mantener el anchor (deuda mínima sin coste; añade ~30 caracteres al HTML del home).
+
+**Trigger de reapertura**: si v2 plantea un link interno desde otro snippet/template al teaser de Kit Consulting del home (e.g., un nav anchor desde el menú o un CTA cross-page), reusar este anchor en lugar de crear uno nuevo. Si tras 6+ meses sin uso del anchor se considera limpieza, cleanup en commit dedicado retirando el `id="kit-consulting"` del `<section>` y la nota inline en `views/snippets/cta_kit_consulting.xml`.
+
+<a id="deferred-navbar-1024px-overflow"></a>
+### Navbar 992-1100px overflow `[+]` con 1 solo item secundario
+
+**Estado**: post eliminación de `/trabaja-con-nosotros` (D23), el navbar a anchura desktop intermedia (992-1100px aprox.) tiene **1 solo item secundario** (Conócenos) dentro del overflow group `[+]`. El comportamiento heredado del setup pre-D23 listaba 2 items secundarios (Conócenos + Empleo) en ese overflow; con 1 solo, mostrar overflow para un único item es UX subóptima.
+
+**Validación pendiente**: ningún humano ha verificado visualmente el navbar a esta anchura específica en sesión 2026-04-30. La validación humana del commit `4ecd0e1` cubrió eliminación correcta vía menú mobile, no anchura intermedia desktop.
+
+**Decisión diferida**: NO fix preventivo. El overflow group sigue funcional (Conócenos accesible vía clickear `[+]`), solo es subóptimo visualmente.
+
+**Trigger de reapertura**: si revisor lingüístico EU (Q1), asesoría legal (Q3), o cualquier humano externo reporta UX raro en menú a anchura desktop reducida (995-1095px aproximadamente). Fix estimado <30 min: eliminar la lógica de overflow cuando solo queda 1 item secundario, mostrarlo directo en navbar. Localización probable: `static/src/scss/snippets/_header.scss` o JS asociado.
+
+<a id="deferred-acceso-clientes-dry-violation"></a>
+### DRY violation desktop+mobile en botón «Acceso clientes»
+
+**Estado**: el botón «Acceso clientes» vive en 2 ubicaciones del template:
+- `views/layout.xml:31` (desktop, override de `template_header_default_oe_structure_header_default_1`).
+- `views/layout.xml:247` (mobile overlay, dentro de `header_mobile_buttons`).
+
+Cualquier cambio al href o al label requiere editar ambos sitios. El commit `730c7b7` (Q2) editó ambos; futuros cambios mantendrían el patrón. DRY violation pre-existente al commit Q2 — no introducida por él.
+
+**Decisión diferida**: aceptar la duplicación.
+
+**Trigger de reapertura**: si v2 cambia el destino del botón otra vez, o si se decide refactorizar el header para extraer el botón a un sub-template QWeb reutilizable (e.g., `<t t-call="website_avanzosc_demo.acceso_clientes_button"/>` invocado desde ambos sitios). Coste estimado de la refactorización: 30-45 min — extraer template + sustituir las 2 inclusions + smoke. Coste actual de mantener la duplicación: 1 edit doble cada vez que cambia algo del botón.
