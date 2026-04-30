@@ -204,6 +204,35 @@ Directo, pero con Playwright abierto para verificar.
 /opt/odoo/v14/venv/bin/python /opt/odoo/v14/base/odoo-bin -c /etc/odoo/odoo14_community.conf -u website_avanzosc_demo -d odoo14_community --stop-after-init
 ```
 
+### Gotchas operacionales (recurrentes)
+
+Patrones que aparecen repetidamente al verificar trabajos en este módulo. Documentados aquí para no re-descubrirlos cada sesión.
+
+**Bundle Odoo se invalida con `-u <module>` — primer request HTTP regenera.** El `run-smoke.sh` ejecuta `-u website_avanzosc_demo --stop-after-init` que dispara `DELETE FROM ir_attachment WHERE id IN (...)` sobre los bundles cacheados (`web.assets_frontend`, `web.assets_frontend_lazy`, etc.). Tras el restart del dev server, el primer request HTTP regenera los bundles con hash nuevo. Si Playwright (u otra herramienta) navega contra el HTML cacheado del request anterior, el `<script src="…/N-old_hash/…js">` apunta a un attachment ya borrado → 404 silencioso → bundle stale. **Patrón**:
+
+```bash
+./scripts/run-smoke.sh post-v1-X.Y     # smoke + restart dev server
+curl -s http://localhost:14070/ >/dev/null   # forzar regen del bundle
+# AHORA Playwright/curl/etc. ven el bundle nuevo
+```
+
+**Verificar `mail.mail` vía SQL requiere JOIN con `mail_message`.** En Odoo 14 los campos `subject`, `email_from`, `reply_to` viven en `mail.message`, no en `mail.mail` (que solo tiene `email_to`, `state`, `body_html`, etc.). Query correcta cuando MCP Odoo no esté disponible:
+
+```sql
+SELECT m.id, msg.subject, m.email_to, msg.email_from, msg.reply_to,
+       m.state, substring(m.body_html, 1, 400)
+FROM mail_mail m
+JOIN mail_message msg ON msg.id = m.mail_message_id
+WHERE msg.subject ILIKE '%…%'
+ORDER BY m.id DESC LIMIT 5;
+```
+
+Conexión local sin password: `psql -d odoo14_community` (usuario `avanzosc` per `db_user` en `/etc/odoo/odoo14_community.conf`).
+
+**Form action en website-routed controllers va lang-aware automáticamente.** Con `@http.route(..., website=True, multilang=True)` (default) el form action que renderiza QWeb se construye con prefijo de lang: `/contacto/submit` en ES, `/eu_ES/contacto/submit` en EU. El controller debe detectar lang vía `request.lang.code` y construir el redirect lang-aware (no hardcodear `/foo` literal). Detalle en D18.
+
+**SCSS pre-anim opacity:0 es deliberado en este stack.** Los heros animados están en `opacity: 0` por default y el JS los revela. **NO invertir ese patrón** (intentado y descartado en D19): el lazy bundle Odoo carga post-load y el JS init corre 70-150 ms tras el primer paint, demasiado tarde para evitar FOFC visible. La escape valve es `prefers-reduced-motion` (que sí revela el contenido sin esperar JS).
+
 ### Git
 
 - **Repo activo (fase experimental)**: `github.com/AnerAvanzosc/website_avanzosc_demo` (público, fork personal). El repo oficial `github.com/avanzosc/odoo-addons` **NO se toca** durante esta fase.
@@ -430,6 +459,23 @@ Detalle íntegro de cada decisión (validaciones literales, justificaciones téc
 | D9 | i18n: ES source en QWeb + `i18n/eu.po`, sin `.pot` en v1. | [decisions-log#d9](docs/decisions-log.md#d9) |
 | D10 | Activación de idiomas vía hook imperativo (no `data/website_config.xml`). | [decisions-log#d10](docs/decisions-log.md#d10) |
 
+### Decisiones cerradas — post-v1 polish (D11–D20)
+
+Sub-bloques A (transiciones suaves) + B (rediseño /contacto) + iteración A6 (latencia page transition). Sesiones 2026-04-29 / 2026-04-30. Detalle íntegro en [decisions-log §5](docs/decisions-log.md#5-post-v1-polish-d11d20).
+
+| ID | Decisión | Detalle |
+|----|----------|---------|
+| D11 | Lenis 1.0.42 sin built-in `anchors`: listener manual delegado en `document` | [decisions-log#d11](docs/decisions-log.md#d11) |
+| D12 | Compensación bias residual ~+16 px de Lenis scrollTo vía `+20` breathing | [decisions-log#d12](docs/decisions-log.md#d12) |
+| D13 | Header height dinámico (`header.offsetHeight + 20`) — no offset fijo | [decisions-log#d13](docs/decisions-log.md#d13) |
+| D14 | Detección home dual: `path == '/' or path == url_for('/')` | [decisions-log#d14](docs/decisions-log.md#d14) |
+| D15 | `publicWidget` selector `'body'` no auto-instancia: enganchar a `AvanzoscRoot.start()` | [decisions-log#d15](docs/decisions-log.md#d15) |
+| D16 | Honeypot: `position:absolute` + `clip-path` (no `display:none`) | [decisions-log#d16](docs/decisions-log.md#d16) |
+| D17 | Páginas via redirect: `is_published=True` + `website_indexed=False` | [decisions-log#d17](docs/decisions-log.md#d17) |
+| D18 | Form lang-aware: redirect via `request.lang.url_code` en controller | [decisions-log#d18](docs/decisions-log.md#d18) |
+| D19 | Page transition Propuesta A descartada por FOFC en stack lazy bundle | [decisions-log#d19](docs/decisions-log.md#d19) |
+| D20 | Page transition fade recortado 200→100 ms (Propuesta D); B diferida | [decisions-log#d20](docs/decisions-log.md#d20) |
+
 ### Decisiones pendientes
 
 - [ ] **Q1 — Validación lingüística DRAFTs**: 182 strings DRAFT en `i18n/eu.po` pendientes de revisión por equipo Avanzosc per runbook `docs/q1-validation-runbook.md`. Gate Phase 9.5 abierto, bloqueante switchover Phase 10. Sub-gate Q3 (23 LEGAL DRAFT entradas en legales) requiere también revisión por asesoría legal.
@@ -439,6 +485,8 @@ Detalle íntegro de cada decisión (validaciones literales, justificaciones téc
 - [ ] **Portal ERP actual** — ¿«Acceso clientes» apunta a `/web/login` estándar o URL custom?
 - [ ] **Analytics y tracking** — GA4, Plausible o Matomo. Decidir antes de producción.
 - [ ] **Plan de migración de contenido antiguo** — tienda y cursos: ¿migrar productos/cursos o solo re-skinear?
+- [ ] **Diferido — investigar `publicWidget` selector `'body'` no instancia** — workaround D15 vigente. Trigger reapertura: si una próxima feature necesita un widget global y D15 no encaja. Ver [decisions-log §6 deferred-publicwidget-body](docs/decisions-log.md#deferred-publicwidget-body).
+- [ ] **Diferido — re-validar TTFB en producción real (Propuesta B)** — D20 implementado bajo medición localhost (~25 ms). Trigger reapertura: tras switchover Phase 10.6, ejecutar mediciones contra `https://avanzosc.es/`; si TTFB mediano >300 ms o load >700 ms, abrir Propuesta B (hold overlay until JS ready) como iteración A7. Ver [decisions-log §6 deferred-ttfb-prod](docs/decisions-log.md#deferred-ttfb-prod).
 
 ---
 

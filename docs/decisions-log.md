@@ -196,3 +196,138 @@ Discovery hecho en sesión 2026-04-28 antes de ejecutar Phase 2; B-G se posponí
 - **G — Animación inicial**: plan 3.10 la lista como acceptance, pero teóricamente diferible. Propuesta: **NO diferir** — la entrada letra-por-letra es el «moment of arrival» diferenciador. Implementar completo en 3.10.
 
 Estado: Task 3.10 cerrada — la verdad final del hero vive en `views/snippets/hero.xml`, `static/src/scss/snippets/_hero.scss` y `static/src/js/snippets/hero.js`.
+
+---
+
+## 5. Post-v1 polish (D11–D20)
+
+Sesión 2026-04-29 / 2026-04-30 tras cierre técnico de v1: dos sub-bloques de polish (A: transiciones suaves, B: rediseño /contacto) más una iteración (A6: latencia page transition). Todas las decisiones de esta sección se tomaron post-validación visual humana de v1. Commits originales en branch `feature/v1-implementation` rango `e6f9b10..644d8fe`.
+
+<a id="d11"></a>
+### D11 — Lenis 1.0.42 sin built-in `anchors`: listener manual delegado
+
+Lenis 1.0.42 NO expone la opción `anchors` del constructor. Verificado contra `cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js` — solo expone `scrollTo`. Context7 mostraba docs sin pin de versión que reflejaban una release posterior; **lección operacional: verificar API contra el CDN exacto pinado en `views/assets.xml`, no contra docs sin versión**.
+
+Implementación: listener delegado en `document` para clicks `<a href="#…">` same-page que llama `lenis.scrollTo(target, opts)` con offset numérico, history.pushState para URL compartible. Vive en `static/src/js/main.js` dentro de `AvanzoscRoot.start()`. **Validación**: commit `7a48d9b` [FEAT] post-v1: smooth anchor scroll via Lenis with header offset.
+
+<a id="d12"></a>
+### D12 — Compensación bias residual ~+16 px de Lenis scrollTo
+
+`lenis.scrollTo(target, {offset})` con target elemento o numérico añade un sesgo residual de ~+16 px al scrollTop final (medido empíricamente en /contacto, /industrial, /equipo cross-page). No calibrable a cero. **Compensación**: cálculo numérico del target (`el.offsetTop - HEADER_OFFSET`) en lugar de delegar a Lenis con elemento+offset. La fórmula final: `offset = headerHeight + 20` (breathing) — el +20 absorbe el bias y deja clearance final consistente de ~20 px sobre el header.
+
+**Validación**: commits `7a48d9b` [FEAT] (versión inicial offset fijo 80) + `8a38705` [FIX] post-v1: dynamic header offset (versión final dinámica per D13).
+
+<a id="d13"></a>
+### D13 — Header height dinámico (no offset fijo) para anchor scroll
+
+Header en EU mide ~100 px en viewport 1280×720 (navbar wrap por etiquetas más largas tipo «Lan egin gurekin», «Ezagutu gaitzazu»). En ES con mismo viewport el header puede medir 62 px scrolled o 100 px no scrolled según estado. **Un offset fijo de 80 px dejaba el target tras el header en EU** (overlap de 36 px detectado en verificación final del sub-bloque A).
+
+**Solución**: leer `header.offsetHeight` al click time, calcular `offset = headerHeight + 20`. Auto-adaptable a cualquier idioma/viewport sin tocar código. **Validación**: commit `8a38705` [FIX] post-v1: dynamic header offset for anchor scroll (taller EU navbar).
+
+<a id="d14"></a>
+### D14 — Detección de home robusta entre ES y EU
+
+`request.httprequest.path` en Odoo 14 con lang routing puede llegar lang-stripped (`/`) o lang-literal (`/eu_ES/`) según el flujo de routing. Una comparación naïve `path == url_for('/')` falla en EU.
+
+**Solución**: comparación dual `is_home = path == '/' or path == url_for('/')`. Cubre ambas formas. Aplicado en `cta_contacto.xml` para enrutar `#timeline` (same-page en home) vs `/#timeline` o `/eu_ES/#timeline` (cross-page con lang preservado). **Validación**: commit `bd63b75` [FIX] post-v1: cta_contacto secondary URL routes to /#timeline when not on home.
+
+<a id="d15"></a>
+### D15 — `publicWidget` con `selector: 'body'` no auto-instancia: enganchar a `AvanzoscRoot.start()`
+
+Verificado empíricamente en sesión 2026-04-29: un `publicWidget.Widget.extend({selector: 'body', start: …})` registrado vía `odoo.define` NO se auto-instancia en este módulo. La función `start()` nunca se ejecuta (instrumentado con `console.log` y `window.__flag`). Razón exacta no investigada (ver §6 «Decisiones diferidas»). **Workaround**: enganchar listeners globales a `AvanzoscRoot.start()` (selector `#wrap`, sí funciona).
+
+Aplicado en page transition fade overlay listener (sub-bloque A commit `e9d7f37`) y en cualquier listener global futuro. **Lección operacional: preferir selectores específicos del snippet o engancharse a AvanzoscRoot, evitar selectores demasiado genéricos**.
+
+<a id="d16"></a>
+### D16 — Honeypot pattern: `position:absolute` + `clip-path`, no `display:none`
+
+Algunos crawlers/bots detectan campos con `display: none` o `visibility: hidden` y skip-fillan (no caen en el honeypot). El patrón estándar a11y-compliant que sí captura bots:
+
+```scss
+.honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+```
+
+Combinado con `aria-hidden="true"` y `tabindex="-1"` el campo es invisible visualmente, fuera del flujo de teclado, ignorado por screen readers, pero presente en el DOM y rellenable por bots automáticos. **Validación**: aplicado en `s_avanzosc_contacto_form` campo `name="website"`, commit `04484ac` [FEAT] post-v1: rediseño /contacto.
+
+<a id="d17"></a>
+### D17 — Páginas accesibles solo vía redirect: `is_published=True` + `website_indexed=False`
+
+Para páginas que solo son accesibles tras una acción (como `/contacto/gracias` tras submit del form): `is_published=True` (necesario para que el redirect 303 del controller resuelva 200) + `website_indexed=False` (evita que Google indexe la confirmación; sin valor SEO, ruido en SERP). **Validación**: aplicado en `page_contacto_gracias_record`, commit `d1c0d9d` [FEAT] post-v1: backend handler /contacto/submit + /gracias.
+
+<a id="d18"></a>
+### D18 — Form action y redirect lang-aware en website-routed controllers
+
+En Odoo 14 con `@http.route(..., website=True, multilang=True)` (default) el form action que renderiza QWeb construye automáticamente el prefijo de lang: `/contacto/submit` en ES, `/eu_ES/contacto/submit` en EU. **El controller debe detectar lang via `request.lang.code` y construir el redirect lang-aware** (no asumir `/contacto/gracias` literal):
+
+```python
+def _gracias_url(self):
+    if request.lang and request.lang.code != 'es_ES':
+        return '/' + request.lang.url_code + '/contacto/gracias'
+    return '/contacto/gracias'
+```
+
+**Validación**: `WebsiteAvanzoscContact._gracias_url`, commit `d1c0d9d`. Verificado empíricamente: form en /eu_ES/contacto → submit → 303 a `/eu_ES/contacto/gracias` (lang preservado).
+
+<a id="d19"></a>
+### D19 — Propuesta A («invertir SCSS opacity por gsap.set en JS») descartada por FOFC en stack lazy
+
+Diagnóstico latencia page transition (sesión 2026-04-30): mediciones Playwright confirmaron TTFB ~25 ms y load ~80 ms (rapidísimo) — el cuello no es server-render ni network. Es **el gap entre primer paint del destino y el momento en que `publicWidget._startWidgets` instancia los widgets que revelan el hero** (animaciones GSAP). Lazy bundle Odoo (`assets_common_lazy.js` 1241 KB + `assets_frontend_lazy.js` 346 KB) carga post-`loadEventEnd`; widget `start()` corre típicamente 70-150 ms tras el primer paint.
+
+**Propuesta A literal** (invertir SCSS de `opacity:0` a `opacity:1` por default + `gsap.set(el, {opacity:0})` en JS antes de animar) **NO aplicable** en este stack: el `gsap.set` llega 70-150 ms tras el primer paint del destino. Resultado visual: hero VISIBLE estático → SNAP a invisible (gsap.set) → fade-in animado (timeline). Un Flash Of Final Content (FOFC) seguido de salto a invisible — peor que el estado actual («hero invisible una vez hasta anim»).
+
+El comentario inline ya existente en `_contacto.scss:31` («Si JS no carga, el SCSS @reduced-motion (abajo) revela el claim») confirma que el equipo previo ya consideró este trade-off: **el patrón actual (invisible hasta JS) es deliberado, con `prefers-reduced-motion` como escape valve para usuarios con la preferencia activada**. Invertir descarta ese diseño sin resolver el cuello.
+
+**Validación**: STOP-and-report del orquestador. No se modificó código bajo Propuesta A. Diagnóstico completo en branch session log; iteración alternativa en D20.
+
+<a id="d20"></a>
+### D20 — Page transition fade recortado 200→100 ms (Propuesta D); B diferida con criterio de reapertura
+
+Tras descartar A (D19), iteración LOW-cost: **recortar la duración del fade page transition** para que el overlay desaparezca antes de generar la expectativa «transición completa, ya estoy» seguida del blanco residual durante el JS lazy parse. Con fade más corto la transición se siente como una carga normal del browser que el usuario ya tolera, sin inducir frustración por blanco residual.
+
+**Cambios**:
+- `_page_transition.scss`: `transition: opacity 100ms` (antes 200ms).
+- `main.js`: `setTimeout(…, 90)` antes de `window.location.href` (antes 200).
+- Offset intencional 10 ms: nav fire ~10 ms antes del fin del fade para que el render del destino empiece bajo el final del overlay sin gap blanco.
+
+**Sitio canónico repartido en 2 ficheros (intencional)**: SCSS controla duración del fade-in; JS controla cuándo dispara la nav. Son timings distintos. Si en futuro hace falta unificarlos, exponer `--page-transition-duration` CSS custom property y leerlo desde JS via `getComputedStyle(document.documentElement).getPropertyValue(...)`.
+
+**Validación**: commit `644d8fe` [IMP] post-v1: shorten page transition fade from 210ms to 100ms. Validación visual humana aprobada post-push.
+
+**Propuesta B (hold overlay until JS ready) — diferida con criterio de reapertura**: si tras switchover a producción real el TTFB resulta >300 ms (medible vía `curl -w '%{time_starttransfer}\n'` contra `https://avanzosc.es/`), la latencia se hace dominante en server-render y no en JS init; en ese caso D20 es insuficiente y B reabre como segunda iteración. La condición de reapertura: **mediciones reales en producción tras switchover, no localhost**.
+
+---
+
+## 6. Decisiones diferidas con criterio de reapertura
+
+Pendientes que no requieren acción inmediata pero deben re-evaluarse cuando se cumpla un trigger específico.
+
+<a id="deferred-publicwidget-body"></a>
+### Investigar por qué `publicWidget` con `selector: 'body'` no auto-instancia
+
+**Estado**: workaround vía D15 (engancharse a `AvanzoscRoot.start()`). Razón exacta no investigada.
+
+**Hipótesis a probar si reabre**: orden de registry en `odoo.define` dispatch, o el lifecycle de `publicWidget.RootWidget._startWidgets` que cachea la lista de widgets antes de que el module se registre.
+
+**Trigger de reapertura**: si en una próxima feature necesitamos un widget global (selector `body`, `html`, o sin selector) y el workaround D15 no encaja, investigar el lifecycle a fondo. Hasta entonces, no merece tiempo.
+
+<a id="deferred-ttfb-prod"></a>
+### TTFB en producción real — re-validar Propuesta B
+
+**Estado**: D20 implementado (recorte fade) bajo medición localhost (TTFB ~25 ms). Si el TTFB en `https://avanzosc.es/` post-switchover es significativamente mayor (>300 ms), el cuello cambia de naturaleza y D20 deja de ser suficiente.
+
+**Trigger de reapertura**: tras switchover Phase 10.6, ejecutar el bloque de mediciones (5 corridas de cada sectorial + home + /contacto) per metodología sub-bloque A5. Si TTFB mediano >300 ms o load >700 ms, abrir Propuesta B (hold overlay until JS ready) como iteración A7.
+
+**Mediciones de referencia (localhost dev, sesión 2026-04-30)**:
+| URL | TTFB | DCL | Load | Lazy KB |
+|---|---|---|---|---|
+| / | 26 | 64 | 68 | 1587 |
+| /contacto | 22-27 | 60-91 | 69-102 | 1587 |
+| /industrial | 23 | 64 | 67 | 1587 |
+| /conocenos | 25 | 68 | 76 | 1587 |

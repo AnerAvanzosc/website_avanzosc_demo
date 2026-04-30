@@ -204,6 +204,43 @@ sudo systemctl start odoo14
 **Verificación**: `journalctl -u odoo14 -n 50 -f` no muestra tracebacks
 ni errores; `curl -I https://avanzosc.es/` devuelve 200.
 
+### 3.5 — Verificación form `/contacto` post-deploy (SMTP real)
+
+**Tiempo estimado**: 5 min.
+**Ejecuta**: sysadmin Avanzosc.
+
+En dev local SMTP no está configurado: el form `/contacto/submit` crea un
+`mail.mail` con `state='exception'` (decisión `WebsiteAvanzoscContact`
+controller con try/except defensivo, UX al usuario sigue siendo
+confirmación per D18). En producción con SMTP configurado, el state debe
+ser `sent` tras el envío real. Verificar:
+
+1. Hacer un submit válido al form de `https://avanzosc.es/contacto`
+   (campo `nombre`, `email` propio, `empresa`, `mensaje`, marcar checkbox
+   privacidad). Submit.
+
+2. Confirmar redirect a `/contacto/gracias` y mensaje «¡Gracias!» visible.
+
+3. Confirmar email recibido en bandeja `comercial@avanzosc.es`.
+
+4. Verificar el record `mail.mail` con state correcto:
+   ```sql
+   SELECT m.id, msg.subject, m.state, m.create_date
+   FROM mail_mail m
+   JOIN mail_message msg ON msg.id = m.mail_message_id
+   WHERE msg.subject ILIKE '[Web] Consulta%'
+   ORDER BY m.id DESC LIMIT 5;
+   ```
+   **Esperado**: `state='sent'` (NO `exception` ni `outgoing`).
+
+5. Si el state queda `exception`: revisar logs Odoo para el traceback
+   del envío (typical: SMTP credentials mal configurados, o `mail.host`
+   no resuelve). Resolver antes de seguir.
+
+6. Repetir el submit en `/eu_ES/contacto` para confirmar que el redirect
+   lang-aware funciona (debe llegar a `/eu_ES/contacto/gracias`) y que
+   el mail body contiene `Idioma: eu_ES`.
+
 ---
 
 ## 4. Robots.txt verificación post-DNS
