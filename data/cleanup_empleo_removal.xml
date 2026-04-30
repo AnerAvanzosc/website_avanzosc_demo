@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Cleanup declarativo post-v1 sesión 2026-04-30 — eliminación de
+    /trabaja-con-nosotros.
+
+    Los records originales (page_trabaja_con_nosotros_record + redirect
+    EU vanity slug) se crearon con `<data noupdate="1">` para que las
+    edits del admin sobre Settings → Website Pages persistan a través de
+    `-u`. Esa flag tiene un side effect: cuando el xml_id desaparece del
+    fichero de origen, el record en BD NO se borra automáticamente.
+
+    Solución idempotente: `<delete search="[(...)]">` con criterio
+    funcional (no por xml_id, porque podríamos tener la BD con el record
+    pero sin el ir.model.data tras una instalación fresh sobre un dump
+    productivo). En runs subsecuentes el search no encuentra nada y el
+    delete es no-op.
+
+    Records eliminados:
+      1. website.page con url='/trabaja-con-nosotros' — la página entera.
+      2. website.rewrite con url_from='/lan-egin-gurekin' que aún apunte
+         al destino antiguo (/eu_ES/trabaja-con-nosotros). NO eliminamos
+         por url_from solo: tenemos un nuevo record con la misma
+         url_from apuntando a /eu_ES/conocenos (el correcto), y
+         eliminarlo por url_from total perdería ese también.
+
+    Ref: CLAUDE.md §11 D8 (patrón análogo de cleanup declarativo de menús
+    default Odoo).
+-->
+<odoo>
+    <data noupdate="0">
+
+        <delete model="website.page"
+                search="[('url', '=', '/trabaja-con-nosotros')]"/>
+
+        <delete model="website.rewrite"
+                search="[('url_from', '=', '/lan-egin-gurekin'),
+                         ('url_to', '=', '/eu_ES/trabaja-con-nosotros')]"/>
+
+    </data>
+</odoo>

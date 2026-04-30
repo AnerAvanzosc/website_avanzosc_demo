@@ -211,11 +211,33 @@
             <field name="url_to">/eu_ES/conocenos</field>
         </record>
 
-        <record id="redirect_eu_slug_trabaja_con_nosotros" model="website.rewrite">
-            <field name="name">EU slug /lan-egin-gurekin → /eu_ES/trabaja-con-nosotros (DRAFT Q1)</field>
+        <!-- Página /trabaja-con-nosotros eliminada post-v1 (sesión
+             2026-04-30). Redirect 301 a /conocenos preserva enlaces
+             externos. Tres entradas:
+               - /trabaja-con-nosotros → /conocenos (ES alias).
+               - /eu_ES/trabaja-con-nosotros → /eu_ES/conocenos (EU alias).
+               - /lan-egin-gurekin → /eu_ES/conocenos (slug vanity EU
+                 reapuntado al destino actual; antes apuntaba al
+                 trabaja-con-nosotros desaparecido). -->
+        <record id="redirect_trabaja_to_conocenos_es" model="website.rewrite">
+            <field name="name">/trabaja-con-nosotros → /conocenos (page removed post-v1)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/trabaja-con-nosotros</field>
+            <field name="url_to">/conocenos</field>
+        </record>
+
+        <record id="redirect_trabaja_to_conocenos_eu" model="website.rewrite">
+            <field name="name">/eu_ES/trabaja-con-nosotros → /eu_ES/conocenos (page removed post-v1)</field>
+            <field name="redirect_type">301</field>
+            <field name="url_from">/eu_ES/trabaja-con-nosotros</field>
+            <field name="url_to">/eu_ES/conocenos</field>
+        </record>
+
+        <record id="redirect_eu_slug_lan_egin_gurekin" model="website.rewrite">
+            <field name="name">EU slug /lan-egin-gurekin → /eu_ES/conocenos (page removed post-v1, was DRAFT Q1)</field>
             <field name="redirect_type">301</field>
             <field name="url_from">/lan-egin-gurekin</field>
-            <field name="url_to">/eu_ES/trabaja-con-nosotros</field>
+            <field name="url_to">/eu_ES/conocenos</field>
         </record>
 
         <record id="redirect_eu_slug_contacto" model="website.rewrite">

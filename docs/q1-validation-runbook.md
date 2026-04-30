@@ -46,7 +46,7 @@ inmediatamente.
 
 - Menú principal (top-level + dropdown sectoriales): 7 items.
 - Hero claims y subtítulos de las 4 sectoriales: 8.
-- Hero claims y subtítulos de Conócenos, Empleo, Contacto: 6.
+- Hero claims y subtítulos de Conócenos, Contacto: 4.
 - CTA texts (Hero CTAs primary/secondary, CTA Kit Consulting, CTA
   Contacto): ~10.
 - Footer headings (Soluciones, Empresa, Legal): 3.
@@ -57,8 +57,8 @@ inmediatamente.
 Cuerpo principal de las páginas corporativas y sectoriales.
 
 - Conócenos: misión + 4 valores + historia + bloque equipo (~12 strings).
-- Empleo: por qué + 5 perfiles + vacantes (~14 strings).
 - Contacto: cómo encontrarnos + 3 datos + mapa attribution (~6 strings).
+- (Página /trabaja-con-nosotros (Empleo) eliminada post-v1 sesión 2026-04-30; sus ~14 strings quitados del .po. URL redirige 301 a /conocenos.)
 - Sector specifics × 4 sectoriales (título + intro + 6 items): 32.
 - Pilares 1-lines (3): 3.
 - Timeline 8 hitos × 2 strings (año + descripción): 16.
@@ -166,7 +166,6 @@ Acceder a la URL EU correspondiente. Mapeo:
 | Servicios | `http://localhost:14070/eu_ES/servicios` |
 | Academias | `http://localhost:14070/eu_ES/academias` |
 | Conócenos | `http://localhost:14070/eu_ES/conocenos` |
-| Empleo | `http://localhost:14070/eu_ES/trabaja-con-nosotros` |
 | Contacto | `http://localhost:14070/eu_ES/contacto` |
 | Aviso Legal | `http://localhost:14070/eu_ES/aviso-legal` |
 | Privacidad | `http://localhost:14070/eu_ES/politica-privacidad` |
@@ -238,20 +237,20 @@ Cuando 4.3 + 4.4 estén en 0, actualizar:
 **Ruta**: `docs/q1-eu-validation/avanzosc-eu-validation-2026-04-30.xlsx`.
 **Generador**: `/tmp/gen_q1_xlsx.py` (script ad-hoc parseando `i18n/eu.po` con polib + openpyxl). Output reproducible — re-ejecutable si la baseline cambia.
 
-**Conteo final por bloque** (201 strings totales pendientes Q1+Q3):
+**Conteo final por bloque** (180 strings totales pendientes Q1+Q3 tras eliminación de /trabaja-con-nosotros sesión 2026-04-30):
 
 | Pestaña XLSX | Bloque ID | Strings |
 |---|---|---|
 | Hero & Home | B1_HERO_HOME | 34 |
-| Navegación & Footer | B2_NAV_FOOTER | 12 |
+| Navegación & Footer | B2_NAV_FOOTER | 11 |
 | Soluciones (4 sectoriales) | B3_SOLUCIONES | 51 |
-| Conócenos - Equipo - Empleo | B4_CONOCENOS | 47 |
+| Conócenos - Equipo | B4_CONOCENOS | 27 |
 | Contacto | B5_CONTACTO | 32 |
 | Transversales | B6_TRANSVERSALES | 2 |
 | Legal — ESPERAR Q3 | B7_LEGAL | 23 |
-| **Total** | | **201** |
+| **Total** | | **180** |
 
-**Distinción Q1 vs Q3**: 178 strings Q1 (revisión lingüística Avanzosc) + 23 strings Q3 (revisión asesoría legal). La pestaña Legal lleva un banner rojo «ESPERAR Q3 — bloque informativo, NO editar todavía» en la fila 3, antes del header de columnas.
+**Distinción Q1 vs Q3**: 157 strings Q1 (revisión lingüística Avanzosc) + 23 strings Q3 (revisión asesoría legal). La pestaña Legal lleva un banner rojo «ESPERAR Q3 — bloque informativo, NO editar todavía» en la fila 3, antes del header de columnas.
 
 **Estructura del XLSX**:
 - Pestaña 0 — INSTRUCCIONES (readme para el revisor: qué es, qué hacer, glosario, tono, qué hacer con Legal, cómo devolver).

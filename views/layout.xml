@@ -184,7 +184,6 @@
                                 <h5 class="s_avanzosc_footer_heading">Empresa</h5>
                                 <ul class="list-unstyled">
                                     <li><a href="/conocenos">Conócenos</a></li>
-                                    <li><a href="/trabaja-con-nosotros">Empleo</a></li>
                                     <li><a href="/contacto">Contacto</a></li>
                                 </ul>
                             </div>
@@ -321,7 +320,6 @@
                             <li><a href="/formacion">Formación</a></li>
                             <li><a href="/contacto">Contacto</a></li>
                             <li><a href="/conocenos">Conócenos</a></li>
-                            <li><a href="/trabaja-con-nosotros">Empleo</a></li>
                         </ul>
                     </nav>
 

@@ -11,7 +11,7 @@ Stack: **módulo custom sobre Odoo 14 Community**, instalación nativa.
 
 Enfoque **todo dentro de Odoo**, tema custom sobre `website`:
 
-- **Web corporativa** (inicio, soluciones sectoriales, conócenos, trabaja con nosotros, contacto) → módulo `website_avanzosc_demo`.
+- **Web corporativa** (inicio, soluciones sectoriales, conócenos, contacto) → módulo `website_avanzosc_demo`.
 - **Tienda** → `website_sale` existente, re-skineada con el tema.
 - **Formación** → `website_slides` existente, re-skineada.
 - **Portal ERP de clientes** → `portal` estándar, acceso desde botón "Acceso clientes" en header.
@@ -25,9 +25,10 @@ Mismo dominio, mismo servidor, mismo Odoo.
 Menú principal:
 
 Orden por prioridad de funnel B2B (decisión 2026-04-28): los 5 primeros
-hasta Contacto son los high-conversion items del funnel; los 2 últimos
-(Conócenos, Empleo) son secundarios y caen al overflow `[+]` a 992px
-sin perjuicio de la UX desktop principal (≥1280 entran los 7).
+hasta Contacto son los high-conversion items del funnel; el último
+(Conócenos) es secundario. Post-v1 sesión 2026-04-30: el item «Empleo»
+(página /trabaja-con-nosotros) se eliminó del menú y la URL redirige 301
+a /conocenos vía `data/redirects.xml`.
 
 1. **Inicio**
 2. **Soluciones** (dropdown — renombrado desde «Soluciones sectoriales»;
@@ -41,10 +42,6 @@ sin perjuicio de la UX desktop principal (≥1280 entran los 7).
 4. **Formación** (renombrado de "Cursos")
 5. **Contacto**
 6. **Conócenos**
-7. **Empleo** (renombrado desde «Trabaja con nosotros»; estándar moderno
-   corporativo, ahorra ancho. Slug interno `/trabaja-con-nosotros` se
-   mantiene — etiqueta visible y URL son decisiones independientes;
-   slug-rename es decisión de SEO posterior).
 
 **Fuera del menú principal**:
 - **Kit Consulting Red.es** → landing en `/kit-consulting`, banner temporal en home.
@@ -273,7 +270,6 @@ website_avanzosc_demo/
 │   │   ├── servicios.xml
 │   │   ├── academias.xml
 │   │   ├── conocenos.xml
-│   │   ├── trabaja_con_nosotros.xml
 │   │   ├── contacto.xml
 │   │   └── kit_consulting.xml
 │   └── snippets/

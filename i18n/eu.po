@@ -123,15 +123,6 @@ msgid "Conócenos"
 msgstr "Ezagutu gaitzazu"
 
 # DRAFT - REVIEW NEEDED — link footer columna Empresa + menú top-level
-# (per pre-decisión Task 1.3)
-#. module: website_avanzosc_demo
-#: model:website.menu,name:website_avanzosc_demo.menu_trabaja
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
-#, fuzzy
-msgid "Empleo"
-msgstr "Lana"
-
-# DRAFT - REVIEW NEEDED — link footer columna Empresa + menú top-level
 #. module: website_avanzosc_demo
 #: model:website.menu,name:website_avanzosc_demo.menu_contacto
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.footer_avanzosc
@@ -195,7 +186,8 @@ msgstr "OpenERPetik Odoo ekosisteman."
 msgid "Módulos publicados, muchos en OCA."
 msgstr "Argitaratutako moduluak, asko OCAn."
 
-# DRAFT - REVIEW NEEDED — Task 3.1 pilar 3 (equipo STEM mayoritariamente femenino).
+# DRAFT - REVIEW NEEDED — Task 3.1 pilar 3 (equipo STEM mayoritariamente
+# femenino).
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_pilares
 #, fuzzy
@@ -236,8 +228,12 @@ msgstr "Matrikulak, egutegiak, ebaluazioak, online prestakuntza."
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_cta_kit_consulting
 #, fuzzy
-msgid "Subvención de hasta 24.000€ para PYMEs. Asesoría especializada en Odoo industrial."
-msgstr "24.000€ arteko diru-laguntza ETEentzat. Aholkularitza espezializatua Odoo industrialean."
+msgid ""
+"Subvención de hasta 24.000€ para PYMEs. Asesoría especializada en Odoo "
+"industrial."
+msgstr ""
+"24.000€ arteko diru-laguntza ETEentzat. Aholkularitza espezializatua Odoo "
+"industrialean."
 
 # DRAFT - REVIEW NEEDED — Task 3.3 CTA Kit Consulting button label.
 #. module: website_avanzosc_demo
@@ -341,7 +337,8 @@ msgstr "Lehenengo OCA moduluak"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
 #, fuzzy
-msgid "Módulos de fabricación publicados en la comunidad. Cultura OCA en el equipo."
+msgid ""
+"Módulos de fabricación publicados en la comunidad. Cultura OCA en el equipo."
 msgstr "Fabrikazio moduluak komunitatean argitaratuta. OCA kultura taldean."
 
 # DRAFT - REVIEW NEEDED — Task 3.8 timeline 2014 título.
@@ -383,8 +380,12 @@ msgstr "Urruneko laguntza eta prestakuntza"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_timeline
 #, fuzzy
-msgid "Helpdesk remoto a escala. Webinars técnicos. Las academias entran como sector."
-msgstr "Urruneko helpdesk eskalan. Webinar teknikoak. Akademiak sektore gisa sartzen dira."
+msgid ""
+"Helpdesk remoto a escala. Webinars técnicos. Las academias entran como "
+"sector."
+msgstr ""
+"Urruneko helpdesk eskalan. Webinar teknikoak. Akademiak sektore gisa sartzen"
+" dira."
 
 # DRAFT - REVIEW NEEDED — Task 3.8 timeline 2022 título.
 #. module: website_avanzosc_demo
@@ -433,8 +434,16 @@ msgstr "Nork eraikitzen duten"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_equipo
 #, fuzzy
-msgid "Equipo STEM con base en Azkoitia, Gipuzkoa. Mayoría femenina en un sector dominado por hombres. Programadoras, consultoras funcionales y técnicas de soporte. Contribuimos a la OCA y formamos a la siguiente generación a través de las academias."
-msgstr "STEM taldea Azkoitian, Gipuzkoan. Emakume gehiengoa gizonek menderatutako sektore batean. Programatzaileak, kontsultore funtzionalak eta laguntza teknikariak. OCAri ekarpenak egiten ditugu eta hurrengo belaunaldia akademien bidez prestatzen dugu."
+msgid ""
+"Equipo STEM con base en Azkoitia, Gipuzkoa. Mayoría femenina en un sector "
+"dominado por hombres. Programadoras, consultoras funcionales y técnicas de "
+"soporte. Contribuimos a la OCA y formamos a la siguiente generación a través"
+" de las academias."
+msgstr ""
+"STEM taldea Azkoitian, Gipuzkoan. Emakume gehiengoa gizonek menderatutako "
+"sektore batean. Programatzaileak, kontsultore funtzionalak eta laguntza "
+"teknikariak. OCAri ekarpenak egiten ditugu eta hurrengo belaunaldia "
+"akademien bidez prestatzen dugu."
 
 # DRAFT - REVIEW NEEDED — Task 3.9 equipo stat label «Equipo».
 #. module: website_avanzosc_demo
@@ -465,7 +474,8 @@ msgid "Mayoría STEM femenina"
 msgstr "STEM gehiengo emakumea"
 
 # DRAFT - REVIEW NEEDED — Task 3.9 equipo stat OCA value.
-# Label «OCA» NO se traduce (acrónimo internacional Odoo Community Association).
+# Label «OCA» NO se traduce (acrónimo internacional Odoo Community
+# Association).
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_equipo
 #, fuzzy
@@ -490,8 +500,12 @@ msgstr "Azkoitia, Gipuzkoa"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_hero
 #, fuzzy
-msgid "Migración OpenUpgrade, módulos OCA y localización fiscal española. Para industria, distribución, servicios y academias."
-msgstr "OpenUpgrade migrazioa, OCA moduluak eta lokalizazio fiskal espainola. Industria, banaketa, zerbitzuak eta akademiarako."
+msgid ""
+"Migración OpenUpgrade, módulos OCA y localización fiscal española. Para "
+"industria, distribución, servicios y academias."
+msgstr ""
+"OpenUpgrade migrazioa, OCA moduluak eta lokalizazio fiskal espainola. "
+"Industria, banaketa, zerbitzuak eta akademiarako."
 
 # DRAFT - REVIEW NEEDED — Task 3.10 hero CTA primary.
 #. module: website_avanzosc_demo
@@ -508,9 +522,9 @@ msgid "Hablar con nosotros"
 msgstr "Gurekin hitz egin"
 
 # ===========================================================================
-# Phase 5 — Páginas sectoriales (industrial, distribucion, servicios, academias)
+# Phase 5 — Páginas sectoriales (industrial, distribucion, servicios,
+# academias)
 # ===========================================================================
-
 # Slug URL EU sectorial — VALIDADO D2, NO DRAFT.
 #. module: website_avanzosc_demo
 #: model:website.page,url:website_avanzosc_demo.page_industrial_record
@@ -566,8 +580,12 @@ msgstr "Odoo industriala lantegian, ez PowerPoint-en."
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_industrial
 #, fuzzy
-msgid "MES, MRP, trazabilidad y mantenimiento. Integración con PLCs, SCADA y balanzas. Equipo con experiencia real en planta."
-msgstr "MES, MRP, trazabilitatea eta mantentze-lana. PLC, SCADA eta balantzekin integrazioa. Lantegian benetako esperientzia duen taldea."
+msgid ""
+"MES, MRP, trazabilidad y mantenimiento. Integración con PLCs, SCADA y "
+"balanzas. Equipo con experiencia real en planta."
+msgstr ""
+"MES, MRP, trazabilitatea eta mantentze-lana. PLC, SCADA eta balantzekin "
+"integrazioa. Lantegian benetako esperientzia duen taldea."
 
 # DRAFT - REVIEW NEEDED — Distribución hero claim.
 #. module: website_avanzosc_demo
@@ -580,8 +598,12 @@ msgstr "Biltegia, picking-a eta ibilbideak. Excel-ik gabe."
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_distribucion
 #, fuzzy
-msgid "WMS, multi-canal, EDI y marketplaces. Integraciones con balanzas, lectores y SGV. Operativa optimizada en almacenes reales."
-msgstr "WMS, multi-kanala, EDI eta marketplace-ak. Balantzak, irakurgailuak eta SGV integrazioak. Biltegi errealetan eragiketa optimizatua."
+msgid ""
+"WMS, multi-canal, EDI y marketplaces. Integraciones con balanzas, lectores y"
+" SGV. Operativa optimizada en almacenes reales."
+msgstr ""
+"WMS, multi-kanala, EDI eta marketplace-ak. Balantzak, irakurgailuak eta SGV "
+"integrazioak. Biltegi errealetan eragiketa optimizatua."
 
 # DRAFT - REVIEW NEEDED — Servicios hero claim.
 #. module: website_avanzosc_demo
@@ -594,8 +616,12 @@ msgstr "Proiektuak, parteak eta fakturazio errepikakorra."
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_servicios
 #, fuzzy
-msgid "Helpdesk, contratos, partes de horas, facturación recurrente. Para empresas de servicios profesionales que necesitan trazabilidad real."
-msgstr "Helpdesk, kontratuak, ordu-parteak, fakturazio errepikakorra. Trazabilitate erreala behar duten zerbitzu profesionaleko enpresentzat."
+msgid ""
+"Helpdesk, contratos, partes de horas, facturación recurrente. Para empresas "
+"de servicios profesionales que necesitan trazabilidad real."
+msgstr ""
+"Helpdesk, kontratuak, ordu-parteak, fakturazio errepikakorra. Trazabilitate "
+"erreala behar duten zerbitzu profesionaleko enpresentzat."
 
 # DRAFT - REVIEW NEEDED — Academias hero claim.
 #. module: website_avanzosc_demo
@@ -608,8 +634,12 @@ msgstr "Matrikulak, egutegiak eta ebaluazioak. Odoo bakarrean."
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_academias
 #, fuzzy
-msgid "Gestión integral de academias y formación: matrículas online, calendarios, evaluaciones, comunicación con familias y formación a distancia."
-msgstr "Akademia eta prestakuntzaren kudeaketa integrala: online matrikulak, egutegiak, ebaluazioak, familiekin komunikazioa eta urruneko prestakuntza."
+msgid ""
+"Gestión integral de academias y formación: matrículas online, calendarios, "
+"evaluaciones, comunicación con familias y formación a distancia."
+msgstr ""
+"Akademia eta prestakuntzaren kudeaketa integrala: online matrikulak, "
+"egutegiak, ebaluazioak, familiekin komunikazioa eta urruneko prestakuntza."
 
 # ----------------------------------------------------------------------------
 # s_avanzosc_sector_specifics — 4 variantes × (1 título + 1 intro + 6 items).
@@ -618,7 +648,6 @@ msgstr "Akademia eta prestakuntzaren kudeaketa integrala: online matrikulak, egu
 # siguen están como DRAFT — requieren revisión lingüística por equipo Avanzosc
 # antes de levantar el flag fuzzy.
 # ----------------------------------------------------------------------------
-
 # DRAFT - REVIEW NEEDED — Sector specifics título industrial.
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
@@ -630,8 +659,12 @@ msgstr "Industria-gaitasunak"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
 #, fuzzy
-msgid "Lo que el sector industrial necesita de Odoo cuando deja de ser un ERP genérico."
-msgstr "Sektore industrialak Odoo-tik behar duena ERP generikoa izateari uzten dionean."
+msgid ""
+"Lo que el sector industrial necesita de Odoo cuando deja de ser un ERP "
+"genérico."
+msgstr ""
+"Sektore industrialak Odoo-tik behar duena ERP generikoa izateari uzten "
+"dionean."
 
 # DRAFT - REVIEW NEEDED — Sector specifics industrial item 1.
 #. module: website_avanzosc_demo
@@ -686,8 +719,10 @@ msgstr "Banaketa-gaitasunak"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
 #, fuzzy
-msgid "Multialmacén, multicanal y multicliente sin que se rompa el stock real."
-msgstr "Biltegi anitz, kanal anitz eta bezero anitz, benetako stocka hautsi gabe."
+msgid ""
+"Multialmacén, multicanal y multicliente sin que se rompa el stock real."
+msgstr ""
+"Biltegi anitz, kanal anitz eta bezero anitz, benetako stocka hautsi gabe."
 
 # DRAFT - REVIEW NEEDED — Sector specifics distribución item 1.
 #. module: website_avanzosc_demo
@@ -742,8 +777,11 @@ msgstr "Zerbitzu-enpresentzako gaitasunak"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
 #, fuzzy
-msgid "Proyectos, partes de horas y facturación recurrente sin Excel intermedio."
-msgstr "Proiektuak, ordu-parteak eta fakturazio errepikakorra, tarteko Excel-ik gabe."
+msgid ""
+"Proyectos, partes de horas y facturación recurrente sin Excel intermedio."
+msgstr ""
+"Proiektuak, ordu-parteak eta fakturazio errepikakorra, tarteko Excel-ik "
+"gabe."
 
 # DRAFT - REVIEW NEEDED — Sector specifics servicios item 1.
 #. module: website_avanzosc_demo
@@ -764,7 +802,8 @@ msgstr "Ordu-parteak mugikorretik sinatuak onarpenarekin."
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
 #, fuzzy
 msgid "Facturación recurrente por contrato (mensual/trimestral/anual)."
-msgstr "Kontratu bidezko fakturazio errepikakorra (hilekoa/hiruhilekoa/urtekoa)."
+msgstr ""
+"Kontratu bidezko fakturazio errepikakorra (hilekoa/hiruhilekoa/urtekoa)."
 
 # DRAFT - REVIEW NEEDED — Sector specifics servicios item 4.
 #. module: website_avanzosc_demo
@@ -798,8 +837,11 @@ msgstr "Akademia eta zentroentzako gaitasunak"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
 #, fuzzy
-msgid "Comunicación con familias y gestión académica sin fricción burocrática."
-msgstr "Familiekin komunikazioa eta kudeaketa akademikoa, izapide burokratikorik gabe."
+msgid ""
+"Comunicación con familias y gestión académica sin fricción burocrática."
+msgstr ""
+"Familiekin komunikazioa eta kudeaketa akademikoa, izapide burokratikorik "
+"gabe."
 
 # DRAFT - REVIEW NEEDED — Sector specifics academias item 1.
 #. module: website_avanzosc_demo
@@ -834,7 +876,8 @@ msgstr "Familien ataria komunikazio bidirekzionalarekin."
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_sector_specifics
 #, fuzzy
 msgid "Pagos recurrentes (mensualidad, comedor, extraescolares)."
-msgstr "Ordainketa errepikakorrak (hileroko kuota, jangela, eskolaz kanpokoak)."
+msgstr ""
+"Ordainketa errepikakorrak (hileroko kuota, jangela, eskolaz kanpokoak)."
 
 # DRAFT - REVIEW NEEDED — Sector specifics academias item 6.
 #. module: website_avanzosc_demo
@@ -849,7 +892,7 @@ msgstr "Kanpoko e-learning plataformekin integrazioa."
 # de strings (claim, subtítulos, cuerpo) van DRAFT + fuzzy hasta revisión
 # lingüística por equipo Avanzosc (gate Q1). Las 3 legales bloquean
 # adicionalmente switchover hasta gate Q3 (revisión asesoría legal).
-#
+# 
 # Política de cobertura EU para legales: en este commit traducimos solo
 # títulos / subtítulos / headings de sección / datos legales clave del
 # titular y enlaces a navegadores. Los cuerpos largos de los artículos
@@ -858,7 +901,6 @@ msgstr "Kanpoko e-learning plataformekin integrazioa."
 # snapshots Phase 6). Cuando se cierre la revisión legal Q3, completar
 # la traducción de cuerpos como tarea Phase 9 (QA bilingüe).
 # ============================================================================
-
 # Slug URL EU — VALIDADO D2 (sesión 2026-04-29), NO DRAFT.
 #. module: website_avanzosc_demo
 #: model:website.page,url:website_avanzosc_demo.page_conocenos_record
@@ -898,7 +940,6 @@ msgstr "/cookien-politika"
 # ----------------------------------------------------------------------------
 # /conocenos — hero, valores (4), historia, equipo
 # ----------------------------------------------------------------------------
-
 # DRAFT - REVIEW NEEDED — Conocenos hero claim.
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_conocenos
@@ -920,7 +961,8 @@ msgstr "Antzerkirik gabe. Emaitza neurgarriekin."
 msgid "Ver valores"
 msgstr "Balioak ikusi"
 
-# DRAFT - REVIEW NEEDED — Conocenos CTA2 (compartido con varias páginas Phase 6).
+# DRAFT - REVIEW NEEDED — Conocenos CTA2 (compartido con varias páginas Phase
+# 6).
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_conocenos
 #, fuzzy
@@ -1001,8 +1043,14 @@ msgstr "Historia"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_conocenos
 #, fuzzy
-msgid "Avanzosc nació en 2008 en Azkoitia (Gipuzkoa) cuando OpenERP era todavía una alternativa minoritaria. Hoy seguimos en el mismo sitio, con más experiencia y un equipo más grande, pero la misma forma de trabajar."
-msgstr "Avanzosc 2008an jaio zen Azkoitian (Gipuzkoa), OpenERP oraindik aukera gutxietsia zenean. Gaur leku berean jarraitzen dugu, esperientzia gehiagorekin eta talde handiago batekin, baina lan egiteko modu berarekin."
+msgid ""
+"Avanzosc nació en 2008 en Azkoitia (Gipuzkoa) cuando OpenERP era todavía una"
+" alternativa minoritaria. Hoy seguimos en el mismo sitio, con más "
+"experiencia y un equipo más grande, pero la misma forma de trabajar."
+msgstr ""
+"Avanzosc 2008an jaio zen Azkoitian (Gipuzkoa), OpenERP oraindik aukera "
+"gutxietsia zenean. Gaur leku berean jarraitzen dugu, esperientzia "
+"gehiagorekin eta talde handiago batekin, baina lan egiteko modu berarekin."
 
 # DRAFT - REVIEW NEEDED — Conocenos heading «Equipo».
 #. module: website_avanzosc_demo
@@ -1015,8 +1063,12 @@ msgstr "Taldea"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_conocenos
 #, fuzzy
-msgid "Equipo STEM con base en Azkoitia. Mayoría femenina. Ingenieras, consultoras y técnicas que han pasado por planta, almacén y aula."
-msgstr "STEM taldea Azkoitian. Gehiengoa emakumezkoa. Lantegitik, biltegitik eta gelatik igaro diren ingeniari, aholkulari eta teknikariak."
+msgid ""
+"Equipo STEM con base en Azkoitia. Mayoría femenina. Ingenieras, consultoras "
+"y técnicas que han pasado por planta, almacén y aula."
+msgstr ""
+"STEM taldea Azkoitian. Gehiengoa emakumezkoa. Lantegitik, biltegitik eta "
+"gelatik igaro diren ingeniari, aholkulari eta teknikariak."
 
 # DRAFT - REVIEW NEEDED — Conocenos link al snippet equipo en home.
 #. module: website_avanzosc_demo
@@ -1026,153 +1078,8 @@ msgid "Conoce al equipo →"
 msgstr "Ezagutu taldea →"
 
 # ----------------------------------------------------------------------------
-# /trabaja-con-nosotros — hero, por qué, perfiles, vacantes
-# ----------------------------------------------------------------------------
-
-# DRAFT - REVIEW NEEDED — Trabaja hero claim.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Trabaja con nosotros"
-msgstr "Lan egin gurekin"
-
-# DRAFT - REVIEW NEEDED — Trabaja hero subtítulo.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Equipo STEM en Azkoitia. Odoo, OCA, planta y aula."
-msgstr "STEM taldea Azkoitian. Odoo, OCA, lantegia eta gela."
-
-# DRAFT - REVIEW NEEDED — Trabaja CTA1.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Ver perfiles"
-msgstr "Profilak ikusi"
-
-# DRAFT - REVIEW NEEDED — Trabaja CTA2.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Enviar CV"
-msgstr "CVa bidali"
-
-# DRAFT - REVIEW NEEDED — Trabaja heading «Por qué Avanzosc».
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Por qué Avanzosc"
-msgstr "Zergatik Avanzosc"
-
-# DRAFT - REVIEW NEEDED — Trabaja párrafo «Por qué».
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Trabajamos con Odoo desde 2008. Cliente real, problemas reales, soluciones técnicas. Equipo mayoritariamente femenino en sector dominado por hombres. Contribución activa a OCA y formación interna continua. Sede en Azkoitia, presencial preferente con flexibilidad."
-msgstr "Odoo-rekin lan egiten dugu 2008tik. Bezero erreala, arazo errealak, irtenbide teknikoak. Gizonek nagusi diren sektorean, gure taldea gehienbat emakumezkoa da. OCAn ekarpen aktiboa eta etengabeko barneko prestakuntza. Egoitza Azkoitian, aurrez aurreko lana hobetsia, malgutasunarekin."
-
-# DRAFT - REVIEW NEEDED — Trabaja heading «Perfiles».
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Perfiles que buscamos siempre"
-msgstr "Beti bilatzen ditugun profilak"
-
-# DRAFT - REVIEW NEEDED — Trabaja perfil 1 label.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Desarrolladora/or Odoo Python"
-msgstr "Odoo Python garatzailea"
-
-# DRAFT - REVIEW NEEDED — Trabaja perfil 1 texto.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "— backend, módulos custom, contribuciones OCA."
-msgstr "— backend, moduluak custom, OCAri ekarpenak."
-
-# DRAFT - REVIEW NEEDED — Trabaja perfil 2 label.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Consultora/or funcional industrial"
-msgstr "Industria-aholkulari funtzionala"
-
-# DRAFT - REVIEW NEEDED — Trabaja perfil 2 texto.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "— MES, MRP, trazabilidad, integración planta."
-msgstr "— MES, MRP, trazabilitatea, lantegiarekin integrazioa."
-
-# DRAFT - REVIEW NEEDED — Trabaja perfil 3 label.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Consultora/or funcional distribución"
-msgstr "Banaketa-aholkulari funtzionala"
-
-# DRAFT - REVIEW NEEDED — Trabaja perfil 3 texto.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "— WMS, picking, multi-canal."
-msgstr "— WMS, picking, kanal anitzekoa."
-
-# DRAFT - REVIEW NEEDED — Trabaja perfil 4 label.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Técnica/o de soporte L2"
-msgstr "L2 laguntza-teknikaria"
-
-# DRAFT - REVIEW NEEDED — Trabaja perfil 4 texto.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "— debugging, comunicación cliente, formación."
-msgstr "— debugging, bezeroarekin komunikazioa, prestakuntza."
-
-# DRAFT - REVIEW NEEDED — Trabaja perfil 5 label.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Practicantes (ingenierías STEM)"
-msgstr "Praktiketako ikasleak (STEM ingeniaritzak)"
-
-# DRAFT - REVIEW NEEDED — Trabaja perfil 5 texto.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "— bootcamp interno + proyectos reales."
-msgstr "— barneko bootcamp + benetako proiektuak."
-
-# DRAFT - REVIEW NEEDED — Trabaja heading «Vacantes».
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Vacantes activas"
-msgstr "Lan-eskaintza irekiak"
-
-# DRAFT - REVIEW NEEDED — Trabaja párrafo vacantes (con placeholder email).
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "Actualmente sin vacantes formales abiertas. Si tu perfil encaja con los anteriores, escríbenos a"
-msgstr "Une honetan lan-eskaintza formalik gabe. Zure profila aurrekoekin bat badator, idatzi gugana"
-
-# DRAFT - REVIEW NEEDED — Trabaja párrafo vacantes cierre.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_trabaja_con_nosotros
-#, fuzzy
-msgid "con tu CV y 3 líneas sobre por qué te interesa Avanzosc."
-msgstr "zure CVarekin eta zergatik Avanzosc interesatzen zaizun azaltzen duten 3 lerrorekin."
-
-# ----------------------------------------------------------------------------
 # /contacto — hero, canales, mapa
 # ----------------------------------------------------------------------------
-
 # DRAFT - REVIEW NEEDED — Contacto claim.
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
@@ -1185,7 +1092,8 @@ msgstr "Hitz egingo dugu?"
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
 #, fuzzy
 msgid "Cuéntanos tu caso técnicamente. Respondemos en 24h laborables."
-msgstr "Konta iezaguzu zure kasua teknikoki. 24 lan-orduren barruan erantzuten dugu."
+msgstr ""
+"Konta iezaguzu zure kasua teknikoki. 24 lan-orduren barruan erantzuten dugu."
 
 # DRAFT - REVIEW NEEDED — Contacto label «Email».
 #. module: website_avanzosc_demo
@@ -1227,7 +1135,6 @@ msgstr "Mapa handiagoa ikusi OpenStreetMap-en"
 # Cuerpos largos NO traducidos: render ES como fallback en sesiones EU
 # hasta que se cierre revisión legal Q3 (Phase 9 QA bilingüe).
 # ----------------------------------------------------------------------------
-
 # LEGAL DRAFT - REVIEW NEEDED — Aviso título página.
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_aviso_legal
@@ -1287,7 +1194,6 @@ msgstr "6. Aplikatu beharreko legeria eta jurisdikzioa"
 # ----------------------------------------------------------------------------
 # /politica-privacidad — solo título / subtítulo / headings de sección.
 # ----------------------------------------------------------------------------
-
 # LEGAL DRAFT - REVIEW NEEDED — Privacidad título página.
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_politica_privacidad
@@ -1299,8 +1205,12 @@ msgstr "Pribatutasun-politika"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_politica_privacidad
 #, fuzzy
-msgid "Información sobre el tratamiento de datos personales conforme al RGPD y la LOPDGDD."
-msgstr "Datu pertsonalen tratamenduari buruzko informazioa, DBOEren eta DLBOren arabera."
+msgid ""
+"Información sobre el tratamiento de datos personales conforme al RGPD y la "
+"LOPDGDD."
+msgstr ""
+"Datu pertsonalen tratamenduari buruzko informazioa, DBOEren eta DLBOren "
+"arabera."
 
 # LEGAL DRAFT - REVIEW NEEDED — Privacidad §1.
 #. module: website_avanzosc_demo
@@ -1354,7 +1264,6 @@ msgstr "7. Interesdunen eskubideak"
 # ----------------------------------------------------------------------------
 # /politica-cookies — solo título / subtítulo / headings de sección.
 # ----------------------------------------------------------------------------
-
 # LEGAL DRAFT - REVIEW NEEDED — Cookies título página.
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_politica_cookies
@@ -1406,12 +1315,10 @@ msgstr "4. Etorkizuneko aldaketak"
 # si difiere. Los archetypes 2-8 quedan sin EU draft hasta esa decisión.
 # 9 strings: 1 sector + 1 subsector + 1 title + 1 summary + 5 detail items.
 # ============================================================================
-
 # Caso éxito archetype 1 sector → ya existe arriba (compartido con
 # footer/menu/sectores). Añadida la referencia a `s_avanzosc_caso_exito`
 # en el entry original para que Odoo aplique la misma traducción aquí.
 # NO duplicar `msgid "Industrial"` — `.po` no acepta duplicados.
-
 # DRAFT - REVIEW NEEDED — Caso éxito archetype 1 subsector.
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_caso_exito
@@ -1431,7 +1338,8 @@ msgstr "Metal-mekanikoaren ekoizlea (50-200 langile)"
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_caso_exito
 #, fuzzy
 msgid "Migración completa Excel → Odoo MRP con trazabilidad y multidivisa."
-msgstr "Excel → Odoo MRP migrazio osoa, trazabilitatearekin eta dibisa anitzekin."
+msgstr ""
+"Excel → Odoo MRP migrazio osoa, trazabilitatearekin eta dibisa anitzekin."
 
 # DRAFT - REVIEW NEEDED — Caso éxito archetype 1 detail 1.
 #. module: website_avanzosc_demo
@@ -1468,11 +1376,9 @@ msgstr "Lote/serie trazabilitatea + EDI bezeroekin."
 msgid "Multidivisa con tipo de cambio diario automático."
 msgstr "Dibisa anitza, eguneroko kanbio-tasa automatikoarekin."
 
-
 # ============================================================================
 # Post-v1 sub-bloque B — /contacto rediseño + /contacto/gracias
 # ============================================================================
-
 # DRAFT - REVIEW NEEDED — Hero claim /contacto.
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
@@ -1485,7 +1391,9 @@ msgstr "Hitz egin dezagun zureaz."
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
 #, fuzzy
 msgid "Cuéntanos qué Odoo te haría falta. Respondemos en 24-48h laborables."
-msgstr "Esan iezaguzu zer Odoo behar duzun. 24-48 ordu laburren barruan erantzungo dizugu."
+msgstr ""
+"Esan iezaguzu zer Odoo behar duzun. 24-48 ordu laburren barruan erantzungo "
+"dizugu."
 
 # DRAFT - REVIEW NEEDED — Info column heading.
 #. module: website_avanzosc_demo
@@ -1526,8 +1434,12 @@ msgstr "Google Maps-en ikusi"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
 #, fuzzy
-msgid "En el centro de Azkoitia, a 5 min andando del Ayuntamiento. Aparcamiento en zona azul."
-msgstr "Azkoitiaren erdigunean, Udaletxetik 5 minutura oinez. Aparkalekua zona urdinean."
+msgid ""
+"En el centro de Azkoitia, a 5 min andando del Ayuntamiento. Aparcamiento en "
+"zona azul."
+msgstr ""
+"Azkoitiaren erdigunean, Udaletxetik 5 minutura oinez. Aparkalekua zona "
+"urdinean."
 
 # DRAFT - REVIEW NEEDED — Schedule label.
 #. module: website_avanzosc_demo
@@ -1582,8 +1494,14 @@ msgstr "Ez bete eremu hau:"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto
 #, fuzzy
-msgid "He leído y acepto la <a href=\"/politica-privacidad\" target=\"_blank\" rel=\"noopener\">política de privacidad</a>. <span class=\"s_avanzosc_contacto_form_required\">*</span>"
-msgstr "Irakurri dut eta onartzen dut <a href=\"/politica-privacidad\" target=\"_blank\" rel=\"noopener\">pribatutasun-politika</a>. <span class=\"s_avanzosc_contacto_form_required\">*</span>"
+msgid ""
+"He leído y acepto la <a href=\"/politica-privacidad\" target=\"_blank\" "
+"rel=\"noopener\">política de privacidad</a>. <span "
+"class=\"s_avanzosc_contacto_form_required\">*</span>"
+msgstr ""
+"Irakurri dut eta onartzen dut <a href=\"/politica-privacidad\" "
+"target=\"_blank\" rel=\"noopener\">pribatutasun-politika</a>. <span "
+"class=\"s_avanzosc_contacto_form_required\">*</span>"
 
 # DRAFT - REVIEW NEEDED — Submit button.
 #. module: website_avanzosc_demo
@@ -1604,7 +1522,8 @@ msgstr "Eskerrik asko!"
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.page_contacto_gracias
 #, fuzzy
 msgid "Hemos recibido tu consulta. Te responderemos en 24-48h laborables."
-msgstr "Zure kontsulta jaso dugu. 24-48 ordu laburren barruan erantzungo dizugu."
+msgstr ""
+"Zure kontsulta jaso dugu. 24-48 ordu laburren barruan erantzungo dizugu."
 
 # DRAFT - REVIEW NEEDED — Gracias action: back to home.
 #. module: website_avanzosc_demo

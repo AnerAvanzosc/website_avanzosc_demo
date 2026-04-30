@@ -98,9 +98,11 @@ BLOCKS = [
     ('B5_CONTACTO', 'Contacto', 'CCE5FF', (
         'page_contacto', 'page_contacto_gracias', 's_avanzosc_cta_contacto',
     ), 'Página /contacto + /contacto/gracias + CTA contacto transversal.'),
-    ('B4_CONOCENOS', 'Conócenos / Equipo / Empleo', 'D9EAD3', (
-        'page_conocenos', 'page_trabaja_con_nosotros', 's_avanzosc_equipo',
-    ), 'Páginas Conócenos y Empleo + snippet equipo.'),
+    ('B4_CONOCENOS', 'Conócenos / Equipo', 'D9EAD3', (
+        'page_conocenos', 's_avanzosc_equipo',
+    ), 'Página Conócenos + snippet equipo. La página /trabaja-con-nosotros'
+       ' se eliminó post-v1 (sesión 2026-04-30) y sus 21 strings dejaron'
+       ' de estar en el .po.'),
     ('B3_SOLUCIONES', 'Soluciones (4 sectoriales)', 'FFF2CC', (
         'page_industrial', 'page_distribucion', 'page_servicios', 'page_academias',
         's_avanzosc_sector_specifics', 's_avanzosc_caso_exito',
@@ -223,7 +225,8 @@ def context_text(entry):
         'menu_formacion': 'Menú: Formación',
         'menu_conocenos': 'Menú: Conócenos',
         'menu_contacto': 'Menú: Contacto',
-        'menu_trabaja_con_nosotros': 'Menú: Empleo',
+        # menu_trabaja eliminado post-v1 — entry retirada; mapping
+        # se mantiene por si quedara alguna referencia residual.
         'menu_soluciones': 'Menú: Soluciones (dropdown)',
         # pages
         'page_industrial': '/industrial',
@@ -231,7 +234,7 @@ def context_text(entry):
         'page_servicios': '/servicios',
         'page_academias': '/academias',
         'page_conocenos': '/conocenos',
-        'page_trabaja_con_nosotros': '/trabaja-con-nosotros',
+        # page_trabaja_con_nosotros eliminada post-v1.
         'page_contacto': '/contacto',
         'page_contacto_gracias': '/contacto/gracias',
         'page_aviso_legal': '/aviso-legal',

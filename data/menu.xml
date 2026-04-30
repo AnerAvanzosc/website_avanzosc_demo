@@ -55,8 +55,10 @@
 
     <!-- Reorden por prioridad de funnel B2B (sesión 2026-04-28):
          los 5 primeros (hasta Contacto) son los high-conversion items;
-         los 2 últimos (Conócenos, Empleo) son secundarios. xml_ids y
-         URLs no cambian — solo `sequence`. -->
+         el último (Conócenos) es secundario. xml_ids y URLs no cambian —
+         solo `sequence`. Post-v1 sesión 2026-04-30: el item «Empleo»
+         (menu_trabaja) se eliminó del menú. La URL /trabaja-con-nosotros
+         redirige 301 a /conocenos vía data/redirects.xml. -->
 
     <record id="menu_contacto" model="website.menu">
         <field name="name">Contacto</field>
@@ -70,17 +72,5 @@
         <field name="url">/conocenos</field>
         <field name="parent_id" ref="website.main_menu"/>
         <field name="sequence">60</field>
-    </record>
-
-    <record id="menu_trabaja" model="website.menu">
-        <!-- Label «Empleo» (no «Trabaja con nosotros»): estándar moderno
-             corporativo, ahorra ancho en navbar. Slug interno
-             /trabaja-con-nosotros se mantiene — etiqueta visible y URL son
-             decisiones independientes (slug-rename = SEO posterior). El
-             xml_id `menu_trabaja` también permanece estable. -->
-        <field name="name">Empleo</field>
-        <field name="url">/trabaja-con-nosotros</field>
-        <field name="parent_id" ref="website.main_menu"/>
-        <field name="sequence">70</field>
     </record>
 </odoo>

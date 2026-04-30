@@ -53,7 +53,8 @@ class WebsiteAvanzoscSitemap(Website):
         {'path': '/servicios', 'eu': True},
         {'path': '/academias', 'eu': True},
         {'path': '/conocenos', 'eu': True},
-        {'path': '/trabaja-con-nosotros', 'eu': True},
+        # /trabaja-con-nosotros eliminada post-v1 (sesión 2026-04-30);
+        # 301 a /conocenos vía data/redirects.xml. Fuera del sitemap.
         {'path': '/contacto', 'eu': True},
         {'path': '/kit-consulting', 'eu': False},  # D5 — ES-only
         {'path': '/aviso-legal', 'eu': True},
