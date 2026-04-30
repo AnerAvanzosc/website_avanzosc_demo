@@ -44,10 +44,17 @@ mergear las correcciones de vuelta a `i18n/eu.po`): ver
 ## Último entregable
 
 **Fecha**: 2026-04-30
-**Archivo**: `avanzosc-eu-validation-2026-04-30.xlsx` · 30 KB · 8 pestañas (INSTRUCCIONES + 7 bloques)
-**Preview PNGs**: [`screenshots/2026-04-30/`](screenshots/2026-04-30/) · 8 imágenes · 100 dpi A3 landscape · ~1.6 MB total
+**Archivo**: `avanzosc-eu-validation-2026-04-30.xlsx` · 8 pestañas (INSTRUCCIONES + 7 bloques)
+**Preview PNGs**: [`screenshots/2026-04-30/`](screenshots/2026-04-30/) · 8 imágenes · 100 dpi A3 landscape · ~1.7 MB total · **v2 post-fix row heights** (ver historial abajo)
 **Strings totales**: 201 (178 Q1 + 23 Q3)
 **Bloques**: ver tabla en runbook §5 — Entrega 2026-04-30.
+
+### Historial de versiones
+
+| Versión | Fecha | Commit | Cambio |
+|---|---|---|---|
+| v2 | 2026-04-30 | (post-fix) | Row heights calculadas para evitar text overlap visible en filas con strings largas (>50 chars en columnas ES/EU/Contexto). XLSX y PNGs regenerados. IDs Q1-XXXXXX estables. |
+| v1 | 2026-04-30 | `37870e7` | Versión inicial. Row heights = None (default openpyxl) → wrapText desbordaba detrás de la fila siguiente. PNGs entregadas en `350a4f0` documentaban el problema. |
 
 ## Script generador
 

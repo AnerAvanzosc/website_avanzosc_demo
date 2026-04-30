@@ -64,6 +64,7 @@ fallback `B8_OTROS` (que el revisor verá como pestaña separada).
 """
 import hashlib
 import sys
+import textwrap
 
 import polib
 from openpyxl import Workbook
@@ -72,6 +73,22 @@ from openpyxl.utils import get_column_letter
 
 PO_PATH = '/opt/odoo/v14/workspace/website_avanzosc_demo/i18n/eu.po'
 OUT_PATH = '/opt/odoo/v14/workspace/website_avanzosc_demo/docs/q1-eu-validation/avanzosc-eu-validation-2026-04-30.xlsx'
+
+# ---------------------------------------------------------------------------
+# Row-height calculation constants (added 2026-04-30 fix to prevent text
+# overlap; openpyxl leaves row_dimensions[N].height = None by default and
+# wrapText=True does NOT auto-resize the row in OOXML — Excel/LibreOffice
+# render at default ~15pt and wrapped text overflows behind the next row).
+#
+# LINE_HEIGHT_PT: 11pt font + line-height ≈ 1.36 ≈ 15pt per visible line.
+# PADDING_PT: 4pt of breathing room (top + bottom combined).
+# PROPORTIONAL_FACTOR: monospace counting under-estimates how many chars
+# fit per line in proportional fonts (Inter/Calibri default in Excel).
+# Empirically 1.2 produces a tight fit without significant whitespace.
+# ---------------------------------------------------------------------------
+LINE_HEIGHT_PT = 15
+PADDING_PT = 4
+PROPORTIONAL_FACTOR = 1.2
 
 # Block definitions: (block_id, title, sheet_color, template_prefixes_or_keys, description)
 # Order matters: first match wins on multi-reference entries.
@@ -103,6 +120,40 @@ BLOCKS = [
 # Catch-all for entries that don't match any block above
 FALLBACK_BLOCK = ('B8_OTROS', 'Otros (sin bloque explícito)', 'EFEFEF', (),
                   'Strings cuya referencia no coincide con ningún bloque temático declarado. Revisar caso por caso.')
+
+
+def compute_row_height(cell_texts, col_widths_chars):
+    """Calculate row height in points to fit all wrapped text without overlap.
+
+    Args:
+      cell_texts: tuple of cell text strings, one per column in this row.
+      col_widths_chars: tuple of column widths in chars, same length as cell_texts.
+
+    Algorithm:
+      For each non-empty cell, count required visual lines as:
+        1 line per explicit '\\n' in text (multi-line cells like INSTRUCCIONES)
+        + lines required for wrapping each segment at effective_width chars
+      Take the maximum across all columns. Multiply by LINE_HEIGHT_PT and
+      add PADDING_PT.
+
+    Returns: float (points). Minimum LINE_HEIGHT_PT + PADDING_PT for
+    empty rows (covers spacers).
+    """
+    max_lines = 1
+    for text, col_w in zip(cell_texts, col_widths_chars):
+        text = str(text or '')
+        if not text:
+            continue
+        effective_w = max(1, int(col_w * PROPORTIONAL_FACTOR))
+        # Split on explicit newlines first, then wrap each segment.
+        segments = text.split('\n')
+        total = 0
+        for seg in segments:
+            wrapped = textwrap.wrap(seg, width=effective_w,
+                                    break_long_words=True, replace_whitespace=False)
+            total += len(wrapped) or 1
+        max_lines = max(max_lines, total)
+    return max_lines * LINE_HEIGHT_PT + PADDING_PT
 
 
 def make_id(msgid):
@@ -353,6 +404,7 @@ def write_instructions(ws, by_block, total_pending, anomaly_count):
     rows.append(('', '9. Convención del color amarillo claro', h2_font, None))
     rows.append(('', 'Las celdas con fondo amarillo claro son las que tú rellenas (EU FINAL y Notas).', fill_yellow, None))
 
+    instructions_col_widths = (4, 100)  # cols A and B widths in chars
     for i, (a, b, font, fill) in enumerate(rows, start=1):
         ws.cell(row=i, column=2, value=b)
         if font:
@@ -360,6 +412,8 @@ def write_instructions(ws, by_block, total_pending, anomaly_count):
         if fill:
             ws.cell(row=i, column=2).fill = fill
         ws.cell(row=i, column=2).alignment = Alignment(wrap_text=True, vertical='top')
+        # Calculate row height to fit wrapped text (only column B carries content here).
+        ws.row_dimensions[i].height = compute_row_height(('', b), instructions_col_widths)
 
 
 def write_block_sheet(wb, block, entries):
@@ -407,17 +461,37 @@ def write_block_sheet(wb, block, entries):
     for i, w in enumerate(widths, start=1):
         ws.column_dimensions[get_column_letter(i)].width = w
 
+    # Set heights for the title/description/banner rows that sit before the
+    # column header. Their content can be long (e.g. the LEGAL banner is one
+    # full sentence). Compute against width of column A merged across 6 cols
+    # (sum of widths = 12+50+50+50+30+45 = 237 chars).
+    merged_width_chars = sum(widths)
+    ws.row_dimensions[1].height = compute_row_height((title,) + ('',) * 5,
+                                                      (merged_width_chars,) + (0,) * 5)
+    ws.row_dimensions[2].height = compute_row_height((description,) + ('',) * 5,
+                                                      (merged_width_chars,) + (0,) * 5)
+    if block_id == 'B7_LEGAL':
+        ws.row_dimensions[3].height = compute_row_height(
+            ('⚠ ESPERAR Q3 ASESORÍA — bloque informativo, NO editar todavía',) + ('',) * 5,
+            (merged_width_chars,) + (0,) * 5)
+    # Header row needs default-ish height (column titles are short).
+    ws.row_dimensions[header_row].height = LINE_HEIGHT_PT + PADDING_PT
+
     # Sort entries by msgid for stable order
     entries_sorted = sorted(entries, key=lambda e: e.msgid.lower())
 
     # Data rows
     for row_idx, entry in enumerate(entries_sorted, start=header_row + 1):
-        ws.cell(row=row_idx, column=1, value=make_id(entry.msgid))
-        ws.cell(row=row_idx, column=2, value=entry.msgid)
-        ws.cell(row=row_idx, column=3, value=entry.msgstr)
-        ws.cell(row=row_idx, column=4, value='')
-        ws.cell(row=row_idx, column=5, value='')
-        ws.cell(row=row_idx, column=6, value=context_text(entry))
+        cell_values = (
+            make_id(entry.msgid),
+            entry.msgid,
+            entry.msgstr,
+            '',
+            '',
+            context_text(entry),
+        )
+        for col, v in enumerate(cell_values, start=1):
+            ws.cell(row=row_idx, column=col, value=v)
 
         # Yellow fill on EU FINAL + Notas
         ws.cell(row=row_idx, column=4).fill = fill_eu_final
@@ -428,6 +502,9 @@ def write_block_sheet(wb, block, entries):
             cell = ws.cell(row=row_idx, column=col)
             cell.alignment = Alignment(wrap_text=True, vertical='top')
             cell.border = border
+
+        # Calculate row height: max wrapped-line count across the 6 columns.
+        ws.row_dimensions[row_idx].height = compute_row_height(cell_values, tuple(widths))
 
     # Freeze header row
     ws.freeze_panes = ws.cell(row=header_row + 1, column=1)
