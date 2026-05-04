@@ -519,6 +519,71 @@ Para EU home: `lang_path='/eu_ES'`, `path='/'` → canonical = `/eu_ES` (sin tra
 
 Implementación en commit `[FIX] B4 SEO: hreflang home EU canonical, defense-in-depth (I4, D26)`.
 
+<a id="d27"></a>
+### D27 — Pieza A: hero decoration technical blueprint (grid de puntos + 3 líneas asimétricas)
+
+Sesión 2026-05-04. Orquestador autorizó decoración hero estilo «technical blueprint» sutil — grid de puntos en periferia + 3 líneas geométricas asimétricas con parallax. Estética seleccionada como diferenciación frente al cliché de blobs orgánicos translucidos SaaS 2024-2026 y por coherencia tonal con la tipografía geometric del módulo (Space Grotesk + JetBrains Mono) + sector industrial Odoo. Validada visualmente en 3 viewports (desktop 1440, tablet 768, mobile 375) con screenshots en `docs/audits/2026-05-04-a11y-seo/visual-pieza-a/`.
+
+**Composición visual**:
+
+- **Layer back — grid de puntos** (CSS `radial-gradient` + `mask-image`):
+  - Dots circulares de 1.5px cada 36px desktop / 44px mobile.
+  - Color `var(--neutral-300)` (#D3D7DC).
+  - Mask radial centrado: `radial-gradient(ellipse 90% 70% at center, transparent 0%, transparent 35%, black 90%)` — desvanece el centro dejando los dots solo en periferia, respetando el rectángulo donde vive el texto.
+  - Opacidad layer final 0.5 tras reveal.
+
+- **Layer front — 3 trazos SVG inline** (`viewBox="0 0 100 100"`, `preserveAspectRatio="none"`, `vector-effect="non-scaling-stroke"`):
+  - **Main**: `<path d="M -2 78 Q 50 90 102 72">` — Bézier suave atravesando el bottom 70-90% del hero, pasando UNDER el subtítulo + CTAs. Anchor periférico, marco visual.
+  - **Secondary 1**: `<path d="M 95 8 L 70 28">` — short diagonal top-right corner descendente.
+  - **Secondary 2**: `<path d="M -2 25 L 18 18">` — short diagonal top-left ascendente. Asimétrica vs Secondary 1 (diferente longitud + ángulo).
+  - Stroke `var(--neutral-500)` con `stroke-opacity: 0.2`.
+
+**Implementación clave** (decisiones técnicas):
+
+1. **CSS radial-gradient para dots, NO SVG `<pattern>`**: zero DOM weight, mask radial trivial via `mask-image`, responsive auto. SVG pattern aportaría flexibilidad que no necesitamos para grid uniforme.
+
+2. **`vector-effect="non-scaling-stroke"`**: con `preserveAspectRatio="none"` el stroke se distorsionaría (~14× horizontal × 6× vertical en 1440×600). Non-scaling-stroke mantiene 1px en pantalla independiente del stretch.
+
+3. **Color líneas `--neutral-500 @ 0.2`**: el módulo no tiene `--neutral-400` en `_variables.scss` (solo 100, 300, 500, 700, 900). `--neutral-500 @ stroke-opacity: 0.2` produce el equivalente visual del «neutral-400 @ 0.25» del briefing inicial.
+
+4. **Parallax vanilla scroll + rAF, NO ScrollTrigger**: precedente `static/src/js/snippets/timeline.js:14-22` documentó que ScrollTrigger requiere scroller-proxy + sync con Lenis (~30 líneas integración). Vanilla scroll + rAF es 10 líneas, sin scope expansion ni dependencia adicional. ScrollTrigger sigue cargado en `views/assets.xml` head_external_assets sin uso (~25KB initial-load externo) — candidato a retirar en commit aparte si no se usa en próximas piezas.
+
+5. **Listener bound a `#wrapwrap`, NO `window`** (descubierto empíricamente): Lenis 1.0.42 con `wrapper: wrapwrap, content: wrapwrap` (per `static/src/js/main.js:38-42`) hace que el scroll real ocurra en `#wrapwrap`. `window.scroll` events nunca disparan bajo este setup. Listener correcto: `var scrollTarget = document.getElementById('wrapwrap') || window` con fallback defensivo.
+
+6. **Toggle class `is-decoration-revealed` simultáneo al letter-stagger**: la decoración aparece con fade 600ms al MISMO tiempo que arranca el letter-stagger del claim (no antes, no después). La atmósfera es del momento de arrival, no compite con el protagonista. SCSS `transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1)` + class toggle JS.
+
+7. **Mobile (≤767px)**: densidad de dots reducida (44px vs 36px) + ocultas las 2 líneas secundarias. Solo queda main bottom curve. En viewport 375px las diagonales caen demasiado cerca del texto y agregan ruido sin valor decorativo.
+
+8. **`prefers-reduced-motion`**: dots y líneas en estado final inmediato (visibles, opacity completa), parallax desactivado, transform: none !important. SCSS `@include reduced-motion` cubre todos los layers.
+
+**Iteración del approach JS** (documentada en commit body):
+1. Listener inicial en `window.addEventListener('scroll', ...)`. **No fire** — Lenis configura `wrapwrap` como scrollable, no window.
+2. Listener corregido a `wrapwrap.addEventListener('scroll', ...)`. Pero bundle stale: `--dev=all` no detectó el cambio post-smoke; primer test seguía mostrando OLD listener.
+3. Re-smoke fuerza regen del bundle. Listener nuevo pickup'd. Parallax functional (verificado empíricamente: `wrapwrap.scrollTop=200` → grid `translate3d(0px, -1.02%, 0px)`, lines `translate3d(0px, -3.06%, 0px)` con math `progress=0.204`).
+
+**Alternativas descartadas**:
+
+- **Blobs orgánicos translucidos** (cliché SaaS 2024-2026): choque tonal con la tipografía geometric del módulo + B2B industrial. Pierde diferenciación visual.
+- **Mancha papel manchado / texturas analógicas**: demasiado artesanal para audiencia B2B industrial; arriesga señal «artesanal pequeña empresa» en vez de «consultora técnica seria».
+- **GSAP ScrollTrigger para parallax**: overhead Lenis scroller-proxy ya documentado como malo en `timeline.js`. Vanilla scroll + rAF es funcionalmente equivalente, 10 líneas, sin caveats.
+
+**Performance** (Lighthouse comparativo):
+
+| Form | Pre-Pieza A | Post-Pieza A | Δ | Threshold | Veredicto |
+|---|---|---|---|---|---|
+| Desktop | LCP 3.2s, Perf 77 | LCP 3.0s, Perf 79 | -0.2s | <500ms | ✓ within (mejora ligera por variance) |
+| Mobile | LCP 16.8s, Perf 52 | LCP 17.1s, Perf 45 | +0.3s | <1s | ✓ within (regresión 300ms < 1000ms) |
+
+Mobile Perf score caída 52→45 (-7) atribuible a TBT variance localhost. LCP element sigue siendo el H1 claim (no la decoración). Localhost no representativo per `deferred-ttfb-prod`; revalidar post-switchover Phase 10.6.
+
+**Trigger reapertura**: si tras switchover Plausible muestra bounce rate hero alto / dwell time bajo en home, evaluar si la decoración no está comunicando lo previsto y considerar refinamiento o retirada. La estética «technical blueprint» asume que el visitante B2B industrial la lee como «esta web entiende mi sector»; si analytics dicen lo contrario, abrir D27' iterando sobre la composición.
+
+**Validación**:
+- Smoke verde (`docs/smoke-tests/sprint-pieza-a.log` + `sprint-pieza-a-retry.log`).
+- axe-core spot check `/`: 0 violations nuevas (única queda el color-contrast del `.btn-primary` G1 deferido pre-existente).
+- Verificación dinámica: `aria-hidden="true"` ✓, `pointer-events: none` ✓ ambos layers, parallax math correcto, reduced-motion CSS rules presentes.
+- 4 screenshots desktop+tablet+mobile+scrolled en `docs/audits/2026-05-04-a11y-seo/visual-pieza-a/`.
+
 ---
 
 ## 6. Decisiones diferidas con criterio de reapertura

@@ -54,12 +54,70 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
             var claim = section.querySelector('.s_avanzosc_hero_claim');
             var subtitle = section.querySelector('.s_avanzosc_hero_subtitle');
             var actions = section.querySelector('.s_avanzosc_hero_actions');
+            // Pieza A — refs a los 2 layers de decoración (CSS grid + SVG lines).
+            var gridLayer = section.querySelector('.s_avanzosc_hero_grid');
+            var linesLayer = section.querySelector('.s_avanzosc_hero_lines');
             var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
             if (reducedMotion) {
-                // SCSS @include reduced-motion fuerza visibility; nada que hacer.
+                // SCSS @include reduced-motion fuerza visibility (incl. layers
+                // Pieza A en estado final); nada que hacer.
                 return this._super.apply(this, arguments);
             }
+
+            // Pieza A — Parallax: vanilla scroll listener + rAF debounce.
+            // Razón de NO usar GSAP ScrollTrigger (aunque el plugin está
+            // cargado en assets.xml head): timeline.js (Task 3.8) documenta
+            // explícitamente que ScrollTrigger requiere scroller-proxy +
+            // sync con Lenis (~30 líneas integración) para funcionar
+            // correctamente en el `#wrapwrap` de Odoo. Escolhar IO-style
+            // o vanilla scroll fue la decisión del módulo. Para parallax
+            // continuo (no one-shot) IO no aplica (no da progreso continuo);
+            // vanilla scroll + rAF es el patrón nativo equivalente, 10 líneas,
+            // sin scope expansion ni dependencia adicional.
+            //
+            // Mecánica: al scrollear, leemos rect.top del hero relativo al
+            // viewport, computamos progress 0→1 (0 = hero en top viewport,
+            // 1 = hero scrolleado completo fuera del viewport por arriba),
+            // y aplicamos translate3d a los 2 layers. translate3d (no
+            // translate Y simple) fuerza GPU layer composition, manteniendo
+            // 60fps incluso con muchos elementos del hero animando.
+            //
+            // Scroll target: en Odoo 14 con Lenis configurado en main.js
+            // (`wrapper: wrapwrap, content: wrapwrap`), el elemento que
+            // realmente scrollea es `#wrapwrap`, NO `window`. Los scroll
+            // events `window.addEventListener('scroll', …)` NO disparan
+            // bajo este setup (verificado empíricamente sesión 2026-05-04).
+            // El listener correcto va en `#wrapwrap`. Sin Lenis (e.g.,
+            // reduced-motion donde main.js no instancia Lenis) `#wrapwrap`
+            // sigue siendo el scrollable element del shell de Odoo, así
+            // que el listener funciona universalmente.
+            // -----------------------------------------------------------------
+            var scrollTarget = document.getElementById('wrapwrap') || window;
+            var parallaxTicking = false;
+            function applyParallax() {
+                var rect = section.getBoundingClientRect();
+                // progress 0→1 mientras el hero sale del viewport por arriba.
+                var heroHeight = rect.height || 1;
+                var progress = Math.max(0, Math.min(1, -rect.top / heroHeight));
+                // Líneas: -15% al fully scrolled past, dots: -5% (más lento atrás).
+                if (linesLayer) {
+                    linesLayer.style.transform = 'translate3d(0, ' + (progress * -15) + '%, 0)';
+                }
+                if (gridLayer) {
+                    gridLayer.style.transform = 'translate3d(0, ' + (progress * -5) + '%, 0)';
+                }
+                parallaxTicking = false;
+            }
+            function onScroll() {
+                if (!parallaxTicking) {
+                    window.requestAnimationFrame(applyParallax);
+                    parallaxTicking = true;
+                }
+            }
+            scrollTarget.addEventListener('scroll', onScroll, { passive: true });
+            // Apply once at init (hero may not be at viewport top on hard reload).
+            applyParallax();
 
             if (typeof window.gsap === 'undefined') {
                 console.warn('[website_avanzosc_demo] GSAP not loaded, hero animation skipped');
@@ -70,6 +128,11 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
                     subtitle.style.transform = 'none';
                 }
                 if (actions) actions.style.opacity = '1';
+                // Pieza A — sin GSAP igual revelamos la decoración para no
+                // dejar el hero pelado. El SCSS transition cubre el fade-in
+                // suave; el listener de scroll para parallax sigue activo
+                // (no depende de GSAP).
+                section.classList.add('is-decoration-revealed');
                 return this._super.apply(this, arguments);
             }
 
@@ -86,6 +149,15 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
             // Los chars individuales (post-Splitting) se animan; si Splitting
             // no corrió, animamos el claim entero.
             gsap.set(claim, { opacity: 1 });
+
+            // Pieza A — Disparar el fade-in de la decoración SIMULTÁNEO al
+            // arranque del letter-stagger (no antes, no después). El SCSS
+            // tiene transition: opacity 600ms cubic-bezier ya configurado;
+            // toggle de la clase activa el reveal. Coordinar con el inicio
+            // del letter-stagger (no con su fin) preserva la sensación del
+            // claim como protagonista — la atmósfera aparece en el mismo
+            // momento del «arrival».
+            section.classList.add('is-decoration-revealed');
 
             var tl = gsap.timeline();
 

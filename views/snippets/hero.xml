@@ -57,6 +57,38 @@
         </t>
 
         <section class="s_avanzosc_hero" data-name="Avanzosc Hero">
+            <!-- Pieza A — Hero decoration (technical blueprint, sutil).
+                 2 layers absolutamente posicionados detrás del contenido,
+                 pointer-events:none + aria-hidden=true para que no
+                 interfieran con interaction ni screen readers. El claim
+                 sigue siendo el LCP element semántico.
+                 Layer 1 (atrás): grid de puntos vía CSS radial-gradient
+                 + mask que desvanece el centro.
+                 Layer 2 (delante): SVG inline con 3 trazos asimétricos
+                 que enmarcan el texto sin cruzarlo.
+                 Parallax + entrance fade gestionados desde hero.js. -->
+            <div class="s_avanzosc_hero_grid" aria-hidden="true"></div>
+            <svg class="s_avanzosc_hero_lines"
+                 viewBox="0 0 100 100"
+                 preserveAspectRatio="none"
+                 aria-hidden="true"
+                 focusable="false">
+                <!-- Main: long curve bottom, passing under text area. -->
+                <path class="s_avanzosc_hero_lines_main"
+                      d="M -2 78 Q 50 90 102 72"
+                      fill="none" stroke="currentColor" stroke-width="1"
+                      vector-effect="non-scaling-stroke"/>
+                <!-- Secondary 1: short diagonal top-right. -->
+                <path class="s_avanzosc_hero_lines_secondary"
+                      d="M 95 8 L 70 28"
+                      fill="none" stroke="currentColor" stroke-width="1"
+                      vector-effect="non-scaling-stroke"/>
+                <!-- Secondary 2: short diagonal top-left (hidden mobile). -->
+                <path class="s_avanzosc_hero_lines_secondary s_avanzosc_hero_lines_secondary_topleft"
+                      d="M -2 25 L 18 18"
+                      fill="none" stroke="currentColor" stroke-width="1"
+                      vector-effect="non-scaling-stroke"/>
+            </svg>
             <div class="container">
                 <div class="s_avanzosc_hero_inner">
                     <h1 class="s_avanzosc_hero_claim"><t t-esc="hero_claim"/></h1>

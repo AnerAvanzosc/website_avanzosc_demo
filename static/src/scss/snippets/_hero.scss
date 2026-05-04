@@ -12,6 +12,13 @@
     padding: 6rem 0 4rem 0;
     display: flex;
     align-items: center;
+    // Pieza A — contenedor relativo para los 2 layers de decoración
+    // (.s_avanzosc_hero_grid + .s_avanzosc_hero_lines) absolutamente
+    // posicionados detrás del contenido. overflow hidden recorta los
+    // trazos SVG que se extienden más allá del viewBox via Q-bezier
+    // (los anchors están a -2 / 102 en viewBox 0-100).
+    position: relative;
+    overflow: hidden;
 
     @media (max-width: 767.98px) {
         min-height: 480px;
@@ -19,9 +26,106 @@
     }
 }
 
+// -----------------------------------------------------------------------------
+// Pieza A — Hero decoration: grid de puntos + líneas geométricas blueprint
+// -----------------------------------------------------------------------------
+// Decisión SVG <pattern> vs CSS radial-gradient para los dots:
+//   Elegido CSS radial-gradient. Razones: (a) zero DOM weight (1 div vs
+//   svg+pattern+rect), (b) el mask radial-gradient para fade-out central
+//   es trivial en CSS via `mask-image`, encadena con el bg sin gymnastics
+//   SVG, (c) responsive auto al cambiar el contenedor sin recalcular
+//   viewBox. SVG <pattern> aportaría flexibilidad (dots no uniformes,
+//   accesible a GSAP) que aquí no necesitamos — patrón uniforme + mask.
+// -----------------------------------------------------------------------------
+.s_avanzosc_hero_grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    // Dots circulares de 1.5px cada 36px. var(--neutral-300) = #D3D7DC.
+    background-image: radial-gradient(
+        circle at center,
+        var(--neutral-300, #D3D7DC) 1.5px,
+        transparent 1.5px
+    );
+    background-size: 36px 36px;
+    // Mask radial centrado: el centro queda transparente (sin dots),
+    // los bordes opacos (con dots). Ellipse 90×70% deja un "halo" oval
+    // que respeta el rectángulo central donde vive el texto.
+    -webkit-mask-image: radial-gradient(
+        ellipse 90% 70% at center,
+        transparent 0%,
+        transparent 35%,
+        black 90%
+    );
+    mask-image: radial-gradient(
+        ellipse 90% 70% at center,
+        transparent 0%,
+        transparent 35%,
+        black 90%
+    );
+    // Opacidad final del layer (los dots ya son neutral-300 light gray).
+    // 0.5 deja la decoración visible pero no compitiendo con el texto.
+    // Inicial 0: hero.js anima 0 → 0.5 al mismo tiempo que el letter-stagger.
+    opacity: 0;
+    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+
+    @media (max-width: 767.98px) {
+        // Mobile: densidad reducida (44px vs 36px) para que la grid no
+        // se vea claustrofóbica en viewport estrecho.
+        background-size: 44px 44px;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Líneas geométricas (SVG inline en hero.xml)
+// -----------------------------------------------------------------------------
+// 3 trazos asimétricos: 1 main bottom curve + 2 secondary diagonals top.
+// Color: var(--neutral-500) #7A828B con opacity 0.2 → efectivamente el
+// "neutral-400 @ 0.25" del briefing (--neutral-400 no existe en el
+// palette del módulo; --neutral-500 con opacity ajustada produce el
+// mismo tono visible).
+// stroke-width: 1 con vector-effect: non-scaling-stroke para mantener
+// grosor constante 1px al estirar viewBox (preserveAspectRatio=none).
+// -----------------------------------------------------------------------------
+.s_avanzosc_hero_lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    color: var(--neutral-500, #7A828B);
+    opacity: 0;
+    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+
+    .s_avanzosc_hero_lines_main {
+        stroke-opacity: 0.2;
+    }
+
+    .s_avanzosc_hero_lines_secondary {
+        stroke-opacity: 0.2;
+    }
+
+    @media (max-width: 767.98px) {
+        // Mobile: ocultar las 2 secundarias, mantener solo la main bottom curve.
+        // Razón: en viewport estrecho las diagonales top-left/top-right caen
+        // demasiado cerca del texto y agregan ruido sin valor decorativo.
+        .s_avanzosc_hero_lines_secondary {
+            display: none;
+        }
+    }
+}
+
 .s_avanzosc_hero_inner {
     width: 100%;
     max-width: 56rem;  // ~896px — limita el ancho del texto para legibilidad.
+    // Pieza A: z-index sobre los 2 layers de decoración (que están en
+    // 0 y 1) para garantizar que el texto del hero gana stacking.
+    position: relative;
+    z-index: 2;
 }
 
 // -----------------------------------------------------------------------------
@@ -149,5 +253,35 @@
             opacity: 1;
             transform: none;
         }
+        // Pieza A: decoración visible inmediatamente sin animación + sin
+        // parallax (hero.js skip JS bajo reduced-motion). Estado final
+        // directo idéntico al post-entrance de los usuarios sin la
+        // preferencia activa.
+        .s_avanzosc_hero_grid {
+            opacity: 0.5;
+            transition: none;
+            transform: none !important;
+        }
+        .s_avanzosc_hero_lines {
+            opacity: 1;
+            transition: none;
+            transform: none !important;
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Estado revealed (clase añadida por hero.js cuando arranca el letter-stagger)
+// -----------------------------------------------------------------------------
+// La JS añade `.is-decoration-revealed` al <section> simultáneo al inicio del
+// letter-stagger. Sin este toggle los layers se quedan en opacity 0 (estado
+// SCSS base, patrón D19: hidden + JS reveal).
+// -----------------------------------------------------------------------------
+.s_avanzosc_hero.is-decoration-revealed {
+    .s_avanzosc_hero_grid {
+        opacity: 0.5;
+    }
+    .s_avanzosc_hero_lines {
+        opacity: 1;
     }
 }
