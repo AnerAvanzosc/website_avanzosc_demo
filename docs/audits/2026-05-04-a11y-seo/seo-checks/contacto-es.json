@@ -1,0 +1,81 @@
+{
+  "url": "/contacto",
+  "lang": "es",
+  "title": "Avanzosc · Contacto | My Website",
+  "titleLen": 32,
+  "metaDescription": null,
+  "metaDescriptionLen": 0,
+  "htmlLang": "es-ES",
+  "htmlLangCorrect": true,
+  "canonical": "http://localhost:14070/contacto",
+  "canonicalCorrect": true,
+  "hreflang": [
+    {
+      "hreflang": "eu",
+      "href": "http://localhost:14070/eu_ES/contacto"
+    },
+    {
+      "hreflang": "es",
+      "href": "http://localhost:14070/contacto"
+    },
+    {
+      "hreflang": "x-default",
+      "href": "http://localhost:14070/contacto"
+    }
+  ],
+  "hreflangValid": true,
+  "og": {
+    "title": "Avanzosc · Contacto | My Website",
+    "description": null,
+    "image": "http://localhost:14070/web/image/website/1/logo?unique=a1306c1",
+    "url": "http://localhost:14070/contacto",
+    "type": "website"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "title": "Avanzosc · Contacto | My Website",
+    "description": null
+  },
+  "h1Count": 1,
+  "h1Texts": [
+    "Hablemos de lo tuyo."
+  ],
+  "headingHierarchy": [
+    {
+      "level": 1,
+      "text": "Hablemos de lo tuyo."
+    },
+    {
+      "level": 2,
+      "text": "Canales directos"
+    },
+    {
+      "level": 5,
+      "text": "Soluciones"
+    },
+    {
+      "level": 5,
+      "text": "Empresa"
+    },
+    {
+      "level": 5,
+      "text": "Legal"
+    }
+  ],
+  "headingSkips": [
+    {
+      "from": 2,
+      "to": 5,
+      "text": "Soluciones"
+    }
+  ],
+  "imgs": {
+    "total": 3,
+    "withAlt": 3,
+    "withEmptyAlt": 0,
+    "missingAlt": 0,
+    "missingAltSrcs": []
+  },
+  "forms": 1,
+  "httpStatus": 200
+}

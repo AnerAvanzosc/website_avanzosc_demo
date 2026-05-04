@@ -1,0 +1,7 @@
+{
+  "status": 200,
+  "contentType": "text/plain; charset=utf-8",
+  "body": "# robots.txt — website_avanzosc_demo\n# Phase 10.2 — controlled by `controllers/main.py:robots_txt`.\n#\n# *** DURANTE QA EN nueva.avanzosc.es: Disallow total para evitar indexación. ***\n# *** ANTES DEL SWITCHOVER (Phase 10.5/10.6): cambiar a Allow: / y verificar. ***\n#\nUser-agent: *\nDisallow: /\n\nSitemap: http://localhost:14070/sitemap.xml\n",
+  "disallowsAll": true,
+  "sitemapDeclared": true
+}

@@ -1,0 +1,175 @@
+{
+  "url": "http://localhost:14070/eu_ES/",
+  "timestamp": "2026-05-04T06:51:07.853Z",
+  "violations": [
+    {
+      "id": "aria-required-parent",
+      "impact": "critical",
+      "tags": [
+        "cat.aria",
+        "wcag2a",
+        "wcag131",
+        "EN-301-549",
+        "EN-9.1.3.1",
+        "RGAAv4",
+        "RGAA-9.3.1"
+      ],
+      "description": "Ensure elements with an ARIA role that require parent roles are contained by them",
+      "help": "Certain ARIA roles must be contained by particular parents",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-required-parent?application=axeAPI",
+      "nodeCount": 5,
+      "sampleNodes": [
+        {
+          "html": "<a role=\"menuitem\" href=\"/eu_ES/\" class=\"nav-link active\">\n            <span>Hasiera</span>\n        </a>",
+          "target": [
+            ".active"
+          ],
+          "failureSummary": "Fix any of the following:\n  Required ARIA parents role not present: menu, menubar, group"
+        },
+        {
+          "html": "<a role=\"menuitem\" href=\"/eu_ES/tienda\" class=\"nav-link \">\n            <span>Denda</span>\n        </a>",
+          "target": [
+            ".nav-link[href$=\"tienda\"][role=\"menuitem\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Required ARIA parents role not present: menu, menubar, group"
+        },
+        {
+          "html": "<a role=\"menuitem\" href=\"/eu_ES/formacion\" class=\"nav-link \">\n            <span>Formakuntza</span>\n        </a>",
+          "target": [
+            ".nav-link[href$=\"formacion\"][role=\"menuitem\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Required ARIA parents role not present: menu, menubar, group"
+        }
+      ]
+    },
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT",
+        "RGAAv4",
+        "RGAA-3.2.1"
+      ],
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI",
+      "nodeCount": 2,
+      "sampleNodes": [
+        {
+          "html": "<span>Konponbideak</span>",
+          "target": [
+            "a[href=\"#\"] > span"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.45 (foreground color: #8a8a8a, background color: #ffffff, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "html": "<a href=\"/eu_ES/clientes\" class=\"btn btn-primary ml-4 s_avanzosc_acceso_clientes\">\n                Acceso clientes\n            </a>",
+          "target": [
+            ".ml-4"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.47 (foreground color: #ffffff, background color: #e85d2f, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "id": "heading-order",
+      "impact": "moderate",
+      "tags": [
+        "cat.semantics",
+        "best-practice"
+      ],
+      "description": "Ensure the order of headings is semantically correct",
+      "help": "Heading levels should only increase by one",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/heading-order?application=axeAPI",
+      "nodeCount": 2,
+      "sampleNodes": [
+        {
+          "html": "<h3 class=\"s_avanzosc_sectores_heading\">Industriala</h3>",
+          "target": [
+            ".s_avanzosc_sectores_card[href$=\"industrial\"] > .s_avanzosc_sectores_heading"
+          ],
+          "failureSummary": "Fix any of the following:\n  Heading order invalid"
+        },
+        {
+          "html": "<h5 class=\"s_avanzosc_footer_heading\">Konponbideak</h5>",
+          "target": [
+            ".col-lg-3.mb-4.col-md-6:nth-child(2) > h5"
+          ],
+          "failureSummary": "Fix any of the following:\n  Heading order invalid"
+        }
+      ]
+    },
+    {
+      "id": "meta-viewport",
+      "impact": "moderate",
+      "tags": [
+        "cat.sensory-and-visual-cues",
+        "wcag2aa",
+        "wcag144",
+        "EN-301-549",
+        "EN-9.1.4.4",
+        "ACT",
+        "RGAAv4",
+        "RGAA-10.4.2"
+      ],
+      "description": "Ensure <meta name=\"viewport\"> does not disable text scaling and zooming",
+      "help": "Zooming and scaling must not be disabled",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/meta-viewport?application=axeAPI",
+      "nodeCount": 1,
+      "sampleNodes": [
+        {
+          "html": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=no\">",
+          "target": [
+            "meta[name=\"viewport\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  user-scalable=no on <meta> tag disables zooming on mobile devices"
+        }
+      ]
+    },
+    {
+      "id": "scrollable-region-focusable",
+      "impact": "serious",
+      "tags": [
+        "cat.keyboard",
+        "wcag2a",
+        "wcag211",
+        "wcag213",
+        "TTv5",
+        "TT4.a",
+        "EN-301-549",
+        "EN-9.2.1.1",
+        "EN-9.2.1.3",
+        "RGAAv4",
+        "RGAA-7.3.2"
+      ],
+      "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+      "help": "Scrollable region must have keyboard access",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/scrollable-region-focusable?application=axeAPI",
+      "nodeCount": 1,
+      "sampleNodes": [
+        {
+          "html": "<div class=\"s_avanzosc_timeline_track\">",
+          "target": [
+            ".s_avanzosc_timeline_track"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+        }
+      ]
+    }
+  ],
+  "incompleteCount": 1,
+  "incomplete": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodeCount": 7
+    }
+  ]
+}

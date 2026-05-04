@@ -1,0 +1,67 @@
+{
+  "allTitles": {
+    "Home | My Website": [
+      "home-es",
+      "home-eu"
+    ],
+    "Avanzosc · Industrial | My Website": [
+      "industrial-es",
+      "industrial-eu"
+    ],
+    "Avanzosc · Distribución | My Website": [
+      "distribucion-es",
+      "distribucion-eu"
+    ],
+    "Avanzosc · Servicios | My Website": [
+      "servicios-es",
+      "servicios-eu"
+    ],
+    "Avanzosc · Contacto | My Website": [
+      "contacto-es",
+      "contacto-eu"
+    ],
+    "Avanzosc · Kit Consulting | My Website": [
+      "kit-consulting-es"
+    ],
+    "Avanzosc · Conócenos | My Website": [
+      "conocenos-eu"
+    ]
+  },
+  "duplicates": [
+    [
+      "Home | My Website",
+      [
+        "home-es",
+        "home-eu"
+      ]
+    ],
+    [
+      "Avanzosc · Industrial | My Website",
+      [
+        "industrial-es",
+        "industrial-eu"
+      ]
+    ],
+    [
+      "Avanzosc · Distribución | My Website",
+      [
+        "distribucion-es",
+        "distribucion-eu"
+      ]
+    ],
+    [
+      "Avanzosc · Servicios | My Website",
+      [
+        "servicios-es",
+        "servicios-eu"
+      ]
+    ],
+    [
+      "Avanzosc · Contacto | My Website",
+      [
+        "contacto-es",
+        "contacto-eu"
+      ]
+    ]
+  ]
+}

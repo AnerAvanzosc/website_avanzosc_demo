@@ -1,0 +1,81 @@
+{
+  "url": "/eu_ES/contacto",
+  "lang": "eu",
+  "title": "Avanzosc · Contacto | My Website",
+  "titleLen": 32,
+  "metaDescription": null,
+  "metaDescriptionLen": 0,
+  "htmlLang": "eu-ES",
+  "htmlLangCorrect": true,
+  "canonical": "http://localhost:14070/eu_ES/contacto",
+  "canonicalCorrect": true,
+  "hreflang": [
+    {
+      "hreflang": "eu",
+      "href": "http://localhost:14070/eu_ES/contacto"
+    },
+    {
+      "hreflang": "es",
+      "href": "http://localhost:14070/contacto"
+    },
+    {
+      "hreflang": "x-default",
+      "href": "http://localhost:14070/contacto"
+    }
+  ],
+  "hreflangValid": true,
+  "og": {
+    "title": "Avanzosc · Contacto | My Website",
+    "description": null,
+    "image": "http://localhost:14070/web/image/website/1/logo?unique=a1306c1",
+    "url": "http://localhost:14070/eu_ES/contacto",
+    "type": "website"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "title": "Avanzosc · Contacto | My Website",
+    "description": null
+  },
+  "h1Count": 1,
+  "h1Texts": [
+    "Hitz egin dezagun zureaz."
+  ],
+  "headingHierarchy": [
+    {
+      "level": 1,
+      "text": "Hitz egin dezagun zureaz."
+    },
+    {
+      "level": 2,
+      "text": "Kanal zuzenak"
+    },
+    {
+      "level": 5,
+      "text": "Konponbideak"
+    },
+    {
+      "level": 5,
+      "text": "Enpresa"
+    },
+    {
+      "level": 5,
+      "text": "Legala"
+    }
+  ],
+  "headingSkips": [
+    {
+      "from": 2,
+      "to": 5,
+      "text": "Konponbideak"
+    }
+  ],
+  "imgs": {
+    "total": 3,
+    "withAlt": 3,
+    "withEmptyAlt": 0,
+    "missingAlt": 0,
+    "missingAltSrcs": []
+  },
+  "forms": 1,
+  "httpStatus": 200
+}

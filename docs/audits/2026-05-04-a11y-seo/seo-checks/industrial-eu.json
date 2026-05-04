@@ -1,0 +1,93 @@
+{
+  "url": "/eu_ES/industrial",
+  "lang": "eu",
+  "title": "Avanzosc · Industrial | My Website",
+  "titleLen": 34,
+  "metaDescription": null,
+  "metaDescriptionLen": 0,
+  "htmlLang": "eu-ES",
+  "htmlLangCorrect": true,
+  "canonical": "http://localhost:14070/eu_ES/industrial",
+  "canonicalCorrect": true,
+  "hreflang": [
+    {
+      "hreflang": "eu",
+      "href": "http://localhost:14070/eu_ES/industrial"
+    },
+    {
+      "hreflang": "es",
+      "href": "http://localhost:14070/industrial"
+    },
+    {
+      "hreflang": "x-default",
+      "href": "http://localhost:14070/industrial"
+    }
+  ],
+  "hreflangValid": true,
+  "og": {
+    "title": "Avanzosc · Industrial | My Website",
+    "description": null,
+    "image": "http://localhost:14070/web/image/website/1/logo?unique=a1306c1",
+    "url": "http://localhost:14070/eu_ES/industrial",
+    "type": "website"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "title": "Avanzosc · Industrial | My Website",
+    "description": null
+  },
+  "h1Count": 1,
+  "h1Texts": [
+    "Odoo industriala lantegian, ez PowerPoint-en."
+  ],
+  "headingHierarchy": [
+    {
+      "level": 1,
+      "text": "Odoo industriala lantegian, ez PowerPoint-en."
+    },
+    {
+      "level": 2,
+      "text": "Industria-gaitasunak"
+    },
+    {
+      "level": 2,
+      "text": "Caso de éxito"
+    },
+    {
+      "level": 3,
+      "text": "Metal-mekanikoaren ekoizlea (50-200 langile)"
+    },
+    {
+      "level": 2,
+      "text": "Hitz egingo dugu?"
+    },
+    {
+      "level": 5,
+      "text": "Konponbideak"
+    },
+    {
+      "level": 5,
+      "text": "Enpresa"
+    },
+    {
+      "level": 5,
+      "text": "Legala"
+    }
+  ],
+  "headingSkips": [
+    {
+      "from": 2,
+      "to": 5,
+      "text": "Konponbideak"
+    }
+  ],
+  "imgs": {
+    "total": 3,
+    "withAlt": 3,
+    "withEmptyAlt": 0,
+    "missingAlt": 0,
+    "missingAltSrcs": []
+  },
+  "forms": 0,
+  "httpStatus": 200
+}

@@ -1,0 +1,28 @@
+{
+  "status": 200,
+  "contentType": "application/xml; charset=utf-8",
+  "locCount": 21,
+  "locs": [
+    "http://localhost:14070/",
+    "http://localhost:14070/eu_ES/",
+    "http://localhost:14070/industrial",
+    "http://localhost:14070/eu_ES/industrial",
+    "http://localhost:14070/distribucion",
+    "http://localhost:14070/eu_ES/distribucion",
+    "http://localhost:14070/servicios",
+    "http://localhost:14070/eu_ES/servicios",
+    "http://localhost:14070/academias",
+    "http://localhost:14070/eu_ES/academias",
+    "http://localhost:14070/conocenos",
+    "http://localhost:14070/eu_ES/conocenos",
+    "http://localhost:14070/contacto",
+    "http://localhost:14070/eu_ES/contacto",
+    "http://localhost:14070/kit-consulting",
+    "http://localhost:14070/aviso-legal",
+    "http://localhost:14070/eu_ES/aviso-legal",
+    "http://localhost:14070/politica-privacidad",
+    "http://localhost:14070/eu_ES/politica-privacidad",
+    "http://localhost:14070/politica-cookies",
+    "http://localhost:14070/eu_ES/politica-cookies"
+  ]
+}

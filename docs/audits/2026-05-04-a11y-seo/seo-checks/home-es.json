@@ -1,0 +1,154 @@
+{
+  "url": "/",
+  "lang": "es",
+  "title": "Home | My Website",
+  "titleLen": 17,
+  "metaDescription": null,
+  "metaDescriptionLen": 0,
+  "htmlLang": "es-ES",
+  "htmlLangCorrect": true,
+  "canonical": "http://localhost:14070/",
+  "canonicalCorrect": true,
+  "hreflang": [
+    {
+      "hreflang": "eu",
+      "href": "http://localhost:14070/eu_ES"
+    },
+    {
+      "hreflang": "es",
+      "href": "http://localhost:14070/"
+    },
+    {
+      "hreflang": "x-default",
+      "href": "http://localhost:14070/"
+    }
+  ],
+  "hreflangValid": true,
+  "og": {
+    "title": "Home | My Website",
+    "description": null,
+    "image": "http://localhost:14070/web/image/website/1/logo?unique=a1306c1",
+    "url": "http://localhost:14070/",
+    "type": "website"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "title": "Home | My Website",
+    "description": null
+  },
+  "h1Count": 1,
+  "h1Texts": [
+    "Odoo industrial de verdad, desde 2008."
+  ],
+  "headingHierarchy": [
+    {
+      "level": 1,
+      "text": "Odoo industrial de verdad, desde 2008."
+    },
+    {
+      "level": 3,
+      "text": "Industrial"
+    },
+    {
+      "level": 3,
+      "text": "Distribución"
+    },
+    {
+      "level": 3,
+      "text": "Servicios"
+    },
+    {
+      "level": 3,
+      "text": "Academias"
+    },
+    {
+      "level": 2,
+      "text": "Kit Consulting"
+    },
+    {
+      "level": 2,
+      "text": "Caso de éxito"
+    },
+    {
+      "level": 3,
+      "text": "Fabricante metal-mecánico (50-200 empleados)"
+    },
+    {
+      "level": 2,
+      "text": "Trayectoria"
+    },
+    {
+      "level": 3,
+      "text": "Fundación en Azkoitia"
+    },
+    {
+      "level": 3,
+      "text": "Primeros módulos OCA"
+    },
+    {
+      "level": 3,
+      "text": "Migración a Odoo 8"
+    },
+    {
+      "level": 3,
+      "text": "Integraciones MES / SCADA"
+    },
+    {
+      "level": 3,
+      "text": "Soporte y formación remota"
+    },
+    {
+      "level": 3,
+      "text": "500+ módulos publicados"
+    },
+    {
+      "level": 3,
+      "text": "Kit Consulting Red.es"
+    },
+    {
+      "level": 3,
+      "text": "4 sectores, equipo STEM"
+    },
+    {
+      "level": 2,
+      "text": "Quiénes lo construyen"
+    },
+    {
+      "level": 2,
+      "text": "¿Hablamos?"
+    },
+    {
+      "level": 5,
+      "text": "Soluciones"
+    },
+    {
+      "level": 5,
+      "text": "Empresa"
+    },
+    {
+      "level": 5,
+      "text": "Legal"
+    }
+  ],
+  "headingSkips": [
+    {
+      "from": 1,
+      "to": 3,
+      "text": "Industrial"
+    },
+    {
+      "from": 2,
+      "to": 5,
+      "text": "Soluciones"
+    }
+  ],
+  "imgs": {
+    "total": 3,
+    "withAlt": 3,
+    "withEmptyAlt": 0,
+    "missingAlt": 0,
+    "missingAltSrcs": []
+  },
+  "forms": 0,
+  "httpStatus": 200
+}
