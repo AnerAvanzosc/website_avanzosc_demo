@@ -79,9 +79,18 @@ class WebsiteAvanzoscSitemap(Website):
             return url_root + path if path != '/' else url_root + '/'
 
         def eu_url(path):
-            # Lang prefix /eu_ES/ delante del path. Path '/' → '/eu_ES/'.
+            # Lang prefix /eu_ES delante del path. Para path raíz '/' la URL
+            # canónica EU es `/eu_ES` SIN trailing slash, alineado con el
+            # special case de Odoo 14 `_get_canonical_url_localized`
+            # (`addons/website/models/website.py:1001-1005`):
+            #   if lang_path and path == '/': localized_path = lang_path
+            # Si emitimos `/eu_ES/` (con trailing) en el sitemap, Google
+            # crawlea esa URL pero `_is_canonical_url` la rechaza por
+            # mismatch contra `/eu_ES`, y `_get_alternate_languages`
+            # retorna [] → la home EU se sirve sin hreflang. Audit I4
+            # 2026-05-04, fix Sprint B4 (D26).
             if path == '/':
-                return url_root + '/eu_ES/'
+                return url_root + '/eu_ES'
             return url_root + '/eu_ES' + path
 
         urls_xml = []

@@ -455,6 +455,70 @@ producción»). Cierre con Plausible Cloud sobre `data-domain="avanzosc.es"`.
 
 **Validación**: smoke verde post-implementación. Verificación dinámica Playwright: a) GET `/` confirma `<script defer data-domain="avanzosc.es" src="https://plausible.io/js/script.404.outbound-links.js">` en `<head>`; b) GET `/contacto/gracias` confirma inline script presente con guard `if (window.plausible)` + listener `DOMContentLoaded` + nombre exacto del goal `Contact Form Submission` (verificación activa con stub de `window.plausible` capturando `[['Contact Form Submission']]`).
 
+<a id="d26"></a>
+### D26 — Sprint B4: hreflang home EU canonical (audit I4) — defense-in-depth en 2 capas
+
+Sesión 2026-05-04. Audit a11y/SEO 2026-05-04 (REPORT.md §I4) detectó que la URL `/eu_ES/` (home EU con trailing slash) carece de bloque `<link rel="alternate" hreflang>` en `<head>`, mientras que `/eu_ES` (sin trailing) y las 11 URLs internas EU lo emiten correctamente. Daño SEO: la home EU es la URL más importante para señales multilingüe, y nuestro sitemap custom estaba apuntando a la variante con trailing.
+
+**Causa raíz** (Odoo core, no parchable):
+
+`_get_canonical_url_localized` en `addons/website/models/website.py:1001-1005` hace special case para home con lang prefix:
+
+```python
+if lang_path and path == '/':
+    # We want `/fr_BE` not `/fr_BE/` for correct canonical on homepage
+    localized_path = lang_path
+else:
+    localized_path = lang_path + path
+```
+
+Para EU home: `lang_path='/eu_ES'`, `path='/'` → canonical = `/eu_ES` (sin trailing). Cuando una request llega a `/eu_ES/` (trailing), `_is_canonical_url` (`website.py:1014-1032`) compara `current_url=/eu_ES/` vs `canonical_url=/eu_ES` → mismatch → URL NO canonical → `_get_alternate_languages` retorna `[]` (`website.py:531-541`) → no hreflang. Las URLs internas (`/eu_ES/industrial`) no caen en el special case y canonicalizan correctamente.
+
+**Fuentes que emiten `/eu_ES/` con trailing**:
+1. Nuestro custom sitemap (`controllers/main.py:84` pre-fix). Controlable.
+2. Language switcher Odoo core (3 instancias HTML por página, no fácilmente parchable).
+3. Bookmarks legacy + sitemaps externos.
+
+**Decisión**: defense-in-depth en 2 capas:
+
+**Capa 1 — Sitemap canonical** (`controllers/main.py:81-95`):
+- `eu_url('/')` ahora devuelve `<url_root>/eu_ES` (sin trailing) alineado con la canonical Odoo. Cubre la ruta de descubrimiento por crawlers (Google, Bing).
+- Cambio: 1 línea + comentario inline citando origen del bug en core.
+
+**Capa 2 — Override `ir.http._dispatch`** (`models/ir_http.py`, nuevo):
+- Intercepta requests con `request.httprequest.path == '/eu_ES/'` ANTES de Werkzeug routing y emite 301 a `/eu_ES`. Cubre clicks desde language switcher Odoo + bookmarks externos + cualquier hit no controlado.
+- Preserva query strings: `/eu_ES/?utm=x` → `/eu_ES?utm=x`.
+
+**Iteración del approach** (3 intentos hasta el final):
+
+1. **Intento 1 — `<record model="website.rewrite">` con `url_from='/eu_ES/'`**: ineficaz. Werkzeug router matchea `/eu_ES/` por `Home.index` (multilang) ANTES de que `_serve_redirect` entre. Mismo bypass que motivó D21 (Q5 blog redirects). Verificado empíricamente: record cargado en BD pero `curl -I /eu_ES/` retornaba 200.
+
+2. **Intento 2 — `@http.route('/eu_ES/')` controller**: loop self-redirect. Werkzeug usa `strict_slashes=False` por default (`base/odoo/http.py:1328`), por lo que `@http.route('/eu_ES/')` matchea TAMBIÉN `/eu_ES`. El controller intercepta el destino del 301 y entra en bucle. Verificado: `curl /eu_ES` retornaba 301 con Location=`/eu_ES`.
+
+3. **Intento 3 — `ir.http._dispatch` override**: funcional. `_dispatch` corre antes de Werkzeug routing matching, viendo `request.httprequest.path` raw del cliente. Inspección literal del path distingue `/eu_ES/` de `/eu_ES` sin colisión.
+
+**Detalle implementación crítico**: en `_dispatch` el `request` es `HttpRequest` bare (no el wrapper Odoo), por lo que `request.redirect()` lanza `AttributeError`. Solución: usar `werkzeug.utils.redirect` directamente. Documentado inline en el modelo.
+
+**Alternativas descartadas**:
+
+- Solo Capa 1 (sitemap fix sin redirect): cubre crawler path pero deja el switcher click + bookmarks + links externos sin normalizar. Cobertura parcial. La Capa 2 cierra el gap por ~30-45 min más de implementación.
+- Override del template language switcher Odoo core: cubre solo switcher (instancia HTML), no bookmarks/sitemaps externos. Más invasivo (toca core rendering). Peor coste/beneficio.
+- Defer hasta migración Odoo 15+/16+: bug funcional con impacto SEO real en la URL más importante (home EU); fix S no merece diferir.
+
+**Trigger reapertura**: si Odoo upstream corrige el special case en versión futura (15+/16+), evaluar si la Capa 2 (`_dispatch` override) sigue siendo necesaria o redundante. La Capa 1 (sitemap canonical) sigue siendo correcta independientemente del fix upstream.
+
+**Precedente arquitectónico**: D21 (Q5/Q6 redirects) usó controller propio por el mismo bypass route-precedence. D26 extiende el mismo patrón a un nivel de despacho aún más temprano (`ir.http._dispatch`) por requerir distinguir trailing slash.
+
+**Validación** (smoke 2026-05-04, los 6 tests del gate de commit pasan):
+- `/eu_ES/` → 301, Location: `/eu_ES` ✓
+- `/eu_ES` → 200 + 3 hreflang alternates (eu, es, x-default) ✓
+- `/eu_ES/?ref=test` → 301, Location: `/eu_ES?ref=test` (query preservada) ✓
+- Sitemap emite `<loc>http://localhost:14070/eu_ES</loc>` (sin trailing) ✓
+- `/eu_ES/industrial` sigue 200 directo (route NO demasiado ancha) ✓
+- `/` (home ES) sigue 200 + hreflang intacto ✓
+
+Implementación en commit `[FIX] B4 SEO: hreflang home EU canonical, defense-in-depth (I4, D26)`.
+
 ---
 
 ## 6. Decisiones diferidas con criterio de reapertura
