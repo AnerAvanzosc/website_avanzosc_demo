@@ -99,6 +99,49 @@ header nav.navbar > .container {
 }
 
 // -----------------------------------------------------------------------------
+// Sprint B3 — WCAG AA fix audit 2026-05-04 C3 (Path B, group G5).
+// Bootstrap navbar-light setea `.navbar-nav .nav-link` con
+// `color: rgba(0,0,0,0.5)` ≡ #888888 que da ratio 3.27-3.54:1 sobre
+// blanco (FAIL WCAG 1.4.3 AA, requiere ≥4.5:1 normal text). axe reportó
+// solo 1 selector por dedup (`a[href="#"] > span` para el dropdown-toggle
+// «Soluciones»), pero el problema afecta a TODOS los `.nav-link` no-active
+// del header (verificado computed style: Tienda, Formación, Contacto,
+// Conócenos, Soluciones — todos rgba(0,0,0,0.5)).
+//
+// Override usa --neutral-700 (#3A4149) con holgura amplia (ratio 11.5:1
+// vs blanco). Por qué no --neutral-900 (texto principal): mantenemos
+// jerarquía visual entre body text (--neutral-900) y nav-link no-active
+// (--neutral-700), preserva la indicación visual de «activo» (más oscuro)
+// vs «secundario» (un escalón más claro).
+//
+// Specificity: necesitamos vencer a Bootstrap
+// `.navbar-light .navbar-nav .nav-link` (0,3,0). Primer intento fue
+// `header nav.navbar .nav-link` (0,1,3) que PIERDE — Bootstrap se
+// quedaba aplicando rgba(0,0,0,0.5) (verificado computed style sesión
+// 2026-05-04 post-fix-1). Selector definitivo:
+// `nav.navbar.navbar-light .navbar-nav .nav-link` da 0,4,1 — gana
+// regardless de orden de fuente. Mismo patrón de defensa-en-profundidad
+// que `.btn.btn-primary` override en _variables.scss:64 (que también
+// duplica clase para asegurar specificity).
+//
+// .active mantiene styling: Bootstrap define `.navbar-light .navbar-nav
+// .nav-link.active` con `color: rgba(0,0,0,0.9)` que tiene specificity
+// 0,4,0 (4 classes). Nuestro override es 0,4,1 — gana en non-active. Pero
+// para el `.active` Bootstrap añade 1 clase adicional → 0,4,1 también.
+// Empate → orden de fuente. assets_frontend (nuestro) carga DESPUÉS,
+// por lo que el .active TAMBIÉN tomaría --neutral-700 (no el rgba(0,0,0,0.9)
+// de active). Para preservar la distinción active/no-active, añadimos
+// regla explícita .active con --neutral-900 (texto principal).
+// -----------------------------------------------------------------------------
+nav.navbar.navbar-light .navbar-nav .nav-link {
+    color: var(--neutral-700, #3A4149);
+
+    &.active {
+        color: var(--neutral-900, #0F1419);
+    }
+}
+
+// -----------------------------------------------------------------------------
 // Botón «Acceso clientes»
 // Hook: clase .s_avanzosc_acceso_clientes añadida en layout.xml.
 // Personalización mínima v1: border-radius y hover. Los colores base

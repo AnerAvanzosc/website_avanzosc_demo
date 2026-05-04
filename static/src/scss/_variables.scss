@@ -11,7 +11,15 @@
 
     --neutral-900: #0F1419;
     --neutral-700: #3A4149;
-    --neutral-500: #7A828B;
+    // --neutral-500: ajustado de #7A828B a #646C75 en Sprint B3 (audit
+    // 2026-05-04 C3 Path B). Con el valor original 3.89:1 vs --neutral-0
+    // y 3.57:1 vs --neutral-100, fallaba WCAG 1.4.3 AA (≥4.5 normal text)
+    // en 7 nodos: G2 contacto info-labels Email/Tel/Dir (×2 langs) +
+    // G4 form_optional «(opcional)». #646C75 da 5.32:1 vs blanco y
+    // 4.88:1 vs --neutral-100 — pasa con margen. Tinte azul-gris
+    // preservado (R<G<B). Probado #6A727B intermedio pero da 4.47:1
+    // contra --neutral-100 (<4.5); de ahí 1 step más oscuro.
+    --neutral-500: #646C75;
     --neutral-300: #D3D7DC;
     --neutral-100: #F4F5F7;
     --neutral-0: #FFFFFF;

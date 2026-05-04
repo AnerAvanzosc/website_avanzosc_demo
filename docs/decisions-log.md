@@ -575,3 +575,33 @@ Score Best Practices estancado en 81-82/100 (mobile/desktop, ES y EU) por estos 
 - N3 puede estar resuelto en core (Odoo upstream actualiza APIs).
 - N4 puede tener distinto trade-off (Odoo 16+ podría incluir source maps opcionales).
 Cuando se decida la migración, re-ejecutar Lighthouse y re-evaluar ambos. Si tras la migración persisten, abrir nueva entry deferred específica de la versión nueva.
+
+<a id="deferred-brand-primary-contrast"></a>
+### Contraste insuficiente en `--brand-primary` — 15 nodos C3 brand pendientes (Sprint B3 Path B)
+
+**Estado**: la auditoría a11y/SEO 2026-05-04 (audit C3, REPORT.md §4) detectó 28 nodos `color-contrast` violations. Sprint B3 Path B (commit B3) cerró 13 nodos no-brand (G2/G4 vía `--neutral-500` darken `#7A828B → #646C75`; G5 vía override `nav.navbar.navbar-light .navbar-nav .nav-link`). Quedan 15 nodos cuyo fix requiere ajustar `--brand-primary` o variables brand derivadas:
+
+- **G1 — 13 nodos `.btn.btn-primary`** con `#FFFFFF` text on `#E85D2F` background (ratio 3.47:1, FAIL ≥4.5):
+  - 12 instancias del botón «Acceso clientes» en el header (sitewide, una por página auditada).
+  - 1 instancia del CTA «Hablar con Avanzosc» (`.btn-lg`) en `/kit-consulting`.
+- **G3 — 2 nodos `.s_avanzosc_contacto_info_link`** «Ver en Google Maps» con `#E85D2F` text on `#FFFFFF` (ratio ~3.5:1).
+
+**Decisión diferida**: NO ajustar `--brand-primary` v1. El módulo carece de **brand source of truth** autoritativa — el hex actual `#E85D2F` es propuesta inicial (CLAUDE.md §9.3 marca «pendiente de extracción del logo», y §13 reitera «Hex finales del logo + SVG» como gate pre-switchover). El logo disponible es bitmap de baja calidad; aplicar hex aproximados extraídos arriesga drift respecto al brand real.
+
+**Workaround vigente**: ninguno. Los 15 nodos siguen incumpliendo WCAG AA hasta que el orquestador-humano consiga el manual de marca / SVG vectorial fuente.
+
+**Trigger de reapertura**: cuando llegue brand source of truth. Acción:
+1. Ajustar `--brand-primary` y `--brand-primary-dark` según hex auténticos extraídos del logo.
+2. Verificar contraste WCAG AA con WebAIM checker:
+   - Para G1 (white text on brand bg): brand-primary debe dar ≥4.5:1 contra `#FFFFFF` (texto normal). Actual `#C44015` (--brand-primary-dark) ya es candidato — preliminar ratio ~5.6:1 vs blanco. Si encaja con brand auténtico, swap `--brand-primary` ← `--brand-primary-dark` actual y derivar nuevo `--brand-primary-dark` (más oscuro aún).
+   - Para G3 (brand text on white bg): mismo target ≥4.5:1 — la misma fix de G1 cubre esto automáticamente porque ambos usan `--brand-primary`.
+3. Smoke + axe-core spot check sobre las 12 URLs auditadas confirmando 0 violations color-contrast residuales.
+
+**Bloquea switchover**: NO al mismo nivel que `deferred-conocenos-stem-claim` (que es factual). Aquí el pendiente es brand-coherence + WCAG AA. La auditoría queda en estado **«AA parcial documentado»**: 13/28 nodos cerrados (46%), 15 deferred con motivo arquitectónico claro (brand source of truth), no incumplimiento doloso. EAA 2025 entra en vigor en junio — se recomienda cerrar este deferred antes de Phase 10.6 switchover, pero el deferred no es bloqueante mecánico (vs Q1/Q3/Q4 sí lo son).
+
+**Acoplamiento con otros pendientes**:
+- §11 «Hex finales del logo + SVG» — mismo trigger (brand source of truth disponible).
+- §11 «Hex finales del logo + SVG» bloquea CLAUDE.md §9.3 «Paleta de color» actualización.
+- Resolver los 3 a la vez: extraer hex del logo → actualizar `--brand-primary` y `--brand-secondary` → cerrar este deferred → cerrar gate logo en §11.
+
+**Validación post-fix esperada**: axe-core sobre 12 URLs → `color-contrast` violations = 0. Lighthouse a11y score ya está en 96 (post-B1+B2); cerrar G1+G3 lo acerca a 100. Si tras el fix de brand alguno de los 15 nodos persiste flagged, abrir entry específica.
