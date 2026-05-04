@@ -16,7 +16,7 @@
         <template id="page_academias" name="Avanzosc · Academias">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <main>
+                    <div>
                         <t t-call="website_avanzosc_demo.s_avanzosc_hero">
                             <t t-set="hero_claim">Matrículas, calendarios y evaluaciones. En un solo Odoo.</t>
                             <t t-set="hero_subtitle">Gestión integral de academias y formación: matrículas online, calendarios, evaluaciones, comunicación con familias y formación a distancia.</t>
@@ -35,7 +35,7 @@
                         </t>
 
                         <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
-                    </main>
+                    </div>
                 </div>
             </t>
         </template>

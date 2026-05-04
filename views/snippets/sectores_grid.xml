@@ -27,28 +27,28 @@
                     <!-- Industrial. -->
                     <div class="col-12 col-md-6">
                         <a href="/industrial" class="s_avanzosc_sectores_card">
-                            <h3 class="s_avanzosc_sectores_heading">Industrial</h3>
+                            <h2 class="s_avanzosc_sectores_heading">Industrial</h2>
                             <p class="s_avanzosc_sectores_text">Producción, MES, trazabilidad, mantenimiento.</p>
                         </a>
                     </div>
                     <!-- Distribución. -->
                     <div class="col-12 col-md-6">
                         <a href="/distribucion" class="s_avanzosc_sectores_card">
-                            <h3 class="s_avanzosc_sectores_heading">Distribución</h3>
+                            <h2 class="s_avanzosc_sectores_heading">Distribución</h2>
                             <p class="s_avanzosc_sectores_text">Almacenes, picking, rutas, multi-canal.</p>
                         </a>
                     </div>
                     <!-- Servicios. -->
                     <div class="col-12 col-md-6">
                         <a href="/servicios" class="s_avanzosc_sectores_card">
-                            <h3 class="s_avanzosc_sectores_heading">Servicios</h3>
+                            <h2 class="s_avanzosc_sectores_heading">Servicios</h2>
                             <p class="s_avanzosc_sectores_text">Proyectos, partes, facturación recurrente.</p>
                         </a>
                     </div>
                     <!-- Academias. -->
                     <div class="col-12 col-md-6">
                         <a href="/academias" class="s_avanzosc_sectores_card">
-                            <h3 class="s_avanzosc_sectores_heading">Academias</h3>
+                            <h2 class="s_avanzosc_sectores_heading">Academias</h2>
                             <p class="s_avanzosc_sectores_text">Matrículas, calendarios, evaluaciones, formación online.</p>
                         </a>
                     </div>

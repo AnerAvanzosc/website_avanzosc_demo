@@ -57,7 +57,7 @@
         <template id="page_politica_cookies" name="Avanzosc · Política de Cookies">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <main class="s_avanzosc_legal">
+                    <div class="s_avanzosc_legal">
                         <section class="s_avanzosc_legal_hero">
                             <div class="container">
                                 <div class="row">
@@ -156,7 +156,7 @@
                                 </div>
                             </div>
                         </section>
-                    </main>
+                    </div>
                 </div>
             </t>
         </template>

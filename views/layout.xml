@@ -172,7 +172,7 @@
                                  URLs idénticas a las del dropdown del header
                                  (data/menu.xml + post_init_hook). -->
                             <div class="col-lg-3 col-md-6 mb-4">
-                                <h5 class="s_avanzosc_footer_heading">Soluciones</h5>
+                                <h3 class="s_avanzosc_footer_heading">Soluciones</h3>
                                 <ul class="list-unstyled">
                                     <li><a href="/industrial">Industrial</a></li>
                                     <li><a href="/distribucion">Distribución</a></li>
@@ -183,7 +183,7 @@
                             <!-- Columna 3: Empresa. URLs idénticas a los
                                  menus top-level correspondientes. -->
                             <div class="col-lg-3 col-md-6 mb-4">
-                                <h5 class="s_avanzosc_footer_heading">Empresa</h5>
+                                <h3 class="s_avanzosc_footer_heading">Empresa</h3>
                                 <ul class="list-unstyled">
                                     <li><a href="/conocenos">Conócenos</a></li>
                                     <li><a href="/contacto">Contacto</a></li>
@@ -192,7 +192,7 @@
                             <!-- Columna 4: Legal. Las 3 páginas son
                                  placeholder (404 hasta tarea posterior). -->
                             <div class="col-lg-3 col-md-6 mb-4">
-                                <h5 class="s_avanzosc_footer_heading">Legal</h5>
+                                <h3 class="s_avanzosc_footer_heading">Legal</h3>
                                 <ul class="list-unstyled">
                                     <li><a href="/aviso-legal">Aviso Legal</a></li>
                                     <li><a href="/politica-privacidad">Política de Privacidad</a></li>
@@ -394,6 +394,70 @@
               inherit_id="website.layout">
         <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]" position="replace">
             <span class="o_footer_copyright_name mr-2">© 2026 Avanzosc S.L. — CIF B20875340</span>
+        </xpath>
+    </template>
+
+    <!-- ============================================================
+         Sprint B1 — a11y/SEO trivial wins (Sprint A 2026-05-04 audit).
+         ============================================================ -->
+
+    <!-- C1 — eliminar role="menuitem"/role="menu" del navbar.
+         Origen: core `website.submenu` (`base/addons/website/views/website_templates.xml:9`)
+         emite `<a role="menuitem">` para cada item del navbar (top-level
+         + dropdown leaves) y `<ul role="menu">` para los dropdown-menu.
+
+         Problema axe-core (`aria-required-parent`, WCAG 4.1.2): los
+         `<a role="menuitem">` top-level están dentro de `<ul class="navbar-nav">`
+         que NO tiene `role="menubar"`, lo que el rule reporta como
+         contenedor inválido (5 nodos × 12 páginas = 60 violations en la
+         auditoría 2026-05-04 §C1).
+
+         Decisión Sprint B1 (per brief): eliminar el role en lugar de
+         semantizar el padre. Los `<a>` del navbar funcionan correctamente
+         como links sin role; añadir `role="menubar"` exigiría además
+         keyboard nav tipo arrow-keys que el navbar de Odoo NO implementa
+         (sería WCAG 4.1.2 fail por otro lado: rol declarado sin
+         interacciones esperadas).
+
+         Override de website.submenu: vaciamos los 2 atributos role.
+         `<attribute name="X"></attribute>` con contenido vacío hace que
+         Odoo emita `role=""`, que el browser y axe-core ignoran. -->
+    <template id="navbar_remove_role_attributes"
+              name="Header: remove ARIA role=menuitem/menu from navbar (C1)"
+              inherit_id="website.submenu">
+        <!-- Remove role="menuitem" del <a> de cada item del menú
+             (top-level + dropdown leaves). El <a> es el único elemento
+             dentro de website.submenu con role="menuitem". -->
+        <xpath expr="//a[@role='menuitem']" position="attributes">
+            <attribute name="role"></attribute>
+        </xpath>
+        <!-- Remove role="menu" del <ul class="dropdown-menu"> que envuelve
+             los items del dropdown — sin role en el padre, eliminar role
+             en los hijos mantiene la consistencia ARIA (WAI-ARIA pattern
+             de menu requiere ambos o ninguno). -->
+        <xpath expr="//ul[@role='menu']" position="attributes">
+            <attribute name="role"></attribute>
+        </xpath>
+    </template>
+
+    <!-- I2 — viewport sin user-scalable=no.
+         Origen real del meta: `web.frontend_layout` (primary view que
+         hereda de `web.layout` y añade el meta vía xpath, en
+         `base/addons/web/views/webclient_templates.xml:469`):
+           <meta name="viewport"
+                 content="width=device-width, initial-scale=1, user-scalable=no"/>
+         `user-scalable=no` viola WCAG 2.1 SC 1.4.4 (Resize Text) y
+         1.4.10 (Reflow) — bloquea zoom para usuarios con visión reducida.
+
+         Importante: el inherit_id correcto es `web.frontend_layout`
+         (donde el meta SE AÑADE), NO `web.layout` (que no tiene meta).
+         Probamos primero `web.layout` y dio ParseError porque el xpath
+         no encontraba el nodo en el target view. -->
+    <template id="viewport_allow_zoom"
+              name="Head: viewport without user-scalable=no (I2)"
+              inherit_id="web.frontend_layout">
+        <xpath expr="//meta[@name='viewport']" position="replace">
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
         </xpath>
     </template>
 </odoo>

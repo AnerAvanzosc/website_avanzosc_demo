@@ -1,0 +1,20 @@
+    load_data(cr, idref, mode, kind='data', package=package)
+  File "/opt/odoo/v14/base/odoo/modules/loading.py", line 69, in load_data
+    tools.convert_file(cr, package.name, filename, idref, mode, noupdate, kind)
+  File "/opt/odoo/v14/base/odoo/tools/convert.py", line 733, in convert_file
+    convert_xml_import(cr, module, fp, idref, mode, noupdate)
+  File "/opt/odoo/v14/base/odoo/tools/convert.py", line 799, in convert_xml_import
+    obj.parse(doc.getroot())
+  File "/opt/odoo/v14/base/odoo/tools/convert.py", line 719, in parse
+    self._tag_root(de)
+  File "/opt/odoo/v14/base/odoo/tools/convert.py", line 681, in _tag_root
+    raise ParseError('while parsing %s:%s, near\n%s' % (
+odoo.tools.convert.ParseError: while parsing None:455, near
+<data name="Head: viewport without user-scalable=no (I2)" inherit_id="web.layout">
+        <xpath expr="//meta[@name='viewport']" position="replace">
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        </xpath>
+    </data>
+2026-05-04 07:23:11,968 31000 INFO odoo14_community odoo.service.server: Initiating shutdown 
+2026-05-04 07:23:11,968 31000 INFO odoo14_community odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-05-04 07:23:11,968 31000 INFO odoo14_community odoo.sql_db: ConnectionPool(used=0/count=0/max=64): Closed 1 connections  

@@ -16,7 +16,7 @@
         <template id="page_servicios" name="Avanzosc · Servicios">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <main>
+                    <div>
                         <t t-call="website_avanzosc_demo.s_avanzosc_hero">
                             <t t-set="hero_claim">Proyectos, partes y facturación recurrente.</t>
                             <t t-set="hero_subtitle">Helpdesk, contratos, partes de horas, facturación recurrente. Para empresas de servicios profesionales que necesitan trazabilidad real.</t>
@@ -35,7 +35,7 @@
                         </t>
 
                         <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
-                    </main>
+                    </div>
                 </div>
             </t>
         </template>

@@ -18,7 +18,7 @@
         <template id="page_distribucion" name="Avanzosc · Distribución">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <main>
+                    <div>
                         <t t-call="website_avanzosc_demo.s_avanzosc_hero">
                             <t t-set="hero_claim">Almacén, picking y rutas. Sin Excel intermedios.</t>
                             <t t-set="hero_subtitle">WMS, multi-canal, EDI y marketplaces. Integraciones con balanzas, lectores y SGV. Operativa optimizada en almacenes reales.</t>
@@ -37,7 +37,7 @@
                         </t>
 
                         <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
-                    </main>
+                    </div>
                 </div>
             </t>
         </template>

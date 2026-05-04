@@ -26,7 +26,7 @@
         <template id="page_contacto" name="Avanzosc · Contacto">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <main>
+                    <div>
                         <!-- Hero compacto: H1 grande con letter-stagger + 1 línea
                              técnico-cercana. Sin CTA: la CTA es el form de abajo. -->
                         <section class="s_avanzosc_contacto_hero">
@@ -160,7 +160,7 @@
                                 </div>
                             </div>
                         </section>
-                    </main>
+                    </div>
                 </div>
             </t>
         </template>

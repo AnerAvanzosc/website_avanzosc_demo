@@ -26,7 +26,7 @@
         <template id="page_contacto_gracias" name="Avanzosc · Gracias">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <main>
+                    <div>
                         <section class="s_avanzosc_contacto_gracias">
                             <div class="container">
                                 <div class="row">
@@ -59,7 +59,7 @@
                                 }
                             });
                         </script>
-                    </main>
+                    </div>
                 </div>
             </t>
         </template>

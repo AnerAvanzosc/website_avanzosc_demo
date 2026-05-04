@@ -42,7 +42,10 @@
                 <h2 class="s_avanzosc_timeline_heading">Trayectoria</h2>
                 <p class="s_avanzosc_timeline_intro">Desde 2008, antes incluso de que se llamara Odoo.</p>
 
-                <div class="s_avanzosc_timeline_track">
+                <div class="s_avanzosc_timeline_track"
+                     tabindex="0"
+                     role="region"
+                     aria-label="Trayectoria Avanzosc 2008-2024">
                     <ul class="s_avanzosc_timeline_items">
                         <li class="s_avanzosc_timeline_item">
                             <span class="s_avanzosc_timeline_dot"/>

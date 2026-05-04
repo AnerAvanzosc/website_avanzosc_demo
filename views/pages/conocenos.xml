@@ -25,7 +25,7 @@
         <template id="page_conocenos" name="Avanzosc · Conócenos">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <main>
+                    <div>
                         <t t-call="website_avanzosc_demo.s_avanzosc_hero">
                             <t t-set="hero_claim">Implantamos Odoo en empresas industriales y de servicios, desde 2008.</t>
                             <t t-set="hero_subtitle">Sin teatros. Con resultados medibles.</t>
@@ -87,7 +87,7 @@
                         </section>
 
                         <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
-                    </main>
+                    </div>
                 </div>
             </t>
         </template>

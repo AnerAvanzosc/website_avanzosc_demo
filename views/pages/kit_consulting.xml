@@ -24,7 +24,7 @@
         <template id="page_kit_consulting" name="Avanzosc · Kit Consulting">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <main>
+                    <div>
                         <section class="s_avanzosc_kit_hero" data-avanzosc-reveal="">
                             <div class="container">
                                 <div class="row">
@@ -74,7 +74,7 @@
                                 </div>
                             </div>
                         </section>
-                    </main>
+                    </div>
                 </div>
             </t>
         </template>

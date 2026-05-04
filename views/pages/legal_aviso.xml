@@ -32,7 +32,7 @@
         <template id="page_aviso_legal" name="Avanzosc · Aviso Legal">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <main class="s_avanzosc_legal">
+                    <div class="s_avanzosc_legal">
                         <section class="s_avanzosc_legal_hero">
                             <div class="container">
                                 <div class="row">
@@ -118,7 +118,7 @@
                                 </div>
                             </div>
                         </section>
-                    </main>
+                    </div>
                 </div>
             </t>
         </template>

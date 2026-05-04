@@ -24,7 +24,7 @@
         <template id="page_industrial" name="Avanzosc · Industrial">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <main>
+                    <div>
                         <!-- Hero industrial: claim + subtítulo + 2 CTAs sector-specific. -->
                         <t t-call="website_avanzosc_demo.s_avanzosc_hero">
                             <t t-set="hero_claim">Odoo industrial en planta, no en PowerPoint.</t>
@@ -49,7 +49,7 @@
 
                         <!-- CTA Contacto cierre. -->
                         <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
-                    </main>
+                    </div>
                 </div>
             </t>
         </template>
