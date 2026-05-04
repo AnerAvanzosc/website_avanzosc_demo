@@ -62,6 +62,21 @@ small, .small {
     letter-spacing: 0.02em;
 }
 
+// ─── Body-text links: underline obligatorio (audit N1, WCAG 1.4.1) ───────────
+// Los <a> dentro de <p> son links de texto corrido (legal_privacidad,
+// kit_consulting disclaimer) cuya distinción del texto circundante NO puede
+// depender solo del color (WCAG 2.1 SC 1.4.1 «Use of Color», Level A).
+// Bootstrap 5 setea por defecto `text-decoration: underline` en <a>; algunas
+// reglas previas del módulo (snippets, cards) lo retiran para CTAs y
+// elementos decorativos. Esta regla `p > a` lo restablece SOLO en párrafos
+// de cuerpo. Selector específico: NO afecta CTAs (ningún CTA del módulo
+// vive directo dentro de <p> per discovery sesión 2026-05-04 — todos están
+// dentro de divs de layout o con sus propias classes).
+// Discovery: 3 casos en views/ (legal_privacidad ×2, kit_consulting ×1).
+p > a {
+    text-decoration: underline;
+}
+
 // ─── Código y datos técnicos ──────────────────────────────────────────────────
 // JetBrains Mono 400 (CLAUDE.md §9.4, §9.7).
 code, pre, kbd, samp {

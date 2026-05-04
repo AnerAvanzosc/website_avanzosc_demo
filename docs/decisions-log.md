@@ -553,3 +553,25 @@ Coste estimado del fix: 20-30 min (controller + template + test del consumo del 
 Aplicar el cambio elegido en `views/snippets/equipo.xml` (o template equivalente) + sincronizar `i18n/eu.po` (ya con flags DRAFT, sujeto a Q1 fase 2). Smoke `run-smoke.sh` + curl spot check confirmando 0 menciones de «STEM»/«femenino» en body Y meta. **Sin este trigger atendido, NO autorizar switchover** — el claim factualmente insostenible no debe llegar al dominio público.
 
 **Localización**: el snippet de equipo invocado por la página de conócenos (probablemente `views/snippets/equipo.xml`); las referencias EU correspondientes en `i18n/eu.po` (entries marcadas `# DRAFT - REVIEW NEEDED — Equipo STEM …` o similar). Verificación de count: `curl -s http://localhost:14070/conocenos http://localhost:14070/eu_ES/conocenos | grep -ciE 'STEM|femenin'` — esperado 0 post-fix.
+
+<a id="deferred-lighthouse-best-practices-upstream"></a>
+### Lighthouse Best Practices score 81-82/100 — deuda upstream Odoo 14
+
+**Estado**: la auditoría a11y/SEO 2026-05-04 capturó 2 fallos Lighthouse Best Practices con origen upstream en el stack Odoo 14, no en código del módulo:
+
+- **N3 — `deprecations`**: el bundle `web.assets_common` / `web.assets_frontend` de Odoo 14 usa APIs deprecated del navegador (probablemente `unload` listeners, `MutationEvent`, o similar legacy heredado del frontend de Odoo). Aparece en 12/12 URLs auditadas.
+- **N4 — `valid-source-maps`**: bundles JS grandes de Odoo (`web.assets_common`, `web.assets_frontend`) sirven minificados sin source maps. Aparece en 12/12 URLs.
+
+Score Best Practices estancado en 81-82/100 (mobile/desktop, ES y EU) por estos 2 issues.
+
+**Decisión**: NO fixear en v1. Razones específicas por issue:
+
+- **N3 (deprecations)**: el horizonte real de impacto es de años (Chrome aún no ha retirado las APIs marcadas como deprecated). Fixear desde el módulo requeriría parchear core Odoo, que rompe la regla §10 CLAUDE.md «no modificar `/opt/odoo/v14/odoo/addons/`». La migración a Odoo 15+/16+ probablemente cierra este issue por sí sola al actualizar el stack.
+- **N4 (valid-source-maps)**: decisión upstream consciente — Odoo bundle minifica para producción y NO emite source maps. Activarlos en producción expondría estructura de código sin beneficio para usuarios finales (devs ya tienen acceso al source local). Trade-off no compensa.
+
+**Workaround vigente**: ninguno. Score BP 81-82 aceptado como techo v1. El score se mantendrá ahí mientras dependamos de Odoo 14 sin parches al core.
+
+**Trigger de reapertura**: evaluación de migración a Odoo 15+/16+, donde:
+- N3 puede estar resuelto en core (Odoo upstream actualiza APIs).
+- N4 puede tener distinto trade-off (Odoo 16+ podría incluir source maps opcionales).
+Cuando se decida la migración, re-ejecutar Lighthouse y re-evaluar ambos. Si tras la migración persisten, abrir nueva entry deferred específica de la versión nueva.
