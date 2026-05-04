@@ -413,6 +413,48 @@ Detectados durante la extracción del paquete; arreglables sin competencia legal
 
 **Validación**: smoke verde post-`12a742a`. 5 fixes verificados visibles en HTML pre-render via curl (mailto, LOPDGDD, link cookies, AEPD canonical, table.table-striped). Detalle en commit messages.
 
+<a id="d25"></a>
+### D25 — Q4 cerrada: Plausible Analytics (script combinado outbound-links + 404 + goal «Contact Form Submission»)
+
+Sesión 2026-05-04. Q4 (analytics web) era pendiente de §11 CLAUDE.md
+(«Analytics y tracking — GA4, Plausible o Matomo. Decidir antes de
+producción»). Cierre con Plausible Cloud sobre `data-domain="avanzosc.es"`.
+
+**Decisión**:
+- **Plausible Cloud** (hosted EU) por encima de GA4 y Matomo.
+- Script combinado **outbound-links + 404** (auto-tracking de clicks externos + 404 manual desde la propia página /404 si Avanzosc decide servir una en el futuro).
+- Goal **«Contact Form Submission»** disparado desde `/contacto/gracias` en DOMContentLoaded (post-redirect-get del form).
+
+**Razones**:
+
+1. **RGPD-friendly por diseño**: sin cookies, sin localStorage, sin huella personal individual. No requiere consent banner ni encaja en el scope ePrivacy de cookies. Coherente con la posición B2B-industrial de la web (consultora seria, sin oscuridad legal).
+2. **Hosted EU**: no aplica el mecanismo Schrems II (transferencia a USA). Coherente con audiencia y con la posición legal interna del proyecto.
+3. **Coste aceptable**: ~100€/año es trivial frente a la operación.
+4. **Setup mínimo**: una etiqueta `<script>` + un evento custom. Sin ingeniería ni mantenimiento ongoing.
+
+**Alternativas descartadas**:
+
+- **GA4**: complicación RGPD post-Schrems II (transferencia a USA con Standard Contractual Clauses), requeriría consent banner, modelo de monetización publicitaria + ad-targeting contrario al tono del rediseño.
+- **Matomo self-hosted**: overhead operacional inaceptable (instancia propia + actualizaciones + backups). Matomo Cloud EU sería alternativa válida; precio similar pero UX más densa que Plausible.
+- **Sin analytics**: aceptable v1 pero ciegos al impacto del rediseño. Imposible iterar sin métricas básicas (visitas, fuente de tráfico, páginas con más tracción, conversión a contacto).
+
+**Implementación**:
+
+- `views/assets.xml`: nuevo `<template id="head_plausible" inherit_id="web.layout">` inyecta el `<script>` en `<head>` con `defer`, `data-domain="avanzosc.es"`, src `https://plausible.io/js/script.404.outbound-links.js`. Sibling semántico de `head_external_assets` (que registra fonts + GSAP + Lenis).
+- `views/pages/contacto_gracias.xml`: inline `<script>` al final del `<main>` con `document.addEventListener('DOMContentLoaded', function(){ if (window.plausible) window.plausible('Contact Form Submission'); })`. Patrón canónico de Plausible (idéntico al snippet oficial para tracking de 404). Guard `if (window.plausible)` para resiliencia contra adblock o script bloqueado.
+
+**Hallazgo URL canónica del script**: la suposición pre-implementación era `script.outbound-links.404.js` (extensions en orden «funcional»). Verificación empírica con `curl -I` mostró que ese URL **devuelve 404**; la URL correcta sigue **orden alfabético** del filename: `script.404.outbound-links.js` (200 OK). La convención de Plausible es alfanumérica per filename concatenation. La docu de context7 no muestra el filename combinado explícitamente; verificar siempre contra el CDN.
+
+**Por qué `/contacto/gracias` y no hook en submit del form**: el form usa Post-Redirect-Get (controller `WebsiteAvanzoscContact.contacto_submit` devuelve 303 a `/contacto/gracias`). Hookear en submit-time tiene riesgos de race con la navegación inmediata (la request a `plausible.io/api/event` puede cancelarse antes de salir aunque Plausible use `keepalive`). Hookear en DOMContentLoaded de gracias es el canal limpio: sólo se llega a esa página tras validación server-side exitosa. Edge case: el honeypot también redirige a gracias silenciosamente; bots que ejecuten JS Y burlen el bot-filtering de Plausible inflarían el goal — aceptado v1 (incidencia esperada cercana a cero).
+
+**Localhost behavior**: Plausible script suprime envíos cuando el hostname del navegador no coincide con `data-domain`. En desarrollo (`localhost:14070`) los eventos no llegan al dashboard; producción (`avanzosc.es`) los disparará normalmente. La verificación dinámica local es entonces estática-en-DOM (script tag presente, listener registrado, signature exacta del goal verificada activamente con stub de `window.plausible`). Mismo comportamiento durante QA en `nueva.avanzosc.es`: dominio mismatch → eventos suprimidos → no contamina el dashboard de producción con tráfico de pre-producción (efecto colateral deseable).
+
+**Trigger de reapertura**: si tras 6 meses post-switchover Plausible no da datos suficientes para decisiones de negocio (e.g., demasiado escueto para análisis de funnel B2B), reabrir y considerar añadir GA4 con consent banner como segunda capa para datos enriquecidos. Mantener Plausible como baseline RGPD-friendly aunque se sume otra capa.
+
+**Implicaciones Q3 fase 2**: el aviso legal y la política de privacidad deben mencionar el uso de Plausible Analytics + ausencia de cookies de tracking + link a la política de Plausible. Recordatorio archivado en `docs/q3-legal-validation/plausible-analytics-pending-additions.md` para que quien genere el paquete formal a asesoría no lo olvide.
+
+**Validación**: smoke verde post-implementación. Verificación dinámica Playwright: a) GET `/` confirma `<script defer data-domain="avanzosc.es" src="https://plausible.io/js/script.404.outbound-links.js">` en `<head>`; b) GET `/contacto/gracias` confirma inline script presente con guard `if (window.plausible)` + listener `DOMContentLoaded` + nombre exacto del goal `Contact Form Submission` (verificación activa con stub de `window.plausible` capturando `[['Contact Form Submission']]`).
+
 ---
 
 ## 6. Decisiones diferidas con criterio de reapertura

@@ -41,6 +41,24 @@
                                 </div>
                             </div>
                         </section>
+                        <!-- Plausible goal "Contact Form Submission" — Q4 / D25.
+                             /contacto/gracias solo se alcanza tras 303 desde
+                             /contacto/submit con datos válidos (server-side
+                             validates required + privacidad). El honeypot
+                             también redirige aquí silenciosamente; los bots
+                             que rellenen el honeypot Y ejecuten JS Y burlen
+                             el bot-filtering de Plausible son edge case
+                             aceptable. Guarded por `window.plausible` para
+                             adblock / script bloqueado. Patrón inline
+                             DOMContentLoaded canónico de Plausible (idéntico
+                             al snippet oficial para tracking de 404). -->
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                if (window.plausible) {
+                                    window.plausible('Contact Form Submission');
+                                }
+                            });
+                        </script>
                     </main>
                 </div>
             </t>

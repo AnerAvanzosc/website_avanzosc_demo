@@ -203,4 +203,39 @@
                     src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"/>
         </xpath>
     </template>
+
+    <!-- ============================================================
+         Plausible Analytics — Q4, D25.
+         Privacy-friendly analytics: sin cookies, sin localStorage, sin
+         huella personal → no requiere consent banner ni encaja en el
+         scope ePrivacy de cookies (RGPD-friendly por diseño). Hosted EU.
+         Script combinado:
+           - outbound-links: tracking automático de clicks a dominios externos.
+           - 404: tracking de páginas 404 (dispara `plausible('404')`
+             desde una página /404 si la sirviéramos; en v1 Odoo ya
+             devuelve su 404 estándar — el flag queda activo por si
+             se decide servir una /404 custom en futuro).
+         URL canónica verificada empíricamente (sesión 2026-05-04):
+         orden alfabético en filename — `script.404.outbound-links.js`
+         (200) sí existe; `script.outbound-links.404.js` da 404. La
+         convención de Plausible es alfanumérica.
+         data-domain="avanzosc.es" — dominio canónico final post-switchover.
+         Durante QA en `nueva.avanzosc.es` el script reportará al mismo
+         site Plausible (mismatched hostname → eventos suprimidos por el
+         propio script Plausible cuando el dominio del navegador no coincide
+         exactamente con data-domain — comportamiento OK para no contaminar
+         métricas con tráfico de pre-producción).
+         Goal "Contact Form Submission" se dispara desde
+         `views/pages/contacto_gracias.xml` (inline DOMContentLoaded).
+         Ref: CLAUDE.md §11 D25, decisions-log.md §7.
+         ============================================================ -->
+    <template id="head_plausible"
+              name="website_avanzosc_demo head: Plausible Analytics"
+              inherit_id="web.layout">
+        <xpath expr="//head" position="inside">
+            <script defer="defer"
+                    data-domain="avanzosc.es"
+                    src="https://plausible.io/js/script.404.outbound-links.js"/>
+        </xpath>
+    </template>
 </odoo>

@@ -25,6 +25,7 @@ la revisión legal real que cierra el gate Q3.
 ```
 docs/q3-legal-validation/
 ├── README.md                                      (este archivo)
+├── plausible-analytics-pending-additions.md       (D25 — Q4: cambios obligatorios para Fase 2)
 └── dev-prereview-2026-04-30/
     ├── pdfs/
     │   ├── 01-aviso-legal-es.pdf
@@ -35,6 +36,17 @@ docs/q3-legal-validation/
     ├── avanzosc-q3-legal-prereview-2026-04-30.xlsx  (entregable XLSX)
     └── datos-sensibles-extraidos.md              (tabla con checkboxes)
 ```
+
+## Notas para Fase 2 (paquete a asesoría)
+
+Antes de generar `for-legal-advisor-YYYY-MM-DD/`, leer y aplicar:
+
+- `plausible-analytics-pending-additions.md` — D25 (sesión 2026-05-04)
+  registra que aviso legal + política de privacidad deben mencionar
+  Plausible Analytics, ausencia de cookies de tracking y link a la
+  política de Plausible. La asesoría tiene la última palabra sobre el
+  wording exacto y sobre decisiones legales (interés legítimo vs
+  consent, DPA explícito).
 
 ## Entregable actual (Fase 1)
 

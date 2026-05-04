@@ -481,6 +481,7 @@ Sub-bloques A (transiciones suaves) + B (rediseño /contacto) + iteración A6 (l
 | D22 | Q2 cerrada: alias público `/clientes` → 301 a `/web/login` (URL canónica Odoo como detalle interno) | [decisions-log#d22](docs/decisions-log.md#d22) |
 | D23 | Eliminada página `/trabaja-con-nosotros`: menú ahora 6 items + redirect 301 a `/conocenos`, 21 strings retiradas de `eu.po`. Commit `4ecd0e1`. | [decisions-log#d23](docs/decisions-log.md#d23) |
 | D24 | Q3 fase 1: paquete pre-revisión legal (PDFs + XLSX 23 strings + datos sensibles MD) + 5 fixes obvios aplicados (LOPDGDD body, cookies tabla, link `/politica-cookies`, mailto aviso, AEPD canónica). Commits `0e152e7` + `12a742a`. | [decisions-log#d24](docs/decisions-log.md#d24) |
+| D25 | Q4 cerrada: Plausible Analytics Cloud (hosted EU, sin cookies, RGPD-friendly) — script combinado `script.404.outbound-links.js` en `<head>` via `web.layout` + goal `Contact Form Submission` inline en `/contacto/gracias` (DOMContentLoaded, guarded por adblock). Mención requerida en aviso/privacidad — pending para Q3 fase 2. | [decisions-log#d25](docs/decisions-log.md#d25) |
 
 ### Decisiones pendientes
 
@@ -489,7 +490,7 @@ Sub-bloques A (transiciones suaves) + B (rediseño /contacto) + iteración A6 (l
 - [ ] **Hex exactos del logo** — extraer de `https://avanzosc.es/web/image/website/1/logo/Avanzosc` y actualizar tabla §9.3.
 - [ ] **SVG del logo** — vectorizar si no existe ya.
 - [ ] **Portal ERP actual** — ¿«Acceso clientes» apunta a `/web/login` estándar o URL custom?
-- [ ] **Analytics y tracking** — GA4, Plausible o Matomo. Decidir antes de producción.
+- ~~**Analytics y tracking** — GA4, Plausible o Matomo. Decidir antes de producción.~~ **Cerrado D25 (sesión 2026-05-04): Plausible Cloud hosted EU.**
 - [ ] **Plan de migración de contenido antiguo** — tienda y cursos: ¿migrar productos/cursos o solo re-skinear?
 - [ ] **Diferido — investigar `publicWidget` selector `'body'` no instancia** — workaround D15 vigente. Trigger reapertura: si una próxima feature necesita un widget global y D15 no encaja. Ver [decisions-log §6 deferred-publicwidget-body](docs/decisions-log.md#deferred-publicwidget-body).
 - [ ] **Diferido — re-validar TTFB en producción real (Propuesta B)** — D20 implementado bajo medición localhost (~25 ms). Trigger reapertura: tras switchover Phase 10.6, ejecutar mediciones contra `https://avanzosc.es/`; si TTFB mediano >300 ms o load >700 ms, abrir Propuesta B (hold overlay until JS ready) como iteración A7. Ver [decisions-log §6 deferred-ttfb-prod](docs/decisions-log.md#deferred-ttfb-prod).
