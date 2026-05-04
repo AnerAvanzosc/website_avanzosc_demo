@@ -236,6 +236,19 @@ Conexión local sin password: `psql -d odoo14_community` (usuario `avanzosc` per
 
 **`url_for` aplica lang prefix automáticamente al render** bajo `request.lang.code`. No hay que duplicar templates ni usar `t-att-href` lang-aware: con `href` literal sin prefijo (e.g. `<a href="/clientes">`), Odoo emite el HTML correcto para cada idioma (`/clientes` en ES, `/eu_ES/clientes` en EU). Patrón verificado en D22 (Q2 alias).
 
+**Cambio de `msgid` en `.po` no propaga con `-u`.** Cuando una entry de `i18n/eu.po` cambia su `msgid` (porque el source ES original cambió en data XML o template), `-u` actualiza la columna `src` de la fila existente en `ir_translation` con el nuevo source pero **conserva el `value` antiguo** (state=`translated` por default tras la primera carga). El render usa la fila vieja → la traducción nueva del `msgstr` no aparece. Intentar `-u --i18n-overwrite` puede fallar con `psycopg2.errors.CardinalityViolation: ON CONFLICT DO UPDATE command cannot affect row a second time` cuando dos `msgid` distintos resuelven al mismo target del upsert.
+
+**Workaround**: antes del `-u`, borrar manualmente la fila stale:
+
+```sql
+DELETE FROM ir_translation
+WHERE name = 'ir.ui.view,website_meta_description'  -- ajustar al campo real
+  AND lang = 'eu_ES'                                  -- ajustar al idioma
+  AND res_id IN (SELECT id FROM ir_ui_view WHERE key = 'website_avanzosc_demo.page_X');
+```
+
+Después `./scripts/run-smoke.sh ...` re-crea la fila desde el `.po` con el `msgstr` nuevo. Verificación post-fix: `curl` la URL y comprobar el render del campo. **Cuándo aplica**: refinamientos de copy donde se reescribe el source ES (Q1 fase 2, copy creativo final, sprints futuros). Si se repite frecuentemente, formalizar como helper script `scripts/refresh-translation.sh <field> <lang> <view_xmlid>`. **Descubierto** durante amend Sprint B2 al reescribir `/conocenos` meta description (commit `73933f4`).
+
 ### Git
 
 - **Repo activo (fase experimental)**: `github.com/AnerAvanzosc/website_avanzosc_demo` (público, fork personal). El repo oficial `github.com/avanzosc/odoo-addons` **NO se toca** durante esta fase.
@@ -495,6 +508,7 @@ Sub-bloques A (transiciones suaves) + B (rediseño /contacto) + iteración A6 (l
 - [ ] **Diferido — investigar `publicWidget` selector `'body'` no instancia** — workaround D15 vigente. Trigger reapertura: si una próxima feature necesita un widget global y D15 no encaja. Ver [decisions-log §6 deferred-publicwidget-body](docs/decisions-log.md#deferred-publicwidget-body).
 - [ ] **Diferido — re-validar TTFB en producción real (Propuesta B)** — D20 implementado bajo medición localhost (~25 ms). Trigger reapertura: tras switchover Phase 10.6, ejecutar mediciones contra `https://avanzosc.es/`; si TTFB mediano >300 ms o load >700 ms, abrir Propuesta B (hold overlay until JS ready) como iteración A7. Ver [decisions-log §6 deferred-ttfb-prod](docs/decisions-log.md#deferred-ttfb-prod).
 - [ ] **Diferido — acceso directo a `/contacto/gracias` cuenta como conversión falsa en Plausible (D25)** — sin workaround vigente; ruido aceptado v1. Trigger reapertura: si conteo de goals supera +20% el conteo real de `mail.mail` enviados (cross-check backend), migrar a flag de sesión (`request.session['contact_submitted']` set en controller + consume en template). Ver [decisions-log §6 deferred-q4-gracias-direct-access](docs/decisions-log.md#deferred-q4-gracias-direct-access).
+- [ ] **Diferido — claim «STEM mayoritariamente femenino» en body `/conocenos` (B2)** — meta description ya limpia (commit `73933f4`); body sigue conteniendo ~6 menciones STEM/femenino. Riesgo factual = 0 mientras `robots.txt Disallow:/` (intencional pre-switchover). Trigger reapertura: **pre-switchover OBLIGATORIO** — sprint final de copy creativo decide entre eliminar el demográfico, reformular sin afirmaciones cuantitativas, o reescribir la sección. Sin trigger atendido, NO autorizar switchover. Ver [decisions-log §6 deferred-conocenos-stem-claim](docs/decisions-log.md#deferred-conocenos-stem-claim).
 
 ---
 

@@ -535,3 +535,21 @@ Cualquier cambio al href o al label requiere editar ambos sitios. El commit `730
 Coste estimado del fix: 20-30 min (controller + template + test del consumo del flag). Mantener D25 como decisión raíz; este patrón es la iteración 2.
 
 **Sub-trigger lateral**: si Q3 post-asesoría exige consent banner para Plausible (escenario que D25 considera improbable pero posible), reabrir esto y migrar al flag de sesión a la vez que se reformula el setup analytics — esfuerzo combinado.
+
+<a id="deferred-conocenos-stem-claim"></a>
+### Claim «Equipo STEM mayoritariamente femenino» en body `/conocenos`
+
+**Estado**: el body de `/conocenos` (snippet `s_avanzosc_equipo` invocado desde `views/pages/conocenos.xml`) contiene actualmente el claim «Equipo STEM mayoritariamente femenino» y referencias derivadas (~6 menciones de «STEM»/«femenino» entre la copia ES y la traducción EU). Durante Sprint B2 (commit `73933f4`) el orquestador-humano confirmó que el claim demográfico de «mayoría femenina» no es sostenible factualmente. La meta description de `/conocenos` fue limpiada en el amend B2 (eliminando «STEM» y «mayoritariamente femenino» de los textos SEO), pero el body permanece sin tocar por política «copy creativo al final del proyecto» — el body es contenido editorial sujeto al sprint final de revisión narrativa, no una iteración técnica.
+
+**Decisión diferida**: aceptar el claim en body durante la fase de desarrollo. La branch sigue siendo `feature/v1-implementation` y `robots.txt` devuelve `Disallow:/` (intencional pre-switchover, C4 / D6), por lo que NO hay exposición pública: ni Google, ni LinkedIn shares, ni visitantes orgánicos ven la copia. Riesgo factual = 0 mientras esto siga así.
+
+**Workaround vigente**: ninguno — el claim queda en la web mientras la branch sea `feature/v1-implementation` y `robots.txt` siga bloqueando indexación. La meta description (que SÍ es shareable de forma cacheada por motores) ya está limpia post-B2.
+
+**Trigger de reapertura**: **pre-switchover OBLIGATORIO**. En el sprint final de revisión de copy creativo (parkeado por política), revisar las ~6 menciones STEM/femenino en `/conocenos` body + las equivalentes en `/eu_ES/conocenos` (vía `i18n/eu.po`) y decidir entre 3 alternativas:
+- (a) **Eliminar el claim demográfico**, manteniendo «STEM» pero retirando «mayoría femenina» y derivadas. Más mínimo invasivo.
+- (b) **Reformular para enfatizar diversidad** sin afirmaciones cuantitativas no verificables (e.g., «equipo técnico diverso, perfiles STEM»). Sostenible, demuestra cuidado.
+- (c) **Eliminar la sección entera** del snippet equipo y reescribir desde cero con el copy refinado del sprint final.
+
+Aplicar el cambio elegido en `views/snippets/equipo.xml` (o template equivalente) + sincronizar `i18n/eu.po` (ya con flags DRAFT, sujeto a Q1 fase 2). Smoke `run-smoke.sh` + curl spot check confirmando 0 menciones de «STEM»/«femenino» en body Y meta. **Sin este trigger atendido, NO autorizar switchover** — el claim factualmente insostenible no debe llegar al dominio público.
+
+**Localización**: el snippet de equipo invocado por la página de conócenos (probablemente `views/snippets/equipo.xml`); las referencias EU correspondientes en `i18n/eu.po` (entries marcadas `# DRAFT - REVIEW NEEDED — Equipo STEM …` o similar). Verificación de count: `curl -s http://localhost:14070/conocenos http://localhost:14070/eu_ES/conocenos | grep -ciE 'STEM|femenin'` — esperado 0 post-fix.
