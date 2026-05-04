@@ -494,6 +494,7 @@ Sub-bloques A (transiciones suaves) + B (rediseño /contacto) + iteración A6 (l
 - [ ] **Plan de migración de contenido antiguo** — tienda y cursos: ¿migrar productos/cursos o solo re-skinear?
 - [ ] **Diferido — investigar `publicWidget` selector `'body'` no instancia** — workaround D15 vigente. Trigger reapertura: si una próxima feature necesita un widget global y D15 no encaja. Ver [decisions-log §6 deferred-publicwidget-body](docs/decisions-log.md#deferred-publicwidget-body).
 - [ ] **Diferido — re-validar TTFB en producción real (Propuesta B)** — D20 implementado bajo medición localhost (~25 ms). Trigger reapertura: tras switchover Phase 10.6, ejecutar mediciones contra `https://avanzosc.es/`; si TTFB mediano >300 ms o load >700 ms, abrir Propuesta B (hold overlay until JS ready) como iteración A7. Ver [decisions-log §6 deferred-ttfb-prod](docs/decisions-log.md#deferred-ttfb-prod).
+- [ ] **Diferido — acceso directo a `/contacto/gracias` cuenta como conversión falsa en Plausible (D25)** — sin workaround vigente; ruido aceptado v1. Trigger reapertura: si conteo de goals supera +20% el conteo real de `mail.mail` enviados (cross-check backend), migrar a flag de sesión (`request.session['contact_submitted']` set en controller + consume en template). Ver [decisions-log §6 deferred-q4-gracias-direct-access](docs/decisions-log.md#deferred-q4-gracias-direct-access).
 
 ---
 

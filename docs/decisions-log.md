@@ -517,3 +517,21 @@ Cualquier cambio al href o al label requiere editar ambos sitios. El commit `730
 **Decisión diferida**: aceptar la duplicación.
 
 **Trigger de reapertura**: si v2 cambia el destino del botón otra vez, o si se decide refactorizar el header para extraer el botón a un sub-template QWeb reutilizable (e.g., `<t t-call="website_avanzosc_demo.acceso_clientes_button"/>` invocado desde ambos sitios). Coste estimado de la refactorización: 30-45 min — extraer template + sustituir las 2 inclusions + smoke. Coste actual de mantener la duplicación: 1 edit doble cada vez que cambia algo del botón.
+
+<a id="deferred-q4-gracias-direct-access"></a>
+### Acceso directo a `/contacto/gracias` cuenta como conversión falsa en Plausible
+
+**Estado**: el goal Plausible «Contact Form Submission» se dispara en DOMContentLoaded de `/contacto/gracias` (per D25). La página tiene `is_published=True` (necesario para que el redirect 303 del controller resuelva 200) y por tanto es accesible vía GET directo. Cualquier acceso que no provenga del flow legítimo (refresh post-submit del usuario, share del link por curiosidad, navegación manual) cuenta como conversión falsa en el dashboard Plausible.
+
+**Decisión diferida**: aceptar el ruido bajo. La página no está enlazada desde menú, footer ni otras navegaciones del sitio; `website_indexed=False` evita que aparezca en SERP de Google (no captará tráfico orgánico). El conteo de envíos reales es visible en backend de Odoo (`mail.mail` registros generados por el controller `WebsiteAvanzoscContact.contacto_submit`) — sirve de cross-check independiente.
+
+**Workaround vigente**: ninguno.
+
+**Trigger de reapertura**: si tras 2-3 meses post-switchover el conteo de goals «Contact Form Submission» en Plausible **supera de forma significativa** (e.g., +20%) el conteo de envíos reales registrados en backend (records de `mail.mail` enviados por el controller, contables vía SQL contra `mail_message` per gotcha §7 CLAUDE.md), migrar al patrón de flag de sesión:
+
+1. `WebsiteAvanzoscContact.contacto_submit`: `request.session['contact_submitted'] = True` antes del `request.redirect(self._gracias_url())`.
+2. `views/pages/contacto_gracias.xml`: el inline script lee y consume el flag antes de disparar el goal — algo equivalente a un `t-if` en QWeb que envuelva el `<script>` completo, leyendo `request.session.get('contact_submitted')`. Tras lectura, `pop` para que el siguiente refresh ya no dispare.
+
+Coste estimado del fix: 20-30 min (controller + template + test del consumo del flag). Mantener D25 como decisión raíz; este patrón es la iteración 2.
+
+**Sub-trigger lateral**: si Q3 post-asesoría exige consent banner para Plausible (escenario que D25 considera improbable pero posible), reabrir esto y migrar al flag de sesión a la vez que se reformula el setup analytics — esfuerzo combinado.
