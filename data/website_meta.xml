@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Sprint B2 — metadata bundle (a11y/SEO audit 2026-05-04 closure).
+    Issues cerrados: C2 (meta description), I1 (site name), I5 (titles
+    duplicados ES↔EU), I7 (og:description), I8 (twitter:title +
+    twitter:description).
+
+    Estrategia A (orquestador): infraestructura técnica + copy genérico
+    SEO ahora; refinamiento de copy en sprint final será cambio de
+    strings en este mismo archivo + sync `i18n/eu.po`.
+
+    Mecánica Odoo 14 (verificado en `base/addons/website/models/`):
+      - El mixin `website.seo.metadata` (mixins.py:24-26) se aplica a
+        `ir.ui.view` (ir_ui_view.py: `_inherit = ["ir.ui.view",
+        "website.seo.metadata"]`), NO a `website.page`. Los campos
+        `website_meta_title`, `website_meta_description`,
+        `website_meta_keywords` son `translate=True` y viven en la VIEW.
+      - `website.page` usa `_inherits = {'ir.ui.view': 'view_id'}`
+        (delegation). En teoría writes via page se propagarían a la
+        view, pero el data loader XML NO lo hace cuando el record write
+        no es vía API ORM completa. Verificado empíricamente: writes a
+        `<record id="page_X_record" model="website.page">` con campo
+        `website_meta_title` NO aparecen en BD (sql_check sesión 2026-05-04).
+      - Solución: escribir directamente a `ir.ui.view` (el record que
+        define el template). xml_id del template = `page_X` (sin
+        sufijo `_record`, que es la convención de los page records).
+
+    Templates targets (todos `ir.ui.view`):
+      - `website.homepage` (core): root view de la home, alcanza
+        `/` y `/eu_ES/` que comparten ruta.
+      - `website_avanzosc_demo.page_industrial` (módulo): alcanza
+        `/industrial` + `/eu_ES/industrial`.
+      - Idem para distribucion, servicios, academias, conocenos,
+        contacto, kit_consulting.
+
+    `website_templates.xml:53-65, 75-103` rendea desde
+    `seo_object.website_meta_title`/`website_meta_description` cuando
+    están set, y `mixins.py:85-90` populates og:title/og:description/
+    twitter:title/twitter:description automáticamente. Cierre de
+    C2+I7+I8+I5 sin tocar templates.
+
+    noupdate="0" (default): cada `-u` reaplica los valores. v1 no espera
+    edición admin desde UI (per D4 «todo por código, no tocar builder»),
+    y «swap del copy refinado en sprint final» implica iteración via
+    `-u`. Para producción con admin editando, considerar flip a
+    noupdate="1" antes del switchover.
+
+    Translations EU: `i18n/eu.po` recibe las 14 entries DRAFT (7 titles
+    ES→EU + 7 meta descriptions ES→EU) marcadas `# DRAFT - REVIEW NEEDED`
+    per gate Q1. kit-consulting es ES-only (D5) → no EU entry. Site
+    name «Avanzosc» idéntico ES/EU (no se traduce).
+-->
+<odoo>
+    <data>
+
+        <!-- I1 — site name «My Website» → «Avanzosc».
+             Target: el record `website.default_website` (id=1) cuyo
+             `name` es por default «My Website» en core
+             (`base/addons/website/data/website_data.xml:230`).
+
+             Importante: el record se declara en core dentro de un
+             `<data noupdate="1">`, lo que setea `ir.model.data.noupdate=t`
+             en BD. Por tanto un `<record id="website.default_website">`
+             declarativo en este file (incluso con `<data noupdate="0">`)
+             es ignorado por Odoo per `convert.py` (verificado
+             empíricamente en sesión 2026-05-04: el write declarativo
+             dejaba `name='My Website'` intacto en SQL).
+
+             Workaround idiomático: invocar `write()` vía `<function>`
+             tag (ejecución imperativa en cada `-u`, bypass del flag
+             noupdate de ir.model.data). Idempotente: si ya está
+             «Avanzosc», el write no cambia nada. -->
+        <function model="website" name="write">
+            <value eval="ref('website.default_website')"/>
+            <value eval="{'name': 'Avanzosc'}"/>
+        </function>
+
+        <!-- C2/I5/I7/I8 — Home (`/` + `/eu_ES/`). Target: view
+             `website.homepage` (core). Idénticos para ambas URLs porque
+             comparten template. EU translation via i18n/eu.po. -->
+        <record id="website.homepage" model="ir.ui.view">
+            <field name="website_meta_title">Avanzosc · Consultora Odoo industrial en Azkoitia</field>
+            <field name="website_meta_description">Consultora Odoo industrial con 17 años de experiencia. Implantación, desarrollo a medida y soporte para fabricantes y distribuidoras desde Azkoitia.</field>
+        </record>
+
+        <!-- /industrial — sectorial flagship per claim D pre-spec. -->
+        <record id="page_industrial" model="ir.ui.view">
+            <field name="website_meta_title">Industrial · Avanzosc</field>
+            <field name="website_meta_description">Odoo para industria: MES, trazabilidad, integración con máquina y automatización productiva. Avanzosc implanta ERP industrial desde 2008.</field>
+        </record>
+
+        <!-- /distribucion — sectorial. -->
+        <record id="page_distribucion" model="ir.ui.view">
+            <field name="website_meta_title">Distribución · Avanzosc</field>
+            <field name="website_meta_description">Odoo para distribución y mayoristas: gestión de almacén, picking, rutas y multi-canal. Implantación con Avanzosc, equipo experto desde 2008.</field>
+        </record>
+
+        <!-- /servicios — sectorial. -->
+        <record id="page_servicios" model="ir.ui.view">
+            <field name="website_meta_title">Servicios · Avanzosc</field>
+            <field name="website_meta_description">Odoo para empresas de servicios: gestión de proyectos, partes de trabajo y facturación recurrente. Avanzosc, consultora con 17 años de experiencia.</field>
+        </record>
+
+        <!-- /academias — sectorial. -->
+        <record id="page_academias" model="ir.ui.view">
+            <field name="website_meta_title">Academias · Avanzosc</field>
+            <field name="website_meta_description">Odoo para academias y centros formativos: matrículas, calendarios, evaluaciones y formación online. Implantación experta con Avanzosc desde Azkoitia.</field>
+        </record>
+
+        <!-- /conocenos — corporativo trust. -->
+        <record id="page_conocenos" model="ir.ui.view">
+            <field name="website_meta_title">Conócenos · Avanzosc</field>
+            <field name="website_meta_description">Avanzosc S.L., consultora Odoo en Azkoitia desde 2008. Más de 600 módulos publicados en OCA. Soluciones para industria, distribución y servicios.</field>
+        </record>
+
+        <!-- /contacto — conversion del funnel. -->
+        <record id="page_contacto" model="ir.ui.view">
+            <field name="website_meta_title">Contacto · Avanzosc</field>
+            <field name="website_meta_description">Hablemos de cómo Odoo puede encajar con tu operación industrial o comercial. Avanzosc, consultora con 17 años de experiencia. Respuesta en 24-48h.</field>
+        </record>
+
+        <!-- /kit-consulting — ES-only per D5. NO EU translation. -->
+        <record id="page_kit_consulting" model="ir.ui.view">
+            <field name="website_meta_title">Kit Consulting · Avanzosc</field>
+            <field name="website_meta_description">Avanzosc participa en el programa Kit Consulting de Red.es como entidad consultora. Asesoramiento en transformación digital para pymes industriales.</field>
+        </record>
+
+        <!-- Sync EU translations from `website.homepage` master a las copias
+             per-website. Razón en `models/website_meta_sync.py` docstring:
+             Odoo no propaga ir.translation entre el view master y sus
+             copias per-website auto-creadas, por lo que aunque el .po
+             aplica al master correctamente, las copias renderizadas
+             no lo reciben.
+             Idempotente. Corre en cada `-i` y `-u`. -->
+        <function model="website" name="_avanzosc_sync_homepage_meta"/>
+
+    </data>
+</odoo>

@@ -64,6 +64,14 @@
         "views/pages/legal_aviso.xml",
         "views/pages/legal_privacidad.xml",
         "views/pages/legal_cookies.xml",
+        # Sprint B2 metadata bundle (a11y/SEO audit 2026-05-04). Site
+        # name + per-page website_meta_title + website_meta_description.
+        # Cierra C2 + I1 + I5 + I7 + I8 (og/twitter rendering automático
+        # por core desde estos campos). EU translations en i18n/eu.po
+        # como DRAFT pendientes de Q1 fase 2.
+        # Carga al final: depende de los page records definidos en
+        # views/pages/*.xml + del record website.homepage_page (core).
+        "data/website_meta.xml",
     ],
     "installable": True,
     "application": False,

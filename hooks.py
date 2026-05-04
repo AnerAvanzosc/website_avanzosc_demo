@@ -345,20 +345,47 @@ def post_init_setup_languages(cr, registry):
         website.write({"default_lang_id": es_lang.id})
 
 
+def post_init_sync_homepage_meta(cr, registry):
+    """Sprint B2 — sync homepage meta translations across multi-website
+    view copies. Wraps the imperative method on `website` model so that
+    on a fresh install the per-website copies of `website.homepage`
+    receive the EU translation (rather than waiting for the next `-u`).
+
+    The same call is also invoked via `<function>` in
+    `data/website_meta.xml`, so on `-u` the sync also runs without
+    re-installing.
+
+    See `models/website_meta_sync.py` docstring for the architectural
+    reason (Odoo per-website view duplication doesn't carry over
+    `ir.translation` rows from the master).
+    """
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    env["website"]._avanzosc_sync_homepage_meta()
+
+
 def _post_init_main(cr, registry):
     """Wrapper invoked by manifest 'post_init_hook'.
 
-    Composes the three post-init sub-logics in deterministic order:
+    Composes the four post-init sub-logics in deterministic order:
       1. post_init_setup_languages — activate ES + EU and bind to
          website 1 with ES as default (D10).
       2. post_init_menu_hierarchy — Soluciones dropdown children (D7).
       3. post_init_remove_odoo_defaults — cleanup of Odoo defaults (D8).
+      4. post_init_sync_homepage_meta — Sprint B2 multi-website view
+         translation sync.
 
     Languages run first because the menu hierarchy hook iterates over
     `env['website'].search([])` and consults `website.menu_id` per site.
     Having languages set up first ensures consistent state for any
     subsequent translation work that the menu hook might trigger.
+
+    Homepage meta sync runs LAST because it depends on `i18n/eu.po`
+    being already loaded (the master view's EU translation must be
+    present in `ir.translation` before we copy it to per-website copies).
+    Odoo loads .po files between data XML and post_init_hook, so the
+    ordering is correct.
     """
     post_init_setup_languages(cr, registry)
     post_init_menu_hierarchy(cr, registry)
     post_init_remove_odoo_defaults(cr, registry)
+    post_init_sync_homepage_meta(cr, registry)

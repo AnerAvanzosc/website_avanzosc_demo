@@ -58,6 +58,17 @@ exactos, verificación posterior y tiempo estimado.
 - [ ] **Hex finales del logo + SVG** (spec §13 #3)
   - SCSS `_variables.scss` actualizado con hex extraídos de logo real.
   - `views/layout.xml` con SVG vectorial limpio (no bitmap).
+- [ ] **`res.company.name` configurado como «Avanzosc S.L.»** (Sprint B2 hallazgo §8.5)
+  - Origen: el tag `og:site_name` que Odoo emite en cada página (visible en shares LinkedIn / Slack / Twitter / WhatsApp) sale de `res.company.name`, NO de `website.name`. El módulo `website_avanzosc_demo` setea `website.name = "Avanzosc"` (Sprint B2, I1) pero NO toca `res.company` porque la company es config de tenant Odoo, no parte del scope del módulo.
+  - Verificación: `psql -d odoo14_community -c "SELECT id, name FROM res_company WHERE id=1;"` → debe devolver `Avanzosc S.L.` (no `YourCompany`, default Odoo).
+  - Si está como `YourCompany`: configurar vía Settings → Companies → editar nombre, o vía SQL/shell:
+    ```bash
+    /opt/odoo/v14/venv/bin/python /opt/odoo/v14/base/odoo-bin shell -c /etc/odoo/odoo14_community.conf -d odoo14_community --no-http
+    >>> env['res.company'].browse(1).write({'name': 'Avanzosc S.L.'})
+    >>> env.cr.commit()
+    ```
+  - Verificación post-fix: `curl -s https://avanzosc.es/ | grep og:site_name` debe devolver `<meta property="og:site_name" content="Avanzosc S.L."/>`.
+  - Idempotente: si ya está como «Avanzosc S.L.», no hacer nada.
 
 **Si CUALQUIER pre-check falla**: NO continuar. Volver a la fase
 correspondiente del plan y cerrar el gate antes de re-intentar.

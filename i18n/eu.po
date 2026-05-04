@@ -527,25 +527,25 @@ msgstr "Gurekin hitz egin"
 # ===========================================================================
 # Slug URL EU sectorial — VALIDADO D2, NO DRAFT.
 #. module: website_avanzosc_demo
-#: model:website.page,url:website_avanzosc_demo.page_industrial_record
+#: model:website.page,url:website_avanzosc_demo.page_industrial
 msgid "/industrial"
 msgstr "/industriala"
 
 # Slug URL EU sectorial — VALIDADO D2, NO DRAFT.
 #. module: website_avanzosc_demo
-#: model:website.page,url:website_avanzosc_demo.page_distribucion_record
+#: model:website.page,url:website_avanzosc_demo.page_distribucion
 msgid "/distribucion"
 msgstr "/banaketa"
 
 # Slug URL EU sectorial — VALIDADO D2, NO DRAFT.
 #. module: website_avanzosc_demo
-#: model:website.page,url:website_avanzosc_demo.page_servicios_record
+#: model:website.page,url:website_avanzosc_demo.page_servicios
 msgid "/servicios"
 msgstr "/zerbitzuak"
 
 # Slug URL EU sectorial — VALIDADO D2, NO DRAFT.
 #. module: website_avanzosc_demo
-#: model:website.page,url:website_avanzosc_demo.page_academias_record
+#: model:website.page,url:website_avanzosc_demo.page_academias
 msgid "/academias"
 msgstr "/akademiak"
 
@@ -903,7 +903,7 @@ msgstr "Kanpoko e-learning plataformekin integrazioa."
 # ============================================================================
 # Slug URL EU — VALIDADO D2 (sesión 2026-04-29), NO DRAFT.
 #. module: website_avanzosc_demo
-#: model:website.page,url:website_avanzosc_demo.page_conocenos_record
+#: model:website.page,url:website_avanzosc_demo.page_conocenos
 msgid "/conocenos"
 msgstr "/ezagutu-gaitzazu"
 
@@ -915,7 +915,7 @@ msgstr "/lan-egin-gurekin"
 
 # Slug URL EU — VALIDADO D2 (sesión 2026-04-29), NO DRAFT.
 #. module: website_avanzosc_demo
-#: model:website.page,url:website_avanzosc_demo.page_contacto_record
+#: model:website.page,url:website_avanzosc_demo.page_contacto
 msgid "/contacto"
 msgstr "/kontaktua"
 
@@ -1538,3 +1538,145 @@ msgstr "Hasierara itzuli"
 #, fuzzy
 msgid "Ver soluciones"
 msgstr "Soluzioak ikusi"
+
+# ============================================================================
+# Sprint B2 metadata bundle — website.page meta_title + meta_description
+# (a11y/SEO audit 2026-05-04 closure). 14 entries DRAFT añadidas
+# 2026-05-04 — pendientes de validación lingüística Q1 fase 2.
+# Bound to data/website_meta.xml records vía xmlid + field reference.
+# kit-consulting: ES-only per D5 (no EU translation).
+# Site name «Avanzosc»: idéntico ES/EU (no se traduce, no entry .po).
+# ============================================================================
+
+# DRAFT - REVIEW NEEDED — Home meta title (B2 / I5+I1).
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_title:website.homepage
+#, fuzzy
+msgid "Avanzosc · Consultora Odoo industrial en Azkoitia"
+msgstr "Avanzosc · Odoo aholkulari industriala Azkoitian"
+
+# DRAFT - REVIEW NEEDED — Home meta description (B2 / C2+I7+I8).
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_description:website.homepage
+#, fuzzy
+msgid ""
+"Consultora Odoo industrial con 17 años de experiencia. Implantación, "
+"desarrollo a medida y soporte para fabricantes y distribuidoras desde "
+"Azkoitia."
+msgstr ""
+"Odoo aholkulari industriala 17 urteko esperientziarekin. Ezarpena, "
+"garapena eta laguntza fabrikatzaile eta banatzaileentzat Azkoititik."
+
+# DRAFT - REVIEW NEEDED — /industrial meta title.
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_title:website_avanzosc_demo.page_industrial
+#, fuzzy
+msgid "Industrial · Avanzosc"
+msgstr "Industriala · Avanzosc"
+
+# DRAFT - REVIEW NEEDED — /industrial meta description.
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_description:website_avanzosc_demo.page_industrial
+#, fuzzy
+msgid ""
+"Odoo para industria: MES, trazabilidad, integración con máquina y "
+"automatización productiva. Avanzosc implanta ERP industrial desde 2008."
+msgstr ""
+"Odoo industriarako: MES, trazabilitatea, makinarekin integrazioa eta "
+"produkzio automatizazioa. Avanzoscek ERP industriala ezartzen du 2008tik."
+
+# DRAFT - REVIEW NEEDED — /distribucion meta title.
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_title:website_avanzosc_demo.page_distribucion
+#, fuzzy
+msgid "Distribución · Avanzosc"
+msgstr "Banaketa · Avanzosc"
+
+# DRAFT - REVIEW NEEDED — /distribucion meta description.
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_description:website_avanzosc_demo.page_distribucion
+#, fuzzy
+msgid ""
+"Odoo para distribución y mayoristas: gestión de almacén, picking, rutas "
+"y multi-canal. Implantación con Avanzosc, equipo experto desde 2008."
+msgstr ""
+"Odoo banaketa eta handizkarientzat: biltegiaren kudeaketa, picking-a, "
+"ibilbideak eta kanal anitza. Ezarpena Avanzosckin, talde aditua 2008tik."
+
+# DRAFT - REVIEW NEEDED — /servicios meta title.
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_title:website_avanzosc_demo.page_servicios
+#, fuzzy
+msgid "Servicios · Avanzosc"
+msgstr "Zerbitzuak · Avanzosc"
+
+# DRAFT - REVIEW NEEDED — /servicios meta description.
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_description:website_avanzosc_demo.page_servicios
+#, fuzzy
+msgid ""
+"Odoo para empresas de servicios: gestión de proyectos, partes de trabajo "
+"y facturación recurrente. Avanzosc, consultora con 17 años de "
+"experiencia."
+msgstr ""
+"Odoo zerbitzu enpresentzat: proiektuen kudeaketa, lan partak eta "
+"fakturazio errepikakorra. Avanzosc, 17 urteko esperientzia duen "
+"aholkulari taldea."
+
+# DRAFT - REVIEW NEEDED — /academias meta title.
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_title:website_avanzosc_demo.page_academias
+#, fuzzy
+msgid "Academias · Avanzosc"
+msgstr "Akademiak · Avanzosc"
+
+# DRAFT - REVIEW NEEDED — /academias meta description.
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_description:website_avanzosc_demo.page_academias
+#, fuzzy
+msgid ""
+"Odoo para academias y centros formativos: matrículas, calendarios, "
+"evaluaciones y formación online. Implantación experta con Avanzosc desde "
+"Azkoitia."
+msgstr ""
+"Odoo akademia eta prestakuntza zentroentzat: matrikulazioak, egutegiak, "
+"ebaluazioak eta online prestakuntza. Ezarpen aditua Avanzosckin, "
+"Azkoititik."
+
+# DRAFT - REVIEW NEEDED — /conocenos meta title.
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_title:website_avanzosc_demo.page_conocenos
+#, fuzzy
+msgid "Conócenos · Avanzosc"
+msgstr "Ezagutu gaitzazu · Avanzosc"
+
+# DRAFT - REVIEW NEEDED — /conocenos meta description.
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_description:website_avanzosc_demo.page_conocenos
+#, fuzzy
+msgid ""
+"Avanzosc S.L., consultora Odoo en Azkoitia desde 2008. Más de 600 módulos "
+"publicados en OCA. Soluciones para industria, distribución y servicios."
+msgstr ""
+"Avanzosc S.L., Azkoitiko Odoo aholkularia 2008tik. OCA-n 600 modulu baino "
+"gehiago argitaratuta. Industria, banaketa eta zerbitzuetarako soluzioak."
+
+# DRAFT - REVIEW NEEDED — /contacto meta title.
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_title:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid "Contacto · Avanzosc"
+msgstr "Kontaktua · Avanzosc"
+
+# DRAFT - REVIEW NEEDED — /contacto meta description.
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_description:website_avanzosc_demo.page_contacto
+#, fuzzy
+msgid ""
+"Hablemos de cómo Odoo puede encajar con tu operación industrial o "
+"comercial. Avanzosc, consultora con 17 años de experiencia. Respuesta "
+"en 24-48h."
+msgstr ""
+"Hitz egin dezagun nola Odoo egokitzen den zure industria edo "
+"merkataritza eragiketara. Avanzosc, 17 urteko esperientzia. Erantzuna "
+"24-48 ordutan."
