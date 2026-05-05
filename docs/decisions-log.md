@@ -584,6 +584,89 @@ Mobile Perf score caída 52→45 (-7) atribuible a TBT variance localhost. LCP e
 - Verificación dinámica: `aria-hidden="true"` ✓, `pointer-events: none` ✓ ambos layers, parallax math correcto, reduced-motion CSS rules presentes.
 - 4 screenshots desktop+tablet+mobile+scrolled en `docs/audits/2026-05-04-a11y-seo/visual-pieza-a/`.
 
+### D28 — Pieza E v2: Timeline scroll-jacking pinneado con 3 slots cinemáticos
+
+Sesión 2026-05-05. Orquestador autorizó rediseño cinemático del snippet `s_avanzosc_timeline`. La sección se convierte en una pieza scroll-jacked: cuando entra en viewport se pinnea, y los 8 hitos pasan a través de 3 slots fijos (left preview, center protagonista, right preview) controlados por scroll progress. Cada wheel tick avanza 1 hito con transición CSS smooth ~0.5s `cubic-bezier(0.45,0,0.55,1)`.
+
+**Composición visual**:
+
+- **3 slots fijos** absolute positioned dentro de `.s_avanzosc_timeline_carousel.is-st-active` (height 420px). Layout responsive desktop only:
+  - `is-slot-left`: 18% horizontal, 22% width, scale 0.85, color `--neutral-700`.
+  - `is-slot-center`: 50% horizontal, 36% width, scale 1, color `--neutral-900` — protagonista (font-size title 1.5rem vs laterales 1rem).
+  - `is-slot-right`: 82% horizontal, 22% width, scale 0.85, color `--neutral-700`.
+  - `is-hidden-left` / `is-hidden-right`: opacity 0, fuera de viewport, scale 0.7. Estado de items que NO están en triada visible.
+
+- **Línea conectora horizontal** + 3 dots fijos a top:82% — decoración estática debajo de los slots. Dots originales de items (orange brand-primary) se ocultan con `display: none` cuando `is-st-active` (slot scaled items desalinearían los dots de la línea).
+
+**Mecánica técnica**:
+
+1. **Bridge Lenis ↔ ScrollTrigger** (en `static/src/js/main.js` post-Lenis init): `ScrollTrigger.scrollerProxy(wrapwrap, {scrollTop, getBoundingClientRect, pinType: 'transform'})` + `lenis.on('scroll', ScrollTrigger.update)` + `ScrollTrigger.defaults({scroller: wrapwrap})`. Patrón canónico Lenis docs. ScrollTrigger plugin 3.12.5 reintroducido en `views/assets.xml` slot 6 tras retirada en commit 61600ff (era plugin huérfano sin uso, ahora consumidor real).
+
+2. **`ScrollTrigger.create`** sobre `.s_avanzosc_timeline`: `pin: true, start: 'top top', end: '+=' + 7 * window.innerHeight, scrub: 1, snap: {snapTo: progress → Math.round(progress*7)/7, duration: 0.4, ease: 'expo.out'}`. SIN `animation` property — la animación visual la dirigen las CSS transitions de los items, no un tween GSAP.
+
+3. **`setActiveTriad(idx)`** en `static/src/js/snippets/timeline.js`: para cada item `n` aplica una de 5 clases de estado según distancia a `idx`. ScrollTrigger.onUpdate computa `idx = Math.round(progress * 7)` y llama a `setActiveTriad(idx)` solo si idx cambió. Las CSS transitions interpolan entre estados (transform, left, opacity, color, width — todas 0.5s).
+
+4. **CSS transitions vs GSAP timelines**: las transitions son idempotentes (sólo el target final cuenta), por lo que un click dot lejano (que dispara varios idx changes durante la 0.6s de `lenis.scrollTo`) no produce pile-up — la transición se redirige al target nuevo en cada cambio. Visualmente: coreografía rápida pero coordinada para saltos lejanos, suave para saltos de 1 hito.
+
+5. **Click handlers (dots/flechas)** route via `lenis.scrollTo(targetPageScroll, {duration: 0.6})` cuando pin activo, fallback `scrollIntoView({inline: 'center'})` en mobile/reduced-motion.
+
+6. **`aria-hidden` dinámico**: `setActiveTriad` añade `aria-hidden="true"` a items NO en slot-center; screen readers leen sólo el protagonista. Cambia en cada step.
+
+**Slots laterales — fix WCAG AA Opción 5**:
+
+Iteración del color en slots laterales:
+- v1: `color: var(--neutral-500)` (#7A828B) + `opacity: 0.5` → axe-core falla 3.6:1 sin opacity, peor con opacity.
+- v2 (Opción 1, intermedio): `color: var(--neutral-700)` + `opacity: 0.5` → axe sigue fallando porque factoriza opacity en blend (ratio 2.65:1 vs WCAG AA 4.5:1).
+- **v3 final (Opción 5)**: `color: var(--neutral-700)` SIN opacity en slots laterales (parent opacity:1 explícito, también removido `opacity: 0.85` en `.desc` de slots laterales). El "preview tenue" se reemplaza por **"preview espacial"**: diferenciación por scale (0.85), posición lateral (left 18% / right 82%) y tamaño tipográfico reducido (title 1rem vs 1.5rem) — sin sacrificar legibilidad WCAG AA.
+
+**Mobile (`<768px`)**: Pieza D base intacta (swipe horizontal scroll-snap nativo, items en flex row con `--item-width: calc(100vw - 120px)`). Bloque `.is-st-active` scoped bajo `@media (min-width: 768px)` — la clase nunca se añade en mobile vía JS gating (`window.innerWidth >= 768`).
+
+**`prefers-reduced-motion`**: scroll-jacking desactivado (`pinEnabled = false`), Pieza D base sin wheel listener, transitions `none` per `@include reduced-motion`. Estado natural visible inmediato.
+
+**Iteración del approach** (documentada en commit body):
+
+1. **Pieza D base** (commit `dde0c5b` previo): scroll-snap horizontal con drag/swipe libre + dots indicadores + flechas desktop. Funcional pero no genera sensación de recorrido controlado.
+2. **Pieza D mejora wheel**: listener custom `wheel → scrollIntoView next/prev item` con debounce + `data-lenis-prevent-wheel="true"` en track. Funcional pero "no impresionante" (descartado).
+3. **Pieza E v1** (translateX entera): tween animaba `track.scrollLeft` y luego `transform: translateX` de la `<ul>` entera, items pasaban contínuos. Funcional pero confirmaba el feedback "no suficientemente impresionante".
+4. **Pieza E v2** (slots cinemáticos — esta decisión): visual storytelling con triada slots fija + items pasando, protagonista claro.
+
+**Alternativas descartadas**:
+
+- Pieza D + mejora wheel: visual continuo, no jerarquía narrativa.
+- Pieza E v1 (translateX track): mismo problema.
+- Cross-fade slots fijos: efecto PowerPoint, sin el feel de "atravesar el tiempo".
+- Scrub continuo sin snap: pierde sensación de hitos discretos.
+- GSAP timelines per-step: pile-up con saltos lejanos vía click dot. CSS transitions idempotentes resuelven sin overhead.
+- Slots laterales con opacity reducida (Opción 1 fix contraste): rompe WCAG AA por blend con white.
+
+**Bugs descubiertos durante implementación** (capturados como gotchas en CLAUDE.md §7):
+
+- Chrome/Webkit `scrollWidth` excluye `padding-right` en `overflow-x:auto` → maxScrollLeft empíricamente 1713px vs 2128px requerido para centrar último item via scrollLeft. Resuelto cambiando a `transform: translateX` (Pieza E v1) y luego a slots fijos (Pieza E v2).
+- `gsap.from(elem, ...)` deja inline styles (transform, opacity) que ganan por specificity sobre clases CSS de estado. En Pieza E v2 el reveal stagger original sobrescribía las clases is-slot-X. Solución: skip reveal stagger cuando `pinEnabled` (los slots ARE the reveal).
+- axe-core 4.x SÍ factoriza `opacity` en color-contrast check — heredan multiplicativamente padre·hijo. Verificado empíricamente con neutral-700 + opacity 0.5: ratio efectivo 2.65:1 vs ratio puro 10.5:1.
+- Lenis 1.0.42 SÍ soporta atributo HTML `data-lenis-prevent-wheel` (verificado en source CDN `@studio-freight/lenis@1.0.42/dist/lenis.js`). Información previa errónea corregida.
+
+**Performance** (Lighthouse comparativo vs 61600ff):
+
+| Form | Baseline 61600ff | Post-Pieza E v2 | Δ | Threshold | Veredicto |
+|---|---|---|---|---|---|
+| Desktop | LCP 3.2s, Perf 77 | LCP 3.1s, Perf 77 | -100ms | <300ms | ✓ within (mejora ligera, variance) |
+| Mobile | LCP 16.8s, Perf 45 | LCP 17.1s (run1) / 17.0s (run2), Perf 42-46 | +200-300ms | <1s | ✓ within (variance band típica ±0.5s) |
+
+A11y score 96 ambos forms. ScrollTrigger CDN reintroducido (~25KB) no impacta LCP por carga `defer` natural en `<head>`.
+
+**Trigger reapertura**:
+- Si Plausible muestra bounce rate timeline alto post-switchover, reconsiderar.
+- Si feedback usuario reporta scroll-jacking incómodo (especialmente trackpad rápido), reabrir para suavizar feel (reducir scrub a 0.5, aumentar pin distance, etc.).
+- La deuda `deferred-brand-primary-contrast` (G3, 15 nodos) se hace MÁS visible — el year `--brand-primary` del slot-center es ahora protagonista absoluto. NO introduce nodo nuevo, pero acelera urgencia del trigger "logo authoritative" / brand source of truth.
+
+**Validación**:
+- Smoke verde (`docs/smoke-tests/sprint-pieza-e-v2-final.log`).
+- axe-core spot check `/`: 2 violations color-contrast (G1 cart `.ml-4` + G2 brand-primary `year` slot-center) — ambas son la deuda preexistente del brand-primary, NO violations nuevas de Pieza E v2.
+- Verificación funcional: pin engages on entry, snap por hito, click dots vía lenis.scrollTo, mid-transición captura los 4 items animándose simultáneamente sin pile-up, mobile fallback Pieza D intact, reduced-motion fallback intact.
+- 5 screenshots en `docs/audits/2026-05-04-a11y-seo/visual-pieza-e-v2/`: estado inicial (slot left vacío), mid hito 4 (3 slots con contenido), final hito 7 (slot right vacío), mid-transición 3→4 (coreografía), mobile fallback.
+- Lighthouse JSONs en `docs/audits/2026-05-04-a11y-seo/lighthouse-post-pieza-e-v2/` (desktop + mobile + mobile-2).
+
 ---
 
 ## 6. Decisiones diferidas con criterio de reapertura
