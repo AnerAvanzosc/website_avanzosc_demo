@@ -234,6 +234,11 @@ class WebsiteAvanzoscContact(http.Controller):
         except Exception:
             _logger.exception('[contacto] mail.mail send failed (form submission still confirmed to user)')
 
+        # Plausible goal flag — consumido (pop) por contacto_gracias.xml.
+        # Evita falsos positivos en refresh/URL directa al goal «Contact
+        # Form Submission». Solo se setea en happy path (NO honeypot, NO
+        # validation-failed). Per resolución deferred-q4-gracias-direct-access.
+        request.session['contact_submitted'] = True
         return request.redirect(self._gracias_url())
 
     def _contacto_url(self):

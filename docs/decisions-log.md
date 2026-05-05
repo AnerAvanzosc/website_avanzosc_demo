@@ -665,6 +665,16 @@ Coste estimado del fix: 20-30 min (controller + template + test del consumo del 
 
 **Sub-trigger lateral**: si Q3 post-asesoría exige consent banner para Plausible (escenario que D25 considera improbable pero posible), reabrir esto y migrar al flag de sesión a la vez que se reformula el setup analytics — esfuerzo combinado.
 
+**Resuelto (2026-05-05)** — Approach 1 (flag de sesión) implementado anticipando el trigger pre-switchover en lugar de esperar al criterio post-switchover +20%. Cambios:
+
+1. `controllers/main.py` `WebsiteAvanzoscContact.contacto_submit`: `request.session['contact_submitted'] = True` antes del `request.redirect(self._gracias_url())` en el happy path. NO en honeypot path. NO en validation-failed paths.
+2. `views/pages/contacto_gracias.xml`: patrón defensivo `<t t-set="show_plausible_goal" t-value="request.session.pop('contact_submitted', False)"/>` + `<t t-if="show_plausible_goal">` envolviendo el `<script>` inline. El `pop` consume el flag al primer disparo (robusto al refresh).
+3. `views/pages/contacto_gracias.xml` record `<field name="cache_time" eval="0"/>` — **gotcha descubierto durante implementación**: `website.page` cachea por defecto 3600s con `cache_key=(website_id, lang, path)` que NO incluye sesión. El render con flag se almacenaba y se servía a refresh / URL directa rompiendo el gating. Verificación empírica del cache stale durante curl tests. Auto-invalidate por `data-no-page-cache=""` en arch (`website.page._can_be_cached`) sólo se dispara al `write` de `vals['arch']` desde -u en condiciones específicas — descartado en favor de `cache_time=0` directo en el record (más explícito y verificable). El record ya tenía `noupdate="1"`; mantener noupdate=1 + SQL UPDATE sobre la fila existente para que tome efecto en BD pre-existente. El `cache_time=0` queda en XML para fresh installs futuros.
+
+Verificación funcional curl (3 escenarios, smoke `sprint-deferred-q4-gracias` verde): submit válido con cookies + follow 303 → `Contact Form Submission` aparece 1 vez ✓. Refresh con misma sesión → 0 ✓. URL directa sin cookies → 0 ✓.
+
+**Gotcha derivado documentado**: `website.page` cachea por defecto 3600s con cache_key SIN sesión — añadir a CLAUDE.md §5 si se descubre patrón recurrente en otras páginas. Por ahora gotcha localizado a `/contacto/gracias`.
+
 <a id="deferred-conocenos-stem-claim"></a>
 ### Claim «Equipo STEM mayoritariamente femenino» en body `/conocenos`
 

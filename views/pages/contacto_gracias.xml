@@ -42,23 +42,34 @@
                             </div>
                         </section>
                         <!-- Plausible goal "Contact Form Submission" — Q4 / D25.
-                             /contacto/gracias solo se alcanza tras 303 desde
-                             /contacto/submit con datos válidos (server-side
-                             validates required + privacidad). El honeypot
-                             también redirige aquí silenciosamente; los bots
-                             que rellenen el honeypot Y ejecuten JS Y burlen
-                             el bot-filtering de Plausible son edge case
-                             aceptable. Guarded por `window.plausible` para
-                             adblock / script bloqueado. Patrón inline
-                             DOMContentLoaded canónico de Plausible (idéntico
-                             al snippet oficial para tracking de 404). -->
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function () {
-                                if (window.plausible) {
-                                    window.plausible('Contact Form Submission');
-                                }
-                            });
-                        </script>
+                             Gated por flag de sesión `contact_submitted`
+                             que el controller `WebsiteAvanzoscContact.contacto_submit`
+                             setea en el happy path antes del redirect 303
+                             (NO en honeypot, NO en validation-failed).
+                             Resolución deferred-q4-gracias-direct-access:
+                             refresh, URL directa o navegación interna a
+                             /gracias sin venir del form ya NO disparan el
+                             goal. `pop` consume el flag — un solo disparo
+                             por submit, robusto al refresh. t-set + t-if
+                             defensivo: t-set evalúa una sola vez (evita
+                             re-evaluación bajo paths de compilación QWeb).
+                             Honeypot edge: bots rellenándolo Y ejecutando
+                             JS Y burlando bot-filter Plausible — aceptable
+                             (no setean flag, así que no disparan goal).
+                             Guarded por `window.plausible` para adblock /
+                             script bloqueado. Patrón inline DOMContentLoaded
+                             canónico Plausible (snippet oficial 404). -->
+                        <t t-set="show_plausible_goal"
+                           t-value="request.session.pop('contact_submitted', False)"/>
+                        <t t-if="show_plausible_goal">
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    if (window.plausible) {
+                                        window.plausible('Contact Form Submission');
+                                    }
+                                });
+                            </script>
+                        </t>
                     </div>
                 </div>
             </t>
@@ -68,6 +79,15 @@
 
     <data noupdate="1">
 
+        <!-- noupdate=1 deliberado: protege is_published / website_indexed
+             del reset por -u si en el futuro un admin los toca por UI.
+             Excepción cache_time=0: forzado por el gating del goal
+             Plausible (resolución deferred-q4-gracias-direct-access).
+             Sin cache_time=0, el render con flag de sesión queda
+             cacheado (default 3600 s, cache_key sin sesión) y se sirve
+             a refresh / URL directa rompiendo el gating. NO eliminar
+             cache_time=0 sin migrar el goal a otro mecanismo (e.g.
+             custom-event-on-submit fuera de la página confirmación). -->
         <record id="page_contacto_gracias_record" model="website.page">
             <field name="name">Gracias</field>
             <field name="type">qweb</field>
@@ -75,6 +95,7 @@
             <field name="view_id" ref="page_contacto_gracias"/>
             <field name="is_published" eval="True"/>
             <field name="website_indexed" eval="False"/>
+            <field name="cache_time" eval="0"/>
         </record>
 
     </data>

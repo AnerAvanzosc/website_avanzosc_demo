@@ -307,7 +307,6 @@ Detalle íntegro de cada decisión (validaciones literales, justificaciones téc
 - [ ] **Plan migración contenido antiguo** — tienda/cursos: ¿migrar o solo re-skinear?
 - [ ] **Diferido — `publicWidget` selector `'body'` no instancia** — workaround D15 vigente. [link](docs/decisions-log.md#deferred-publicwidget-body).
 - [ ] **Diferido — TTFB prod re-validate** — D20 medido en localhost. Trigger: post-switchover Phase 10.6. [link](docs/decisions-log.md#deferred-ttfb-prod).
-- [ ] **Diferido — `/contacto/gracias` direct access falsea conversión Plausible** — ruido aceptado v1. [link](docs/decisions-log.md#deferred-q4-gracias-direct-access).
 - [ ] **Diferido — claim STEM en body `/conocenos` (B2)** — pre-switchover OBLIGATORIO. Sin trigger atendido NO autorizar switchover. [link](docs/decisions-log.md#deferred-conocenos-stem-claim).
 - [ ] **Diferido — Lighthouse Best Practices 81-82/100** — origen upstream Odoo 14, sin parche posible. [link](docs/decisions-log.md#deferred-lighthouse-best-practices-upstream).
 - [ ] **Diferido — contraste `--brand-primary` 15 nodos (C3 brand)** — acoplado con hex finales del logo. Recomendado pre-switchover (EAA 2025). [link](docs/decisions-log.md#deferred-brand-primary-contrast).
