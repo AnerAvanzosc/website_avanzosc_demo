@@ -42,64 +42,10 @@
                 <h2 class="s_avanzosc_timeline_heading">Trayectoria</h2>
                 <p class="s_avanzosc_timeline_intro">Desde 2008, antes incluso de que se llamara Odoo.</p>
 
-                <!-- Pieza D base + Pieza E pin/snap — Carrusel scroll-snap
-                     horizontal con scroll-jacking opcional.
-                     Estructura: arrows + track + dots indicators dentro de
-                     `.s_avanzosc_timeline_carousel`. Items mantienen sus
-                     campos year + title + desc — solo cambia el contenedor.
-
-                     Mecánica dual:
-                       - Mobile / reduced-motion: scroll-snap CSS x mandatory
-                         en track (Pieza D base). Drag/swipe libre, snap por
-                         hito al soltar. Wheel de página se comporta natural
-                         (Lenis vertical).
-                       - Desktop motion-on: timeline.js engancha ScrollTrigger
-                         pin+snap. La sección se pinea al entrar viewport, los
-                         wheel ticks de Lenis se traducen a un step horizontal
-                         por hito, y al completar los 8 hitos el pin se libera
-                         y la página continúa. JS añade `.is-st-active` al
-                         carousel y SCSS desactiva scroll-snap-type para no
-                         fightear el tween que escribe scrollLeft (snap
-                         mandatory pulla las escrituras GSAP — verificado
-                         empíricamente Pieza D mejora wheel sesión 2026-05-05).
-
-                     ARIA: role="region" + tabindex en el wrapper `<div>`
-                     `.s_avanzosc_timeline_track_wrap`, NO en la `<ul>`.
-                     Razón: poner role="region" en `<ul>` rompe el rol
-                     implícito list y deja los `<li>` huérfanos (axe-core
-                     reporta `aria-allowed-role` + `listitem` violations,
-                     verificado empíricamente sesión 2026-05-05). El
-                     wrapper `<div>` recibe los atributos manteniendo la
-                     `<ul>` con su semántica natural.
-
-                     NOTA: en Pieza D mejora wheel se añadió
-                     `data-lenis-prevent-wheel="true"` para que Lenis ignorara
-                     el wheel sobre el track y un listener custom traducía a
-                     scroll horizontal. Pieza E retira esa atribución porque
-                     ahora QUEREMOS que Lenis procese el wheel (drives la
-                     página → ScrollTrigger pin → tween → scrollLeft del
-                     track). -->
-                <div class="s_avanzosc_timeline_carousel">
-                    <button type="button"
-                            class="s_avanzosc_timeline_arrow s_avanzosc_timeline_arrow--prev"
-                            aria-label="Hito anterior"
-                            disabled="disabled">‹</button>
-                    <button type="button"
-                            class="s_avanzosc_timeline_arrow s_avanzosc_timeline_arrow--next"
-                            aria-label="Hito siguiente">›</button>
-                    <!-- Pieza E v2 — 3 slot dots fijos sobre la línea conectora.
-                         Sólo visibles cuando is-st-active (CSS). En modo Pieza D
-                         mobile estos dots no se renderizan (display:none implícito
-                         por el bloque @media + .is-st-active del SCSS). Decoración
-                         pura: el indicador "qué hito está activo" vive en la
-                         barra de 8 dots inferior. -->
-                    <span class="s_avanzosc_timeline_slot_dot s_avanzosc_timeline_slot_dot--left" aria-hidden="true"></span>
-                    <span class="s_avanzosc_timeline_slot_dot s_avanzosc_timeline_slot_dot--center" aria-hidden="true"></span>
-                    <span class="s_avanzosc_timeline_slot_dot s_avanzosc_timeline_slot_dot--right" aria-hidden="true"></span>
-                    <div class="s_avanzosc_timeline_track_wrap"
-                         tabindex="0"
-                         role="region"
-                         aria-label="Trayectoria Avanzosc 2008-2024">
+                <div class="s_avanzosc_timeline_track"
+                     tabindex="0"
+                     role="region"
+                     aria-label="Trayectoria Avanzosc 2008-2024">
                     <ul class="s_avanzosc_timeline_items">
                         <li class="s_avanzosc_timeline_item">
                             <span class="s_avanzosc_timeline_dot"/>
@@ -150,17 +96,6 @@
                             <p class="s_avanzosc_timeline_desc">Industrial, distribución, servicios, academias. Mayoría STEM femenina.</p>
                         </li>
                     </ul>
-                    </div>
-                    <div class="s_avanzosc_timeline_dots" aria-label="Indicadores de hito">
-                        <button type="button" class="s_avanzosc_timeline_dot_indicator is-active" data-target-index="0" aria-label="Ir al hito 1: 2008" aria-current="true"></button>
-                        <button type="button" class="s_avanzosc_timeline_dot_indicator" data-target-index="1" aria-label="Ir al hito 2: 2011"></button>
-                        <button type="button" class="s_avanzosc_timeline_dot_indicator" data-target-index="2" aria-label="Ir al hito 3: 2014"></button>
-                        <button type="button" class="s_avanzosc_timeline_dot_indicator" data-target-index="3" aria-label="Ir al hito 4: 2017"></button>
-                        <button type="button" class="s_avanzosc_timeline_dot_indicator" data-target-index="4" aria-label="Ir al hito 5: 2020"></button>
-                        <button type="button" class="s_avanzosc_timeline_dot_indicator" data-target-index="5" aria-label="Ir al hito 6: 2022"></button>
-                        <button type="button" class="s_avanzosc_timeline_dot_indicator" data-target-index="6" aria-label="Ir al hito 7: 2024"></button>
-                        <button type="button" class="s_avanzosc_timeline_dot_indicator" data-target-index="7" aria-label="Ir al hito 8: Hoy"></button>
-                    </div>
                 </div>
             </div>
         </section>

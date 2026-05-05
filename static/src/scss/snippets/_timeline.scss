@@ -1,8 +1,7 @@
 // =============================================================================
-// _timeline.scss — Estilos del snippet s_avanzosc_timeline (Pieza D rediseño).
-// Scope: 8 hitos en carrusel scroll-snap horizontal con asomamiento lateral,
-// dots indicadores clicables debajo, flechas prev/next desktop.
-// Ref: spec §6.8, CLAUDE.md §11 «Trayectoria», §5 reduced-motion, Pieza D.
+// _timeline.scss — Estilos del snippet s_avanzosc_timeline (Task 3.8).
+// Scope: 8 hitos horizontal desktop / vertical mobile, GSAP-driven reveal.
+// Ref: spec §6.8, CLAUDE.md §11 «Trayectoria», §5 reduced-motion.
 // =============================================================================
 
 .s_avanzosc_timeline {
@@ -34,104 +33,94 @@
 }
 
 // -----------------------------------------------------------------------------
-// Carrusel container — Pieza D
+// Track (contenedor de items)
 // -----------------------------------------------------------------------------
-// Wrapping del track + arrows + dots indicators. Variables CSS para
-// item-width y gap responsivos. position relative para anchor de los
-// elementos absolutos (flechas + línea conectora ::before).
-// overflow: visible para que el asomamiento de items vecinos NO se recorte
-// en los bordes del container — el track interno es quien tiene
-// overflow-x: auto. Trade-off scroll-snap conocido: con overflow visible
-// en wrapper, el scroll lateral del track sigue funcionando porque el
-// track tiene su propio overflow-x.
+// Desktop (md+): horizontal flex con overflow-x: auto y scroll-snap suave
+// para que el usuario pueda navegar lateralmente si los 8 items exceden
+// el container width.
+// Mobile (<md): vertical column.
 // -----------------------------------------------------------------------------
-.s_avanzosc_timeline_carousel {
-    --item-width: 280px;
-    --item-gap: 1.5rem;
-    --dot-center-y: calc(0.5rem + 8px);  // Item padding-top relativo + dot half-height.
-
+.s_avanzosc_timeline_track {
     position: relative;
-    overflow: visible;
 
-    @media (max-width: 767.98px) {
-        // Mobile: item-width pequeño para garantizar peek visible de los
-        // hitos vecinos (~44px por lado tras descontar gap). Fórmula
-        // empírica: viewport(375) - 120px = 255px → padding-each-side = 60px,
-        // gap = 16px → vecino asoma 60-16 = 44px. Encaja dentro del rango
-        // 40-60px del briefing.
-        --item-width: calc(100vw - 120px);
-        --item-gap: 1rem;
-    }
-
-    // Línea conectora horizontal — pseudo-elemento del carousel container.
-    // Continúa fuera del viewport del track (entra por izquierda, sale por
-    // derecha) per briefing Pieza D. NO se corta en bordes — usa left/right
-    // del container que se extiende más allá del clip del track.
-    &::before {
-        content: "";
-        position: absolute;
-        top: var(--dot-center-y);  // Alinea con centro del dot del item.
-        left: 0;
-        right: 0;
-        height: 2px;
-        background-color: var(--neutral-300, #D3D7DC);
-        z-index: 0;
-        pointer-events: none;
+    @media (min-width: 768px) {
+        overflow-x: auto;
+        overflow-y: visible;  // Permite que dot/year/title/desc se vean por encima del track.
+        scroll-snap-type: x proximity;
+        // Padding bottom for scrollbar breathing room.
+        padding-bottom: 0.5rem;
     }
 }
 
-// -----------------------------------------------------------------------------
-// Track wrapper (recibe role="region" + tabindex + aria-label) — Pieza D
-// -----------------------------------------------------------------------------
-// Wrapper `<div>` exterior a la `<ul>`. Tiene los atributos ARIA + scroll
-// behavior + scrollbar hidden. La `<ul>` interna queda con sus list semantics
-// intactas (sin role, sin tabindex), evitando que axe-core reporte
-// `aria-allowed-role` y `listitem` violations.
-// -----------------------------------------------------------------------------
-.s_avanzosc_timeline_track_wrap {
-    overflow-x: auto;
-    overflow-y: visible;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    // Scrollbar hidden cross-browser: el indicador visual es la barra de dots,
-    // no la scrollbar nativa.
-    scrollbar-width: none;             // Firefox
-    -ms-overflow-style: none;          // IE/Edge legacy
-    &::-webkit-scrollbar { display: none; }  // Webkit
-    // Outline visible al focus para accesibilidad keyboard
-    &:focus-visible {
-        outline: 2px solid var(--brand-primary, #E85D2F);
-        outline-offset: 4px;
-    }
-}
-
-// -----------------------------------------------------------------------------
-// Items (flex inner) — scroll-snap-align centered
-// -----------------------------------------------------------------------------
-// `<ul>` recibe display flex + padding lateral para centrado del primer/último.
-// scroll-snap se hereda del wrapper que tiene overflow scroll. Sin role propio
-// para mantener la semántica list nativa.
-// -----------------------------------------------------------------------------
 .s_avanzosc_timeline_items {
     list-style: none;
+    padding: 0;
     margin: 0;
-    padding: 0.5rem calc(50% - var(--item-width) / 2) 1rem;
+
+    // Mobile: vertical stack con línea vertical a la izquierda.
     display: flex;
-    flex-direction: row;
-    gap: var(--item-gap);
+    flex-direction: column;
+    gap: 2rem;
+
+    @media (min-width: 768px) {
+        // Desktop: horizontal row con línea horizontal a través de los dots.
+        flex-direction: row;
+        gap: 0;
+        position: relative;
+
+        // Línea horizontal continua a través de los dots.
+        // Posicionada en `top: 0.5rem` (alinea con el centro vertical del dot,
+        // que tiene altura 1rem).
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0.5rem;
+            left: 1.5rem;
+            right: 1.5rem;
+            height: 2px;
+            background-color: var(--neutral-300, #D3D7DC);
+            z-index: 0;
+        }
+    }
 }
 
 // -----------------------------------------------------------------------------
-// Item individual — flex 0 0 var width + scroll-snap-align center
+// Item individual (cada hito)
+// -----------------------------------------------------------------------------
+// Mobile: row layout con dot left + content right (padding-left para
+// reservar espacio del dot+linea vertical).
+// Desktop: column layout con dot top + year/title/desc below.
 // -----------------------------------------------------------------------------
 .s_avanzosc_timeline_item {
     position: relative;
-    flex: 0 0 var(--item-width);
-    scroll-snap-align: center;
-    padding-top: 2rem;  // Espacio reservado para dot + año arriba del título.
-    text-align: center;
-    // z-index sobre la línea conectora ::before del carousel.
-    z-index: 1;
+    padding-left: 2.5rem;  // Mobile: espacio para dot + línea vertical.
+
+    @media (min-width: 768px) {
+        // Desktop: column. Width fijo para horizontal layout.
+        flex: 0 0 auto;
+        width: 220px;
+        padding-left: 0;
+        padding-top: 2rem;  // Espacio para que el dot+línea vivan arriba.
+        text-align: center;
+        scroll-snap-align: start;
+    }
+
+    // Mobile: línea vertical a la izquierda de cada item, conectando dots.
+    @media (max-width: 767.98px) {
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: -2rem;  // Extiende a través del gap al item siguiente.
+            left: 0.5rem;
+            width: 2px;
+            background-color: var(--neutral-300, #D3D7DC);
+            z-index: 0;
+        }
+        &:last-child::before {
+            display: none;  // Último item no necesita continuación.
+        }
+    }
 }
 
 .s_avanzosc_timeline_dot {
@@ -143,10 +132,18 @@
     background-color: var(--brand-primary, #E85D2F);
     border: 2px solid var(--neutral-0, #FFFFFF);
     box-shadow: 0 0 0 2px var(--neutral-300, #D3D7DC);
+    z-index: 1;
+
+    // Mobile: dot a la izquierda del padding del item.
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;  // Sobre la línea conectora.
+    left: 0;
+
+    @media (min-width: 768px) {
+        // Desktop: dot centrado horizontal en la posición top del item.
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
 
 .s_avanzosc_timeline_year {
@@ -179,349 +176,10 @@
 }
 
 // -----------------------------------------------------------------------------
-// Flechas prev/next — solo desktop, discretas
+// Reduced-motion: estado final directo, sin animación.
 // -----------------------------------------------------------------------------
-// Position absolute sobre el track, top centrado a la altura del título
-// (no del dot — que el usuario navegue con flecha al lado del nombre del
-// hito, no al lado del dot small). Estilo discreto: bg blanco con shadow,
-// icono solo, no protagonistas.
-// -----------------------------------------------------------------------------
-.s_avanzosc_timeline_arrow {
-    @media (max-width: 767.98px) {
-        display: none;
-    }
-
-    position: absolute;
-    top: 4rem;  // Centrado aprox a la altura del título del item activo.
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    border: 1px solid var(--neutral-300, #D3D7DC);
-    background-color: var(--neutral-0, #FFFFFF);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    color: var(--neutral-700, #3A4149);
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 400;
-    line-height: 1;
-    cursor: pointer;
-    z-index: 3;  // Sobre items + línea conectora.
-    transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
-                color 200ms cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 200ms cubic-bezier(0.16, 1, 0.3, 1);
-
-    &:hover:not([disabled]),
-    &:focus-visible:not([disabled]) {
-        background-color: var(--brand-primary, #E85D2F);
-        color: var(--neutral-0, #FFFFFF);
-        border-color: var(--brand-primary, #E85D2F);
-    }
-
-    &[disabled] {
-        opacity: 0.3;
-        cursor: not-allowed;
-    }
-
-    &--prev {
-        left: 0.5rem;
-    }
-
-    &--next {
-        right: 0.5rem;
-    }
-
-    @include reduced-motion {
-        transition: none;
-    }
-}
-
-// -----------------------------------------------------------------------------
-// Dots indicadores — barra debajo del track
-// -----------------------------------------------------------------------------
-.s_avanzosc_timeline_dots {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-}
-
-.s_avanzosc_timeline_dot_indicator {
-    width: 8px;
-    height: 8px;
-    padding: 0;
-    border: none;
-    border-radius: 50%;
-    background-color: var(--neutral-300, #D3D7DC);
-    cursor: pointer;
-    transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
-                transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
-
-    &.is-active,
-    &[aria-current="true"] {
-        background-color: var(--brand-primary, #E85D2F);
-        transform: scale(1.4);
-    }
-
-    &:hover:not(.is-active),
-    &:focus-visible:not(.is-active) {
-        background-color: var(--neutral-500, #7A828B);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--brand-primary, #E85D2F);
-        outline-offset: 3px;
-    }
-
-    @include reduced-motion {
-        transition: none;
-    }
-}
-
-// -----------------------------------------------------------------------------
-// Pieza E v2 — Slots cinemáticos (3 slots: left / center / right)
-// -----------------------------------------------------------------------------
-// Cambio de mecánica respecto a Pieza E v1: en lugar de animar translateX de
-// toda la `<ul>` como un track contínuo deslizable, fijamos 3 slots en
-// posición absoluta (left ~18%, center 50%, right ~82%) y los 8 items pasan
-// a través de ellos al avanzar el scroll-jacking. El slot center es el
-// protagonista (full color, scale 1, opacity 1, width 36%); left/right son
-// preview/recap (scale 0.85, opacity 0.5, color neutral, width 22%).
-//
-// Cada item tiene 5 estados posibles:
-//   .is-hidden-left   — fuera del viewport por la izquierda (opacity 0).
-//   .is-slot-left     — slot izquierdo (preview pasado).
-//   .is-slot-center   — slot central (protagonista).
-//   .is-slot-right    — slot derecho (preview futuro).
-//   .is-hidden-right  — fuera del viewport por la derecha (opacity 0).
-//
-// JS (`setActiveTriad(idx)`) computa para cada item N qué clase aplicar:
-//   N <  idx-1     → is-hidden-left
-//   N == idx-1     → is-slot-left
-//   N == idx       → is-slot-center
-//   N == idx+1     → is-slot-right
-//   N >  idx+1     → is-hidden-right
-//
-// Las CSS transitions (0.5s ease cubic-bezier) interpolan entre estados, y
-// como el cambio de clase es idempotente (sólo el target final cuenta), los
-// saltos rápidos de idx (click dot lejano → varios pasos en 0.6s) no
-// producen pile-up de animaciones — la transición se redirige al nuevo
-// target en cada cambio.
-//
-// Mobile / reduced-motion: la clase `is-st-active` NUNCA se añade (timeline.js
-// gating). El bloque slots está scoped bajo `@media (min-width: 768px)`
-// adicional para defensa en profundidad (incluso si la clase se añadiera por
-// error en mobile, el SCSS no la honraría — así Pieza D scroll-snap base
-// queda intacta).
-//
-// Línea conectora + dots fijos: el ::before del carousel pinta una línea
-// horizontal a una altura fija (top: 35%), y 3 dots fijos absolute en X
-// 18%/50%/82% se superponen sobre la línea. Los dots originales internos a
-// los items (`.s_avanzosc_timeline_dot`) se ocultan con `display: none` en
-// modo is-st-active porque el scale 0.85 los desalinearía de la línea.
-// -----------------------------------------------------------------------------
-
-@media (min-width: 768px) {
-
-    .s_avanzosc_timeline_carousel.is-st-active {
-        // Carousel pasa a ser un canvas absolute con altura fija.
-        height: 420px;
-        overflow: hidden;
-
-        // Track wrapper se simplifica: sin scroll, sin snap. La `<ul>`
-        // interna no es scrollable; los items absolutos viven directamente
-        // dentro de ella ocupando posiciones por clase.
-        .s_avanzosc_timeline_track_wrap {
-            overflow: hidden;
-            scroll-snap-type: none;
-            height: 100%;
-        }
-
-        .s_avanzosc_timeline_items {
-            position: relative;
-            height: 100%;
-            padding: 0;          // override Pieza D padding centering
-            display: block;       // override flex
-        }
-
-        // Ocultar dots internos a items — la línea conectora + 3 dots fijos
-        // de slot proveen el indicador visual estable.
-        .s_avanzosc_timeline_dot {
-            display: none;
-        }
-
-        // Línea conectora horizontal DEBAJO de los slots (no atravesándolos).
-        // top: 82% deja los items en el espacio 0-75% del carousel y la línea
-        // + 3 dots fijos en la franja inferior, simbolizando la "trayectoria"
-        // base sobre la que viajan los hitos. Posición visual: 344px sobre
-        // 420px de carousel.
-        &::before {
-            top: 82%;
-        }
-
-        // 3 dots fijos sobre la línea conectora a las posiciones de slot.
-        // Decoración estática — el indicador de "qué hito" está en la barra
-        // de 8 dots de abajo (.s_avanzosc_timeline_dots).
-        .s_avanzosc_timeline_slot_dot {
-            position: absolute;
-            top: 82%;
-            transform: translate(-50%, -50%);
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: var(--neutral-0, #FFFFFF);
-            border: 2px solid var(--neutral-300, #D3D7DC);
-            z-index: 2;
-            pointer-events: none;
-        }
-        .s_avanzosc_timeline_slot_dot--left { left: 18%; }
-        .s_avanzosc_timeline_slot_dot--center {
-            left: 50%;
-            border-color: var(--brand-primary, #E85D2F);
-            background-color: var(--brand-primary, #E85D2F);
-            width: 16px;
-            height: 16px;
-        }
-        .s_avanzosc_timeline_slot_dot--right { left: 82%; }
-    }
-
-    // -------------------------------------------------------------------
-    // Items en modo slots — 5 estados absolute positioning
-    // -------------------------------------------------------------------
-    // top: 40% deja el item por encima del centro vertical, dejando la
-    // franja inferior libre para la línea conectora + slot dots a top:82%.
-    // -------------------------------------------------------------------
-    .s_avanzosc_timeline_carousel.is-st-active .s_avanzosc_timeline_item {
-        position: absolute;
-        top: 40%;
-        left: 50%;                              // será sobrescrito por estado
-        transform: translate(-50%, -50%) scale(1);
-        width: 36%;
-        opacity: 0;                              // por defecto invisible
-        text-align: center;
-        padding: 0;
-        margin: 0;
-        flex: none;                              // override Pieza D
-        scroll-snap-align: none;                 // override Pieza D
-        z-index: 1;
-        pointer-events: none;
-        transition:
-            left 0.5s cubic-bezier(0.45, 0, 0.55, 1),
-            opacity 0.5s cubic-bezier(0.45, 0, 0.55, 1),
-            transform 0.5s cubic-bezier(0.45, 0, 0.55, 1),
-            color 0.5s cubic-bezier(0.45, 0, 0.55, 1),
-            width 0.5s cubic-bezier(0.45, 0, 0.55, 1);
-
-        @include reduced-motion {
-            transition: none;
-        }
-
-        // ----- Estado: hidden-left (fuera del viewport por la izquierda) -----
-        &.is-hidden-left {
-            left: -10%;
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0.7);
-            width: 22%;
-        }
-
-        // ----- Estado: slot-left (preview pasado) -----
-        // Opción 5 fix contraste WCAG AA (sesión 2026-05-05): color
-        // `--neutral-700` con `opacity: 1`. axe-core factoriza opacity en
-        // el cálculo color-contrast (verificado empíricamente: ratio
-        // teórico 10.5:1 para neutral-700 puro caía a 2.65:1 con opacity
-        // 0.5). El "preview tenue" se sustituye por "preview espacial":
-        // diferenciación por scale (0.85), posición lateral (left 18% /
-        // right 82%) y tamaño tipográfico reducido en title/desc — sin
-        // sacrificar legibilidad WCAG AA del texto. Note `opacity: 1`
-        // explícito en lugar de heredar — el base item rule pone
-        // `opacity: 0` por defecto (estado invisible) y los slots
-        // visibles deben sobrescribir.
-        &.is-slot-left {
-            left: 18%;
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(0.85);
-            width: 22%;
-            color: var(--neutral-700, #3A4149);
-        }
-
-        // ----- Estado: slot-center (protagonista) -----
-        &.is-slot-center {
-            left: 50%;
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-            width: 36%;
-            color: var(--neutral-900, #0F1419);
-            z-index: 3;
-            pointer-events: auto;
-        }
-
-        // ----- Estado: slot-right (preview futuro) -----
-        // Mismo fix Opción 5 que is-slot-left: opacity 1 explícita,
-        // color neutral-700 puro, diferenciación por scale + posición.
-        &.is-slot-right {
-            left: 82%;
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(0.85);
-            width: 22%;
-            color: var(--neutral-700, #3A4149);
-        }
-
-        // ----- Estado: hidden-right (fuera del viewport por la derecha) -----
-        &.is-hidden-right {
-            left: 110%;
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0.7);
-            width: 22%;
-        }
-    }
-
-    // En slot center, el year + title heredan tamaño normal; en slots
-    // laterales, el title se reduce un punto para enfatizar la jerarquía
-    // (protagonista vs preview). El color de cada elemento de texto hereda
-    // del item parent (--neutral-700 en slots laterales, --neutral-900 en
-    // slot center). El year mantiene brand-primary siempre (deuda
-    // brand-primary contrast deferred-G3, NO introducida por Pieza E v2).
-    //
-    // Opción 5 fix contraste: NO usamos opacity en text elements de slots
-    // laterales (axe-core factoriza opacity y rompía AA). Diferenciación
-    // de jerarquía por font-size únicamente.
-    .s_avanzosc_timeline_carousel.is-st-active {
-        .s_avanzosc_timeline_item.is-slot-left,
-        .s_avanzosc_timeline_item.is-slot-right {
-            .s_avanzosc_timeline_title {
-                font-size: 1rem;
-                color: inherit;
-            }
-            .s_avanzosc_timeline_desc {
-                font-size: 0.8125rem;
-                color: inherit;
-            }
-        }
-        .s_avanzosc_timeline_item.is-slot-center {
-            .s_avanzosc_timeline_title {
-                font-size: 1.5rem;
-                color: var(--neutral-900, #0F1419);
-            }
-            .s_avanzosc_timeline_desc {
-                font-size: 1rem;
-                color: var(--neutral-700, #3A4149);
-            }
-            .s_avanzosc_timeline_year {
-                font-size: 1rem;
-            }
-        }
-    }
-}
-
-// -----------------------------------------------------------------------------
-// Reduced-motion — neutralizar smooth scroll del track + transitions
-// -----------------------------------------------------------------------------
-.s_avanzosc_timeline_track_wrap {
-    @include reduced-motion {
-        scroll-behavior: auto;
-    }
-}
-
-// El JS de timeline.js detecta reduced-motion y NO ejecuta gsap.from() sobre
-// items — los items quedan en su estado natural (visible). El SCSS no
-// aplica opacity:0 inicial por esto: el «from» state lo seteа GSAP, el «to»
-// es el render natural CSS. Saltar gsap.from = render natural inmediato.
+// El JS de timeline.js detecta reduced-motion y NO ejecuta gsap.from()
+// — los items quedan en su estado natural (visible). El SCSS no necesita
+// neutralizar nada porque no hay opacity:0 inicial en CSS — el JS aplica
+// la animación FROM hidden TO visible via gsap, y bajo reduced-motion no
+// se ejecuta, dejando el estado «to» (natural CSS) como render default.
