@@ -734,3 +734,23 @@ Cuando se decida la migración, re-ejecutar Lighthouse y re-evaluar ambos. Si tr
 - Resolver los 3 a la vez: extraer hex del logo → actualizar `--brand-primary` y `--brand-secondary` → cerrar este deferred → cerrar gate logo en §11.
 
 **Validación post-fix esperada**: axe-core sobre 12 URLs → `color-contrast` violations = 0. Lighthouse a11y score ya está en 96 (post-B1+B2); cerrar G1+G3 lo acerca a 100. Si tras el fix de brand alguno de los 15 nodos persiste flagged, abrir entry específica.
+
+<a id="deferred-timeline-scrolljacking"></a>
+### Timeline scroll-jacking — diferido tras revert D28 (Pieza E v2)
+
+**Contexto**: durante 5 sprints (Pieza D base → Pieza D + mejora wheel → Pieza E v1 translateX → Pieza E v2 slots cinemáticos → calibración pinScroll → migración GSAP tweens con `overwrite:'auto'`) se intentó implementar scroll-jacking pinneado para el snippet `s_avanzosc_timeline` (8 hitos). Bug visual persistente: hitos asoman hacia un slot, se desvían a otro a medio camino, sin completar la transición ("ghost effect"). Diagnóstico raíz: con 8 hitos discretos + scroll-jacking pinneado, un wheel rápido típico produce ~5 idx changes en ~360ms; visualmente borroso por **física** (cadencia inter-idx 30-200ms vs duración mínima de animación cinemática 0.5s), no por bug de implementación. Todas las soluciones técnicas exploradas (CSS transitions, GSAP `overwrite:'auto'` para kill clean del tween anterior, throttling, scrollPerStep ampliado) o destrozaban la sensación de control o no resolvían la causa raíz. Revertido completo en commit `827ec78`.
+
+**Decisión**: timeline vuelve al original (8 hitos visibles a la vez en flex/grid horizontal con scroll-x nativo del browser). Pieza A hero (D27) intacta como única adición visual del sprint Pieza A-E. El timeline original cumple función informativa per spec §6.8 — listar la trayectoria de Avanzosc 2008-2024 — y no es bloqueante para v1 ni switchover.
+
+**Workaround vigente**: ninguno necesario. El timeline original es funcional, accesible, y semánticamente correcto.
+
+**Trigger de reapertura**: si en una iteración futura se decide volver a abordar el timeline visual "impresionante", considerar approaches alternativos al scroll-jacking sobre N hitos discretos. Opciones documentadas (no implementadas, mantenerlas como referencia conceptual):
+
+- **Carrusel swipe lateral nativo** (CSS scroll-snap, sin pin, sin wheel intercept) — mecánica probada en Pieza D base, descartada por orquestador como "no suficientemente impresionante" pero sigue siendo el path más bajo en complejidad técnica.
+- **Animación de entrada con stagger reveal sin interacción posterior** — los 8 hitos se revelan al entrar viewport (IO + gsap.from stagger), luego permanecen estáticos en su layout horizontal/vertical. Path drawing concept de Pieza C abandonada explora esta dirección.
+- **Vertical timeline en columna** con reveal stagger — diferente layout fundamental (no horizontal), permite más espacio per hito sin scroll-x.
+- **Reducir hitos a 3-4 consolidados** — desbloquea scroll-jacking real (cadencia de idx changes >>500ms), pero requiere reescritura del copy editorial sobre los hitos. Parkeada por política «copy creativo al final del proyecto» (mismo bloqueo que `deferred-conocenos-stem-claim`).
+
+**Lecciones técnicas capturadas en CLAUDE.md §7** (gotchas restaurados post-revert): `scrollLeft+scroll-snap`, `data-lenis-prevent-wheel`, `scrollWidth+padding-right`, `gsap.from inline styles`, `axe-core+opacity`. Útiles independientemente del feature timeline — aplicables a cualquier scroll-jacking o carrusel custom futuro.
+
+**No bloquea switchover**: el timeline original es WCAG AA-compliant (verificado pre-Pieza-D), responsive, semánticamente correcto. La audiencia B2B industrial puede leer la trayectoria sin necesidad de feature interactiva avanzada.
