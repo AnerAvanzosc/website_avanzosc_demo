@@ -20,11 +20,11 @@ automáticamente cuando `request.lang.code == 'eu_ES'`.
 
 | Métrica | Valor |
 |---|---|
-| Total `msgid` en `i18n/eu.po` | **192** |
+| Total `msgid` en `i18n/eu.po` | **191** |
 | Strings **VALIDADAS** (sin flag fuzzy, sin marker DRAFT) | **10** |
-| Strings **DRAFT** (flag `#, fuzzy` + comentario `DRAFT - REVIEW NEEDED`) | **182** |
+| Strings **DRAFT** (flag `#, fuzzy` + comentario `DRAFT - REVIEW NEEDED`) | **180** |
 | De ellas: marcadas `LEGAL DRAFT` (revisión por asesoría legal Q3) | **23** |
-| De ellas: marcadas `DRAFT` general (Q1 revisión lingüística Avanzosc) | **159** |
+| De ellas: marcadas `DRAFT` general (Q1 revisión lingüística Avanzosc) | **157** |
 
 Las 10 validadas (D2, sesión brainstorm 2026-04-27):
 - Claim corporativo (1): «Odoo industrial de verdad, desde 2008.» → «Benetako Odoo industriala, 2008tik.».
