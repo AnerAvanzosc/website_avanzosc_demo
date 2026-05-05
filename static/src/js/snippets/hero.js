@@ -66,15 +66,17 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
             }
 
             // Pieza A — Parallax: vanilla scroll listener + rAF debounce.
-            // Razón de NO usar GSAP ScrollTrigger (aunque el plugin está
-            // cargado en assets.xml head): timeline.js (Task 3.8) documenta
-            // explícitamente que ScrollTrigger requiere scroller-proxy +
-            // sync con Lenis (~30 líneas integración) para funcionar
-            // correctamente en el `#wrapwrap` de Odoo. Escolhar IO-style
-            // o vanilla scroll fue la decisión del módulo. Para parallax
-            // continuo (no one-shot) IO no aplica (no da progreso continuo);
-            // vanilla scroll + rAF es el patrón nativo equivalente, 10 líneas,
-            // sin scope expansion ni dependencia adicional.
+            // Razón de NO usar GSAP ScrollTrigger: timeline.js (Task 3.8)
+            // documenta explícitamente que ScrollTrigger requiere
+            // scroller-proxy + sync con Lenis (~30 líneas integración) para
+            // funcionar correctamente en el `#wrapwrap` de Odoo. Escoger
+            // IO-style o vanilla scroll fue la decisión del módulo. Para
+            // parallax continuo (no one-shot) IO no aplica (no da progreso
+            // continuo); vanilla scroll + rAF es el patrón nativo
+            // equivalente, 10 líneas, sin scope expansion ni dependencia
+            // adicional. El plugin ScrollTrigger fue cargado pre-existente
+            // en assets.xml hasta que se retiró (2026-05-04) al confirmar
+            // 0 uso real — ahora ya no está en el bundle.
             //
             // Mecánica: al scrollear, leemos rect.top del hero relativo al
             // viewport, computamos progress 0→1 (0 = hero en top viewport,

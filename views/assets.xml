@@ -184,11 +184,14 @@
             <script type="text/javascript"
                     src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"/>
 
-            <!-- 6. GSAP ScrollTrigger 3.12.5 — plugin. Requiere core GSAP cargado
-                 previamente (orden garantizado por posición en este bloque).
-                 Ref: spec §9.1 tabla de versiones. -->
-            <script type="text/javascript"
-                    src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"/>
+            <!-- 6. (retirada) GSAP ScrollTrigger — antes cargada aquí. Descartada
+                 por trade-off Lenis: requiere scroller-proxy + sync ~30 líneas
+                 (timeline.js Task 3.8 documentó la decisión). El módulo usa IO
+                 (timeline) o vanilla scroll + rAF (hero parallax Pieza A D27)
+                 en su lugar. Plugin retirado del bundle el 2026-05-04 al
+                 confirmar que ningún snippet lo invoca; ahorro ~25KB
+                 initial-load externo.
+                 Ref: D27 (Pieza A), timeline.js docstring. -->
 
             <!-- 7. Splitting.js 1.0.6 JS — reemplazo MIT de GSAP SplitText.
                  Expone el global `Splitting`. Usado en hero para split por letra.
