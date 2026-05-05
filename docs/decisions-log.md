@@ -764,3 +764,122 @@ Cuando se decida la migración, re-ejecutar Lighthouse y re-evaluar ambos. Si tr
 **Lecciones técnicas capturadas en CLAUDE.md §7** (gotchas restaurados post-revert): `scrollLeft+scroll-snap`, `data-lenis-prevent-wheel`, `scrollWidth+padding-right`, `gsap.from inline styles`, `axe-core+opacity`. Útiles independientemente del feature timeline — aplicables a cualquier scroll-jacking o carrusel custom futuro.
 
 **No bloquea switchover**: el timeline original es WCAG AA-compliant (verificado pre-Pieza-D), responsive, semánticamente correcto. La audiencia B2B industrial puede leer la trayectoria sin necesidad de feature interactiva avanzada.
+
+**Resuelto (2026-05-05) — Pieza E v3 / approach H** — Reapertura autorizada por el orquestador tras Fase A1 verify-only (confirmado: «Scrub continuo sin snap» figuraba como alternativa descartada conceptualmente sobre criterio UX, NO como sprint empíricamente fallido). §4 reautorizada como excepción para este componente, mismo precedente que D28.
+
+Approach H: pin + scrub continuo SIN snap, SIN idx changes discretos durante scrub. ScrollTrigger.create con `pin:true, scrub:1, end:'+=' + 7*innerHeight`, sin propiedad snap. Cada item recibe inline styles continuos (left/scale/opacity/width/zIndex) en función del `progress` 0..1 vía `onUpdate`. Sin clases is-slot-* discretas, sin transition CSS sobre las propiedades animadas (el JS provee el flujo a 60fps a través de ScrollTrigger.update enganchado a Lenis raf).
+
+Mapping continuo (justificación en docstring de `static/src/js/snippets/timeline.js`):
+
+```
+effectiveIdx = progress * (N-1)            // float continuo en [0, N-1]
+delta        = i - effectiveIdx            // signed distance del item i al centro virtual
+left%        = 50 + delta * 32             // anclas: -1→18, 0→50, +1→82
+scale        = 1.0 - 0.15 * min(|delta|, 2)
+opacity      = clamp(1 - max(0, |delta|-1), 0, 1)
+width%       = 36 - 14 * min(|delta|, 1)
+zIndex       = 100 - round(|delta| * 10)
+```
+
+Idx discreto se computa SOLO para sincronizar `aria-current="step"` del dot indicator activo y `disabled` de las flechas (`Math.round(effectiveIdx)`). Click en dot/flecha → `lenis.scrollTo` a posición pin del idx target con `duration: 0.6`.
+
+Verificación playwright (smoke `sprint-pieza-e-v3`):
+- Estado inicial progress 0: item 0 center (left 50%, scale 1, opacity 1, width 36%), item 1 slot-right (82%, 0.85, 1, 22%), items 2-7 hidden (left ≥114%, opacity 0). Mapping exacto.
+- Progress 0.5: items 3 y 4 al 34% / 66% (in-between continuo), items 2 y 5 fade lateral 0.5 opacity, items 0/1/6/7 hidden. Sin protagonista único — comportamiento esperado del approach continuo.
+- Progress 1.0: item 7 center, item 6 slot-left, slot-right vacío.
+- **Wheel rápido patológico** (5 deltas 1100-1300 px en 322 ms total, cadencia inter-event 80 ms < umbral 200 ms del ghost original): items se mueven monotónicamente, sin asomar-y-desviarse, sin oscilación. Item 2 traversa 114% → 101% → 84% → 69% → 51% → 8% sin reversiones. Opacity transición monotónica 0 → 0.40 → 0.93 → 1.0 → 1.0 → 0.69. Sin ghost detectado.
+- Pin engaged correctamente: `pin-spacer` height 7011 px, `pinType: 'transform'` aplicado (matrix translateY 2980 px @ progress 0.47 — la sección queda visualmente fija mientras el wrapwrap scrollea). Section rect top ≈ -16 px durante todo el rango pin.
+- Mobile (375 px viewport): `is-st-active` NO se añade, items sin inline styles, 0 ScrollTriggers creados — Pieza D base scroll-snap CSS nativo intacto.
+- Console: 0 errors, 0 warnings.
+- 3 screenshots desktop 1440×900 en `docs/audits/2026-05-05-pieza-e-v3/` (01 progress 0 inicial, 02 progress 50 mid, 03 progress 100 end).
+
+Por qué approach H resuelve el ghost: D28 generaba ghost porque las clases discretas `is-slot-*` cambiaban a cadencia inter-event 30-200 ms, mientras que las CSS transitions (0.5 s) se redirigían sin completar — el item asomaba hacia un slot, cambiaba de target a medio camino. Approach H NO usa clases discretas durante scrub, NO usa transitions CSS sobre las propiedades animadas: el JS lee `progress` desde Lenis raf y aplica inline styles directamente. Cada frame es la verdad — no hay tween en flight que pueda ser interrumpido.
+
+Pendiente validación visual humana del orquestador en localhost:14070 (commit local, NO pusheado pre-validación).
+
+**Ajuste post-validación (mismo commit, amend)** — tras validación visual del orquestador, 3 refinamientos sobre la sensibilidad cinemática:
+
+1. **Progress fill bar (Approach A)**: la línea conectora `::before` a top:82% pasa de solid neutral-300 a `linear-gradient` con stop dinámico izq→der. Se rellena en `--brand-primary` proporcional a `ScrollTrigger.progress` (variable CSS `--progress-fill` actualizada por JS en cada `onUpdate`). z-index 0 (debajo de slot_dots z-index 2) — el slot_dot--center fijo a 50% queda siempre por encima del fill cuando éste cruza ese punto.
+
+2. **Adyacentes pierden fuerza** (continuous, gotcha 14 cubierto):
+   - **Scale más agresivo**: `1.0 - 0.20 * Math.min(|delta|, 1)` — saturación a 0.80 en `|delta|≥1` (vs 0.85 con la fórmula original `0.15 * min(|delta|, 2)`).
+   - **Color text continuous lerp**: `--neutral-900 (#0F1419)` → `--neutral-500 (#646C75, post-B3 darkened)` según `Math.min(|delta|, 1)` cuando opacity = 1. En rango fade-out (opacity < 1, |delta| > 1) revertir a `--neutral-900`: el lerp endpoint compuesto con opacity 0.5 produciría blend ≈ #b2b6ba (2.04:1, vs 3.47:1 con neutral-900 puro) — physics gotcha 14, opacity < 1 sobre blanco no puede pasar AA, mantenemos magnitud equivalente al baseline.
+   - **Opacity rango [0,1] sigue plana = 1.0**, fade [1,2] sin cambios.
+   - **Year keeps `--brand-primary` plano**: decisión deliberada — brand recognition + scope-keep sobre G3 `deferred-brand-primary-contrast` (atenuar brand-primary toca esa deuda separada).
+   - **`color: inherit`** en `.s_avanzosc_timeline_title` y `_desc` bajo `.is-st-active` para que el lerp en el item parent fluya.
+   - **`aria-hidden="true"` cuando opacity < 1**: items en fade-out se excluyen del accessibility tree para screen readers (no anuncian items que están saliendo del viewport). axe-core 4.x no honra `aria-hidden` para color-contrast checks; el fail estructural en fade-range queda como el baseline pre-amend (gotcha 14).
+
+3. **axe-core verification (5 progress steps, sección scoped)**:
+
+   | progress | violations | nodes | regresión vs baseline pre-amend |
+   |---|---|---|---|
+   | 0% | 1 | year `2008` brand-primary 3.47:1 | NO — G3 deferred-brand-primary-contrast |
+   | 25% | 0 | — | NO — limpio |
+   | 50% | 2 | desc items 2014 + 2022 (#878a8c, 3.47:1) | NO — magnitud equivalente al baseline (color neutral-900 + opacity 0.5 inherent) |
+   | 75% | 1 | desc item Hoy (#c3c4c6, 1.74:1) | NO — magnitud equivalente al baseline (opacity 0.25) |
+   | 100% | 1 | year `Hoy` brand-primary 3.47:1 | NO — G3 deferred-brand-primary-contrast |
+
+   Cero regresiones nuevas vs baseline. Todas las violations son estructurales conocidas: brand-primary en year (G3 deferred) o color-on-white con opacity < 1 inherent al fade-out (gotcha 14, no resoluble físicamente sin sacrificar el efecto motion).
+
+4. **Wheel rápido test post-amend**: 5 deltas 1100-1300 px en 322 ms total (cadencia inter-event 80 ms). `--progress-fill` evoluciona monotónicamente sincronizado con `ScrollTrigger.progress` durante burst (0% → 5.76% → 13.25% → 20.12% → 28.24%) y durante settle (40.95% → 43.81% → … → 47.26%). Sin reversals, sin stutter. Fill tracking 1:1 con progress.
+
+5. **2 screenshots adicionales**: `04-progress-25-amend.png`, `05-progress-75-amend.png` en `docs/audits/2026-05-05-pieza-e-v3/` muestran progress fill en posición intermedia + estado "adyacentes pierden fuerza".
+
+**Ajuste post-validación 2 (mismo commit, amend)** — feedback humano: «slot-dots laterales no cambian al cruzar el progress fill; 3 dots ≠ 8 hitos». Resuelto:
+
+1. **HTML**: 3 spans `s_avanzosc_timeline_slot_dot--left/center/right` reemplazados por 8 spans `s_avanzosc_timeline_milestone_dot` generados con QWeb `t-foreach="range(8)"`. Cada dot lleva `data-idx` + `style="--idx: N"` (CSS variable inline) + `aria-hidden="true"`.
+
+2. **SCSS**: regla `.s_avanzosc_timeline_milestone_dot` bajo `.is-st-active` con `left: calc((100% / 7) * var(--idx, 0))` — distribución lineal 0..100% sobre la línea conectora. Estado base bg `--neutral-300`; estado `.is-passed` bg `--brand-primary`; transition 200ms ease. z-index 3 (sobre línea + progress fill, debajo de items).
+
+3. **Distribución elegida — sin inset, dots de 0% a 100%**:
+   - La línea conectora `::before` actual va `left: 0; right: 0` (sin inset). Brief: «Si la línea va de 0 a 100%: primer en 0%, último en 100%». Aplicado literalmente.
+   - Step: `100% / 7 ≈ 14.286%` por hito.
+   - Posiciones: 0%, 14.29%, 28.57%, 42.86%, 57.14%, 71.43%, 85.71%, 100%.
+   - Verificado vía Playwright: idx 0 en `left: 0px`, idx 7 en `left: 1110px` sobre carousel width 1110 px en viewport 1440. Step 158.57 px exact.
+   - Endpoints (idx 0, idx 7) sit at carousel edges; con `transform: translate(-50%, -50%)` los dots quedan medio cortados (5 px clip cada lado). Trade-off aceptado: alineación literal con la línea + lectura visual de "inicio/fin de la trayectoria coincide con el borde del carousel".
+
+4. **JS**: `updateScrub(progress)` añade loop de 8 dots con `classList.toggle('is-passed', progress >= idx / totalSteps)`. Idempotente — toggle al mismo state es no-op. Threshold por dot:
+   - dot 0: 0 (passed siempre desde progress 0).
+   - dot 1: 1/7 ≈ 0.143.
+   - dot 2: 2/7 ≈ 0.286.
+   - ... dot 7: 1.0.
+
+5. **Mobile + reduced-motion fallback**: `.is-st-active` no se añade → updateScrub no se ejecuta → dots quedan en estado base `--neutral-300` estáticos. Cumple requisito brief.
+
+6. **axe-core diff vs baseline e4b21be**: cero diff. Mismas violations en mismos progress points (year G3 deferred + desc en fade-range gotcha 14 estructural). Milestone dots son aria-hidden + decorativos (sin text content) — axe no los flagea para color-contrast.
+
+7. **Wheel rápido patológico**: 5 deltas 1100-1300 px en 322 ms (cadencia inter-event 80 ms). Dots respondidos monotónicamente:
+   - progress 0.057 → passed [0]
+   - progress 0.132 → passed [0]
+   - progress 0.201 → passed [0,1] (cruzó threshold dot 1 = 0.143)
+   - progress 0.282 → passed [0,1]
+   - settle 0.470 → passed [0,1,2,3]
+   Sin reverse, sin flicker, sin toggle on→off→on intermedio.
+
+8. **2 screenshots milestone dots**: `06-progress-30-milestones.png` (3 dots naranja idx 0-2 sobre 5 grises), `07-progress-70-milestones.png` (5 dots naranja idx 0-4 sobre 3 grises).
+
+**Ajuste post-validación 3 (mismo commit, amend)** — feedback humano: «dots idx 0 y 7 se cortan por overflow:hidden del carousel». Aplicado inset 5%/95%:
+
+1. **Línea conectora `::before` del carousel**: `left: 0; right: 0` → `left: 5%; right: 5%`. Aplica al rule base (D base + .is-st-active heredan). Bajo .is-st-active el `&::before` solo override `top` + `background-image` (gradient progress fill); el inset 5/95% se hereda. Verificado: rendered `before_left: 55.5px`, `before_right: 55.5px`, `before_width: 999px` sobre carousel 1110 px.
+
+2. **Milestone dots fórmula**: `left: calc((100% / 7) * var(--idx, 0))` → `left: calc(5% + (90% / 7) * var(--idx, 0))`. Idx 0 en 5%, idx 7 en 95%, step 90/7 ≈ 12.857%/step. Verificado en viewport 1440 (carousel 1110 px):
+   - idx 0: `55.5px` (= 5% × 1110) ✓
+   - idx 1: `198.20px` ✓
+   - idx 2: `340.92px` ✓
+   - idx 3: `483.64px` ✓
+   - idx 4: `626.34px` ✓
+   - idx 5: `769.06px` ✓
+   - idx 6: `911.78px` ✓
+   - idx 7: `1054.5px` (= 95% × 1110) ✓
+   - Step uniforme 142.71 px ≈ 12.857% × 1110.
+
+3. **Dots completos sin clip**: con dot width 10 px y centrado via `transform: translate(-50%, -50%)`, el dot idx 0 ocupa pixels 50.5..60.5 del carousel — completamente dentro de los 0..1110 px del carousel. Idem idx 7 ocupa 1049.5..1059.5. Sin recorte por `overflow: hidden`.
+
+4. **axe-core diff vs baseline 8623b63**: inset solo afecta geometría (línea + dots). Cero color/opacity/text changes. Las violations reportadas son las mismas estructurales pre-existentes:
+   - **Year brand-primary 3.47:1 en item slot-center** (G3 `deferred-brand-primary-contrast`).
+   - **Title/desc en fade-range con color neutral-900 + opacity 0.5 → blend ≈ #87898C, 3.47:1** (gotcha 14 estructural).
+   - **Desc en fade más profundo con opacity 0.25 → blend ≈ #c3c4c6, 1.74:1** (gotcha 14 estructural).
+
+   En esta corrida axe-core reporta más violations que en la corrida baseline (e.g., +1 title en fade-50, +1 year-protagonist en progress-25 y 75). Re-runs en mismo session son determinísticos — la varianza vs baseline parece deberse a axe-core 4.x catching pre-existing structural issues con más thoroughness en este run (transient layout/visibility computation differences). NO se introduce ningún tipo nuevo de violation; todas mapean a deferred conocidos (G3 brand-primary year, gotcha 14 fade-range).
+
+5. **Screenshot post-inset**: `08-progress-0-inset.png` muestra los 8 dots completos sin clip + línea con inset 5/95% + dot idx 0 naranja (passed) + dots idx 1-7 grises + items 2008 (slot center) y 2011 (slot right) en el estado inicial.

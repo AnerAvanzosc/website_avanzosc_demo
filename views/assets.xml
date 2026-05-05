@@ -122,7 +122,7 @@
          la variable `lucide`.
          Ref: spec §3.3 (pipeline de assets, punto 1-2), CLAUDE.md §9.4, §9.7. -->
     <template id="head_external_assets"
-              name="website_avanzosc_demo head: Google Fonts + Lucide + GSAP + Splitting + Lenis"
+              name="website_avanzosc_demo head: Google Fonts + Lucide + GSAP + ScrollTrigger + Splitting + Lenis"
               inherit_id="web.layout">
         <!-- Ancla: después del último elemento de <head> (position inside
              añade al final del contenedor, antes del cierre </head>).
@@ -184,14 +184,18 @@
             <script type="text/javascript"
                     src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"/>
 
-            <!-- 6. (retirada) GSAP ScrollTrigger — antes cargada aquí. Descartada
-                 por trade-off Lenis: requiere scroller-proxy + sync ~30 líneas
-                 (timeline.js Task 3.8 documentó la decisión). El módulo usa IO
-                 (timeline) o vanilla scroll + rAF (hero parallax Pieza A D27)
-                 en su lugar. Plugin retirado del bundle el 2026-05-04 al
-                 confirmar que ningún snippet lo invoca; ahorro ~25KB
-                 initial-load externo.
-                 Ref: D27 (Pieza A), timeline.js docstring. -->
+            <!-- 6. GSAP ScrollTrigger 3.12.5 — re-introducido para Pieza E v3
+                 (timeline scrolljack pin + scrub continuo SIN snap). Bridge
+                 con Lenis configurado en main.js (scroller-proxy + lenis.on
+                 scroll → ScrollTrigger.update). Sólo aplica desktop+motion-on
+                 (gating en timeline.js); mobile/reduced-motion conserva D
+                 base CSS scroll-snap nativo sin pin.
+                 Retirada brevemente en `61600ff` (sin consumidor); restaurada
+                 al cerrar `deferred-timeline-scrolljacking` con approach H
+                 (decisions-log §6).
+                 Ref: D27 (Pieza A), Pieza E v3 brief sesión 2026-05-05. -->
+            <script type="text/javascript"
+                    src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"/>
 
             <!-- 7. Splitting.js 1.0.6 JS — reemplazo MIT de GSAP SplitText.
                  Expone el global `Splitting`. Usado en hero para split por letra.

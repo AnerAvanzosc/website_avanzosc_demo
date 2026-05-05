@@ -49,6 +49,56 @@ odoo.define('website_avanzosc_demo.main', function (require) {
                 requestAnimationFrame(raf);
 
                 // ----------------------------------------------------------------
+                // GSAP ScrollTrigger ↔ Lenis bridge (Pieza E v3).
+                // Patrón canónico Lenis docs:
+                //   1. scrollerProxy(wrapwrap, {scrollTop, getBoundingClientRect})
+                //      enseña a ScrollTrigger a leer/escribir scroll a través de
+                //      Lenis (no del DOM nativo, que en Odoo 14 vive en wrapwrap
+                //      con overflow auto, no window).
+                //   2. lenis.on('scroll', ScrollTrigger.update) — cada paso de
+                //      Lenis (smoothed) dispara update de los triggers, en lugar
+                //      del scroll listener nativo que ScrollTrigger pondría sobre
+                //      window por default.
+                //   3. ScrollTrigger.defaults({scroller: wrapwrap}) — todos los
+                //      triggers creados por widgets (timeline.js Pieza E v3) usan
+                //      wrapwrap como scroller sin tener que repetirlo.
+                //   4. pinType: 'transform' — fix obligatorio cuando el scroller
+                //      no es window. position:fixed dentro de un scroller custom
+                //      puede comportarse raro (clipping, transform-context). Con
+                //      'transform', ScrollTrigger pinéa moviendo translate3d
+                //      sobre el wrapwrap mientras el contenido pasa por debajo.
+                //
+                // Gating: sólo se ejecuta si Lenis está activo (estamos dentro
+                // del else-if Lenis); reduced-motion ya no entra. Guard explícito
+                // de gsap + ScrollTrigger por si el CDN del plugin falla
+                // (ad-blocker, regresión en assets.xml).
+                // ----------------------------------------------------------------
+                if (typeof window.gsap !== 'undefined' &&
+                    typeof window.ScrollTrigger !== 'undefined') {
+                    var ST = window.ScrollTrigger;
+                    window.gsap.registerPlugin(ST);
+                    ST.scrollerProxy(wrapwrap, {
+                        scrollTop: function (value) {
+                            if (arguments.length) {
+                                lenis.scrollTo(value, { immediate: true });
+                            }
+                            return lenis.scroll;
+                        },
+                        getBoundingClientRect: function () {
+                            return {
+                                top: 0,
+                                left: 0,
+                                width: window.innerWidth,
+                                height: window.innerHeight,
+                            };
+                        },
+                        pinType: 'transform',
+                    });
+                    lenis.on('scroll', ST.update);
+                    ST.defaults({ scroller: wrapwrap });
+                }
+
+                // ----------------------------------------------------------------
                 // Smooth anchor scroll. Lenis 1.0.42 NO expone la opción
                 // `anchors` del constructor (verificado contra
                 // cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42 — solo
