@@ -97,6 +97,13 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
             // -----------------------------------------------------------------
             var scrollTarget = document.getElementById('wrapwrap') || window;
             var parallaxTicking = false;
+            // Pieza A v2 — refactor: el transform de las capas decorativas
+            // se compone en SCSS desde 3 CSS vars (--scroll-y, --mouse-rx,
+            // --mouse-ry). Cada listener actualiza solo la suya; CSS combina
+            // todas en un único `transform: translate3d(...) rotateX(...)
+            // rotateY(...)`. Sin esto, el inline `style.transform` del
+            // scroll parallax y del mouse parallax se sobrescribirían
+            // mutuamente. CSS vars son la coexistencia limpia.
             function applyParallax() {
                 var rect = section.getBoundingClientRect();
                 // progress 0→1 mientras el hero sale del viewport por arriba.
@@ -104,10 +111,10 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
                 var progress = Math.max(0, Math.min(1, -rect.top / heroHeight));
                 // Líneas: -15% al fully scrolled past, dots: -5% (más lento atrás).
                 if (linesLayer) {
-                    linesLayer.style.transform = 'translate3d(0, ' + (progress * -15) + '%, 0)';
+                    linesLayer.style.setProperty('--scroll-y', (progress * -15) + '%');
                 }
                 if (gridLayer) {
-                    gridLayer.style.transform = 'translate3d(0, ' + (progress * -5) + '%, 0)';
+                    gridLayer.style.setProperty('--scroll-y', (progress * -5) + '%');
                 }
                 parallaxTicking = false;
             }
@@ -223,6 +230,158 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
                     ease: 'expo.out',
                 }, 0.9);
             }
+
+            // -------------------------------------------------------------
+            // Pieza A v2 — Mouse reactivity 3D + glow zonal sobre paths
+            // -------------------------------------------------------------
+            // Activación: solo desktop ≥992px (Bootstrap `lg`, alineado con
+            // breakpoints existentes del módulo). Mobile <992px y reduced-
+            // motion se quedan con parallax scroll vanilla + animación de
+            // entrada actuales — la rama reduced-motion ya hizo early return
+            // arriba. Para mobile, simplemente NO se enganchan listeners.
+            //
+            // Defaults técnicos:
+            //   ROTATE_MAX_GRID  = 5.0 deg — capa "más lejana".
+            //   ROTATE_MAX_LINES = 10.0 deg — capa "más cerca", magnitud 2x
+            //                                grid (ratio 2:1 mantenido).
+            //                                Subido desde 1.5/3.0 (imperceptible
+            //                                en uso real) tras feedback humano
+            //                                post-validación commit c3e8774.
+            //   PERSPECTIVE      = 1000 px (en SCSS sobre la section).
+            //   LERP             = 0.10 — damping por frame del current al
+            //                              target. Sin lerp = jitter cuando
+            //                              el mousemove llega más rápido que
+            //                              el rAF.
+            //
+            // Coexistencia con scroll parallax: ambos escriben CSS vars
+            // independientes (--scroll-y vs --mouse-rx/-ry). SCSS combina.
+            //
+            // Lerp loop: rAF cascade activo solo cuando hay diferencia
+            // current↔target. Cuando converge a target=0 + current≈0
+            // (mouseleave settled), se detiene para no consumir CPU.
+            //
+            // Glow zona-cuadrante: dividir hero en 3 zonas según posiciones
+            // groseras de los 3 paths del SVG (viewBox 0..100):
+            //   - main path: M -2 78 → 102 72 (curva inferior horizontal).
+            //   - secondary topright: M 95 8 → 70 28 (diagonal arriba-der).
+            //   - secondary topleft: M -2 25 → 18 18 (diagonal arriba-izq).
+            // Decisión: dividir por (nx, ny) normalizadas en hero rect:
+            //   ny > 0.5            → main (zona inferior, todo el ancho).
+            //   ny ≤ 0.5 && nx ≤ 0.5 → secondary topleft.
+            //   ny ≤ 0.5 && nx > 0.5 → secondary topright.
+            // Más simple que bounding box per-path (que requeriría
+            // getBBox + transform inverse para mapear viewBox a viewport)
+            // y suficiente: cada zona contiene a su path natural.
+            // -------------------------------------------------------------
+            var DESKTOP_MIN = 992;
+            var enableMouseReactivity = window.innerWidth >= DESKTOP_MIN;
+            if (!enableMouseReactivity) {
+                return this._super.apply(this, arguments);
+            }
+
+            var ROTATE_MAX_GRID = 5.0;
+            var ROTATE_MAX_LINES = 10.0;
+            var LERP = 0.10;
+
+            var mainPath = section.querySelector('.s_avanzosc_hero_lines_main');
+            var topleftPath = section.querySelector('.s_avanzosc_hero_lines_secondary_topleft');
+            var toprightPath = section.querySelector(
+                '.s_avanzosc_hero_lines_secondary:not(.s_avanzosc_hero_lines_secondary_topleft)'
+            );
+
+            // currentRX/RY normalized en [-1, +1] (sin grados); al apply,
+            // multiplicamos por ROTATE_MAX_GRID|LINES per layer.
+            var targetRX = 0, targetRY = 0;
+            var currentRX = 0, currentRY = 0;
+            var rafActive = false;
+            var activePath = null;
+
+            function pickActivePath(nx, ny) {
+                if (ny > 0.5) return mainPath;
+                return nx <= 0.5 ? topleftPath : toprightPath;
+            }
+            function setGlow(p) {
+                if (activePath === p) return;
+                if (activePath) activePath.classList.remove('is-glow');
+                if (p) p.classList.add('is-glow');
+                activePath = p;
+            }
+
+            function applyMouseTransform() {
+                if (gridLayer) {
+                    gridLayer.style.setProperty('--mouse-rx', (currentRX * ROTATE_MAX_GRID).toFixed(3) + 'deg');
+                    gridLayer.style.setProperty('--mouse-ry', (currentRY * ROTATE_MAX_GRID).toFixed(3) + 'deg');
+                }
+                if (linesLayer) {
+                    linesLayer.style.setProperty('--mouse-rx', (currentRX * ROTATE_MAX_LINES).toFixed(3) + 'deg');
+                    linesLayer.style.setProperty('--mouse-ry', (currentRY * ROTATE_MAX_LINES).toFixed(3) + 'deg');
+                }
+            }
+
+            function lerpLoop() {
+                currentRX += (targetRX - currentRX) * LERP;
+                currentRY += (targetRY - currentRY) * LERP;
+                applyMouseTransform();
+                // Convergencia: target=0 + |current| pequeño → snap a 0 y stop.
+                if (
+                    targetRX === 0 && targetRY === 0 &&
+                    Math.abs(currentRX) < 0.005 && Math.abs(currentRY) < 0.005
+                ) {
+                    currentRX = 0;
+                    currentRY = 0;
+                    applyMouseTransform();
+                    rafActive = false;
+                    return;
+                }
+                window.requestAnimationFrame(lerpLoop);
+            }
+            function ensureLoop() {
+                if (!rafActive) {
+                    rafActive = true;
+                    window.requestAnimationFrame(lerpLoop);
+                }
+            }
+
+            function onMouseMove(e) {
+                var rect = section.getBoundingClientRect();
+                if (rect.width === 0 || rect.height === 0) return;
+                var nx = (e.clientX - rect.left) / rect.width;
+                var ny = (e.clientY - rect.top) / rect.height;
+                if (nx < 0) nx = 0; else if (nx > 1) nx = 1;
+                if (ny < 0) ny = 0; else if (ny > 1) ny = 1;
+                // signed [-1, +1] desde el centro del hero.
+                var sx = nx * 2 - 1;
+                var sy = ny * 2 - 1;
+                // Convención CSS: rotateY positivo gira eje vertical
+                // (right edge hacia el viewer). rotateX positivo gira eje
+                // horizontal (top edge hacia el viewer). Queremos que el
+                // hover hacia el cursor inquline la capa "hacia" él:
+                //   cursor a la derecha (sx>0) → right edge forward → +RY.
+                //   cursor arriba (sy<0)       → top edge forward    → +RX.
+                // → targetRX = -sy (invertido para que arriba = +RX).
+                targetRX = -sy;
+                targetRY = sx;
+                setGlow(pickActivePath(nx, ny));
+                ensureLoop();
+            }
+            function onMouseLeave() {
+                targetRX = 0;
+                targetRY = 0;
+                setGlow(null);
+                ensureLoop();
+            }
+
+            function attachMouseHandlers() {
+                section.addEventListener('mousemove', onMouseMove);
+                section.addEventListener('mouseleave', onMouseLeave);
+            }
+
+            // Activación post-timeline: enchufar onComplete al tl GSAP
+            // existente. Cuando termine la animación de entrada (~1.3s),
+            // se enganchan los listeners. Antes de eso, el hero queda
+            // "calmado" — el letter-stagger es el moment of arrival y no
+            // queremos competir con interacción mouse simultánea.
+            tl.eventCallback('onComplete', attachMouseHandlers);
 
             return this._super.apply(this, arguments);
         },

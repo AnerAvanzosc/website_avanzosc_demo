@@ -19,6 +19,12 @@
     // (los anchors están a -2 / 102 en viewBox 0-100).
     position: relative;
     overflow: hidden;
+    // Pieza A v2 — perspective para que rotateX/rotateY sobre las
+    // capas decorativas produzcan efecto 3D real (sin perspective,
+    // las rotaciones renderean como skew 2D plano). 1000px es el
+    // valor canónico para parallax tipo blueprint discreto: distancia
+    // suficiente para que la rotación se note sin distorsionar.
+    perspective: 1000px;
 
     @media (max-width: 767.98px) {
         min-height: 480px;
@@ -70,6 +76,15 @@
     opacity: 0;
     transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
     will-change: opacity, transform;
+    // Pieza A v2 — transform compuesto de 2 fuentes vía CSS variables:
+    //   --scroll-y     : translate vertical from parallax scroll listener.
+    //   --mouse-rx/-ry : rotate from mouse parallax (≥992px desktop only).
+    // El JS escribe en cada var independientemente; CSS combina aquí.
+    // Sin var fallbacks → identity transform (visualmente idéntico a
+    // pre-v2 cuando no hay JS o reduced-motion).
+    transform: translate3d(0, var(--scroll-y, 0%), 0)
+               rotateX(var(--mouse-rx, 0deg))
+               rotateY(var(--mouse-ry, 0deg));
 
     @media (max-width: 767.98px) {
         // Mobile: densidad reducida (44px vs 36px) para que la grid no
@@ -100,13 +115,29 @@
     opacity: 0;
     transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
     will-change: opacity, transform;
+    // Pieza A v2 — mismo patrón CSS-vars que .s_avanzosc_hero_grid.
+    // Magnitudes mouse aplicadas por JS son mayores en lines que en
+    // grid (capa visualmente "más cerca" del usuario per spec).
+    transform: translate3d(0, var(--scroll-y, 0%), 0)
+               rotateX(var(--mouse-rx, 0deg))
+               rotateY(var(--mouse-ry, 0deg));
 
-    .s_avanzosc_hero_lines_main {
-        stroke-opacity: 0.2;
-    }
-
+    .s_avanzosc_hero_lines_main,
     .s_avanzosc_hero_lines_secondary {
         stroke-opacity: 0.2;
+        // Pieza A v2 — glow al hover de zona: stroke-opacity 0.2→0.6
+        // y stroke-width 1→1.5px con transition 200ms ease-out.
+        // JS añade .is-glow al path activo según zona-cuadrante del cursor.
+        // currentColor mantiene --neutral-500 (lenguaje "blueprint discreto"
+        // intacto, sin saltar a brand-primary).
+        transition: stroke-opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                    stroke-width 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .s_avanzosc_hero_lines_main.is-glow,
+    .s_avanzosc_hero_lines_secondary.is-glow {
+        stroke-opacity: 0.6;
+        stroke-width: 1.5;
     }
 
     @media (max-width: 767.98px) {
@@ -115,6 +146,15 @@
         // demasiado cerca del texto y agregan ruido sin valor decorativo.
         .s_avanzosc_hero_lines_secondary {
             display: none;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        // Reduced-motion: glow CSS transition off (instant on/off si JS lo
+        // tocara, pero JS gating ya excluye reduced-motion del mouse code).
+        .s_avanzosc_hero_lines_main,
+        .s_avanzosc_hero_lines_secondary {
+            transition: none;
         }
     }
 }
