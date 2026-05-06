@@ -33,8 +33,19 @@ odoo.define('website_avanzosc_demo.utils.count_up', function (require) {
         return 1 - Math.pow(1 - t, 3);
     }
 
+    // Guard común: KPIs sin `data-target` (e.g. F1 cleanup placeholder
+    // «—» hasta que el primer caso de éxito real aporte métricas) son
+    // no-op. El nodo conserva su `textContent` actual y NO se marca
+    // counted, para que el día que se rellene el atributo, el animate
+    // arranque limpio sin reset manual.
+    function _hasTarget(node) {
+        var raw = node.getAttribute('data-target');
+        return raw !== null && raw !== '';
+    }
+
     function paintFinal(node) {
-        var target = parseInt(node.getAttribute('data-target') || '0', 10);
+        if (!_hasTarget(node)) return;
+        var target = parseInt(node.getAttribute('data-target'), 10);
         var suffix = node.getAttribute('data-suffix') || '';
         node.textContent = target + suffix;
         node.setAttribute('data-counted', 'true');
@@ -42,7 +53,8 @@ odoo.define('website_avanzosc_demo.utils.count_up', function (require) {
 
     function animate(node, durationMs) {
         if (node.getAttribute('data-counted') === 'true') return;
-        var target = parseInt(node.getAttribute('data-target') || '0', 10);
+        if (!_hasTarget(node)) return;
+        var target = parseInt(node.getAttribute('data-target'), 10);
         var suffix = node.getAttribute('data-suffix') || '';
         var duration = durationMs || DEFAULT_DURATION_MS;
         var startTime = null;
