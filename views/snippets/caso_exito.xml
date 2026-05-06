@@ -254,101 +254,105 @@
 
                     </div>
                     <div class="col-12 col-lg-5 s_avanzosc_caso_exito_visual">
-                        <!-- SVG dashboard placeholder. Wireframe-style genérico —
-                             NO datos reales (anonymous-first per Q2). 600×400 viewBox
-                             escalable, mantiene aspect ratio. Idéntico para todos
-                             los archetypes (no varía con archetype_id). -->
                         <!--
-                            SVG dashboard wireframe. F1 introduce 3 cambios
-                            estructurales para soportar la animación de entrada:
-                              1. KPI numbers (3) — antes <rect> placeholder, ahora
-                                 <text> con `data-target` y contenido inicial
-                                 condicional («0» si caso_exito_animated, valor
-                                 final si no). En modo animated, el JS hace
-                                 count-up rAF 0→target reusando count_up util.
-                              2. Bars (6) — clase `s_avanzosc_caso_exito_bar` para
-                                 hook CSS scaleY 0→1 desde bottom (bajo
-                                 `.is-animated`).
-                              3. Donut — antes <path> wedge filled con `L 490 280 Z`
-                                 (pizza slice hacia el centro). Ahora arc stroked
-                                 (mismo stroke-width 20 que el ring gris,
-                                 stroke-linecap butt) que reemplaza el rim gris en
-                                 el segmento naranja. Visualmente más coherente
-                                 con un donut chart real. `pathLength="100"`
-                                 permite hardcodear dasharray/dashoffset en SCSS
-                                 sin conocer la longitud exacta del arco.
+                            F1.2 — encuadre tipo ventana macOS (titlebar + 3 dots
+                            + frame_body con SVG). SOLO en home (caso_exito_animated
+                            true). Sectoriales rendean el SVG raw sin wrapper.
 
-                            Targets KPI: 87 / 142 / 36 — generic mockup numbers,
-                            no atribuibles a métricas de cliente real (CLAUDE.md
-                            §11 D3 anonymous-first). Mismo nivel semántico que
-                            los `<rect>` placeholder originales.
+                            El SVG se extrajo a la sub-template
+                            `s_avanzosc_caso_exito_svg_dashboard` (definida abajo
+                            en este mismo file) para evitar duplicar 50+ líneas de
+                            markup entre las dos branches del t-if/t-else. La
+                            sub-template no requiere registro extra en
+                            __manifest__.py — se define en el mismo XML que ya
+                            está en `data`.
                         -->
-                        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" class="s_avanzosc_caso_exito_svg" role="img" aria-label="Dashboard placeholder">
-                            <!-- Frame del dashboard -->
-                            <rect x="10" y="10" width="580" height="380" rx="8" fill="#FFFFFF" stroke="#D3D7DC" stroke-width="2"/>
-                            <!-- Top bar (header del dashboard) -->
-                            <rect x="20" y="20" width="560" height="40" rx="4" fill="#F4F5F7"/>
-                            <circle cx="40" cy="40" r="6" fill="#D3D7DC"/>
-                            <rect x="60" y="35" width="120" height="10" rx="2" fill="#D3D7DC"/>
-                            <!-- KPI cards — F1.1 v2 wrapper <g> por card.
-                                 Cada KPI agrupa los 4 elementos visuales (bg rect,
-                                 label bar, número text, subtitle bar) en un único
-                                 <g class="s_avanzosc_caso_exito_kpi_card"> para
-                                 poder dim+hover la card como unidad lógica (opacity
-                                 + translate aplican al group, cascadean a hijos).
-                                 El bg rect lleva clase `_bg` aparte para hover
-                                 stroke (que aplica solo al rect, no a label/text).
-                                 Texto «—» (em-dash) per F1 cleanup mientras llegan
-                                 métricas reales. -->
-                            <g class="s_avanzosc_caso_exito_kpi_card">
-                                <rect class="s_avanzosc_caso_exito_kpi_card_bg" x="20" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
-                                <rect x="35" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
-                                <text x="35" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
-                                      class="s_avanzosc_caso_exito_kpi_text">—</text>
-                                <rect x="35" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
-                            </g>
-
-                            <g class="s_avanzosc_caso_exito_kpi_card">
-                                <rect class="s_avanzosc_caso_exito_kpi_card_bg" x="210" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
-                                <rect x="225" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
-                                <text x="225" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
-                                      class="s_avanzosc_caso_exito_kpi_text">—</text>
-                                <rect x="225" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
-                            </g>
-
-                            <g class="s_avanzosc_caso_exito_kpi_card">
-                                <rect class="s_avanzosc_caso_exito_kpi_card_bg" x="400" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
-                                <rect x="415" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
-                                <text x="415" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
-                                      class="s_avanzosc_caso_exito_kpi_text">—</text>
-                                <rect x="415" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
-                            </g>
-
-                            <!-- Bar chart silhouette — orden DOM izquierda→derecha
-                                 para que el stagger 80ms del JS recorra naturalmente. -->
-                            <rect x="20" y="180" width="370" height="200" rx="6" fill="#F4F5F7"/>
-                            <rect class="s_avanzosc_caso_exito_bar" x="40" y="320" width="40" height="50" rx="2" fill="#E85D2F"/>
-                            <rect class="s_avanzosc_caso_exito_bar" x="100" y="290" width="40" height="80" rx="2" fill="#E85D2F"/>
-                            <rect class="s_avanzosc_caso_exito_bar" x="160" y="240" width="40" height="130" rx="2" fill="#E85D2F"/>
-                            <rect class="s_avanzosc_caso_exito_bar" x="220" y="270" width="40" height="100" rx="2" fill="#E85D2F"/>
-                            <rect class="s_avanzosc_caso_exito_bar" x="280" y="220" width="40" height="150" rx="2" fill="#E85D2F"/>
-                            <rect class="s_avanzosc_caso_exito_bar" x="340" y="200" width="40" height="170" rx="2" fill="#E85D2F"/>
-
-                            <!-- Donut: ring gris background + arc stroked en
-                                 brand-primary (reemplaza el wedge filled previo). -->
-                            <rect x="400" y="180" width="180" height="200" rx="6" fill="#F4F5F7"/>
-                            <circle cx="490" cy="280" r="55" fill="#FFFFFF" stroke="#D3D7DC" stroke-width="20"/>
-                            <path class="s_avanzosc_caso_exito_donut_fill"
-                                  d="M 490 225 A 55 55 0 0 1 538 308"
-                                  fill="none"
-                                  stroke="#E85D2F"
-                                  stroke-width="20"
-                                  stroke-linecap="butt"
-                                  pathLength="100"/>
-                        </svg>
+                        <t t-if="caso_exito_animated">
+                            <div class="s_avanzosc_caso_exito_frame">
+                                <div class="s_avanzosc_caso_exito_frame_titlebar" aria-hidden="true">
+                                    <span class="s_avanzosc_caso_exito_frame_dot is-close"/>
+                                    <span class="s_avanzosc_caso_exito_frame_dot is-min"/>
+                                    <span class="s_avanzosc_caso_exito_frame_dot is-max"/>
+                                </div>
+                                <div class="s_avanzosc_caso_exito_frame_body">
+                                    <t t-call="website_avanzosc_demo.s_avanzosc_caso_exito_svg_dashboard"/>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <t t-call="website_avanzosc_demo.s_avanzosc_caso_exito_svg_dashboard"/>
+                        </t>
                     </div>
                 </div>
             </div>
         </section>
+    </template>
+
+    <!--
+        F1.2 — sub-template del SVG dashboard. Extraída del template padre
+        para no duplicar 50+ líneas entre las branches t-if (con frame
+        macOS) / t-else (raw sin frame).
+
+        Contenido inalterado respecto a F1 + F1.1 v2:
+          - Frame interno + top bar wireframe.
+          - 3 KPI cards en <g class="s_avanzosc_caso_exito_kpi_card"> con
+            text «—» (F1 cleanup) y bg rect aparte (kpi_card_bg).
+          - 6 bars (s_avanzosc_caso_exito_bar) izq→der.
+          - Donut como arc stroked pathLength=100 (s_avanzosc_caso_exito_donut_fill).
+    -->
+    <template id="s_avanzosc_caso_exito_svg_dashboard" name="Avanzosc · Caso de éxito · SVG dashboard">
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" class="s_avanzosc_caso_exito_svg" role="img" aria-label="Dashboard placeholder">
+            <!-- Frame interno del dashboard (wireframe). -->
+            <rect x="10" y="10" width="580" height="380" rx="8" fill="#FFFFFF" stroke="#D3D7DC" stroke-width="2"/>
+            <!-- Top bar (header del dashboard wireframe). -->
+            <rect x="20" y="20" width="560" height="40" rx="4" fill="#F4F5F7"/>
+            <circle cx="40" cy="40" r="6" fill="#D3D7DC"/>
+            <rect x="60" y="35" width="120" height="10" rx="2" fill="#D3D7DC"/>
+
+            <!-- KPI cards (3) — wrapper <g> por card. -->
+            <g class="s_avanzosc_caso_exito_kpi_card">
+                <rect class="s_avanzosc_caso_exito_kpi_card_bg" x="20" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
+                <rect x="35" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
+                <text x="35" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
+                      class="s_avanzosc_caso_exito_kpi_text">—</text>
+                <rect x="35" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
+            </g>
+
+            <g class="s_avanzosc_caso_exito_kpi_card">
+                <rect class="s_avanzosc_caso_exito_kpi_card_bg" x="210" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
+                <rect x="225" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
+                <text x="225" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
+                      class="s_avanzosc_caso_exito_kpi_text">—</text>
+                <rect x="225" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
+            </g>
+
+            <g class="s_avanzosc_caso_exito_kpi_card">
+                <rect class="s_avanzosc_caso_exito_kpi_card_bg" x="400" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
+                <rect x="415" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
+                <text x="415" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
+                      class="s_avanzosc_caso_exito_kpi_text">—</text>
+                <rect x="415" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
+            </g>
+
+            <!-- Bar chart — 6 bars izq→der para stagger natural. -->
+            <rect x="20" y="180" width="370" height="200" rx="6" fill="#F4F5F7"/>
+            <rect class="s_avanzosc_caso_exito_bar" x="40" y="320" width="40" height="50" rx="2" fill="#E85D2F"/>
+            <rect class="s_avanzosc_caso_exito_bar" x="100" y="290" width="40" height="80" rx="2" fill="#E85D2F"/>
+            <rect class="s_avanzosc_caso_exito_bar" x="160" y="240" width="40" height="130" rx="2" fill="#E85D2F"/>
+            <rect class="s_avanzosc_caso_exito_bar" x="220" y="270" width="40" height="100" rx="2" fill="#E85D2F"/>
+            <rect class="s_avanzosc_caso_exito_bar" x="280" y="220" width="40" height="150" rx="2" fill="#E85D2F"/>
+            <rect class="s_avanzosc_caso_exito_bar" x="340" y="200" width="40" height="170" rx="2" fill="#E85D2F"/>
+
+            <!-- Donut: ring gris background + arc stroked brand-primary. -->
+            <rect x="400" y="180" width="180" height="200" rx="6" fill="#F4F5F7"/>
+            <circle cx="490" cy="280" r="55" fill="#FFFFFF" stroke="#D3D7DC" stroke-width="20"/>
+            <path class="s_avanzosc_caso_exito_donut_fill"
+                  d="M 490 225 A 55 55 0 0 1 538 308"
+                  fill="none"
+                  stroke="#E85D2F"
+                  stroke-width="20"
+                  stroke-linecap="butt"
+                  pathLength="100"/>
+        </svg>
     </template>
 </odoo>

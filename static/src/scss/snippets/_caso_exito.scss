@@ -164,6 +164,97 @@ $avanzosc-dim-opacity: 0.55;
 .s_avanzosc_caso_exito.is-animated {
 
     // -------------------------------------------------------------------------
+    // F1.2 — encuadre macOS (Sonoma) alrededor del SVG dashboard.
+    // -------------------------------------------------------------------------
+    // Sólo en home (selector .is-animated). Sectoriales no rendean el
+    // wrapper DOM (t-if/t-else en QWeb), así que estas reglas no matchean
+    // nada fuera de home.
+    //
+    // overflow: hidden + border-radius 12px → border-radius limpio del
+    // titlebar y del frame_body, y el SVG queda perfectamente recortado.
+    //
+    // Las hover drop-shadows (F1.1 v2) viven dentro del viewBox del SVG
+    // (0..600 × 0..400) y por construcción no se proyectan fuera de él
+    // — el SVG default-clipea al viewBox. El frame's overflow:hidden
+    // recorta los hijos en su borde, pero como el SVG ya no proyecta más
+    // allá de sus bounds, no hay clip extra de las shadows del hover. La
+    // box-shadow del propio frame es paint del frame y NO está afectada
+    // por overflow:hidden del frame.
+    .s_avanzosc_caso_exito_frame {
+        background: #FFFFFF;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12),
+                    0 4px 12px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        // F1.2 v2: sin max-width ni margin auto — el frame ocupa todo el
+        // ancho natural de la columna (col-lg-5 desktop, col-12 mobile).
+        // El SVG dentro escala isotrópico via `width: 100%; height: auto`
+        // del bloque base `.s_avanzosc_caso_exito_svg`, manteniendo el
+        // aspect ratio 3:2 del viewBox 600×400.
+        // `width: 100%` necesario porque `.s_avanzosc_caso_exito_visual`
+        // usa `display:flex; justify-content:center` — sin width explícito,
+        // el flex-item toma intrinsic content size (≈300px) en vez de
+        // stretch a la columna padre.
+        width: 100%;
+
+        @media (max-width: 767.98px) {
+            // Mobile: 8px se siente más proporcional al viewport reducido.
+            // 12px sobre un container pequeño exagera la curvatura. La
+            // columna ya era col-12 → 100% width, sin cambio de comportamiento
+            // respecto a F1.2 v1.
+            border-radius: 8px;
+        }
+    }
+
+    .s_avanzosc_caso_exito_frame_titlebar {
+        height: 36px;
+        background: #F5F5F7;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        gap: 8px;
+    }
+
+    .s_avanzosc_caso_exito_frame_dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+
+        &.is-close {
+            background: #FF5F57;
+        }
+        &.is-min {
+            background: #FEBC2E;
+        }
+        &.is-max {
+            background: #28C840;
+        }
+    }
+
+    .s_avanzosc_caso_exito_frame_body {
+        background: #FFFFFF;
+        // padding 0: el SVG ocupa todo el ancho del body sin margen interior.
+        padding: 0;
+    }
+
+    // SVG drop-shadow original (definido global a `.s_avanzosc_caso_exito_svg`)
+    // pinta una elevación sutil. El frame ya provee su propia box-shadow
+    // mucho más prominente, así que la del SVG sería redundante (o quedaría
+    // recortada por overflow:hidden del frame). Override a none bajo
+    // `.is-animated` para limpiar el doble shadow.
+    //
+    // F1.2 v2: override max-width:none para que el SVG llene el ancho
+    // del frame (la regla global lo capa a 500px). El frame_body ya no
+    // tiene cap propio, así que el SVG escala isotrópico hasta el ancho
+    // de la columna.
+    .s_avanzosc_caso_exito_svg {
+        filter: none;
+        max-width: none;
+    }
+
+    // -------------------------------------------------------------------------
     // F1 — entrada (bars, donut, kpi_text). Estados iniciales y transitions
     // que se mantienen intactos (orchestrator F1.1 v2 NO toca el mecanismo
     // de entrada; solo añade opacity transition para que el dim/undim
