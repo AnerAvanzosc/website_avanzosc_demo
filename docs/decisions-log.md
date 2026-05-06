@@ -584,6 +584,83 @@ Mobile Perf score caída 52→45 (-7) atribuible a TBT variance localhost. LCP e
 - Verificación dinámica: `aria-hidden="true"` ✓, `pointer-events: none` ✓ ambos layers, parallax math correcto, reduced-motion CSS rules presentes.
 - 4 screenshots desktop+tablet+mobile+scrolled en `docs/audits/2026-05-04-a11y-seo/visual-pieza-a/`.
 
+<a id="d29"></a>
+### D29 — Pieza A v3: hero decoración enriquecida — 10 anotaciones tipo CAD HTML+CSS positioned + hover individual + mobile dedicado
+
+Sesión 2026-05-06. Bloque iterativo de rediseño visual del hero (sin tocar copy / H1 / subtítulo / layout CTAs). Construye sobre Pieza A v2 (D27 + commit `0a4c588` mouse parallax 3D + glow zonal): añade vocabulario CAD blueprint con 10 anotaciones técnicas decorativas, hover individual sobre cada una, parallax v2 extendido al nuevo container, y subset mobile dedicado con composición simétrica.
+
+**Approach final — HTML + CSS positioned (NO SVG global con viewBox)**:
+
+- Container `.s_avanzosc_hero_annotations` div hermano de `_grid` y `_lines` dentro de `.s_avanzosc_hero`. `position: absolute; inset: 0; z-index: 1`. DOM order POSTERIOR a `_lines` → pinta encima.
+- 10 `<div class="cad-annotation" data-anno="ID">` children, cada uno `position: absolute` con `top/left/right/bottom %`. Sin viewBox global. Cada anotación se renderiza en su posición % en TODOS los viewports.
+- Mini-SVGs locales por anotación (viewBox pequeño per gráfico) para los elementos line/circle. Texto siempre en `<span class="cad-text">` HTML (excepción: labels X/Y/Z del axis viven dentro del SVG porque son inline al gráfico).
+- Tipografía `JetBrains Mono` (cargada global vía `views/assets.xml:156` Google Fonts), 0.7rem ≈ 11.2 px desktop.
+
+**Las 10 anotaciones**:
+
+| `data-anno` | composición | posición desktop |
+|---|---|---|
+| `header-spec` | "v.14  ISO 9001  OCA" | top:5% left:2.5% |
+| `dim-h` | cota horizontal "26.4" + tick-ends | top:8% right:8% |
+| `dim-v` | cota vertical "Ø 18.0" + tick-ends | top:30% right:2% |
+| `cross-a1` | cross-mark + "A1" | top:18% left:8% |
+| `cross-b2` | cross-mark + "B2" | bottom:25% left:60% |
+| `ticks-085` | 3 ticks verticales + "0.85" | bottom:18% left:25% |
+| `footer-coord` | "X 0.000  Y 0.000" | bottom:5% left:2.5% |
+| `footer-scale` | "SCALE 1:1" | bottom:5% left:50% (centered) |
+| `crosshair-p0` | cruz con gap central + dot + "P.0" | top:50% right:25% (44×44 px) |
+| `axis-xyz` | 3 ejes + dot + labels XYZ inline SVG | bottom:7% right:5% (56×56 px) |
+
+**Mouse parallax v2 extendido**: el container annotations hereda CSS-vars `--scroll-y` / `--mouse-rx` / `--mouse-ry` (mismo magnitud que `_lines`, `ROTATE_MAX_LINES = 10°`). SCSS combina via:
+
+```scss
+transform: translate3d(0, var(--scroll-y, 0%), 0)
+           rotateX(var(--mouse-rx, 0deg))
+           rotateY(var(--mouse-ry, 0deg));
+```
+
+Children HTML del container heredan el transform 3D automáticamente — cero JS extra para los 10 elementos.
+
+**Hover individual JS (`hero.js` extiende `onMouseMove` del v2)**: `pickActiveAnnotation(x, y)` itera todas las `.cad-annotation`, calcula `getBoundingClientRect()` + padding 30 px expandido, distancia mínima cursor↔rect, closest wins con tiebreak menor-área. Solo UNA glowing simultáneamente (`.is-glow`). `mouseleave` → todas off. Independiente del glow de `_lines` (sistema v2 sigue activo). 10/10 alcanzables individualmente.
+
+**Mobile dedicado (<992 px Bootstrap lg) — rediseño, NO desktop-recortado**:
+
+- Visible (5): `header-spec` (texto acortado a "v.14  OCA" via duplicate spans `cad-show-desktop`/`cad-show-mobile`), `footer-coord` ("X 0.000" acortado), `footer-scale` (igual; reposicionado a esquina inferior derecha, override del centrado desktop), `axis-xyz` (reusado con override CSS: 36×36 px + top:14px right:14px), `mobile-ticks` (3 ticks decorativos sin cota textual, `cad-annotation--mobile-only`).
+- Hidden (6): `dim-h`, `dim-v`, `cross-a1`, `cross-b2`, `ticks-085`, `crosshair-p0`.
+- Posiciones mobile en px (no %): `top:14px / left:18px / right:14-18px / bottom:14px` per spec.
+- Mouse parallax + hover individual EXCLUIDOS del gating mobile (ya respetado por v2 que requiere `innerWidth >= 992`).
+
+**HTML duplication mobile/desktop vía spans** (decisión técnica): `<span class="cad-text cad-show-desktop">…</span>` + `<span class="cad-text cad-show-mobile">…</span>`. SCSS toggle vía `display`. Trade-off vs `::before` content / `attr(data)`: +2 nodos DOM por anotación dual, pero traducibilidad i18n preservada (cada texto es nodo HTML extraíble por el extractor de Odoo).
+
+**Iteración del bloque** — 4 amends iterativos (3 approaches descartados, todos recuperables via reflog para trazabilidad):
+
+| iter | hash pre-amend | scope | descarte |
+|---|---|---|---|
+| 1a | `377bd65` | v3 estirado (SVG `preserveAspectRatio="none"` + viewBox 0..100) | texto distorsionado por stretch no uniforme |
+| 1b | `7824b1e` | v3 SVG separado (viewBox 1400×600 + `slice`) | con `slice`, anotaciones de bordes desaparecían según viewport — distintos visitantes veían distintas anotaciones |
+| 2 | `40e5093` | v3 HTML+CSS positioned base (8 anotaciones spec) | ✓ aprobado |
+| 3 | `114c28d` | + crosshair-p0 + axis-xyz (mockup approved) | ✓ aprobado |
+| 4 (final) | `a899e5f` | sizes desktop crosshair 44×44 / axis 56×56 + mobile dedicado rediseñado | ✓ aprobado |
+
+Solo `a899e5f` existe en git history (los 4 anteriores son pre-amend, recuperables via `git reflog`). Causa raíz del bug del approach SVG (1a + 1b): un viewBox con preserveAspectRatio fijo recorta o distorsiona elementos en bordes según viewport-vs-viewBox aspect ratio mismatch. Lección capturada en gotcha 17 de CLAUDE.md §5.
+
+**Performance / accesibilidad**:
+
+- `aria-hidden="true"` en el container annotations entero (heredado por children) — decoration completa, axe skip color-contrast.
+- `vector-effect: non-scaling-stroke` en lines de mini-SVGs crosshair y axis para mantener stroke 1 CSS px independiente del tamaño SVG (44×44 / 56×56 desktop, 36×36 mobile).
+- Reduced-motion: anotaciones estáticas, `transform: none`, `transition: none`. Defensa CSS además del gating JS.
+- axe-core diff vs baseline `0a4c588` (v2 pushed): cero regresiones nuevas. Única violation residual `.s_avanzosc_hero_cta_primary` 3.47:1 (G3 `deferred-brand-primary-contrast` pre-existente, no introducida por v3).
+- Multi-viewport verification (CRÍTICO — fix del bug 1b): 1920×1080, 1440×900, 1366×768, 1280×800 → 10/10 visibles en todos. Cero anotaciones desaparecen.
+
+**Validación**:
+
+- Smoke verde (`docs/smoke-tests/sprint-pieza-a-v3-html.log` + `-amend.log` + `-amend2.log`).
+- Hover sweep desktop 1440: 10/10 alcanzables individualmente (cada cursor en centro de una anotación → solo esa con `.is-glow`).
+- Mobile 375: 5 visibles, 6 hidden, mousemove sintético no dispara hover (gating <992 funciona), texto acortado verificado.
+- Reduced-motion (page.emulateMedia): 10 elementos visibles estáticos, `transform: 'none'`.
+- Console: 0 errors / 0 warnings.
+- 8 screenshots en `docs/audits/2026-05-06-pieza-a-v3-html/` cubriendo: 1920 neutral, 1280 neutral, 1440 glow cross-a1, mobile 375 subset (v3 base), neutral v3-final con 10 anotaciones, glow crosshair, desktop final post-amend sizes, mobile v2-dedicated.
+
 ---
 
 ## 6. Decisiones diferidas con criterio de reapertura
