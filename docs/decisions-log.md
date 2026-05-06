@@ -883,3 +883,23 @@ Pendiente validación visual humana del orquestador en localhost:14070 (commit l
    En esta corrida axe-core reporta más violations que en la corrida baseline (e.g., +1 title en fade-50, +1 year-protagonist en progress-25 y 75). Re-runs en mismo session son determinísticos — la varianza vs baseline parece deberse a axe-core 4.x catching pre-existing structural issues con más thoroughness en este run (transient layout/visibility computation differences). NO se introduce ningún tipo nuevo de violation; todas mapean a deferred conocidos (G3 brand-primary year, gotcha 14 fade-range).
 
 5. **Screenshot post-inset**: `08-progress-0-inset.png` muestra los 8 dots completos sin clip + línea con inset 5/95% + dot idx 0 naranja (passed) + dots idx 1-7 grises + items 2008 (slot center) y 2011 (slot right) en el estado inicial.
+
+---
+
+**Resuelto (2026-05-06)** tras validación visual humana del orquestador. Trazabilidad de los 4 amends del bloque (sólo el último existe en git, el resto pre-amend):
+
+| iter | hash pre-push | scope |
+|---|---|---|
+| 1 | `29fa373` | Approach H base — pin + scrub:1 SIN snap, mapping per-item left/scale/opacity/width/zIndex inline frame-by-frame. Pieza D fallback intacta mobile/reduced-motion |
+| 2 | `e4b21be` | Sensibilidad: progress fill bar (linear-gradient via CSS variable), scale más agresivo (0.20 saturado en \|delta\|=1), color lerp neutral-900→neutral-500 con guard opacity, year mantiene brand-primary, aria-hidden gating en fade |
+| 3 | `8623b63` | 8 milestone-dots (uno por hito) reemplazando 3 slot-dots, formula `left: calc((100%/7) * --idx)`, toggle `.is-passed` cuando progress ≥ idx/(N-1), transition 200ms |
+| 4 | `96a006f` | Inset 5%/95% en línea + milestone-dots para evitar clip endpoints en `overflow:hidden` |
+
+**Síntesis de la solución**:
+
+- **Approach H elimina el ghost por construcción** (no por workaround): sin clases discretas `is-step-N` durante scrub, sin transitions CSS sobre las propiedades animadas, cada frame es la verdad calculada desde `ScrollTrigger.progress`. Verificado wheel patológico (5 deltas 1100-1300 px en 322 ms, cadencia 80 ms ≪ 200 ms umbral D28): items monotónicos sin asomar-y-desviarse.
+- **§4 reautorizada como excepción** para este componente — el approach genuinamente nuevo (scrub continuo sin snap) fue verificado en Fase A1 como NO intentado en los 5 sprints previos de D28.
+- **Adyacentes pierden fuerza** con curva continua: scale 0.20 saturado en \|delta\|=1, color lerp neutral-900→neutral-500 (#646C75 post-B3, AA 5.3:1) cuando opacity=1, opacity flat 1.0 en [0,1] (gotcha 14 cubierto), fade en [1,2].
+- **Progress fill izq→der** + **8 milestone-dots** iluminándose secuencialmente con threshold `idx/(N-1)`, transition CSS 200ms ease. Inset 5/95% para evitar clip de endpoints idx 0/7 en overflow:hidden carousel.
+- **axe-core**: cero regresiones nuevas. Violations residuales mapean a (a) `deferred-brand-primary-contrast` G3 (year brand-primary 3.47:1 en item slot-center, 15 nodos pendientes hex final logo) y (b) gotcha 14 estructural (color × opacity 0.5 sobre blanco no puede pasar AA por física — fade-range inherent al motion).
+- **Lección capturada como gotcha 16 en CLAUDE.md §5**: «Scroll-driven cinemática sobre N hitos discretos con animación de duración D produce ghost cuando cadencia inter-step < D — fix por construcción: scrub continuo SIN snap».
