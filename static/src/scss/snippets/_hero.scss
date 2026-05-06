@@ -159,11 +159,310 @@
     }
 }
 
+// =============================================================================
+// Pieza A v3 — Anotaciones CAD HTML+CSS positioned (NO viewBox global)
+// =============================================================================
+// Container y 8 cad-annotation children, cada una position:absolute con
+// top/left/right/bottom en %. Esto evita el bug del v3 SVG anterior donde
+// preserveAspectRatio="slice" recortaba anotaciones a los bordes según el
+// viewport real (visitantes veían distintas anotaciones según resolución).
+// Cada anotación se renderiza siempre en su posición % en TODOS los viewports.
+//
+// Mouse parallax v2: el container hereda --scroll-y / --mouse-rx / --mouse-ry
+// del JS (magnitud paritaria a _lines, capa misma profundidad).
+// =============================================================================
+.s_avanzosc_hero_annotations {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    color: var(--neutral-500, #7A828B);
+    opacity: 0;
+    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+    transform: translate3d(0, var(--scroll-y, 0%), 0)
+               rotateX(var(--mouse-rx, 0deg))
+               rotateY(var(--mouse-ry, 0deg));
+
+    // -------------------------------------------------------------------------
+    // .cad-annotation: cada div con posición absolute en %. Inline-flex para
+    // alinear mini-SVG + texto. Defaults: opacity 0.75 (texto), 0.55 stroke.
+    // -------------------------------------------------------------------------
+    .cad-annotation {
+        position: absolute;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;       // ~11.2 px efectivos (root 16 px)
+        font-weight: 400;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+        line-height: 1;
+        // pointer-events: none ya heredado del container. Hover detection
+        // via JS getBoundingClientRect (no CSS :hover).
+    }
+
+    .cad-text {
+        opacity: 0.75;
+        transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cad-svg {
+        overflow: visible;
+        line {
+            stroke: currentColor;
+            stroke-width: 1;
+            stroke-opacity: 0.55;
+            fill: none;
+            transition: stroke-opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                        stroke-width 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Glow al hover individual: JS añade .is-glow al div activo.
+    // Eleva opacities a 1.0 + stroke-width +50%. Mantiene currentColor
+    // (--neutral-500), no salta a brand-primary.
+    // -------------------------------------------------------------------------
+    .cad-annotation.is-glow {
+        .cad-text { opacity: 1; }
+        .cad-svg line {
+            stroke-opacity: 1;
+            stroke-width: 1.5;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Posiciones individuales por data-anno. Diseñadas para NO solapar
+    // bounding-box rects (con padding 30 px del hover) — evita el problema
+    // ticks-085 vs cross-b2 del v3 SVG.
+    // -------------------------------------------------------------------------
+    [data-anno="header-spec"]   { top: 5%;    left: 2.5%; }
+    [data-anno="dim-h"]         { top: 8%;    right: 8%;
+                                  flex-direction: column; gap: 2px; }
+    [data-anno="dim-v"]         { top: 30%;   right: 2%;
+                                  flex-direction: row; gap: 4px; }
+    [data-anno="cross-a1"]      { top: 18%;   left: 8%; }
+    [data-anno="cross-b2"]      { bottom: 25%; left: 60%; }  // ajustado de 55% para más separación de ticks-085
+    [data-anno="ticks-085"]     { bottom: 18%; left: 25%;
+                                  flex-direction: column; gap: 2px; }
+    [data-anno="footer-coord"]  { bottom: 5%; left: 2.5%; }
+
+    // .cad-center-x: footer-scale centrado horizontal vía translateX(-50%).
+    .cad-center-x {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    [data-anno="footer-scale"]  { bottom: 5%; }
+
+    // -------------------------------------------------------------------------
+    // Crosshair P.0 (centro-derecha) y mini axis XYZ (esquina inf. derecha).
+    // Adiciones approved post-validación humana del v3 base.
+    // -------------------------------------------------------------------------
+    [data-anno="crosshair-p0"] {
+        top: 50%;
+        right: 25%;
+        transform: translateY(-50%);
+    }
+    [data-anno="axis-xyz"] {
+        bottom: 7%;
+        right: 5%;
+    }
+
+    // Crosshair mini-SVG: cruz + dot. fill-opacity más alta para que el
+    // dot central sea perceptible. Tamaño 44×44 (post amend desktop —
+    // antes 26×26 se veía perdido junto a las cotas con texto largo).
+    // vector-effect: non-scaling-stroke mantiene grosor 1 CSS px aunque
+    // el SVG escale a tamaños diferentes (reduce vs no-effect que
+    // produciría stroke proporcional 1.69×).
+    .cad-crosshair-svg {
+        line {
+            stroke: currentColor;
+            stroke-opacity: 0.55;
+            stroke-width: 1;
+            fill: none;
+            vector-effect: non-scaling-stroke;
+            transition: stroke-opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                        stroke-width 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        circle {
+            fill: currentColor;
+            fill-opacity: 0.7;
+            stroke: none;
+            transition: fill-opacity 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    }
+
+    // Mini axis XYZ: 3 ejes + dot + labels X/Y/Z dentro del mini-SVG
+    // (excepción a "texto siempre HTML" porque labels son inline al
+    // gráfico, no anotación textual standalone). Tamaño 56×56 (post
+    // amend desktop). vector-effect non-scaling-stroke mantiene 1 px.
+    .cad-axis-svg {
+        line {
+            stroke: currentColor;
+            stroke-opacity: 0.65;
+            stroke-width: 1;
+            fill: none;
+            vector-effect: non-scaling-stroke;
+            transition: stroke-opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                        stroke-width 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        circle {
+            fill: currentColor;
+            fill-opacity: 0.85;
+            stroke: none;
+            transition: fill-opacity 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        text {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 400;
+            fill: currentColor;
+            fill-opacity: 0.85;
+            transition: fill-opacity 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    }
+
+    // Mobile ticks (decorative, mobile-only). 3 vertical lines.
+    .cad-mobile-ticks-svg {
+        line {
+            stroke: currentColor;
+            stroke-opacity: 0.55;
+            stroke-width: 1;
+            fill: none;
+            vector-effect: non-scaling-stroke;
+        }
+    }
+
+    // ----- Show/hide spans desktop vs mobile (text-shortening) -----
+    // .cad-show-mobile oculto por default; visible only @media mobile.
+    .cad-show-mobile { display: none; }
+
+    // ----- Mobile-only annotations (mobile-ticks): hidden default -----
+    .cad-annotation--mobile-only { display: none; }
+
+    // Glow boost para los nuevos: el rule general .cad-annotation.is-glow
+    // ya cubre `.cad-svg line { stroke-opacity: 1; stroke-width: 1.5 }` via
+    // `.cad-svg line` selector; las nuevas usan `.cad-crosshair-svg` y
+    // `.cad-axis-svg` (selectors específicos), por tanto necesitan reglas
+    // is-glow propias para los circles + text labels.
+    .cad-annotation.is-glow {
+        .cad-crosshair-svg {
+            line { stroke-opacity: 1; stroke-width: 1.5; }
+            circle { fill-opacity: 1; }
+        }
+        .cad-axis-svg {
+            line { stroke-opacity: 1; stroke-width: 1.5; }
+            circle { fill-opacity: 1; }
+            text { fill-opacity: 1; }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Mobile <992px (Bootstrap lg): rediseño dedicado del subset.
+    //
+    // Visible (5):
+    //   - header-spec  : "v.14  OCA" (acortado de "v.14  ISO 9001  OCA"
+    //                    via duplicate spans cad-show-desktop / cad-show-
+    //                    mobile). top:14px left:18px.
+    //   - footer-coord : "X 0.000" (acortado de "X 0.000  Y 0.000").
+    //                    bottom:14px left:18px.
+    //   - footer-scale : "SCALE 1:1" (igual texto). bottom:14px right:18px
+    //                    (override del centrado horizontal del desktop).
+    //   - axis-xyz     : reusado del desktop; reposicionado a top:14px
+    //                    right:14px y reescalado a 36×36 (vs 56×56 desktop).
+    //   - mobile-ticks : 3 ticks decorativos sin cota textual. Centered
+    //                    horizontalmente sobre la curva main bottom.
+    //
+    // Hidden (6): dim-h, dim-v, cross-a1, cross-b2, ticks-085, crosshair-p0.
+    // -------------------------------------------------------------------------
+    @media (max-width: 991.98px) {
+        .cad-annotation:not(.cad-annotation--mobile-keep):not(.cad-annotation--mobile-only) {
+            display: none;
+        }
+        // Mobile-only annotations: visibles.
+        .cad-annotation--mobile-only {
+            display: inline-flex;
+        }
+        // Text shortening switch.
+        .cad-show-desktop { display: none; }
+        .cad-show-mobile  { display: inline; }
+
+        // Mobile position overrides (px-based per spec).
+        [data-anno="header-spec"] {
+            top: 14px;
+            left: 18px;
+            right: auto;
+        }
+        [data-anno="footer-coord"] {
+            bottom: 14px;
+            left: 18px;
+            right: auto;
+        }
+        // footer-scale: override del centrado desktop (left:50% + transform)
+        // a esquina inferior derecha.
+        [data-anno="footer-scale"] {
+            bottom: 14px;
+            right: 18px;
+            left: auto;
+            transform: none;
+        }
+        // axis-xyz: override desktop bottom/right + reescalar SVG.
+        [data-anno="axis-xyz"] {
+            top: 14px;
+            right: 14px;
+            bottom: auto;
+            .cad-axis-svg {
+                width: 36px;
+                height: 36px;
+            }
+        }
+        // mobile-ticks: posición sobre la curva main bottom (proyectada
+        // a mobile aspect). bottom:18% ≈ donde la curva pasa por t=0.5.
+        [data-anno="mobile-ticks"] {
+            bottom: 18%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+
+    // Reduced-motion: defensa CSS. JS gating ya excluye el mouse parallax
+    // + hover; aquí adicionalmente desactivamos transitions del glow (instant
+    // si JS lo aplicara por error).
+    @media (prefers-reduced-motion: reduce) {
+        .cad-text,
+        .cad-svg line {
+            transition: none;
+        }
+    }
+}
+
+// Estado revealed: container también se muestra al disparar el toggle de
+// hero.js (mismo timing que _grid + _lines).
+.s_avanzosc_hero.is-decoration-revealed {
+    .s_avanzosc_hero_annotations {
+        opacity: 1;
+    }
+}
+
+// Reduced-motion: estado final visible directo, sin parallax.
+.s_avanzosc_hero {
+    @include reduced-motion {
+        .s_avanzosc_hero_annotations {
+            opacity: 1;
+            transition: none;
+            transform: none !important;
+        }
+    }
+}
+
 .s_avanzosc_hero_inner {
     width: 100%;
     max-width: 56rem;  // ~896px — limita el ancho del texto para legibilidad.
-    // Pieza A: z-index sobre los 2 layers de decoración (que están en
-    // 0 y 1) para garantizar que el texto del hero gana stacking.
+    // Pieza A: z-index sobre los 3 layers de decoración (grid 0, lines 1,
+    // annotations 1) para que el texto del hero gane stacking.
     position: relative;
     z-index: 2;
 }

@@ -54,9 +54,11 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
             var claim = section.querySelector('.s_avanzosc_hero_claim');
             var subtitle = section.querySelector('.s_avanzosc_hero_subtitle');
             var actions = section.querySelector('.s_avanzosc_hero_actions');
-            // Pieza A — refs a los 2 layers de decoración (CSS grid + SVG lines).
+            // Pieza A — refs a los 3 layers de decoración (CSS grid + SVG
+            // lines + HTML annotations container v3).
             var gridLayer = section.querySelector('.s_avanzosc_hero_grid');
             var linesLayer = section.querySelector('.s_avanzosc_hero_lines');
+            var annotationsLayer = section.querySelector('.s_avanzosc_hero_annotations');
             var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
             if (reducedMotion) {
@@ -115,6 +117,11 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
                 }
                 if (gridLayer) {
                     gridLayer.style.setProperty('--scroll-y', (progress * -5) + '%');
+                }
+                // Pieza A v3 — annotations en misma capa de profundidad que
+                // lines (-15%) per spec.
+                if (annotationsLayer) {
+                    annotationsLayer.style.setProperty('--scroll-y', (progress * -15) + '%');
                 }
                 parallaxTicking = false;
             }
@@ -316,6 +323,12 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
                     linesLayer.style.setProperty('--mouse-rx', (currentRX * ROTATE_MAX_LINES).toFixed(3) + 'deg');
                     linesLayer.style.setProperty('--mouse-ry', (currentRY * ROTATE_MAX_LINES).toFixed(3) + 'deg');
                 }
+                // Pieza A v3 — annotations parallax magnitud paritaria a lines
+                // (capa misma profundidad visual). Per spec.
+                if (annotationsLayer) {
+                    annotationsLayer.style.setProperty('--mouse-rx', (currentRX * ROTATE_MAX_LINES).toFixed(3) + 'deg');
+                    annotationsLayer.style.setProperty('--mouse-ry', (currentRY * ROTATE_MAX_LINES).toFixed(3) + 'deg');
+                }
             }
 
             function lerpLoop() {
@@ -342,6 +355,59 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
                 }
             }
 
+            // -----------------------------------------------------------------
+            // Pieza A v3 — Hover individual sobre <div class="cad-annotation">.
+            // -----------------------------------------------------------------
+            // Cada anotación HTML+CSS positioned recibe .is-glow cuando el
+            // cursor está dentro de su rect expandido por padding 30 px. Solo
+            // UNA simultáneamente. Tiebreak menor-área cuando overlap (aunque
+            // las posiciones están diseñadas para NO solapar — defensa).
+            //
+            // Independiente del glow de las 3 líneas grandes (sistema v2):
+            // ambos sistemas pueden glowear simultáneamente porque escriben
+            // sobre distintos elementos.
+            // -----------------------------------------------------------------
+            var HOVER_PADDING = 30;
+            var annotations = annotationsLayer
+                ? annotationsLayer.querySelectorAll('.cad-annotation')
+                : [];
+            var activeAnnotation = null;
+
+            function distanceToRect(x, y, r) {
+                var dx = Math.max(r.left - x, 0, x - r.right);
+                var dy = Math.max(r.top - y, 0, y - r.bottom);
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+            function pickActiveAnnotation(x, y) {
+                var best = null;
+                var bestDist = Infinity;
+                var bestArea = Infinity;
+                for (var i = 0; i < annotations.length; i++) {
+                    var g = annotations[i];
+                    if (window.getComputedStyle(g).display === 'none') continue;
+                    var r = g.getBoundingClientRect();
+                    if (r.width === 0 && r.height === 0) continue;
+                    var inExpanded =
+                        x >= r.left - HOVER_PADDING && x <= r.right + HOVER_PADDING &&
+                        y >= r.top - HOVER_PADDING && y <= r.bottom + HOVER_PADDING;
+                    if (!inExpanded) continue;
+                    var d = distanceToRect(x, y, r);
+                    var a = r.width * r.height;
+                    if (d < bestDist || (d === bestDist && a < bestArea)) {
+                        bestDist = d;
+                        bestArea = a;
+                        best = g;
+                    }
+                }
+                return best;
+            }
+            function setActiveAnnotation(g) {
+                if (activeAnnotation === g) return;
+                if (activeAnnotation) activeAnnotation.classList.remove('is-glow');
+                if (g) g.classList.add('is-glow');
+                activeAnnotation = g;
+            }
+
             function onMouseMove(e) {
                 var rect = section.getBoundingClientRect();
                 if (rect.width === 0 || rect.height === 0) return;
@@ -362,12 +428,15 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
                 targetRX = -sy;
                 targetRY = sx;
                 setGlow(pickActivePath(nx, ny));
+                // Pieza A v3 — hover individual sobre cad-annotation.
+                setActiveAnnotation(pickActiveAnnotation(e.clientX, e.clientY));
                 ensureLoop();
             }
             function onMouseLeave() {
                 targetRX = 0;
                 targetRY = 0;
                 setGlow(null);
+                setActiveAnnotation(null);
                 ensureLoop();
             }
 

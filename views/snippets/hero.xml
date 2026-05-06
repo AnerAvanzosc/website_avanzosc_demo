@@ -89,6 +89,135 @@
                       fill="none" stroke="currentColor" stroke-width="1"
                       vector-effect="non-scaling-stroke"/>
             </svg>
+            <!-- Pieza A v3 — Anotaciones técnicas tipo CAD (HTML+CSS positioned).
+                 Tras 2 intentos descartados (v3 estirado 377bd65 que distorsionaba
+                 el texto via SVG preserveAspectRatio="none", y v3 SVG 7824b1e que
+                 con preserveAspectRatio="slice" recortaba anotaciones a los bordes
+                 según viewport — distintos viewports veían distintas anotaciones).
+
+                 Approach final: cada anotación es un <div> position:absolute con
+                 top/left/right/bottom en %. NO viewBox global. Cada anotación se
+                 renderiza en su posición % en TODOS los viewports.
+
+                 Container hermano de _grid + _lines, dentro de .s_avanzosc_hero.
+                 z-index 1 (mismo que _lines), DOM order POSTERIOR → pinta encima.
+                 aria-hidden=true (decoración pura).
+
+                 Mini-SVGs locales por anotación (con su propio viewBox pequeño)
+                 para los gráficos de líneas (cotas, cross-marks, ticks). Texto
+                 SIEMPRE en <span class="cad-text"> HTML — texto en HTML+CSS no
+                 se estira con el contenedor.
+
+                 Hover individual: JS pickActiveAnnotation calcula distancia
+                 cursor↔rect de cada <div>; rect expandido por padding 30px;
+                 closest wins con tiebreak menor-área. Solo UNA <div>.is-glow
+                 simultáneamente. mouseleave → todas off.
+
+                 Mouse parallax v2: el container hereda var(mouse-rx/-ry) (mismo
+                 magnitud que _lines) + var(scroll-y). CSS combina via transform.
+
+                 Mobile <992px: subset reducido (header-spec + dim-h + cross-a1).
+                 Resto display:none. -->
+            <div class="s_avanzosc_hero_annotations" aria-hidden="true">
+                <div class="cad-annotation cad-annotation--mobile-keep" data-anno="header-spec">
+                    <span class="cad-text cad-show-desktop">v.14  ISO 9001  OCA</span>
+                    <span class="cad-text cad-show-mobile">v.14  OCA</span>
+                </div>
+
+                <div class="cad-annotation cad-dim-h" data-anno="dim-h">
+                    <span class="cad-text">26.4</span>
+                    <svg class="cad-svg" viewBox="0 0 120 8" width="120" height="8" focusable="false">
+                        <line x1="0" y1="4" x2="120" y2="4"/>
+                        <line x1="0" y1="0" x2="0" y2="8"/>
+                        <line x1="120" y1="0" x2="120" y2="8"/>
+                    </svg>
+                </div>
+
+                <div class="cad-annotation cad-dim-v" data-anno="dim-v">
+                    <span class="cad-text">Ø 18.0</span>
+                    <svg class="cad-svg" viewBox="0 0 8 100" width="8" height="100" focusable="false">
+                        <line x1="4" y1="0" x2="4" y2="100"/>
+                        <line x1="0" y1="0" x2="8" y2="0"/>
+                        <line x1="0" y1="100" x2="8" y2="100"/>
+                    </svg>
+                </div>
+
+                <div class="cad-annotation cad-cross" data-anno="cross-a1">
+                    <svg class="cad-svg" viewBox="0 0 14 14" width="14" height="14" focusable="false">
+                        <line x1="0" y1="7" x2="14" y2="7"/>
+                        <line x1="7" y1="0" x2="7" y2="14"/>
+                    </svg>
+                    <span class="cad-text">A1</span>
+                </div>
+
+                <div class="cad-annotation cad-cross" data-anno="cross-b2">
+                    <svg class="cad-svg" viewBox="0 0 14 14" width="14" height="14" focusable="false">
+                        <line x1="0" y1="7" x2="14" y2="7"/>
+                        <line x1="7" y1="0" x2="7" y2="14"/>
+                    </svg>
+                    <span class="cad-text">B2</span>
+                </div>
+
+                <div class="cad-annotation cad-ticks" data-anno="ticks-085">
+                    <svg class="cad-svg" viewBox="0 0 80 8" width="80" height="8" focusable="false">
+                        <line x1="0" y1="0" x2="0" y2="8"/>
+                        <line x1="40" y1="0" x2="40" y2="8"/>
+                        <line x1="80" y1="0" x2="80" y2="8"/>
+                    </svg>
+                    <span class="cad-text">0.85</span>
+                </div>
+
+                <div class="cad-annotation cad-annotation--mobile-keep" data-anno="footer-coord">
+                    <span class="cad-text cad-show-desktop">X 0.000  Y 0.000</span>
+                    <span class="cad-text cad-show-mobile">X 0.000</span>
+                </div>
+
+                <div class="cad-annotation cad-annotation--mobile-keep cad-center-x" data-anno="footer-scale">
+                    <span class="cad-text">SCALE 1:1</span>
+                </div>
+
+                <!-- Crosshair P.0: cruz con gap central + dot, centro-derecha
+                     del hero. Mockup approved del orquestador. -->
+                <div class="cad-annotation cad-crosshair" data-anno="crosshair-p0">
+                    <svg class="cad-crosshair-svg" viewBox="0 0 40 40" width="44" height="44" focusable="false">
+                        <line x1="0" y1="20" x2="14" y2="20"/>
+                        <line x1="26" y1="20" x2="40" y2="20"/>
+                        <line x1="20" y1="0" x2="20" y2="14"/>
+                        <line x1="20" y1="26" x2="20" y2="40"/>
+                        <circle cx="20" cy="20" r="2"/>
+                    </svg>
+                    <span class="cad-text">P.0</span>
+                </div>
+
+                <!-- Mini axis XYZ: 3 ejes saliendo de un origen + dot + labels.
+                     Excepción a "texto siempre HTML" — los labels X Y Z viven
+                     dentro del mini-SVG como <text> inline al gráfico.
+                     Reusado en mobile con override de width/height + posición
+                     (top:14px right:14px en lugar de bottom:7% right:5%). -->
+                <div class="cad-annotation cad-annotation--mobile-keep cad-axis" data-anno="axis-xyz">
+                    <svg class="cad-axis-svg" viewBox="0 0 50 50" width="56" height="56" focusable="false">
+                        <line x1="15" y1="35" x2="42" y2="35"/>
+                        <line x1="15" y1="35" x2="15" y2="8"/>
+                        <line x1="15" y1="35" x2="4" y2="46"/>
+                        <circle cx="15" cy="35" r="1.8"/>
+                        <text x="45" y="38" font-size="8">X</text>
+                        <text x="12" y="6" font-size="8">Y</text>
+                        <text x="0" y="49" font-size="8">Z</text>
+                    </svg>
+                </div>
+
+                <!-- Mobile-only: 3 tick marks decorativos sobre línea main
+                     bottom (sin cota textual). Solo display en mobile via
+                     CSS modifier mobile-only. Posición se acerca a la
+                     curva _lines proyectada en mobile (~bottom:18% center). -->
+                <div class="cad-annotation cad-annotation--mobile-only" data-anno="mobile-ticks">
+                    <svg class="cad-mobile-ticks-svg" viewBox="0 0 100 8" width="180" height="8" focusable="false">
+                        <line x1="2" y1="0" x2="2" y2="8"/>
+                        <line x1="50" y1="0" x2="50" y2="8"/>
+                        <line x1="98" y1="0" x2="98" y2="8"/>
+                    </svg>
+                </div>
+            </div>
             <div class="container">
                 <div class="s_avanzosc_hero_inner">
                     <h1 class="s_avanzosc_hero_claim"><t t-esc="hero_claim"/></h1>
