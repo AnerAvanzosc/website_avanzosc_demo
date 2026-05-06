@@ -290,31 +290,39 @@
                             <rect x="20" y="20" width="560" height="40" rx="4" fill="#F4F5F7"/>
                             <circle cx="40" cy="40" r="6" fill="#D3D7DC"/>
                             <rect x="60" y="35" width="120" height="10" rx="2" fill="#D3D7DC"/>
-                            <!-- KPI cards row — texto em-dash placeholder. F1 cleanup
-                                 (post-8767a79): los targets 87/142/36 eran mockup
-                                 sin atribución; vaciados a «—» hasta que el primer
-                                 caso de éxito real aporte métricas. La animación
-                                 count-up del widget queda operativa: cuando se
-                                 introduzca `data-target="<valor>"` por archetype el
-                                 count-up arranca solo. Mientras tanto, el guard de
-                                 count_up.js skipea KPIs sin data-target. -->
-                            <rect x="20" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
-                            <rect x="35" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
-                            <text x="35" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
-                                  class="s_avanzosc_caso_exito_kpi_text">—</text>
-                            <rect x="35" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
+                            <!-- KPI cards — F1.1 v2 wrapper <g> por card.
+                                 Cada KPI agrupa los 4 elementos visuales (bg rect,
+                                 label bar, número text, subtitle bar) en un único
+                                 <g class="s_avanzosc_caso_exito_kpi_card"> para
+                                 poder dim+hover la card como unidad lógica (opacity
+                                 + translate aplican al group, cascadean a hijos).
+                                 El bg rect lleva clase `_bg` aparte para hover
+                                 stroke (que aplica solo al rect, no a label/text).
+                                 Texto «—» (em-dash) per F1 cleanup mientras llegan
+                                 métricas reales. -->
+                            <g class="s_avanzosc_caso_exito_kpi_card">
+                                <rect class="s_avanzosc_caso_exito_kpi_card_bg" x="20" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
+                                <rect x="35" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
+                                <text x="35" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
+                                      class="s_avanzosc_caso_exito_kpi_text">—</text>
+                                <rect x="35" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
+                            </g>
 
-                            <rect x="210" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
-                            <rect x="225" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
-                            <text x="225" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
-                                  class="s_avanzosc_caso_exito_kpi_text">—</text>
-                            <rect x="225" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
+                            <g class="s_avanzosc_caso_exito_kpi_card">
+                                <rect class="s_avanzosc_caso_exito_kpi_card_bg" x="210" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
+                                <rect x="225" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
+                                <text x="225" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
+                                      class="s_avanzosc_caso_exito_kpi_text">—</text>
+                                <rect x="225" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
+                            </g>
 
-                            <rect x="400" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
-                            <rect x="415" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
-                            <text x="415" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
-                                  class="s_avanzosc_caso_exito_kpi_text">—</text>
-                            <rect x="415" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
+                            <g class="s_avanzosc_caso_exito_kpi_card">
+                                <rect class="s_avanzosc_caso_exito_kpi_card_bg" x="400" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
+                                <rect x="415" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
+                                <text x="415" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
+                                      class="s_avanzosc_caso_exito_kpi_text">—</text>
+                                <rect x="415" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
+                            </g>
 
                             <!-- Bar chart silhouette — orden DOM izquierda→derecha
                                  para que el stagger 80ms del JS recorra naturalmente. -->

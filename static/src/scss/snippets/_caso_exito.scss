@@ -143,43 +143,157 @@
 // padre opacity-only 600ms se mantiene intacto encima.
 // =============================================================================
 
+// =============================================================================
+// F1.1 v2 — Hover dramático sobre bars + donut + KPI cards con dim del resto.
+// =============================================================================
+// Capa post-entrada activa SOLO bajo `.is-animated`. El JS gestor
+// (caso_exito.js) toggle `.is-hovered` sobre el target individual y
+// `data-hover-active` sobre el <svg>. CSS dim aplica a los demás
+// hover-targets via `[data-hover-active] :not(.is-hovered)`.
+//
+// Sectoriales sin `.is-animated` no reciben ninguna regla — JS no
+// engancha y CSS no matchea.
+// =============================================================================
+
+// Vars locales (scope SCSS del archivo). Centralizan los timings/curvas
+// del hover orchestrator para tweaks futuros sin search-and-replace.
+$avanzosc-hover-curve: cubic-bezier(0.16, 1, 0.3, 1);
+$avanzosc-hover-duration: 280ms;
+$avanzosc-dim-opacity: 0.55;
+
 .s_avanzosc_caso_exito.is-animated {
 
-    // Bars: scaleY 0→1 desde bottom. `transform-box: fill-box` es
-    // obligatorio en SVG para que `transform-origin` se interprete dentro
-    // del bounding box del propio elemento (no del viewBox global).
-    // `50% 100%` ancla el origen en bottom-center → la barra crece desde
-    // su base hacia arriba.
+    // -------------------------------------------------------------------------
+    // F1 — entrada (bars, donut, kpi_text). Estados iniciales y transitions
+    // que se mantienen intactos (orchestrator F1.1 v2 NO toca el mecanismo
+    // de entrada; solo añade opacity transition para que el dim/undim
+    // animen suavemente).
+    // -------------------------------------------------------------------------
+
+    // Bars: scaleY 0→1 desde bottom + opacity 1 default + transitions
+    // combinadas (transform 600ms entrada / opacity 280ms dim/undim /
+    // filter 280ms hover). El hover-IN scale 1.12 declara su propia
+    // transition transform 280ms (más rápida que la 600ms de entrada).
+    // El hover-OUT del transform sigue cayendo a 600ms del base — trade-off
+    // asimétrico aceptado igual que F1.1 v1.
     .s_avanzosc_caso_exito_bar {
         transform: scaleY(0);
         transform-box: fill-box;
         transform-origin: 50% 100%;
-        transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+        opacity: 1;
+        transition: transform 600ms $avanzosc-hover-curve,
+                    opacity $avanzosc-hover-duration $avanzosc-hover-curve,
+                    filter $avanzosc-hover-duration $avanzosc-hover-curve;
     }
     .s_avanzosc_caso_exito_bar.is-drawn {
         transform: scaleY(1);
     }
 
-    // Donut: stroke-dasharray + stroke-dashoffset line-draw.
-    // `pathLength="100"` en el <path> permite hardcodear los valores 100
-    // sin conocer la longitud exacta del arco — el browser escala dasharray
-    // y dashoffset proporcionalmente al pathLength declarado.
-    // dashoffset:100 = stroke totalmente oculto (offset = pathLength entero).
-    // La transición a 0 dibuja el arco izq→der (start→end de la d).
+    // Donut: line-draw (stroke-dashoffset 900ms) + opacity 280ms (dim) +
+    // transform 280ms (hover scale) + filter 280ms (hover drop-shadow).
+    // transform-box: fill-box → transform-origin: center usa el centro del
+    // bounding box del path (≈ x=514, y=266 en viewBox). Ligeramente offset
+    // del centro visual del ring gris (490, 280); diferencia ~24×14 px en
+    // viewBox 600×400, no choca con bars (x≤380) tras scale 1.08.
     .s_avanzosc_caso_exito_donut_fill {
         stroke-dasharray: 100;
         stroke-dashoffset: 100;
-        transition: stroke-dashoffset 900ms cubic-bezier(0.16, 1, 0.3, 1);
+        opacity: 1;
+        transform-box: fill-box;
+        transform-origin: center;
+        transition: stroke-dashoffset 900ms $avanzosc-hover-curve,
+                    opacity $avanzosc-hover-duration $avanzosc-hover-curve,
+                    transform $avanzosc-hover-duration $avanzosc-hover-curve,
+                    filter $avanzosc-hover-duration $avanzosc-hover-curve;
     }
     .s_avanzosc_caso_exito_donut_fill.is-drawn {
         stroke-dashoffset: 0;
     }
 
-    // Reduced-motion local override: el override global de _typography
-    // ya pone `* { transition: none !important }` bajo reduce, así que
-    // técnicamente este bloque es defensa redundante. Lo mantenemos para
-    // que el estado final (scale 1, dashoffset 0) sea explícito incluso
-    // si el override global se debilitara en el futuro.
+    // -------------------------------------------------------------------------
+    // F1.1 v2 — KPI cards (group <g>)
+    // -------------------------------------------------------------------------
+    // Cards no tienen entrada propia (rendean siempre con todos sus hijos
+    // visibles). Solo participan en dim + hover post-load. transform-box
+    // fill-box sobre <g> usa la unión de bounding boxes de los descendants
+    // — soportado en navegadores modernos (Chrome/FF/Safari recientes).
+    // transform-origin 50% 100% para translateY que viene desde la base
+    // (sensación "lift").
+    // Bg rect: clase aparte para que el hover stroke (1px brand-primary)
+    // aplique solo al rect contenedor — no al label/subtitle/text.
+    .s_avanzosc_caso_exito_kpi_card {
+        opacity: 1;
+        transform-box: fill-box;
+        transform-origin: 50% 100%;
+        transition: transform $avanzosc-hover-duration $avanzosc-hover-curve,
+                    opacity $avanzosc-hover-duration $avanzosc-hover-curve,
+                    filter $avanzosc-hover-duration $avanzosc-hover-curve;
+    }
+    .s_avanzosc_caso_exito_kpi_card_bg {
+        transition: stroke $avanzosc-hover-duration $avanzosc-hover-curve;
+    }
+
+    // -------------------------------------------------------------------------
+    // F1.1 v2 — Dim non-hovered cuando el SVG tiene data-hover-active
+    // -------------------------------------------------------------------------
+    // El dim aplica a todos los hover-targets EXCEPTO el .is-hovered.
+    // Sin data-hover-active, opacity vuelve al base (1) → undim natural.
+    // La transición opacity 280ms vive en las reglas base de cada elemento,
+    // así que el undim también es suave (no hace falta declararlo aquí).
+    .s_avanzosc_caso_exito_svg[data-hover-active] {
+        .s_avanzosc_caso_exito_bar:not(.is-hovered),
+        .s_avanzosc_caso_exito_donut_fill:not(.is-hovered),
+        .s_avanzosc_caso_exito_kpi_card:not(.is-hovered) {
+            opacity: $avanzosc-dim-opacity;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // F1.1 v2 — Hover-in styles
+    // -------------------------------------------------------------------------
+    // Bars: scale +12% + brightness 1.25 + drop-shadow naranja 12px. Solo
+    // post-entrada (selector requiere `.is-drawn.is-hovered`). Transition
+    // transform 280ms re-declarada localmente (vs 600ms del base) para que
+    // el hover-IN responda rápido. hover-OUT cae a 600ms del base.
+    .s_avanzosc_caso_exito_bar.is-drawn.is-hovered {
+        transform: scaleY(1.12);
+        filter: brightness(1.25) drop-shadow(0 0 12px rgba(232, 93, 47, 0.5));
+        transition: transform $avanzosc-hover-duration $avanzosc-hover-curve,
+                    filter $avanzosc-hover-duration $avanzosc-hover-curve;
+    }
+
+    // Donut: scale 1.08 desde center + drop-shadow naranja 16px. La
+    // transition transform/filter 280ms ya declarada en el base; aquí solo
+    // overrides de los valores final.
+    .s_avanzosc_caso_exito_donut_fill.is-hovered {
+        transform: scale(1.08);
+        filter: drop-shadow(0 0 16px rgba(232, 93, 47, 0.55));
+    }
+
+    // KPI cards: translateY -4px + drop-shadow oscuro suave + stroke 1px
+    // brand-primary en el bg rect.
+    .s_avanzosc_caso_exito_kpi_card.is-hovered {
+        transform: translateY(-4px);
+        filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
+    }
+    .s_avanzosc_caso_exito_kpi_card.is-hovered .s_avanzosc_caso_exito_kpi_card_bg {
+        stroke: var(--brand-primary, #E85D2F);
+        stroke-width: 1;
+    }
+
+    // -------------------------------------------------------------------------
+    // Reduced-motion: anula transitions + hover state propio.
+    // -------------------------------------------------------------------------
+    // El override global de `_typography.scss` ya pone `* { transition:
+    // none !important }`, pero defensiva explícita aquí para estado final
+    // limpio (transform/filter neutralizados, dim sigue aplicando como
+    // salto instantáneo).
+    //
+    // Decisión: el dim (opacity 0.55) bajo reduce SE MANTIENE como feedback
+    // visual binario sin transición. Respeta la preferencia (ningún
+    // movimiento) sin perder el feedback de cuál elemento está
+    // protagonizando vs los demás. Las transformaciones y filtros
+    // dramáticos sí se anulan (esos sí son "motion" estricto).
     @include reduced-motion {
         .s_avanzosc_caso_exito_bar {
             transform: scaleY(1);
@@ -187,6 +301,33 @@
         }
         .s_avanzosc_caso_exito_donut_fill {
             stroke-dashoffset: 0;
+            transition: none;
+        }
+        .s_avanzosc_caso_exito_kpi_card {
+            transform: none;
+            transition: none;
+        }
+        // Hover targets bajo reduce: anulamos transforms y filters. El dim
+        // (opacity 0.55) sigue aplicando vía la regla base [data-hover-active]
+        // — no la tocamos aquí. transition: none redundante respecto al
+        // override global pero defensivo.
+        .s_avanzosc_caso_exito_bar.is-drawn.is-hovered {
+            transform: scaleY(1);
+            filter: none;
+            transition: none;
+        }
+        .s_avanzosc_caso_exito_donut_fill.is-hovered {
+            transform: none;
+            filter: none;
+            transition: none;
+        }
+        .s_avanzosc_caso_exito_kpi_card.is-hovered {
+            transform: none;
+            filter: none;
+            transition: none;
+        }
+        .s_avanzosc_caso_exito_kpi_card.is-hovered .s_avanzosc_caso_exito_kpi_card_bg {
+            stroke: none;
             transition: none;
         }
     }
