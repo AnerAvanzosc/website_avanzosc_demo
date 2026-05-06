@@ -91,8 +91,17 @@
                  al entrar en viewport. Ver reveal.js docstring. -->
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/snippets/reveal.js"/>
+            <!-- F1 — count-up util compartida (refactor de contador.js).
+                 DEBE cargar antes que sus consumidores (contador.js,
+                 caso_exito.js) porque hacen `require()` del módulo. -->
+            <script type="text/javascript"
+                    src="/website_avanzosc_demo/static/src/js/utils/count_up.js"/>
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/snippets/contador.js"/>
+            <!-- F1 — animación de entrada del SVG dashboard de §6 Caso éxito
+                 (home only via flag `caso_exito_animated`). -->
+            <script type="text/javascript"
+                    src="/website_avanzosc_demo/static/src/js/snippets/caso_exito.js"/>
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/snippets/timeline.js"/>
             <script type="text/javascript"

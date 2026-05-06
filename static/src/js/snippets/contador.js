@@ -36,21 +36,14 @@ odoo.define('website_avanzosc_demo.snippets.contador', function (require) {
     // -------------------------------------------------------------------
 
     var publicWidget = require('web.public.widget');
+    var countUp = require('website_avanzosc_demo.utils.count_up');
 
-    // 1500ms intencional, excede rango spec §9.2 (800-1200ms entradas grandes).
-    // Los contadores numéricos requieren tiempo extra de lectura para que el
-    // usuario procese el valor final con confort. La curva easeOutCubic
-    // descelera en los últimos ~400ms, dando tiempo suficiente para que
-    // los dígitos sean leídos a medida que se aproximan al target. Decisión
-    // consciente del implementer Phase 3.5; auditoría 8.1 (sesión 2026-04-29)
-    // mantiene el valor.
-    var DURATION_MS = 1500;
+    // F1 refactor: la lógica de count-up (easeOutCubic + animate + paintFinal)
+    // se extrajo a `website_avanzosc_demo.utils.count_up` para que F1
+    // (caso_exito.js KPI animación del SVG dashboard) la reutilice sin
+    // duplicar. Comportamiento idéntico al previo: 1500ms easeOutCubic,
+    // one-shot via `data-counted="true"`, threshold IO 0.5.
     var THRESHOLD = 0.5;
-
-    function easeOutCubic(t) {
-        // t en [0, 1]. Curva ease-out cubic.
-        return 1 - Math.pow(1 - t, 3);
-    }
 
     publicWidget.registry.AvanzoscContador = publicWidget.Widget.extend({
         selector: '.s_avanzosc_contador',
@@ -60,46 +53,18 @@ odoo.define('website_avanzosc_demo.snippets.contador', function (require) {
             var numbers = section.querySelectorAll('.s_avanzosc_contador_number');
             var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-            // Helper: paint final state (target + suffix) on a given node.
-            function paintFinal(node) {
-                var target = parseInt(node.getAttribute('data-target') || '0', 10);
-                var suffix = node.getAttribute('data-suffix') || '';
-                node.textContent = target + suffix;
-                node.setAttribute('data-counted', 'true');
-            }
-
-            // Helper: animate count-up on a given node.
-            function animate(node) {
-                if (node.getAttribute('data-counted') === 'true') return;
-                var target = parseInt(node.getAttribute('data-target') || '0', 10);
-                var suffix = node.getAttribute('data-suffix') || '';
-                var startTime = null;
-
-                function step(now) {
-                    if (!startTime) startTime = now;
-                    var elapsed = now - startTime;
-                    var t = Math.min(1, elapsed / DURATION_MS);
-                    var current = Math.round(target * easeOutCubic(t));
-                    node.textContent = current + suffix;
-                    if (t < 1) {
-                        window.requestAnimationFrame(step);
-                    } else {
-                        node.setAttribute('data-counted', 'true');
-                    }
-                }
-                window.requestAnimationFrame(step);
-            }
-
             // Reduced-motion or no IO: paint final directly.
             if (reducedMotion || !('IntersectionObserver' in window)) {
-                numbers.forEach(paintFinal);
+                numbers.forEach(countUp.paintFinal);
                 return this._super.apply(this, arguments);
             }
 
             var observer = new IntersectionObserver(function (entries) {
                 entries.forEach(function (entry) {
                     if (entry.isIntersecting) {
-                        numbers.forEach(animate);
+                        numbers.forEach(function (n) {
+                            countUp.animate(n);
+                        });
                         observer.unobserve(section);
                     }
                 });

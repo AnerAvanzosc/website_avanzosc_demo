@@ -51,7 +51,19 @@
 -->
 <odoo>
     <template id="s_avanzosc_caso_exito" name="Avanzosc · Caso de éxito">
-        <section class="s_avanzosc_caso_exito" data-name="Avanzosc Caso de éxito" data-avanzosc-reveal="">
+        <!--
+            F1 — animación de entrada del SVG dashboard (one-shot al cruzar
+            threshold IO 0.4 en el viewport). Activación opt-in:
+            `caso_exito_animated=True` cuando el llamador lo pasa via t-call
+            body (home.xml). Sectoriales (industrial/distribucion/servicios/
+            academias) NO la activan: el SVG renderea estado final estático
+            (KPIs con su valor target, bars al 100%, donut completo) y el
+            widget JS no se engancha (selector requiere `.is-animated`).
+        -->
+        <t t-if="not caso_exito_animated">
+            <t t-set="caso_exito_animated" t-value="False"/>
+        </t>
+        <section t-attf-class="s_avanzosc_caso_exito#{caso_exito_animated and ' is-animated' or ''}" data-name="Avanzosc Caso de éxito" data-avanzosc-reveal="">
             <div class="container">
 
                 <!-- Resolver archetype activo. archetype_id puede venir via t-call
@@ -246,6 +258,31 @@
                              NO datos reales (anonymous-first per Q2). 600×400 viewBox
                              escalable, mantiene aspect ratio. Idéntico para todos
                              los archetypes (no varía con archetype_id). -->
+                        <!--
+                            SVG dashboard wireframe. F1 introduce 3 cambios
+                            estructurales para soportar la animación de entrada:
+                              1. KPI numbers (3) — antes <rect> placeholder, ahora
+                                 <text> con `data-target` y contenido inicial
+                                 condicional («0» si caso_exito_animated, valor
+                                 final si no). En modo animated, el JS hace
+                                 count-up rAF 0→target reusando count_up util.
+                              2. Bars (6) — clase `s_avanzosc_caso_exito_bar` para
+                                 hook CSS scaleY 0→1 desde bottom (bajo
+                                 `.is-animated`).
+                              3. Donut — antes <path> wedge filled con `L 490 280 Z`
+                                 (pizza slice hacia el centro). Ahora arc stroked
+                                 (mismo stroke-width 20 que el ring gris,
+                                 stroke-linecap butt) que reemplaza el rim gris en
+                                 el segmento naranja. Visualmente más coherente
+                                 con un donut chart real. `pathLength="100"`
+                                 permite hardcodear dasharray/dashoffset en SCSS
+                                 sin conocer la longitud exacta del arco.
+
+                            Targets KPI: 87 / 142 / 36 — generic mockup numbers,
+                            no atribuibles a métricas de cliente real (CLAUDE.md
+                            §11 D3 anonymous-first). Mismo nivel semántico que
+                            los `<rect>` placeholder originales.
+                        -->
                         <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" class="s_avanzosc_caso_exito_svg" role="img" aria-label="Dashboard placeholder">
                             <!-- Frame del dashboard -->
                             <rect x="10" y="10" width="580" height="380" rx="8" fill="#FFFFFF" stroke="#D3D7DC" stroke-width="2"/>
@@ -253,35 +290,52 @@
                             <rect x="20" y="20" width="560" height="40" rx="4" fill="#F4F5F7"/>
                             <circle cx="40" cy="40" r="6" fill="#D3D7DC"/>
                             <rect x="60" y="35" width="120" height="10" rx="2" fill="#D3D7DC"/>
-                            <!-- KPI cards row -->
+                            <!-- KPI cards row — number rect → <text> con data-target. -->
                             <rect x="20" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
                             <rect x="35" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
-                            <rect x="35" y="115" width="100" height="20" rx="3" fill="#0F1419"/>
+                            <text x="35" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
+                                  class="s_avanzosc_caso_exito_kpi_text" data-target="87">
+                                <t t-esc="'0' if caso_exito_animated else '87'"/>
+                            </text>
                             <rect x="35" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
 
                             <rect x="210" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
                             <rect x="225" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
-                            <rect x="225" y="115" width="100" height="20" rx="3" fill="#0F1419"/>
+                            <text x="225" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
+                                  class="s_avanzosc_caso_exito_kpi_text" data-target="142">
+                                <t t-esc="'0' if caso_exito_animated else '142'"/>
+                            </text>
                             <rect x="225" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
 
                             <rect x="400" y="80" width="180" height="80" rx="6" fill="#F4F5F7"/>
                             <rect x="415" y="95" width="60" height="8" rx="2" fill="#D3D7DC"/>
-                            <rect x="415" y="115" width="100" height="20" rx="3" fill="#0F1419"/>
+                            <text x="415" y="135" font-family="Space Grotesk, sans-serif" font-size="22" font-weight="600" fill="#0F1419"
+                                  class="s_avanzosc_caso_exito_kpi_text" data-target="36">
+                                <t t-esc="'0' if caso_exito_animated else '36'"/>
+                            </text>
                             <rect x="415" y="145" width="80" height="6" rx="2" fill="#D3D7DC"/>
 
-                            <!-- Bar chart silhouette -->
+                            <!-- Bar chart silhouette — orden DOM izquierda→derecha
+                                 para que el stagger 80ms del JS recorra naturalmente. -->
                             <rect x="20" y="180" width="370" height="200" rx="6" fill="#F4F5F7"/>
-                            <rect x="40" y="320" width="40" height="50" rx="2" fill="#E85D2F"/>
-                            <rect x="100" y="290" width="40" height="80" rx="2" fill="#E85D2F"/>
-                            <rect x="160" y="240" width="40" height="130" rx="2" fill="#E85D2F"/>
-                            <rect x="220" y="270" width="40" height="100" rx="2" fill="#E85D2F"/>
-                            <rect x="280" y="220" width="40" height="150" rx="2" fill="#E85D2F"/>
-                            <rect x="340" y="200" width="40" height="170" rx="2" fill="#E85D2F"/>
+                            <rect class="s_avanzosc_caso_exito_bar" x="40" y="320" width="40" height="50" rx="2" fill="#E85D2F"/>
+                            <rect class="s_avanzosc_caso_exito_bar" x="100" y="290" width="40" height="80" rx="2" fill="#E85D2F"/>
+                            <rect class="s_avanzosc_caso_exito_bar" x="160" y="240" width="40" height="130" rx="2" fill="#E85D2F"/>
+                            <rect class="s_avanzosc_caso_exito_bar" x="220" y="270" width="40" height="100" rx="2" fill="#E85D2F"/>
+                            <rect class="s_avanzosc_caso_exito_bar" x="280" y="220" width="40" height="150" rx="2" fill="#E85D2F"/>
+                            <rect class="s_avanzosc_caso_exito_bar" x="340" y="200" width="40" height="170" rx="2" fill="#E85D2F"/>
 
-                            <!-- Donut placeholder (simplificado) -->
+                            <!-- Donut: ring gris background + arc stroked en
+                                 brand-primary (reemplaza el wedge filled previo). -->
                             <rect x="400" y="180" width="180" height="200" rx="6" fill="#F4F5F7"/>
                             <circle cx="490" cy="280" r="55" fill="#FFFFFF" stroke="#D3D7DC" stroke-width="20"/>
-                            <path d="M 490 225 A 55 55 0 0 1 538 308 L 490 280 Z" fill="#E85D2F"/>
+                            <path class="s_avanzosc_caso_exito_donut_fill"
+                                  d="M 490 225 A 55 55 0 0 1 538 308"
+                                  fill="none"
+                                  stroke="#E85D2F"
+                                  stroke-width="20"
+                                  stroke-linecap="butt"
+                                  pathLength="100"/>
                         </svg>
                     </div>
                 </div>

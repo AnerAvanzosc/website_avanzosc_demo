@@ -51,8 +51,13 @@
                 <t t-call="website_avanzosc_demo.s_avanzosc_cta_kit_consulting"/>
                 <!-- Sección 5: Contador (17 / 600+ / 4). -->
                 <t t-call="website_avanzosc_demo.s_avanzosc_contador"/>
-                <!-- Sección 6: Caso de éxito (archetype activo via config_parameter). -->
-                <t t-call="website_avanzosc_demo.s_avanzosc_caso_exito"/>
+                <!-- Sección 6: Caso de éxito (archetype activo via config_parameter).
+                     `caso_exito_animated=True` activa la animación de entrada
+                     del SVG dashboard (F1) — exclusiva de la home; sectoriales
+                     dejan el flag a False y rendean estado final estático. -->
+                <t t-call="website_avanzosc_demo.s_avanzosc_caso_exito">
+                    <t t-set="caso_exito_animated" t-value="True"/>
+                </t>
                 <!-- Sección 7: Timeline (8 hitos trayectoria). -->
                 <t t-call="website_avanzosc_demo.s_avanzosc_timeline"/>
                 <!-- Sección 8: Equipo (SVG abstracto + copy + 4 stats). -->

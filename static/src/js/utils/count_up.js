@@ -1,0 +1,70 @@
+odoo.define('website_avanzosc_demo.utils.count_up', function (require) {
+    'use strict';
+
+    // -------------------------------------------------------------------
+    // Count-up util — extraído de Task 3.5 (contador.js) para reuso por
+    // F1 (caso_exito.js KPI count-up del SVG dashboard).
+    //
+    // Forma:
+    //   - `paintFinal(node)`: pinta target + suffix directo, marca counted.
+    //     Usado bajo prefers-reduced-motion o sin IntersectionObserver.
+    //   - `animate(node, durationMs)`: rAF loop con interpolación
+    //     easeOutCubic 0→target durante `durationMs`. One-shot via
+    //     `data-counted="true"`.
+    //
+    // Convención de atributos esperada en el nodo:
+    //   - `data-target` (obligatorio): valor final entero (parseInt).
+    //   - `data-suffix` (opcional, default ''): sufijo concatenado a cada
+    //     frame (e.g. "+" para «600+»). Pasa transparente para el SVG
+    //     KPI text que no usa suffix.
+    //
+    // El nodo puede ser HTML (<span>) o SVG (<text>): textContent funciona
+    // en ambos sin distinción.
+    //
+    // Default duration 1500ms: alineado con la decisión consciente de
+    // contador.js de exceder rango spec §9.2 (800-1200ms entradas grandes)
+    // para dar tiempo de lectura al usuario; la curva easeOutCubic
+    // descelera en los últimos ~400ms.
+    // -------------------------------------------------------------------
+
+    var DEFAULT_DURATION_MS = 1500;
+
+    function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+    }
+
+    function paintFinal(node) {
+        var target = parseInt(node.getAttribute('data-target') || '0', 10);
+        var suffix = node.getAttribute('data-suffix') || '';
+        node.textContent = target + suffix;
+        node.setAttribute('data-counted', 'true');
+    }
+
+    function animate(node, durationMs) {
+        if (node.getAttribute('data-counted') === 'true') return;
+        var target = parseInt(node.getAttribute('data-target') || '0', 10);
+        var suffix = node.getAttribute('data-suffix') || '';
+        var duration = durationMs || DEFAULT_DURATION_MS;
+        var startTime = null;
+
+        function step(now) {
+            if (!startTime) startTime = now;
+            var elapsed = now - startTime;
+            var t = Math.min(1, elapsed / duration);
+            var current = Math.round(target * easeOutCubic(t));
+            node.textContent = current + suffix;
+            if (t < 1) {
+                window.requestAnimationFrame(step);
+            } else {
+                node.setAttribute('data-counted', 'true');
+            }
+        }
+        window.requestAnimationFrame(step);
+    }
+
+    return {
+        paintFinal: paintFinal,
+        animate: animate,
+        DEFAULT_DURATION_MS: DEFAULT_DURATION_MS,
+    };
+});
