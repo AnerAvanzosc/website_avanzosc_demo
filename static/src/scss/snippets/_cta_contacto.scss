@@ -16,6 +16,34 @@
 .s_avanzosc_cta_contacto {
     background-color: var(--neutral-900, #0F1419);
     padding: 5rem 0;
+    // F5 v1: grain ambient + glow CTA. position relative para anclar
+    // el ::before del grain. overflow:hidden contiene el glow del
+    // botón si se proyecta cerca del edge inferior antes del footer.
+    position: relative;
+    overflow: hidden;
+
+    // F5 v1 grain ambient layer. SVG fractalNoise inline en data URI
+    // base64, baseFrequency 0.9 + 2 octaves = grain fino. Tile 200×200
+    // se repite por el background. opacity 0.05 + mix-blend-mode overlay
+    // sobre fondo neutral-900 da textura clara visible sin saturar el
+    // contenido. pointer-events:none deja todos los eventos al CTA.
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IiBudW1PY3RhdmVzPSIyIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI24pIi8+PC9zdmc+");
+        background-repeat: repeat;
+        opacity: 0.05;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    // El contenido del CTA por encima del grain layer.
+    .container {
+        position: relative;
+        z-index: 1;
+    }
 
     @media (max-width: 767.98px) {
         padding: 3rem 0;
@@ -124,10 +152,32 @@
     padding-left: 2rem;
     padding-right: 2rem;
     transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    // F5 v1: position relative para anclar el ::before del glow.
+    position: relative;
 
     &:hover,
     &:focus {
         transform: translateY(-1px);
+    }
+
+    // F5 v1 glow pulse. Pseudo ::before con radial-gradient brand-primary
+    // alpha 0.30 + blur 24px = halo difuso. inset -12px expande el rect
+    // 12px más allá del button para que el blur no se recorte. z-index
+    // -1 sitúa el halo detrás del background del btn-primary, así el
+    // halo solo se ve donde se proyecta fuera del botón. Color hardcoded
+    // rgb(232, 93, 47) coherente con _sectores.scss (rgba sin var/hex).
+    // pulse 3s alternate ping-pong: scale 1→1.05 + opacity 0.6→0.4
+    // — respiración suave que dirige la mirada al CTA sin agitar.
+    &::before {
+        content: "";
+        position: absolute;
+        inset: -12px;
+        border-radius: calc(0.3rem + 12px);
+        background: radial-gradient(ellipse at center, rgba(232, 93, 47, 0.30) 0%, transparent 70%);
+        filter: blur(24px);
+        z-index: -1;
+        pointer-events: none;
+        animation: avanzosc-cta-glow-pulse 3s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
     }
 
     @include reduced-motion {
@@ -137,7 +187,25 @@
         &:focus {
             transform: none;
         }
+
+        // F5 v1: bajo reduce el override global ya mata la animation
+        // del ::before. Defensiva explícita: el glow queda estático
+        // visible (opacity 0.5 ≈ punto medio del rango pulse) sin
+        // pulsar — preserva la presencia visual del CTA sin movimiento.
+        &::before {
+            animation: none;
+            opacity: 0.5;
+            transform: none;
+        }
     }
+}
+
+// F5 v1 keyframes pulse — escala + opacity en ping-pong (alternate
+// en la animation hace 0%↔100%). Solo transform y opacity = GPU per
+// CLAUDE.md §5.
+@keyframes avanzosc-cta-glow-pulse {
+    0%   { transform: scale(1);    opacity: 0.6; }
+    100% { transform: scale(1.05); opacity: 0.4; }
 }
 
 // -----------------------------------------------------------------------------
