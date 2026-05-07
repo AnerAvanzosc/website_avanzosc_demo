@@ -14,9 +14,24 @@
 .s_avanzosc_sectores {
     background-color: var(--neutral-0, #FFFFFF);
     padding: 5rem 0;
+    // F4 v2: position relative para contener el absolute del boxes
+    // layer. overflow hidden recorta cells que se proyectan fuera del
+    // section tras el skew + translate.
+    position: relative;
+    overflow: hidden;
 
     @media (max-width: 767.98px) {
         padding: 3rem 0;
+    }
+
+    // F4 v7: el .container ahora envuelve sólo las cards (boxes es
+    // hijo directo de section, no del container — full-bleed). Para
+    // que los cards queden por encima del grid, el container recibe
+    // z-index:1. La regla previa estaba en .row pero ahora abarcamos
+    // el ancestor común para cubrir todo el contenido visible.
+    .container {
+        position: relative;
+        z-index: 1;
     }
 
     .row {
@@ -24,6 +39,144 @@
         // Bootstrap row tiene gutter por defecto via cols margin/padding;
         // aquí añadimos row-gap específico para el caso 2x2 + 1x4.
         row-gap: 1.5rem;
+    }
+}
+
+// =============================================================================
+// F4 v2 — Background boxes layer (grid isométrico blueprint interactivo)
+// =============================================================================
+// Inspirado en componente Aceternity UI (React + Framer Motion), adaptado
+// al stack del proyecto (SCSS + vanilla JS, NO React, NO libs nuevas).
+//
+// Estructura: cells generadas en runtime por sectores.js widget (30 rows ×
+// 20 cols por defecto, configurable vía data-rows/data-cols). Cada cell es
+// un div con borders sutiles. Al hover sobre cell, background-color brand-
+// primary alpha 0.18 instant + fade-out 600ms al salir.
+//
+// Perspective: skewX(-48deg) skewY(14deg) scale(0.675) crea efecto
+// isométrico blueprint. translate(-40%, -60%) reposiciona para que el
+// grid quede visualmente centrado en la sección tras el skew.
+//
+// Mask radial: gradient que desvanece el grid hacia los bordes — clave
+// para que el efecto no domine, queda como capa atmosférica detrás de
+// las cards.
+//
+// Mobile (hover: none o <768px): hidden via display: none. Efecto
+// desktop-first.
+// =============================================================================
+.s_avanzosc_sectores_boxes {
+    position: absolute;
+    // F4 v7: boxes es hijo directo de la <section> (no del .container
+    // Bootstrap), por lo que el ancestor positioned cubre 100vw del
+    // viewport — patrón equivalente al fondo amarillo full-bleed de
+    // §4 Kit Consulting. inset: -30% expande el rect 60% más allá
+    // de la sección antes del transform: el scale(0.675) + skew
+    // reducen el bounding rect post-transform a ~76% del pre-
+    // transform, así que con inset 0 quedaría un gap de ~150px
+    // por lado. Con inset -30% el rect post-transform supera el
+    // ancho de la sección con margen, garantizando cobertura
+    // edge-to-edge tras el clip por overflow:hidden de la section.
+    inset: -30%;
+    z-index: 0;
+    display: flex;
+    pointer-events: auto;
+
+    // F4 v6: mask radial — black 60% / transparent 95%. Heredada
+    // sin cambios: zona totalmente opaca al 60% del radio, fade
+    // pega al borde a 95%. Mantiene el efecto atmosférico-blueprint
+    // sin recortar agresivamente.
+    -webkit-mask-image: radial-gradient(ellipse at center, black 60%, transparent 95%);
+    mask-image: radial-gradient(ellipse at center, black 60%, transparent 95%);
+
+    // F4 v6: translate Y -10% (centrado vertical post-skewY). X 0%
+    // (centrado horizontal post-skewX). Heredado sin cambios.
+    transform: translate(0%, -10%) skewX(-48deg) skewY(14deg) scale(0.675) translateZ(0);
+    transform-origin: center;
+
+    // F4 v7: densidad 50×30=1500 cells (vs F4 v6 40×25=1000). Sube
+    // por el aumento de ancho del área (full viewport vs container)
+    // pero reducida desde el primer intento de 60×35=2100 al detectar
+    // empíricamente que 2100 producía FPS drop a 45 avg / 20 min en
+    // sweep stress (vs 60 fps esperado). 1500 cells mantiene 60 fps
+    // sostenidos preservando densidad visual del pattern. cell dims
+    // 96×48 sin cambios respecto a v4-v6.
+    --cell-w: 96px;
+    --cell-h: 48px;
+    --rows: 50;
+    --cols: 30;
+}
+
+.s_avanzosc_sectores_boxes_row {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.s_avanzosc_sectores_boxes_cell {
+    width: var(--cell-w);
+    height: var(--cell-h);
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: transparent;
+    position: relative;
+    // F4 v3: transition 200ms (vs F4 v2 600ms). "Estela mínima":
+    // cuando el JS quita .is-hovered (al cursor moverse a otra cell
+    // o salir del grid), el background-color decae de alpha 0.18
+    // a transparent en 200ms. Visual: trail muy corto, casi instant.
+    transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
+
+    // F4 v4 paleta multi-color: alpha 0.40 (vs F4 v3 0.18). Validación
+    // visual humana en F4 v3 detectó "casi no se ve color"; subir a
+    // 0.40 hace los hovers nítidos sin saturar el fondo. RGB triplets
+    // hardcodeados manteniendo coherencia con design system:
+    //   color-1: brand-primary  #E85D2F → rgb(232, 93, 47)
+    //   color-2: brand-accent   #F5B800 → rgb(245, 184, 0)
+    //   color-3: neutral-700    #3A4149 → rgb(58, 65, 73)
+    //   color-4: neutral-300    #D3D7DC → rgb(211, 215, 220)
+    // No se usan var(--brand-primary) directamente porque rgba()
+    // necesita los componentes RGB y CSS no permite extraer el RGB
+    // de una hex var sin color-mix() — patrón no establecido en el
+    // resto del módulo. Mantener hardcoded preserva legibilidad y
+    // alinea con prácticas existentes (ver _hero.scss / _pilares.scss).
+    // color-4 (gris claro 0.40 sobre blanco): visible pero el más
+    // tímido del set — añade ritmo entre los 3 saturados.
+    &.is-hovered.color-1 {
+        background-color: rgba(232, 93, 47, 0.40);  // brand-primary
+    }
+    &.is-hovered.color-2 {
+        background-color: rgba(245, 184, 0, 0.40);   // brand-accent
+    }
+    &.is-hovered.color-3 {
+        background-color: rgba(58, 65, 73, 0.40);    // neutral-700
+    }
+    &.is-hovered.color-4 {
+        background-color: rgba(211, 215, 220, 0.40); // neutral-300
+    }
+
+    // Iconos «+» decorativos cada 2x2 cells. Posicionados en la
+    // intersección top-left de cada cell con has-plus. F4 v4: offsets
+    // escalados ×1.5 (-8 → -12, -6 → -9) por proporción al aumento
+    // de cell size (96/64 = 1.5).
+    &.has-plus::after {
+        content: "+";
+        position: absolute;
+        top: -12px;
+        left: -9px;
+        font-size: 12px;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.16);
+        pointer-events: none;
+        font-family: 'JetBrains Mono', monospace;
+    }
+}
+
+// Mobile responsive + touch-only: ocultar boxes layer entero. El efecto
+// es desktop-first; en mobile el grid distrae del scroll vertical y
+// (hover: none) deja el grid estático sin la capa interactiva que le da
+// sentido.
+@media (max-width: 767.98px), (hover: none) {
+    .s_avanzosc_sectores_boxes {
+        display: none;
     }
 }
 
@@ -51,6 +204,8 @@
     text-decoration: none;
     color: inherit;
     height: 100%;  // Cards en la misma row tienen igual altura aunque texto difiera.
+    position: relative;  // F4: scope para ::before line-draw absolute.
+    overflow: hidden;    // F4: recorta el line-draw a los bordes redondeados.
 
     // Reveal initial state.
     opacity: 0;
@@ -59,27 +214,68 @@
     //   - reveal duration 600ms = techo del rango micro 300-600ms ✓
     //   - reveal stagger 100ms × 4 ítems = 300ms total → escena total
     //     ~900ms, dentro entradas grandes 800-1200ms ✓
-    //   - hover transform 200ms = 100ms por debajo del rango micro,
-    //     justificado igual que el botón Acceso clientes (estándar
-    //     industria hover feedback)
+    //   - hover transform 200ms (legacy v1) → ahora 280ms (F4) sigue
+    //     <300ms del rango micro pero más cerca del lenguaje motion
+    //     consolidado del sitio (F1.1 v2 / F2 v2 polish usan 280ms).
     //   - ease cubic-bezier expo coincide con spec ✓
-    // Combina las dos transiciones (reveal: opacity+transform 600ms expo,
-    // hover: transform+shadow 200ms expo) en una sola declaración. Las
-    // duraciones difieren entre propiedades — opacity solo en reveal,
-    // shadow solo en hover, transform en ambos.
+    // Combina las transiciones (reveal: opacity+transform 600ms expo,
+    // hover: transform+shadow+border 280ms expo) en una sola declaración.
     transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
-                transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
+                transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 280ms cubic-bezier(0.16, 1, 0.3, 1);
 
-    // Hover: lift + shadow. Solo transform y box-shadow per CLAUDE.md §5
-    // (animación GPU-friendly, no afecta layout).
-    &:hover,
-    &:focus {
+    // F4 — line-draw del border bottom: pseudo-element width 0 → 100%
+    // al hover. transition 400ms (más larga que el lift 280ms para que
+    // el line-draw se sienta como una capa narrativa "después" del
+    // lift). Color brand-primary.
+    &::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background: var(--brand-primary, #E85D2F);
+        transition: width 400ms cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+    }
+}
+
+// F4 — Hover amplificado SOLO en dispositivos con hover capability.
+// Touch-only (hover: none): tap navega directo, sin lift/scale/line-draw
+// que destabilice layout o requiera doble-tap (tap-to-show-hover, tap-
+// to-navigate).
+//
+// Magnitudes nuevas (vs v1 translateY -4 + shadow ligera):
+//   - transform: translateY(-6px) scale(1.03) — coherente con lenguaje
+//     F2 v2 polish (scale 1.06). Aquí 1.03 más sutil porque la card
+//     ya es grande y un scale 1.06 sería excesivo.
+//   - box-shadow 16/40 alpha 0.14 — sombra más teatral.
+//   - z-index 2 — eleva la card hovered sobre vecinas en grid 2x2 para
+//     que el solapamiento del scale no quede tapado por bordes vecinos.
+//   - line-draw bottom border 100% width — capa narrativa final.
+@media (hover: hover) {
+    .s_avanzosc_sectores_card:hover,
+    .s_avanzosc_sectores_card:focus {
         text-decoration: none;
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        // !important necesario para vencer la specificity (0,5,0) de la
+        // regla reveal `.s_avanzosc_sectores.is-revealed .col-12:nth-child(N)
+        // .s_avanzosc_sectores_card { transform: translateY(0) }`. Mi
+        // hover rule (0,2,0) sin !important pierde ante el reveal cuando
+        // ambos están aplicando — el reveal fija el transform al estado
+        // final translateY(0) y el hover no puede overrride. Constraint
+        // del orchestrator: NO TOCAR el stagger nth-child del reveal,
+        // así que !important es la vía pragmática (vs refactor de la
+        // regla reveal o cadena de selectors larga).
+        transform: translateY(-6px) scale(1.03) !important;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
         border-color: var(--brand-primary, #E85D2F);
+        z-index: 2;
+    }
+    .s_avanzosc_sectores_card:hover::before,
+    .s_avanzosc_sectores_card:focus::before {
+        width: 100%;
     }
 }
 
@@ -150,7 +346,26 @@
             &:hover,
             &:focus {
                 transform: none;
+                z-index: auto;  // F4: anula la elevación bajo reduce
+                box-shadow: none;
             }
+
+            // F4 line-draw bajo reduce: binario sin transition. El
+            // override global * { transition: none !important } ya
+            // mata la transition del width; bajo reduce el line-draw
+            // aparece instant (width 0 → 100%) en hover/focus o
+            // permanece a 0 sin hover. Defensiva explícita aquí.
+            &::before {
+                transition: none;
+            }
+        }
+
+        // F4 v2 boxes bajo reduce: cells visibles pero sin transition
+        // del fade. El JS (sectores.js) salta su propio attach
+        // pointermove bajo reduce → el grid queda estático puramente
+        // visual. Defensa por si JS no respetara el guard.
+        .s_avanzosc_sectores_boxes_cell {
+            transition: none;
         }
     }
 }

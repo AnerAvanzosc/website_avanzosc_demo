@@ -113,6 +113,11 @@
                  (§8). Reusa hover_orchestrator. -->
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/snippets/equipo.js"/>
+            <!-- F4 v2 — background boxes layer (grid isométrico interactivo)
+                 en §3 Sectores. Genera cells al runtime + listener
+                 pointermove con fade-out trail. -->
+            <script type="text/javascript"
+                    src="/website_avanzosc_demo/static/src/js/snippets/sectores.js"/>
             <script type="text/javascript"
                     src="/website_avanzosc_demo/static/src/js/snippets/timeline.js"/>
             <script type="text/javascript"

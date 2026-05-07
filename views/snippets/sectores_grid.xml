@@ -22,6 +22,17 @@
 <odoo>
     <template id="s_avanzosc_sectores" name="Avanzosc · Sectores">
         <section id="sectores" class="s_avanzosc_sectores" data-name="Avanzosc Sectores" data-avanzosc-reveal="">
+            <!-- F4 v7 — Background boxes layer full-bleed.
+                 Hijo directo de la <section> (no del .container) para
+                 que ocupe 100% del ancho del viewport, equivalente al
+                 patrón de §4 Kit Consulting (fondo amarillo edge-to-edge).
+                 SCSS lo posiciona absolute con inset: -30% sobre la
+                 sección entera. data-rows/data-cols configuran densidad:
+                 50×30 = 1500 cells (ajustado tras detectar FPS drop con
+                 60×35=2100 en sweep stress: avg 45 fps con 2100 vs 60
+                 fps con 1500). Generado por JS al runtime (sectores.js
+                 widget). Hidden en mobile vía media query. -->
+            <div class="s_avanzosc_sectores_boxes" data-rows="50" data-cols="30" aria-hidden="true"/>
             <div class="container">
                 <div class="row">
                     <!-- Industrial. -->
