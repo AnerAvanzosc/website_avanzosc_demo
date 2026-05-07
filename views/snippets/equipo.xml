@@ -1,66 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Task 3.9 — s_avanzosc_equipo snippet.
-    Ref: spec §6.9, plan §3.9, CLAUDE.md §9.1 pilar 3 «Equipo único»,
-    §9.6 (NO stock photos), [?] #8 spec (sesión fotográfica pendiente).
+    Ref: spec §6.9, plan §3.9, CLAUDE.md §9.1 pilar 3 «Equipo único».
 
-    BLOQUEO BLANDO ACEPTADO PER BRIEFING SESIÓN 2026-04-28:
-    Sin fotos reales del equipo (Avanzosc aún no ha hecho la sesión
-    fotográfica). v1 usa SVG abstracto inline en lugar de stock photos
-    o foto pixelada actual. CLAUDE.md §9.6 prohíbe stock photos
-    explícitamente. Cuando se cierre [?] #8, sustituir el SVG abstracto
-    por foto real — cambio aislado a este file, sin tocar SCSS / JS.
+    F2 (post-F1.2 v2): SVG abstracto de placeholder REEMPLAZADO por grid
+    de 8 tarjetas con el equipo real (Ana Juaristi CEO + 7 técnicos).
+    Cada tarjeta lleva avatar circular con iniciales, nombre, rol y
+    especialidad. Ana lleva clase `is-ceo` (avatar brand-primary + badge
+    CEO).
 
-    Layout: 2 cols. Col izquierda: SVG abstracto con composición de
-    círculos de distintos tamaños y colores (brand-primary +
-    neutral-700) que evocan «equipo» sin individualizar. Col derecha:
-    heading + párrafo principal + 4 stats breves.
+    Layout:
+      - Top: heading + paragraph (intro narrativa).
+      - Middle: grid 4×2 desktop / 2×4 tablet / 1×8 mobile.
+      - Bottom: 4 stats clave (sin cambios respecto a v1).
 
-    Reveal: simple fade+translateY via widget genérico AvanzoscReveal
-    (`data-avanzosc-reveal`). NO scroll-trigger complejo (reservado
-    para timeline 3.8).
+    Reveal padre: la sección entera mantiene `data-avanzosc-reveal=""`
+    (IO 0.2, opacity+translateY 600ms expo). Las 8 tarjetas heredan
+    el reveal del padre — sin stagger individual.
 
-    Background neutral-100 (alterno suave con timeline blanco anterior
-    y dark CTA contacto siguiente).
-
-    NO en builder (D4).
+    Hover dramático: gestionado por `equipo.js` widget reusando el util
+    `hover_orchestrator` (mismo patrón que F1.1 v2 caso_exito).
+    Toggle .is-hovered + data-hover-active en el grid.
 -->
 <odoo>
     <template id="s_avanzosc_equipo" name="Avanzosc · Equipo">
         <section id="equipo" class="s_avanzosc_equipo" data-name="Avanzosc Equipo" data-avanzosc-reveal="">
             <div class="container">
-                <div class="row align-items-center">
-                    <!-- Col izquierda: SVG abstracto del equipo. -->
-                    <div class="col-12 col-lg-5 s_avanzosc_equipo_visual">
-                        <!-- TODO #spec-q8: replace with real team photo when
-                             Avanzosc photoshoot session is completed. SVG
-                             abstract placeholder per CLAUDE.md §9.6 (NO stock
-                             photos) and per briefing sesión 2026-04-28
-                             approach «sin foto real en v1». -->
-                        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" class="s_avanzosc_equipo_svg" role="img" aria-label="Representación abstracta del equipo">
-                            <!-- Círculos representando personas en composición orgánica.
-                                 Tamaños y colores variados — sugieren diversidad sin
-                                 individualizar. NO ojos, NO caras genéricas (eso sería
-                                 stock-illustration; queremos abstracción geométrica). -->
-                            <!-- Fondo sutil -->
-                            <circle cx="200" cy="200" r="180" fill="var(--neutral-0, #FFFFFF)" opacity="0.5"/>
 
-                            <!-- Composición de círculos -->
-                            <circle cx="120" cy="140" r="42" fill="var(--brand-primary, #E85D2F)"/>
-                            <circle cx="220" cy="120" r="38" fill="var(--neutral-700, #3A4149)"/>
-                            <circle cx="290" cy="180" r="32" fill="var(--brand-primary, #E85D2F)"/>
-                            <circle cx="160" cy="240" r="48" fill="var(--neutral-700, #3A4149)"/>
-                            <circle cx="260" cy="270" r="36" fill="var(--brand-primary, #E85D2F)"/>
-                            <circle cx="100" cy="290" r="28" fill="var(--neutral-700, #3A4149)"/>
-                            <circle cx="320" cy="290" r="26" fill="var(--brand-primary, #E85D2F)"/>
-                            <circle cx="200" cy="340" r="22" fill="var(--neutral-700, #3A4149)"/>
-                        </svg>
-                    </div>
-
-                    <!-- Col derecha: copy + stats. -->
-                    <div class="col-12 col-lg-7 s_avanzosc_equipo_text">
+                <!-- Intro: heading + paragraph centered. -->
+                <div class="row">
+                    <div class="col-12 col-lg-9 mx-auto s_avanzosc_equipo_text">
                         <h2 class="s_avanzosc_equipo_heading">Quiénes lo construyen</h2>
                         <p class="s_avanzosc_equipo_paragraph">Equipo STEM con base en Azkoitia, Gipuzkoa. Mayoría femenina en un sector dominado por hombres. Programadoras, consultoras funcionales y técnicas de soporte. Contribuimos a la OCA y formamos a la siguiente generación a través de las academias.</p>
+                    </div>
+                </div>
+
+                <!-- Grid 8 tarjetas. -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="s_avanzosc_equipo_grid">
+
+                            <article class="s_avanzosc_equipo_card is-ceo">
+                                <div class="s_avanzosc_equipo_card_avatar">
+                                    <span class="s_avanzosc_equipo_card_initials">AJ</span>
+                                </div>
+                                <div class="s_avanzosc_equipo_card_meta">
+                                    <span class="s_avanzosc_equipo_card_badge" aria-hidden="true">CEO</span>
+                                    <h3 class="s_avanzosc_equipo_card_name">Ana Juaristi</h3>
+                                    <p class="s_avanzosc_equipo_card_role">CEO</p>
+                                    <p class="s_avanzosc_equipo_card_specialty">Dirección y Odoo MRP</p>
+                                </div>
+                            </article>
+
+                            <article class="s_avanzosc_equipo_card">
+                                <div class="s_avanzosc_equipo_card_avatar">
+                                    <span class="s_avanzosc_equipo_card_initials">RD</span>
+                                </div>
+                                <div class="s_avanzosc_equipo_card_meta">
+                                    <h3 class="s_avanzosc_equipo_card_name">Ramón Díez</h3>
+                                    <p class="s_avanzosc_equipo_card_role">Director comercial</p>
+                                    <p class="s_avanzosc_equipo_card_specialty">Ventas y ofertas</p>
+                                </div>
+                            </article>
+
+                            <article class="s_avanzosc_equipo_card">
+                                <div class="s_avanzosc_equipo_card_avatar">
+                                    <span class="s_avanzosc_equipo_card_initials">OA</span>
+                                </div>
+                                <div class="s_avanzosc_equipo_card_meta">
+                                    <h3 class="s_avanzosc_equipo_card_name">Olatz Aranguren</h3>
+                                    <p class="s_avanzosc_equipo_card_role">Consultora</p>
+                                    <p class="s_avanzosc_equipo_card_specialty">Contabilidad y administración</p>
+                                </div>
+                            </article>
+
+                            <article class="s_avanzosc_equipo_card">
+                                <div class="s_avanzosc_equipo_card_avatar">
+                                    <span class="s_avanzosc_equipo_card_initials">ADF</span>
+                                </div>
+                                <div class="s_avanzosc_equipo_card_meta">
+                                    <h3 class="s_avanzosc_equipo_card_name">Alfredo De la Fuente</h3>
+                                    <p class="s_avanzosc_equipo_card_role">Analista programador</p>
+                                    <p class="s_avanzosc_equipo_card_specialty">Coordinación técnica</p>
+                                </div>
+                            </article>
+
+                            <article class="s_avanzosc_equipo_card">
+                                <div class="s_avanzosc_equipo_card_avatar">
+                                    <span class="s_avanzosc_equipo_card_initials">OC</span>
+                                </div>
+                                <div class="s_avanzosc_equipo_card_meta">
+                                    <h3 class="s_avanzosc_equipo_card_name">Oihane Crucelaegi</h3>
+                                    <p class="s_avanzosc_equipo_card_role">Analista programadora</p>
+                                    <p class="s_avanzosc_equipo_card_specialty">Backend y APIs</p>
+                                </div>
+                            </article>
+
+                            <article class="s_avanzosc_equipo_card">
+                                <div class="s_avanzosc_equipo_card_avatar">
+                                    <span class="s_avanzosc_equipo_card_initials">BA</span>
+                                </div>
+                                <div class="s_avanzosc_equipo_card_meta">
+                                    <h3 class="s_avanzosc_equipo_card_name">Berezi Amubieta</h3>
+                                    <p class="s_avanzosc_equipo_card_role">Analista programadora</p>
+                                    <p class="s_avanzosc_equipo_card_specialty">Verticales sectoriales</p>
+                                </div>
+                            </article>
+
+                            <article class="s_avanzosc_equipo_card">
+                                <div class="s_avanzosc_equipo_card_avatar">
+                                    <span class="s_avanzosc_equipo_card_initials">LE</span>
+                                </div>
+                                <div class="s_avanzosc_equipo_card_meta">
+                                    <h3 class="s_avanzosc_equipo_card_name">Lucía Echeverría</h3>
+                                    <p class="s_avanzosc_equipo_card_role">Programadora</p>
+                                    <p class="s_avanzosc_equipo_card_specialty">Desarrollo de módulos</p>
+                                </div>
+                            </article>
+
+                            <article class="s_avanzosc_equipo_card">
+                                <div class="s_avanzosc_equipo_card_avatar">
+                                    <span class="s_avanzosc_equipo_card_initials">AG</span>
+                                </div>
+                                <div class="s_avanzosc_equipo_card_meta">
+                                    <h3 class="s_avanzosc_equipo_card_name">Ane Gurruchaga</h3>
+                                    <p class="s_avanzosc_equipo_card_role">Programadora</p>
+                                    <p class="s_avanzosc_equipo_card_specialty">Migración de BBDD</p>
+                                </div>
+                            </article>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats clave. Sin cambios respecto a v1. -->
+                <div class="row">
+                    <div class="col-12 col-lg-9 mx-auto">
                         <ul class="s_avanzosc_equipo_stats">
                             <li class="s_avanzosc_equipo_stat">
                                 <span class="s_avanzosc_equipo_stat_label">Equipo</span>
@@ -81,6 +156,7 @@
                         </ul>
                     </div>
                 </div>
+
             </div>
         </section>
     </template>

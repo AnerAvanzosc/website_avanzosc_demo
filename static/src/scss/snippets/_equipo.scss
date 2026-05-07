@@ -1,7 +1,8 @@
 // =============================================================================
-// _equipo.scss — Estilos del snippet s_avanzosc_equipo (Task 3.9).
-// Scope: 2 cols con SVG abstracto + copy + stats.
+// _equipo.scss — Estilos del snippet s_avanzosc_equipo (Task 3.9 + F2 v2).
+// Scope: heading + paragraph + grid 4×2 de tarjetas del equipo + 4 stats.
 // Ref: spec §6.9, CLAUDE.md §9.1 pilar 3 «Equipo único», §9.6 (NO stock).
+// F2 v2: SVG abstracto removido, reemplazado por equipo real (8 personas).
 // =============================================================================
 
 .s_avanzosc_equipo {
@@ -12,8 +13,7 @@
         padding: 3rem 0;
     }
 
-    // Reveal simple fade+translateY del bloque entero.
-    // Audit 8.1: 600ms = techo del rango micro 300-600ms (spec §9.2). ✓
+    // Reveal padre (sin cambios desde Task 3.9).
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -32,32 +32,10 @@
 }
 
 // -----------------------------------------------------------------------------
-// SVG visual (col-lg-5)
-// -----------------------------------------------------------------------------
-.s_avanzosc_equipo_visual {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 2rem;
-
-    @media (min-width: 992px) {  // lg+
-        margin-bottom: 0;
-    }
-}
-
-.s_avanzosc_equipo_svg {
-    width: 100%;
-    max-width: 360px;
-    height: auto;
-}
-
-// -----------------------------------------------------------------------------
-// Texto + stats (col-lg-7)
+// Intro (heading + paragraph) — F2 v2 ahora encima del grid, no en col lateral.
 // -----------------------------------------------------------------------------
 .s_avanzosc_equipo_text {
-    @media (min-width: 992px) {
-        padding-left: 2rem;
-    }
+    margin-bottom: 3rem;
 }
 
 .s_avanzosc_equipo_heading {
@@ -74,14 +52,171 @@
     font-family: 'Inter', sans-serif;
     font-size: 1.125rem;
     font-weight: 400;
-    line-height: 1.65;  // CLAUDE.md §9.4 body line-height
+    line-height: 1.65;
     color: var(--neutral-700, #3A4149);
-    margin: 0 0 2rem 0;
-    max-width: 36rem;  // ~576px — limita el texto para legibilidad.
+    margin: 0;
+    max-width: 36rem;
+}
+
+// =============================================================================
+// F2 v2 — Grid 4×2 con 8 tarjetas del equipo
+// =============================================================================
+.s_avanzosc_equipo_grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+
+    @media (max-width: 991.98px) {
+        // Tablet: 2 cols × 4 rows.
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: 767.98px) {
+        // Mobile: 1 col × 8 rows.
+        grid-template-columns: 1fr;
+    }
+}
+
+.s_avanzosc_equipo_card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.s_avanzosc_equipo_card_avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--neutral-700, #3A4149);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.s_avanzosc_equipo_card_initials {
+    color: #FFFFFF;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 1.4rem;
+    letter-spacing: 0.02em;
+    line-height: 1;
+}
+
+.s_avanzosc_equipo_card_meta {
+    flex: 1 1 auto;
+    min-width: 0;  // permite que el texto se trunque/wrap si necesario
+}
+
+.s_avanzosc_equipo_card_name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--neutral-900, #0F1419);
+    margin: 0;
+}
+
+.s_avanzosc_equipo_card_role {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--neutral-700, #3A4149);
+    margin: 0.25rem 0 0 0;
+}
+
+.s_avanzosc_equipo_card_specialty {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--neutral-500, #646C75);
+    margin: 0.25rem 0 0 0;
+}
+
+// CEO accent.
+.s_avanzosc_equipo_card.is-ceo .s_avanzosc_equipo_card_avatar {
+    background: var(--brand-primary, #E85D2F);
+}
+
+// CEO badge — span markup en .meta, posicionado absolute top-right del card.
+// `<span>` text es i18n-friendly (Odoo extrae el text node) y aria-hidden
+// evita que screen readers lean "CEO" duplicado (badge + role text).
+.s_avanzosc_equipo_card_badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;  // 11px
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    color: var(--brand-primary, #E85D2F);
+    background: rgba(232, 93, 47, 0.1);
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+}
+
+// =============================================================================
+// F2 v2 — Hover dramático (mismo lenguaje que F1.1 v2 caso_exito)
+// =============================================================================
+// Toggle .is-hovered + data-hover-active gestionado por equipo.js via util
+// hover_orchestrator. Dim aplica a todas las cards excepto la is-hovered.
+
+.s_avanzosc_equipo_grid[data-hover-active] {
+    .s_avanzosc_equipo_card:not(.is-hovered) {
+        opacity: 0.55;
+    }
+}
+
+.s_avanzosc_equipo_card.is-hovered {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.10);
+}
+
+.s_avanzosc_equipo_card.is-hovered .s_avanzosc_equipo_card_avatar {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+// CEO hovered: drop-shadow naranja en avatar, en vez del oscuro.
+.s_avanzosc_equipo_card.is-ceo.is-hovered .s_avanzosc_equipo_card_avatar {
+    box-shadow: 0 8px 24px rgba(232, 93, 47, 0.25);
+}
+
+// Reduced-motion: anula transitions y transforms del hover, mantiene el
+// dim binario sin transición (override global * { transition: none }
+// kills transition; opacity binario persiste).
+@include reduced-motion {
+    .s_avanzosc_equipo_card,
+    .s_avanzosc_equipo_card_avatar {
+        transition: none;
+    }
+    .s_avanzosc_equipo_card.is-hovered {
+        transform: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .s_avanzosc_equipo_card.is-hovered .s_avanzosc_equipo_card_avatar {
+        transform: none;
+        box-shadow: none;
+    }
 }
 
 // -----------------------------------------------------------------------------
-// Stats list (4 datos breves en grid 2x2 desktop, 1col mobile)
+// Stats list (4 datos breves) — sin cambios funcionales desde Task 3.9.
 // -----------------------------------------------------------------------------
 .s_avanzosc_equipo_stats {
     list-style: none;
