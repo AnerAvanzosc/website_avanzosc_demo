@@ -456,8 +456,8 @@ msgstr "Taldea"
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_equipo
 #, fuzzy
-msgid "15-25 personas"
-msgstr "15-25 pertsona"
+msgid "8 personas"
+msgstr "8 pertsona"
 
 # DRAFT - REVIEW NEEDED — Task 3.9 equipo stat label «Composición».
 #. module: website_avanzosc_demo

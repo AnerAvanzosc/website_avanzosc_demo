@@ -47,7 +47,7 @@
                                 <div class="s_avanzosc_equipo_card_meta">
                                     <span class="s_avanzosc_equipo_card_badge" aria-hidden="true">CEO</span>
                                     <h3 class="s_avanzosc_equipo_card_name">Ana Juaristi</h3>
-                                    <p class="s_avanzosc_equipo_card_role">CEO</p>
+                                    <p class="s_avanzosc_equipo_card_role">Fundadora</p>
                                     <p class="s_avanzosc_equipo_card_specialty">Dirección y Odoo MRP</p>
                                 </div>
                             </article>
@@ -79,7 +79,7 @@
                                     <span class="s_avanzosc_equipo_card_initials">ADF</span>
                                 </div>
                                 <div class="s_avanzosc_equipo_card_meta">
-                                    <h3 class="s_avanzosc_equipo_card_name">Alfredo De la Fuente</h3>
+                                    <h3 class="s_avanzosc_equipo_card_name">Alfredo De la F.</h3>
                                     <p class="s_avanzosc_equipo_card_role">Analista programador</p>
                                     <p class="s_avanzosc_equipo_card_specialty">Coordinación técnica</p>
                                 </div>
@@ -139,7 +139,7 @@
                         <ul class="s_avanzosc_equipo_stats">
                             <li class="s_avanzosc_equipo_stat">
                                 <span class="s_avanzosc_equipo_stat_label">Equipo</span>
-                                <span class="s_avanzosc_equipo_stat_value">15-25 personas</span>
+                                <span class="s_avanzosc_equipo_stat_value">8 personas</span>
                             </li>
                             <li class="s_avanzosc_equipo_stat">
                                 <span class="s_avanzosc_equipo_stat_label">Composición</span>
