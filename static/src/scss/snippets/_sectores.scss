@@ -125,32 +125,25 @@
     // a transparent en 200ms. Visual: trail muy corto, casi instant.
     transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
 
-    // F4 v4 paleta multi-color: alpha 0.40 (vs F4 v3 0.18). Validación
-    // visual humana en F4 v3 detectó "casi no se ve color"; subir a
-    // 0.40 hace los hovers nítidos sin saturar el fondo. RGB triplets
-    // hardcodeados manteniendo coherencia con design system:
+    // Paleta multi-color hover, alpha 0.60 sobre fondo blanco. RGB
+    // triplets hardcodeados — rgba() no acepta var(--hex) y color-mix()
+    // no es patrón establecido en el módulo:
     //   color-1: brand-primary  #E85D2F → rgb(232, 93, 47)
     //   color-2: brand-accent   #F5B800 → rgb(245, 184, 0)
     //   color-3: neutral-700    #3A4149 → rgb(58, 65, 73)
     //   color-4: neutral-300    #D3D7DC → rgb(211, 215, 220)
-    // No se usan var(--brand-primary) directamente porque rgba()
-    // necesita los componentes RGB y CSS no permite extraer el RGB
-    // de una hex var sin color-mix() — patrón no establecido en el
-    // resto del módulo. Mantener hardcoded preserva legibilidad y
-    // alinea con prácticas existentes (ver _hero.scss / _pilares.scss).
-    // color-4 (gris claro 0.40 sobre blanco): visible pero el más
-    // tímido del set — añade ritmo entre los 3 saturados.
+    // color-4 más tímido del set, añade ritmo entre los 3 saturados.
     &.is-hovered.color-1 {
-        background-color: rgba(232, 93, 47, 0.40);  // brand-primary
+        background-color: rgba(232, 93, 47, 0.60);  // brand-primary
     }
     &.is-hovered.color-2 {
-        background-color: rgba(245, 184, 0, 0.40);   // brand-accent
+        background-color: rgba(245, 184, 0, 0.60);   // brand-accent
     }
     &.is-hovered.color-3 {
-        background-color: rgba(58, 65, 73, 0.40);    // neutral-700
+        background-color: rgba(58, 65, 73, 0.60);    // neutral-700
     }
     &.is-hovered.color-4 {
-        background-color: rgba(211, 215, 220, 0.40); // neutral-300
+        background-color: rgba(211, 215, 220, 0.60); // neutral-300
     }
 
     // Iconos «+» decorativos cada 2x2 cells. Posicionados en la
