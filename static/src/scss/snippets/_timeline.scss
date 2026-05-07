@@ -13,7 +13,9 @@
 
 .s_avanzosc_timeline {
     background-color: var(--neutral-0, #FFFFFF);
-    padding: 5rem 0;
+    // padding-top compensa header sticky 62px durante pin GSAP (respiración visible objetivo: 80px).
+    padding-top: 8.875rem;
+    padding-bottom: 2.5rem;
 
     @media (max-width: 767.98px) {
         padding: 3rem 0;
