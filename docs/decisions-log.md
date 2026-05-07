@@ -980,3 +980,55 @@ Pendiente validación visual humana del orquestador en localhost:14070 (commit l
 - **Progress fill izq→der** + **8 milestone-dots** iluminándose secuencialmente con threshold `idx/(N-1)`, transition CSS 200ms ease. Inset 5/95% para evitar clip de endpoints idx 0/7 en overflow:hidden carousel.
 - **axe-core**: cero regresiones nuevas. Violations residuales mapean a (a) `deferred-brand-primary-contrast` G3 (year brand-primary 3.47:1 en item slot-center, 15 nodos pendientes hex final logo) y (b) gotcha 14 estructural (color × opacity 0.5 sobre blanco no puede pasar AA por física — fade-range inherent al motion).
 - **Lección capturada como gotcha 16 en CLAUDE.md §5**: «Scroll-driven cinemática sobre N hitos discretos con animación de duración D produce ghost cuando cadencia inter-step < D — fix por construcción: scrub continuo SIN snap».
+
+---
+
+<a id="deferred-casos-exito-stack-3d"></a>
+### Casos éxito — stack 3D con perspectiva (post-F5)
+
+**Estado**: parkeado, post-F5.
+
+**Origen**: turno con orchestrator post-F2 v2 polish (sesión 2026-05-07). Usuario compartió componente React + Framer Motion (`CardStack`) que NO se puede portar literal por incompatibilidad de stack — este módulo es Odoo 14 + GSAP + vanilla JS + SCSS + QWeb, sin React / Next / Tailwind / TypeScript en ningún punto del pipeline.
+
+**Concepto**: stack de cards 3D con perspectiva, una activa al frente, las demás en abanico detrás. Click sobre una card del fondo cambia la activa con animación de rotación + traslación. Auto-advance opcional con autoplay cada N segundos. Hover pausa el autoplay.
+
+**Aplicación pensada**: §6 caso éxito. Posiblemente reemplazando o ampliando el dashboard SVG actual con una secuencia de casos navegables. Coexistiría con el frame macOS de F1.2 v2 o lo sustituiría según diseño.
+
+**Implementación obligatoria**:
+
+- **GSAP + vanilla JS + SCSS + QWeb**. NO introducir React / Framer Motion / Tailwind / TypeScript.
+- Reusar lenguaje motion ya consolidado: `cubic-bezier(0.16, 1, 0.3, 1)`, guards `prefers-reduced-motion`, Lenis-aware si scroll-driven (en este caso click-driven, no scroll-driven, así que sin acoplamiento Lenis).
+- Auto-advance: `setTimeout` recursivo cancelable, NO loops infinitos sin pausa (CLAUDE.md §4 patrones prohibidos).
+- Reduced-motion: stack estático mostrando solo card activa, navegación por click sin transición.
+
+**Riesgos**:
+- §6 caso éxito ya tiene F1 entrance + F1.1 v2 hover dramático + F1.2 v2 frame macOS. Sumar stack 3D requiere repensar la jerarquía visual: ¿el stack reemplaza el dashboard o lo enmarca? Decisión a tomar al abrir el deferred.
+
+**Coste estimado**: medio (1-2 sesiones).
+
+---
+
+<a id="deferred-casos-exito-ticker-clientes"></a>
+### Casos éxito — ticker horizontal de logos clientes (post-F5)
+
+**Estado**: parkeado, post-F5.
+
+**Origen**: mismo turno que `deferred-casos-exito-stack-3d` (sesión 2026-05-07). Idea complementaria explorada en la misma conversación.
+
+**Concepto**: banda horizontal infinita estilo «breaking news ticker» americano. Logos de clientes deslizando derecha→izquierda en loop infinito. Hover sobre un logo: el ticker pausa, el logo se expande en card mostrando info del cliente (nombre, sector, breve descripción del proyecto). Sale el cursor: ticker reanuda movimiento.
+
+**Aplicación pensada**: §6 caso éxito. Como banda nueva encima/debajo del dashboard actual, o como sección nueva entre §6 y §7.
+
+**Implementación obligatoria**:
+
+- CSS animation infinita en loop O GSAP ScrollTrigger (decidir según comportamiento exacto):
+  - Si pausa por hover (cursor) → CSS animation con `animation-play-state: paused` al hacer hover sobre el ticker. Sin scroll listener.
+  - Si pausa por scroll (entrar/salir viewport) → ScrollTrigger.
+- `prefers-reduced-motion`: ticker estático con scroll horizontal nativo del usuario, o pausa total visible (lista estática).
+- Datos del cliente bajo NDA: usar archetypes anonymous-first equivalentes a `caso_exito.xml` o esperar autorización del cliente antes de exhibir logos reales (CLAUDE.md §11 D3).
+
+**Riesgos**:
+- §7 timeline ya pinea desktop con ScrollTrigger. Cualquier ticker scroll-driven cerca puede competir por el wheel — preferiblemente auto-loop CSS sin scroll.
+- 600+ módulos del catálogo no caben en un ticker; selección curada de logos requerida (input cliente).
+
+**Coste estimado**: medio (1 sesión).
