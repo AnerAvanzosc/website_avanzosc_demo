@@ -34,16 +34,13 @@
         <section class="s_avanzosc_contador" data-name="Avanzosc Contador" data-avanzosc-reveal="">
             <div class="container">
                 <div class="row">
-                    <!-- Pilar 1: años trayectoria. -->
-                    <div class="col-12 col-md-4">
-                        <div class="s_avanzosc_contador_item">
-                            <span class="s_avanzosc_contador_number"
-                                  data-target="17"
-                                  data-suffix="">0</span>
-                            <p class="s_avanzosc_contador_text">Años en el ecosistema Odoo.</p>
-                        </div>
-                    </div>
-                    <!-- Pilar 2: módulos publicados. Sufijo «+» tras animar. -->
+                    <!-- F3 v2 dedupe: §5 ahora muestra capacidad técnica
+                         (módulos publicados / sectores / software libre),
+                         distinto de §2 Pilares que muestra identidad
+                         (años / OCA / STEM). El contador «17 años» se
+                         removió porque §2 ya cubre trayectoria. -->
+
+                    <!-- Contador 1 (era 2 pre-F3 v2): módulos publicados. -->
                     <div class="col-12 col-md-4">
                         <div class="s_avanzosc_contador_item">
                             <span class="s_avanzosc_contador_number"
@@ -52,13 +49,22 @@
                             <p class="s_avanzosc_contador_text">Módulos publicados.</p>
                         </div>
                     </div>
-                    <!-- Pilar 3: sectores cubiertos. -->
+                    <!-- Contador 2 (era 3 pre-F3 v2): sectores cubiertos. -->
                     <div class="col-12 col-md-4">
                         <div class="s_avanzosc_contador_item">
                             <span class="s_avanzosc_contador_number"
                                   data-target="4"
                                   data-suffix="">0</span>
                             <p class="s_avanzosc_contador_text">Sectores cubiertos.</p>
+                        </div>
+                    </div>
+                    <!-- Contador 3 (nuevo F3 v2): 100% software libre. -->
+                    <div class="col-12 col-md-4">
+                        <div class="s_avanzosc_contador_item">
+                            <span class="s_avanzosc_contador_number"
+                                  data-target="100"
+                                  data-suffix="%">0</span>
+                            <p class="s_avanzosc_contador_text">Software libre.</p>
                         </div>
                     </div>
                 </div>

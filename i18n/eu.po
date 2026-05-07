@@ -172,19 +172,19 @@ msgstr "Denda"
 msgid "Formación"
 msgstr "Formakuntza"
 
-# DRAFT - REVIEW NEEDED — Task 3.1 pilar 1 (trayectoria desde 2008).
+# DRAFT - REVIEW NEEDED — F3 v2 pilar 1 (años construyendo, count-up 0→17).
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_pilares
 #, fuzzy
-msgid "En el ecosistema Odoo desde OpenERP."
-msgstr "OpenERPetik Odoo ekosisteman."
+msgid "Años construyendo Odoo desde OpenERP."
+msgstr "Odoo OpenERPetik eraikitzen urteak."
 
-# DRAFT - REVIEW NEEDED — Task 3.1 pilar 2 (volumen técnico, 600+ módulos).
+# DRAFT - REVIEW NEEDED — F3 v2 pilar 2 (palabra-símbolo OCA, comunidad open source).
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_pilares
 #, fuzzy
-msgid "Módulos publicados, muchos en OCA."
-msgstr "Argitaratutako moduluak, asko OCAn."
+msgid "Activos en la comunidad open source."
+msgstr "Iturri irekiko komunitatean aktibo."
 
 # DRAFT - REVIEW NEEDED — Task 3.1 pilar 3 (equipo STEM mayoritariamente
 # femenino).
@@ -270,26 +270,26 @@ msgstr "Kontaktatu"
 msgid "Ver casos de éxito"
 msgstr "Ikusi arrakasta-kasuak"
 
-# DRAFT - REVIEW NEEDED — Task 3.5 contador años trayectoria.
-#. module: website_avanzosc_demo
-#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_contador
-#, fuzzy
-msgid "Años en el ecosistema Odoo."
-msgstr "Urte Odoo ekosisteman."
-
-# DRAFT - REVIEW NEEDED — Task 3.5 contador módulos publicados.
+# DRAFT - REVIEW NEEDED — F3 v2 contador 1 módulos publicados (era pre-F3 v2 contador 2).
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_contador
 #, fuzzy
 msgid "Módulos publicados."
 msgstr "Argitaratutako moduluak."
 
-# DRAFT - REVIEW NEEDED — Task 3.5 contador sectores.
+# DRAFT - REVIEW NEEDED — F3 v2 contador 2 sectores (era pre-F3 v2 contador 3).
 #. module: website_avanzosc_demo
 #: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_contador
 #, fuzzy
 msgid "Sectores cubiertos."
 msgstr "Estaltzen diren sektoreak."
+
+# DRAFT - REVIEW NEEDED — F3 v2 contador 3 NUEVO (100% software libre).
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.s_avanzosc_contador
+#, fuzzy
+msgid "Software libre."
+msgstr "Software librea."
 
 # DRAFT - REVIEW NEEDED — Task 3.8 timeline heading.
 #. module: website_avanzosc_demo

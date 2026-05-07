@@ -115,6 +115,190 @@
     margin-right: auto;
 }
 
+// =============================================================================
+// F3 v2 — Letter-split reveal de los spans STEM y OCA (pilares 3 y 2)
+// =============================================================================
+// Splitting.js wraps cada char en <span class="char"> con CSS variable
+// --char-index. Estado inicial: opacity 0 + translateY(20px). Cuando el
+// JS añade `.is-revealed-stem` o `.is-revealed-oca` al span padre, los
+// chars transition a opacity 1 + translateY 0 con stagger 80ms via
+// --char-index.
+//
+// Reglas compartidas: misma mecánica de animación para los 2 spans
+// palabra-símbolo. Selector grupo evita duplicar reglas.
+//
+// `display: inline-block` es necesario en cada char para que `transform`
+// funcione (inline elements ignoran transform per spec CSS).
+//
+// Coexistencia con reveal del item: el item entero (parent) tiene su
+// propio reveal opacity 0→1 (stagger 0/100/200ms entre cols). Las chars
+// dentro tienen opacity propia que se compone multiplicativamente con
+// la del padre durante la ventana de overlap. Visualmente: la palabra
+// gradualmente aparece letra por letra mientras el item completa su
+// fade-in. Compound aceptado.
+// =============================================================================
+
+// F3 v7 — STEM ahora usa misma ruleta slot-machine JS-driven que OCA.
+// Las reglas .stem .char con CSS letter-stagger reveal (opacity 0 +
+// translateY + transition + delay) y `.is-revealed-stem .char` activador
+// (introducidas en F3 v3) fueron REMOVIDAS — ya no se aplican porque
+// el JS no añade `.is-revealed-stem` y la ruleta gestiona la entrada
+// char-by-char vía textContent ticks alfabéticos. Decoupling option B
+// preservado: STEM y OCA ambas JS-driven slot-machine, sin reglas
+// .char-reveal CSS.
+//
+// Tipografía F3 v3 STEM (color transparent + webkit-text-stroke 1.5px
+// neutral-900) se mantiene en el span padre y propaga por inheritance
+// a los chars wrapped por Splitting (las propiedades
+// -webkit-text-stroke-width y -webkit-text-stroke-color son inherited
+// per spec, igual que `color`).
+
+// F3 v6 — OCA: chars NO usan CSS reveal stagger ni clase
+// `.is-revealed-oca`. La ruleta tipo slot-machine JS gestiona la
+// entrada char-by-char vía textContent ticks alfabéticos. Los 3
+// rodillos arrancan en letras calculadas (A/M/I) por aritmética
+// modular para que tras N saltos aterricen en O/C/A. Ver
+// pilares.js alphabetRoulette para detalles.
+//
+// El `display: inline-block` lo trae splitting.css automáticamente,
+// no hace falta declararlo aquí. Decoupling option B (puramente
+// decoupled) — STEM y OCA tienen mecánicas de entrada distintas que
+// no comparten reglas CSS.
+//
+// F3 v5 introduzco classes `.is-roulette-fading` + `.is-roulette-faded-in`
+// para fade-in de char 'A'. F3 v6 elimina ese caso especial — ahora
+// 'A' también ruletea (arranca en 'I' y avanza 18 saltos modulares
+// para volver a 'A'). Las classes ya no se usan, removidas.
+
+// =============================================================================
+// F3 v3 — Diferenciación tipográfica entre OCA y STEM
+// =============================================================================
+// La animación letter-split (stagger 80ms + opacity+translateY) se mantiene
+// idéntica para ambos. La diferencia se introduce SOLO en el estado final:
+//   - OCA: solid brand-primary + tracking amplio (0.2em entre chars). Vibe
+//     editorial-marca.
+//   - STEM: outline neutral-900 con interior transparente. Vibe técnica/
+//     blueprint.
+// Pilar 1 «17» queda con color por defecto (--neutral-900), sin tracking
+// especial — count-up numeric editorial estándar.
+//
+// `letter-spacing 0.2em` aplicado solo a `.char:not(:last-child)`: el
+// letter-spacing por definición CSS es trailing space DESPUÉS del carácter,
+// así que aplicarlo al último char crearía un trailing 0.2em que
+// descentraría el bounding box visualmente. Skipear el último char remueve
+// ese trailing space exactamente — equivalente a "tracking entre chars,
+// no after-last-char". Patrón semántico más limpio que padding-left
+// compensatorio o margin-right negativo.
+//
+// `-webkit-text-stroke` para STEM: soporte cross-browser desde 2016
+// (Chrome ≥4, Safari ≥3.1, Firefox ≥49, Edge ≥79). Las propiedades
+// `-webkit-text-stroke-width` y `-webkit-text-stroke-color` son
+// `inherited` por especificación, así que setearlas en el padre
+// `.s_avanzosc_pilares_stem` propaga a los chars `.char` sin duplicar
+// reglas. `color: transparent` en el padre también se hereda al .char.
+// =============================================================================
+
+.s_avanzosc_pilares_oca {
+    color: var(--brand-primary, #E85D2F);
+
+    .char:not(:last-child) {
+        letter-spacing: 0.2em;
+    }
+}
+
+.s_avanzosc_pilares_stem {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--neutral-900, #0F1419);
+}
+
+// =============================================================================
+// F3 v8 — Tooltips al hover sobre OCA / STEM (acrónimos expandidos)
+// =============================================================================
+// Aplica solo en pilares 2 y 3 (OCA + STEM), no en pilar 1 «17» (no tiene
+// info adicional que el label no comunique). Wrapper `_number_wrapper`
+// con `tabindex=0` permite focus por teclado; position:relative scopea el
+// position:absolute del tooltip al wrapper (no al item completo, que
+// incluiría también el label).
+//
+// Tooltip: opacity 0 + pointer-events:none por defecto; al hover/focus
+// del wrapper, opacity 1 + pointer-events:auto. Transición 200ms expo
+// en opacity + transform (translateY 4→0 para slide sutil).
+//
+// Mobile/touch: gating con `@media (hover: hover)` — solo dispositivos
+// con cursor real activan el hover. Touch-only NUNCA muestra el tooltip.
+// Decisión: el tap-to-show NO se implementa en F3 v8 (deferred a F3+ si
+// se decide). Quien quiera saber el acrónimo en mobile lee el label
+// debajo o consulta /conocenos.
+//
+// Override defensivo del text-stroke + color: el tooltip de STEM debe
+// mostrarse con color sólido neutral-900, NO con outline. Aunque el
+// tooltip es sibling del span (no descendant), defendemos con
+// `-webkit-text-stroke: 0` y `color: var(--neutral-900)` explícitos.
+// =============================================================================
+
+.s_avanzosc_pilares_number_wrapper {
+    position: relative;
+    display: inline-block;
+
+    &:focus {
+        outline: 2px solid var(--brand-primary, #E85D2F);
+        outline-offset: 4px;
+        border-radius: 4px;
+    }
+}
+
+.s_avanzosc_pilares_tooltip {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+
+    background: var(--neutral-0, #FFFFFF);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--neutral-900, #0F1419);
+    -webkit-text-stroke: 0;       // override por si STEM heredase
+    letter-spacing: normal;       // override por si OCA heredase tracking
+    white-space: nowrap;
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12),
+                0 2px 6px rgba(0, 0, 0, 0.06);
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 10;
+
+    // Triángulo apuntando hacia abajo (al símbolo).
+    &::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px 6px 0 6px;
+        border-style: solid;
+        border-color: var(--neutral-0, #FFFFFF) transparent transparent transparent;
+    }
+}
+
+// Hover/focus reveal — solo en dispositivos con hover capability.
+@media (hover: hover) {
+    .s_avanzosc_pilares_number_wrapper:hover .s_avanzosc_pilares_tooltip,
+    .s_avanzosc_pilares_number_wrapper:focus-within .s_avanzosc_pilares_tooltip {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+        pointer-events: auto;
+    }
+}
+
 // -----------------------------------------------------------------------------
 // prefers-reduced-motion: estado final directo, sin animación.
 // -----------------------------------------------------------------------------
@@ -127,5 +311,30 @@
         }
         // Bajo reduced-motion no aplican los staggers per :nth-child — el
         // override de transition: none anula transition-delay también.
+
+        // F3 v7 STEM/OCA: bajo reduced-motion, el JS NO llama Splitting
+        // ni alphabetRoulette (early return tras matchMedia). Los spans
+        // muestran «STEM» / «OCA» literal sin chars wrapped. Defensa
+        // explícita por si en el futuro se alterara el path JS y dejara
+        // chars residuales: forzar estado final visible.
+        .s_avanzosc_pilares_stem .char,
+        .s_avanzosc_pilares_oca .char {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+
+        // F3 v8 tooltip: bajo reduced-motion, anular transitions del
+        // tooltip y forzar transform final (translateY 0). El tooltip
+        // sigue respondiendo a hover/focus pero aparece/desaparece
+        // instantáneo (sin slide). Comportamiento accesible y consistente
+        // con la preferencia del usuario.
+        .s_avanzosc_pilares_tooltip {
+            transition: none;
+        }
+        .s_avanzosc_pilares_number_wrapper:hover .s_avanzosc_pilares_tooltip,
+        .s_avanzosc_pilares_number_wrapper:focus-within .s_avanzosc_pilares_tooltip {
+            transform: translateX(-50%) translateY(0);
+        }
     }
 }

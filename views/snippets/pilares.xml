@@ -27,24 +27,39 @@
         <section class="s_avanzosc_pilares" data-name="Avanzosc Pilares">
             <div class="container">
                 <div class="row">
-                    <!-- Pilar 1: trayectoria desde 2008. -->
+                    <!-- Pilar 1: trayectoria. F3 v2 count-up 0→17 (años). -->
                     <div class="col-12 col-md-4">
                         <div class="s_avanzosc_pilares_item">
-                            <span class="s_avanzosc_pilares_number">2008</span>
-                            <p class="s_avanzosc_pilares_text">En el ecosistema Odoo desde OpenERP.</p>
+                            <span class="s_avanzosc_pilares_number" data-target="17">0</span>
+                            <p class="s_avanzosc_pilares_text">Años construyendo Odoo desde OpenERP.</p>
                         </div>
                     </div>
-                    <!-- Pilar 2: volumen técnico (600+ módulos). -->
+                    <!-- Pilar 2: comunidad. Slot-machine OCA (F3 v7) +
+                         tooltip al hover (F3 v8) expandiendo el acrónimo.
+                         Wrapper `s_avanzosc_pilares_number_wrapper` con
+                         tabindex 0 para focus por teclado; position
+                         relative scopea el position absolute del tooltip. -->
                     <div class="col-12 col-md-4">
                         <div class="s_avanzosc_pilares_item">
-                            <span class="s_avanzosc_pilares_number">600+</span>
-                            <p class="s_avanzosc_pilares_text">Módulos publicados, muchos en OCA.</p>
+                            <div class="s_avanzosc_pilares_number_wrapper" tabindex="0">
+                                <span class="s_avanzosc_pilares_number s_avanzosc_pilares_oca">OCA</span>
+                                <div class="s_avanzosc_pilares_tooltip" role="tooltip" aria-hidden="true">
+                                    <span>Odoo Community Association</span>
+                                </div>
+                            </div>
+                            <p class="s_avanzosc_pilares_text">Activos en la comunidad open source.</p>
                         </div>
                     </div>
-                    <!-- Pilar 3: equipo STEM. Text-led, sin número (decisión B). -->
+                    <!-- Pilar 3: equipo STEM. Slot-machine STEM (F3 v7) +
+                         tooltip al hover (F3 v8) expandiendo el acrónimo. -->
                     <div class="col-12 col-md-4">
                         <div class="s_avanzosc_pilares_item">
-                            <span class="s_avanzosc_pilares_number">STEM</span>
+                            <div class="s_avanzosc_pilares_number_wrapper" tabindex="0">
+                                <span class="s_avanzosc_pilares_number s_avanzosc_pilares_stem">STEM</span>
+                                <div class="s_avanzosc_pilares_tooltip" role="tooltip" aria-hidden="true">
+                                    <span>Science, Technology, Engineering, Mathematics</span>
+                                </div>
+                            </div>
                             <p class="s_avanzosc_pilares_text">Ingenieras y mayoría femenina.</p>
                         </div>
                     </div>
