@@ -1,7 +1,7 @@
 {
     "name": "Website Avanzosc Demo",
     "summary": "Tema y contenido a medida para avanzosc.es sobre Odoo 14.",
-    "version": "14.0.1.0.0",
+    "version": "18.0.1.0.0",
     "category": "Website/Theme",
     "website": "https://avanzosc.es",
     "author": "Avanzosc S.L.",
@@ -73,6 +73,67 @@
         # views/pages/*.xml + del record website.homepage_page (core).
         "data/website_meta.xml",
     ],
+    # Phase 1 v18 migration — assets registered via manifest dict (v15+
+    # pattern). Mirrors exactly the load order of the legacy
+    # `<template inherit_id="web.assets_frontend">` xpath in
+    # views/assets.xml (kept in place transitionally as dead code; the
+    # v18 bundler ignores re-registration of the same paths). Two
+    # `inherit_id="web.layout"` templates in that same file
+    # (head_external_assets, head_plausible) inject <link>/<script>
+    # directly into <head> and are NOT bundle registrations, so they
+    # stay in XML as-is.
+    #
+    # Order rules:
+    #   - SCSS: partials de variables/mixins/typography → snippets en
+    #     orden de implementación → main.scss al final para que pueda
+    #     sobrescribir.
+    #   - JS: main.js → utils (count_up, hover_orchestrator) ANTES de
+    #     sus consumidores (contador, caso_exito, equipo) → snippets.
+    "assets": {
+        "web.assets_frontend": [
+            # SCSS — base
+            "website_avanzosc_demo/static/src/scss/_variables.scss",
+            "website_avanzosc_demo/static/src/scss/_mixins.scss",
+            "website_avanzosc_demo/static/src/scss/_typography.scss",
+            # SCSS — header / footer
+            "website_avanzosc_demo/static/src/scss/snippets/_header.scss",
+            "website_avanzosc_demo/static/src/scss/snippets/_footer.scss",
+            # SCSS — snippets Phase 3
+            "website_avanzosc_demo/static/src/scss/snippets/_pilares.scss",
+            "website_avanzosc_demo/static/src/scss/snippets/_sectores.scss",
+            "website_avanzosc_demo/static/src/scss/snippets/_cta_kit_consulting.scss",
+            "website_avanzosc_demo/static/src/scss/snippets/_cta_contacto.scss",
+            "website_avanzosc_demo/static/src/scss/snippets/_contador.scss",
+            "website_avanzosc_demo/static/src/scss/snippets/_caso_exito.scss",
+            "website_avanzosc_demo/static/src/scss/snippets/_sector_specifics.scss",
+            "website_avanzosc_demo/static/src/scss/snippets/_timeline.scss",
+            "website_avanzosc_demo/static/src/scss/snippets/_equipo.scss",
+            "website_avanzosc_demo/static/src/scss/snippets/_hero.scss",
+            # SCSS — post-v1
+            "website_avanzosc_demo/static/src/scss/snippets/_page_transition.scss",
+            "website_avanzosc_demo/static/src/scss/snippets/_contacto.scss",
+            # SCSS — main (último para overrides globales)
+            "website_avanzosc_demo/static/src/scss/main.scss",
+            # JS — entry
+            "website_avanzosc_demo/static/src/js/main.js",
+            # JS — snippets early
+            "website_avanzosc_demo/static/src/js/snippets/pilares.js",
+            "website_avanzosc_demo/static/src/js/snippets/reveal.js",
+            # JS — utils compartidas (deben cargar ANTES de sus consumers)
+            "website_avanzosc_demo/static/src/js/utils/count_up.js",
+            "website_avanzosc_demo/static/src/js/utils/hover_orchestrator.js",
+            # JS — snippets que consumen utils
+            "website_avanzosc_demo/static/src/js/snippets/contador.js",
+            "website_avanzosc_demo/static/src/js/snippets/caso_exito.js",
+            "website_avanzosc_demo/static/src/js/snippets/equipo.js",
+            # JS — resto
+            "website_avanzosc_demo/static/src/js/snippets/sectores.js",
+            "website_avanzosc_demo/static/src/js/snippets/timeline.js",
+            "website_avanzosc_demo/static/src/js/snippets/hero.js",
+            "website_avanzosc_demo/static/src/js/snippets/header.js",
+            "website_avanzosc_demo/static/src/js/snippets/contacto.js",
+        ],
+    },
     "installable": True,
     "application": False,
     # Post-init wrapper that composes:
