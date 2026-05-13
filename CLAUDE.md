@@ -46,56 +46,63 @@ Menú principal (orden por prioridad funnel B2B, ver D23 sobre eliminación de �
 
 ---
 
-## 3. Reglas de código NO NEGOCIABLES
+## 3. Reglas de código NO NEGOCIABLES (target Odoo 18)
+
+> **Estado**: rama `feature/v18-migration`. Target obligatorio Odoo 18.0.
+> El árbol v14 vive en `feature/v1-implementation`. Esta sección refleja las reglas v18; la versión v14 sigue siendo válida en su propia rama.
 
 ### XML y vistas
 - Toda modificación de vistas existentes con herencia `<xpath>`, nunca reescritura.
 - Cada herencia con `inherit_id` explícito y comentario `<!-- -->` explicando el porqué.
 - IDs prefijados: `website_avanzosc_demo.snippet_hero`, no `snippet_hero`.
+- QWeb (`t-att-*`, `t-set`, `t-foreach` con `t-as`) y patches `primary="True"` siguen vigentes en v18.
 
-### Assets
-Registrar CSS/JS vía **herencia XML** de `web.assets_frontend`, no con el manifest moderno:
-```xml
-<template id="assets_frontend" inherit_id="web.assets_frontend">
-    <xpath expr="." position="inside">
-        <link rel="stylesheet" type="text/scss" href="/website_avanzosc_demo/static/src/scss/main.scss"/>
-        <script type="text/javascript" src="/website_avanzosc_demo/static/src/js/main.js"/>
-    </xpath>
-</template>
+### Assets (declarados en manifest)
+Registrar CSS/JS desde `__manifest__.py`:
+```python
+'assets': {
+    'web.assets_frontend': [
+        'website_avanzosc_demo/static/src/scss/main.scss',
+        'website_avanzosc_demo/static/src/js/main.js',
+    ],
+},
 ```
-**No usar** `'assets': {'web.assets_frontend': [...]}` del manifest — eso es v15+.
+**No usar** `<template inherit_id="web.assets_frontend">` para REGISTRAR nuevos archivos — patrón v14, ignorado en v17+. La herencia XML de `web.assets_frontend` sólo cabe ahora para reordenar/excluir bundles existentes via `t-call-assets`.
 
 ### SCSS
 - Variables globales en `static/src/scss/_variables.scss`.
 - Un SCSS por snippet/componente, importados desde `main.scss`.
-- Sobrescribir variables de Bootstrap **antes** de importar, no después.
+- Sobrescribir variables de Bootstrap **antes** de importar. v18 ships Bootstrap 5.x.
 
-### JavaScript
+### JavaScript (OWL + ES6 modules)
 ```javascript
-odoo.define('website_avanzosc_demo.hero', function (require) {
-    'use strict';
-    var publicWidget = require('web.public.widget');
+/** @odoo-module **/
+import publicWidget from "@web/legacy/js/public/public_widget";
 
-    publicWidget.registry.AvanzoscHero = publicWidget.Widget.extend({
-        selector: '.s_avanzosc_hero',
-        start: function () {
-            // ...
-            return this._super.apply(this, arguments);
-        },
-    });
+publicWidget.registry.AvanzoscHero = publicWidget.Widget.extend({
+    selector: '.s_avanzosc_hero',
+    start() {
+        // ...
+        return this._super(...arguments);
+    },
 });
 ```
-- `publicWidget` para comportamiento del frontend público.
-- Sin `import/export` de ES6. Sin `class X extends Y` moderno de v15+.
+- Código nuevo: ES6 modules con `/** @odoo-module **/`, `import`/`export`, `class X extends Y`.
+- `publicWidget` sigue siendo el camino para frontend público (importado desde `@web/legacy/js/public/public_widget`).
+- Componentes interactivos complejos: OWL (`import { Component, useState } from "@odoo/owl"`).
+- **NO** `odoo.define('ns', function (require) {...})` — removed en v17+.
+- Legacy `odoo.define` heredado del árbol v14 sólo aceptable transitoriamente con comentario explícito `// PENDING-V18-OWL-MIGRATION` referenciando ticket; bloquea merge a `main`.
 
 ### Snippets
 - Cada snippet es un template QWeb en `views/snippets/`.
 - Prefijo de clase CSS: `s_avanzosc_X`.
-- Registro en el builder vía herencia de `website.snippets`.
+- Registro en el builder vía herencia de `website.snippets`. API v18 mantiene esa estructura.
 
 ### Modelos Python
-- Heredar con `_inherit = 'model.name'`.
-- Campos custom prefijados con `x_avanzosc_`.
+- Heredar con `_inherit = 'model.name'`. Campos custom prefijados con `x_avanzosc_`.
+- `@api.multi` y `@api.one` removed (desde v13/v14): todos los métodos son multi-record por default; iterar `self` explícitamente cuando haga falta single-record.
+- Hooks: signature v18 es `def _post_init_main(env)` (env-first). La signature v14 `(cr, registry)` sigue aceptada por compat pero deprecated — migrar al firmar el commit que toque `hooks.py`.
+- Campos `translate=True` persisten como JSONB en v17+: queries SQL crudos sobre esos campos deben usar `col->>'en_US'`.
 
 ---
 
@@ -239,16 +246,26 @@ Prefijos de commit (mapeo de uso para este proyecto):
 
 ---
 
-## 6. Lo que NO hacer
+## 6. Lo que NO hacer (enforcement v18)
 
 - **NO** tocar el Website Builder visual. Todo por código.
-- **NO** modificar archivos dentro de `/opt/odoo/v14/odoo/addons/` (core). Solo heredar.
+- **NO** modificar archivos dentro de `/opt/odoo/v18/base/addons/` ni `/opt/odoo/v18/github/enterprise/` (core/enterprise). Solo heredar.
 - **NO** añadir `package.json` ni dependencias npm al módulo. Librerías por CDN.
-- **NO** usar sintaxis de Odoo 15+ (ES6 modules, manifest assets). Estamos en v14.
+- **NO** usar patrones v14 deprecados en código nuevo. Categorización:
+  - **BLOCKING** (el módulo no carga / el feature no funciona en v18):
+    - `odoo.define('ns', function (require) { ... })` sin `/** @odoo-module **/` arriba → removed en v17+.
+    - `<template inherit_id="web.assets_frontend"><xpath ...><script/link/></xpath></template>` para REGISTRAR nuevos archivos → ignorado en v17+, hay que migrar a manifest `'assets'`.
+    - `@api.multi`, `@api.one` → AttributeError en runtime.
+    - Queries SQL crudos sobre campos `translate=True` que asumen columna `text` en lugar de JSONB.
+  - **WARNING** (sigue funcionando pero deprecated, migrar oportunísticamente):
+    - Hooks Python con signature `(cr, registry)` en lugar de `(env)`.
+    - Variables Bootstrap con nombres v4 (`$primary`, `$btn-padding-y`) — Odoo 18 ships BS5; comprobar renames.
+    - Lazy bundle `web.assets_frontend_lazy` (eliminado en v18: todo lo registrado en `assets_frontend` se carga eager).
 - **NO** guardar credenciales ni API keys en el código. `ir.config_parameter` o variables de entorno.
 - **NO** commitear datos reales de clientes en casos de éxito de prueba. Datos ficticios hasta aprobación del cliente.
 - **NO** replicar la estructura densa de párrafos de la web actual. La nueva va a tener ~30% del texto actual y triple de impacto.
 - **NO** usar stock photos genéricos (ver `docs/brand-guide.md` §6 para criterios fotografía).
+- **NO** asumir compatibilidad transparente v14 → v18 de gotchas previas. Antes de aplicar a v18 cualquier patrón documentado en §5 «Gotchas operacionales» (`ir_http._dispatch` override, `cache_time=0` en `website.page`, lazy bundle, form lang-aware, `website.rewrite` strip de fragment, etc.), verificar contra el source v18 — varios internals cambiaron.
 
 ---
 
