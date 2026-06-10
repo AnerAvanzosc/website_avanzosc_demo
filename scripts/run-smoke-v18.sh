@@ -95,5 +95,28 @@ if [[ $SMOKE_FAIL -eq 1 ]]; then
     exit 1
 fi
 
+# GATE A — Negative proof: módulo declarado pero no encontrado / no installable.
+# Caso real: el symlink en addons_path desapareció y Odoo skippea el módulo
+# emitiendo sólo un WARNING (no ERROR), exit 0 limpio. Las 3 heurísticas
+# anteriores no lo detectan. Síntoma: 'not installable, skipped' o
+# 'no manifest file found'.
+if grep -qE "${MODULE}: not installable|module ${MODULE}: no manifest file found" "$TMP_FULL"; then
+    echo "[run-smoke-v18] FAIL: ${MODULE} no encontrado o no instalable en addons_path." >&2
+    echo "[run-smoke-v18]       Verifica el symlink en /opt/odoo/v18/github/avanzosc/odoo-addons/${MODULE}." >&2
+    exit 2
+fi
+
+# GATE B — Positive proof: el módulo realmente se cargó.
+# Caso: el módulo está en addons_path pero por alguna razón nunca entra al
+# grafo de instalación (filtro --modules, install_module mal seteado, etc.).
+# Buscamos al menos uno de los marcadores INFO que Odoo emite al tocar el
+# módulo: 'loading <module>/...' (cualquier archivo) o el resumen final.
+if ! grep -qE "loading ${MODULE}/|Module ${MODULE} loaded" "$TMP_FULL"; then
+    echo "[run-smoke-v18] FAIL: ${MODULE} nunca se intentó cargar." >&2
+    echo "[run-smoke-v18]       Causas posibles: addons_path no incluye el módulo, manifest no parseable," >&2
+    echo "[run-smoke-v18]       o el módulo ya estaba instalado y -i no lo re-ejercitó." >&2
+    exit 3
+fi
+
 echo "[run-smoke-v18] SMOKE OK"
 exit 0
