@@ -8,8 +8,8 @@ NO heredan el xml_id de la master, por lo que las traducciones de
 sólo aplican al record master, no a las copias renderizadas.
 
 Resultado del rendering: para una request a `/eu_ES/`, Odoo selecciona
-la copia per-website (e.g. id=802) que carece de la entrada eu_ES en
-`ir.translation`, y cae al source ES. El title del home aparece igual
+la copia per-website (e.g. id=802) que en el JSONB de `website_meta_*`
+carece del slot `eu_ES` y cae al source. El title del home aparece igual
 en ambos idiomas (audit I5 partialmente cerrado para el resto de
 sectoriales+contacto pero NO para home).
 
@@ -22,8 +22,14 @@ con la misma `key`. Idempotente. Se invoca:
 NO inventamos los strings aquí: leemos el valor del master que ya tiene
 la traducción cargada por Odoo desde `i18n/eu.po`. Si el master no
 tiene el valor, no se hace nada (defensivo).
+
+v18: traducciones persisten como columnas JSONB en cada modelo (no en
+`ir.translation`, modelo eliminado en v17+). Lectura per-lang vía
+`record.with_context(lang=<code>)[field]`; escritura simétrica vía
+`record.with_context(lang=<code>).write({field: value})` — Odoo
+gestiona internamente el merge JSONB. Ver D27+ y CLAUDE.md §3.
 """
-from odoo import api, models, SUPERUSER_ID
+from odoo import api, models
 
 
 class Website(models.Model):
@@ -38,14 +44,12 @@ class Website(models.Model):
         Idempotent. Safe to call multiple times.
 
         Why this is needed: Odoo per-website view duplication doesn't
-        carry over `ir.translation` rows. The .po file in this module
-        only updates the master record (id with `website.homepage` xml_id),
-        not the auto-spawned per-website copies.
+        propagate the JSONB translation slots of the duplicated view's
+        translatable fields. The .po file in this module only updates
+        the master record (id with `website.homepage` xml_id), not the
+        auto-spawned per-website copies.
         """
-        ir_translation = self.env["ir.translation"].sudo()
         ir_view = self.env["ir.ui.view"].sudo()
-
-        # Find master (no website_id) and per-website copies of the home view.
         all_views = ir_view.search([("key", "=", "website.homepage")])
         master = all_views.filtered(lambda v: not v.website_id)
         copies = all_views - master
@@ -53,59 +57,24 @@ class Website(models.Model):
             # Nothing to sync (single-website install or no copies yet).
             return
 
-        # For each translatable meta field, copy ir.translation rows from
-        # master to each copy.
         meta_fields = ("website_meta_title", "website_meta_description")
-        langs = self.env["res.lang"].search([("active", "=", True)]).mapped("code")
-        # Skip the source language — it's stored on the field directly,
-        # not in ir.translation. Odoo's view propagation handles it.
+        source_lang = "es_ES"
+        # `get_installed()` returns [(code, name), ...] for active langs only.
+        # Skip the source lang (master writes it directly to the JSONB source slot).
         non_source_langs = [
-            code for code in langs if code != "es_ES"
+            code for code, _name in self.env["res.lang"].get_installed()
+            if code != source_lang
         ]
 
         for field_name in meta_fields:
-            translation_name = "ir.ui.view,%s" % field_name
             for lang in non_source_langs:
-                master_translation = ir_translation.search(
-                    [
-                        ("name", "=", translation_name),
-                        ("res_id", "=", master.id),
-                        ("lang", "=", lang),
-                    ],
-                    limit=1,
-                )
-                if not master_translation or not master_translation.value:
+                master_value = master.with_context(lang=lang)[field_name]
+                if not master_value:
+                    # Defensive: master has no translation for this lang.
                     continue
                 for copy in copies:
-                    existing = ir_translation.search(
-                        [
-                            ("name", "=", translation_name),
-                            ("res_id", "=", copy.id),
-                            ("lang", "=", lang),
-                        ],
-                        limit=1,
-                    )
-                    if existing:
-                        # Already in sync? skip if same value.
-                        if existing.value == master_translation.value:
-                            continue
-                        existing.write(
-                            {
-                                "value": master_translation.value,
-                                "src": master_translation.src,
-                                "state": master_translation.state,
-                            }
-                        )
-                    else:
-                        ir_translation.create(
-                            {
-                                "name": translation_name,
-                                "lang": lang,
-                                "res_id": copy.id,
-                                "src": master_translation.src,
-                                "value": master_translation.value,
-                                "state": master_translation.state,
-                                "type": master_translation.type,
-                                "module": master_translation.module,
-                            }
-                        )
+                    copy_in_lang = copy.with_context(lang=lang)
+                    if copy_in_lang[field_name] == master_value:
+                        # Already in sync.
+                        continue
+                    copy_in_lang.write({field_name: master_value})
