@@ -45,7 +45,7 @@ class IrHttp(models.AbstractModel):
     _inherit = "ir.http"
 
     @classmethod
-    def _dispatch(cls):
+    def _dispatch(cls, endpoint):
         # Pre-routing intercept of the EU-home trailing-slash variant.
         # Compares against the raw client-sent path so Werkzeug's
         # strict_slashes=False normalization doesn't blur the distinction.
@@ -58,4 +58,4 @@ class IrHttp(models.AbstractModel):
             qs = request.httprequest.query_string.decode("utf-8")
             target = "/eu_ES" + (("?" + qs) if qs else "")
             return werkzeug_redirect(target, code=301)
-        return super(IrHttp, cls)._dispatch()
+        return super(IrHttp, cls)._dispatch(endpoint)
