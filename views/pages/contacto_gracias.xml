@@ -59,16 +59,18 @@
                              Guarded por `window.plausible` para adblock /
                              script bloqueado. Patrón inline DOMContentLoaded
                              canónico Plausible (snippet oficial 404). -->
-                        <t t-set="show_plausible_goal"
-                           t-value="request.session.pop('contact_submitted', False)"/>
-                        <t t-if="show_plausible_goal">
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    if (window.plausible) {
-                                        window.plausible('Contact Form Submission');
-                                    }
-                                });
-                            </script>
+                        <t t-nocache="Render depends on request.session flag set by /contacto submit controller; cache would serve the same Plausible goal trigger to every visitor.">
+                            <t t-set="show_plausible_goal"
+                               t-value="request.session.pop('contact_submitted', False)"/>
+                            <t t-if="show_plausible_goal">
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        if (window.plausible) {
+                                            window.plausible('Contact Form Submission');
+                                        }
+                                    });
+                                </script>
+                            </t>
                         </t>
                     </div>
                 </div>
@@ -81,13 +83,17 @@
 
         <!-- noupdate=1 deliberado: protege is_published / website_indexed
              del reset por -u si en el futuro un admin los toca por UI.
-             Excepción cache_time=0: forzado por el gating del goal
-             Plausible (resolución deferred-q4-gracias-direct-access).
-             Sin cache_time=0, el render con flag de sesión queda
-             cacheado (default 3600 s, cache_key sin sesión) y se sirve
-             a refresh / URL directa rompiendo el gating. NO eliminar
-             cache_time=0 sin migrar el goal a otro mecanismo (e.g.
-             custom-event-on-submit fuera de la página confirmación). -->
+
+             v14 usaba <field name="cache_time" eval="0"/> aquí para
+             desactivar el cache per-page (3600 s default) y permitir
+             que el gating de Plausible por request.session funcionase
+             en refresh / URL directa.
+
+             v18 ha eliminado el cache per-page de website.page (campo
+             cache_time removido del modelo, _can_be_cached/
+             _cached_response inertes). El opt-out se hace ahora vía
+             t-nocache="..." en el sub-árbol QWeb session-dependent
+             (ver template page_contacto_gracias arriba). -->
         <record id="page_contacto_gracias_record" model="website.page">
             <field name="name">Gracias</field>
             <field name="type">qweb</field>
@@ -95,7 +101,6 @@
             <field name="view_id" ref="page_contacto_gracias"/>
             <field name="is_published" eval="True"/>
             <field name="website_indexed" eval="False"/>
-            <field name="cache_time" eval="0"/>
         </record>
 
     </data>
