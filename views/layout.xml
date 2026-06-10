@@ -194,27 +194,30 @@
     </template>
 
     <!-- ============================================================
-         Phase 7 (Tasks 7.1 + 7.3) — Mobile header buttons
-         Inyectamos hamburger Lucide menu + Acceso clientes Lucide user
-         dentro del header. Se muestran solo en `<992px` (Bootstrap-`lg`)
-         vía media query en `_header.scss`. En desktop quedan
-         `display: none`.
+         Phase 7 (Tasks 7.1 + 7.3) — Mobile header buttons (v18 approach C).
+         Heredamos website.template_header_mobile (en v14 era
+         template_header_default; v18 separó el header mobile en su
+         propio sub-template t-call'eado desde template_header_default).
 
-         Inyección con xpath `inside` al final del navbar (último hijo)
-         para que con `margin-left: auto` se empujen a la derecha. La
-         estructura del navbar default es:
-            <nav>
-              <a class="navbar-brand">logo</a>
-              <button class="navbar-toggler">...</button>
-              <div class="collapse navbar-collapse">menu + acceso btn</div>
-            </nav>
-         Nuestros botones quedan al lado del navbar-toggler nativo (que
-         además ocultamos con SCSS — no lo usamos).
+         (1) Sustituimos íntegramente la <ul o_header_mobile_buttons_wrap>
+             nativa, que contiene el botón Bootstrap offcanvas
+             (navbar-toggler-icon → #top_menu_collapse_mobile), por nuestro
+             markup hamburger Lucide + acceso clientes envueltos en
+             <li class="nav-item"> (patrón idiomático v18).
+
+         (2) Suprimimos también el <div id="top_menu_collapse_mobile">
+             offcanvas wrapper — ya no se activa porque nuestro hamburger
+             abre #s_avanzosc_mobile_overlay (template layout_mobile_overlay
+             más abajo), no el offcanvas nativo. Dejarlo serían ~30 líneas
+             de HTML muerto.
+
+         JS publicWidget en static/src/js/snippets/header.js sigue intacto:
+         monta sobre selector '.s_avanzosc_hamburger' y abre el overlay
+         custom por id. Sin cambios al JS.
 
          ARIA: <span class="s_avanzosc_sr_only"> contiene el texto
-         accesible — extraíble por i18n de Odoo (texto contenido en
-         nodo). aria-label hardcoded ES como fallback (Odoo no extrae
-         aria-label por defecto en QWeb). EU vía DRAFT en eu.po.
+         accesible — extraíble por i18n de Odoo. aria-label hardcoded
+         ES como fallback. EU vía DRAFT en eu.po.
 
          Ref: spec §8.1, plan §7.1 + §7.3, decisión sesión 2026-04-29
          (B1 acordeón cerrado, fade 200ms, switcher cierra+navega).
@@ -223,25 +226,30 @@
          ============================================================ -->
     <template id="header_mobile_buttons"
               name="Header: mobile hamburger and user icon (&lt;992px)"
-              inherit_id="website.template_header_default">
-        <xpath expr="//nav[hasclass('navbar')]" position="inside">
-            <div class="s_avanzosc_header_mobile_actions">
-                <button type="button"
-                        class="s_avanzosc_hamburger"
-                        aria-label="Abrir menú"
-                        aria-expanded="false"
-                        aria-controls="s_avanzosc_mobile_overlay">
-                    <i data-lucide="menu"/>
-                    <span class="s_avanzosc_sr_only">Abrir menú</span>
-                </button>
-                <a href="/clientes"
-                   class="s_avanzosc_acceso_clientes_mobile"
-                   aria-label="Acceso clientes">
-                    <i data-lucide="user"/>
-                    <span class="s_avanzosc_sr_only">Acceso clientes</span>
-                </a>
-            </div>
+              inherit_id="website.template_header_mobile">
+        <xpath expr="//ul[hasclass('o_header_mobile_buttons_wrap')]" position="replace">
+            <ul class="o_header_mobile_buttons_wrap navbar-nav flex-row align-items-center gap-2 mb-0">
+                <li class="nav-item">
+                    <button type="button"
+                            class="s_avanzosc_hamburger"
+                            aria-label="Abrir menú"
+                            aria-expanded="false"
+                            aria-controls="s_avanzosc_mobile_overlay">
+                        <i data-lucide="menu"/>
+                        <span class="s_avanzosc_sr_only">Abrir menú</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <a href="/clientes"
+                       class="s_avanzosc_acceso_clientes_mobile"
+                       aria-label="Acceso clientes">
+                        <i data-lucide="user"/>
+                        <span class="s_avanzosc_sr_only">Acceso clientes</span>
+                    </a>
+                </li>
+            </ul>
         </xpath>
+        <xpath expr="//div[@id='top_menu_collapse_mobile']" position="replace"/>
     </template>
 
     <!-- ============================================================
