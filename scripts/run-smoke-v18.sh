@@ -43,7 +43,26 @@ ODOO_PYTHON="/opt/odoo/v18/venv/bin/python"
 ODOO_BIN="/opt/odoo/v18/base/odoo-bin"
 ODOO_CONF="/etc/odoo/odoo18.conf"
 ODOO_DB="odoo18_avanzosc_web"
+ODOO_TEMPLATE_DB="odoo18_demo"
 MODULE="website_avanzosc_demo"
+
+# Sync filestore from the template DB. createdb -T <template> clones
+# schema + data but does NOT copy the filestore — ir.attachment records
+# inherited from the template reference binary blobs that only live in
+# the template's filestore. Symptom: HTTP 500 on /web/assets/.../*.js
+# bundles with FileNotFoundError on a sha-named file.
+# cp -rn is idempotent (no-clobber): missing files copied, existing
+# files preserved. Skips silently if template filestore is absent.
+FILESTORE_ROOT="/opt/odoo/v18/.local/share/Odoo/filestore"
+FILESTORE_TEMPLATE="$FILESTORE_ROOT/$ODOO_TEMPLATE_DB"
+FILESTORE_TARGET="$FILESTORE_ROOT/$ODOO_DB"
+if [[ -d "$FILESTORE_TEMPLATE" ]]; then
+    mkdir -p "$FILESTORE_TARGET"
+    cp -rn "$FILESTORE_TEMPLATE"/. "$FILESTORE_TARGET"/ 2>/dev/null || true
+    echo "[run-smoke-v18] filestore synced: $FILESTORE_TEMPLATE -> $FILESTORE_TARGET"
+else
+    echo "[run-smoke-v18] WARNING: template filestore missing ($FILESTORE_TEMPLATE); skipping sync." >&2
+fi
 
 LOG_LEVEL="info"
 if [[ "${DEBUG:-0}" == "1" ]]; then
