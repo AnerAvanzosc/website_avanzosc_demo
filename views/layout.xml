@@ -9,31 +9,18 @@
          Ref: CLAUDE.md §3, §4, §10; spec §8.1; task 1.2.
          ============================================================ -->
 
-    <!-- 1. Botón «Acceso clientes» — override de oe_structure_header_default_1.
-         Hereda website.template_header_default_oe_structure_header_default_1,
-         que es el template que rellena la zona oe_structure con el botón
-         "Contact Us" estándar de Odoo. Lo reemplazamos con nuestro botón.
-         La clase s_avanzosc_acceso_clientes sirve de hook CSS en _header.scss.
-         href: /clientes (alias público redirige 301 a /web/login per Q2,
-         sesión 2026-04-30; ver data/redirects.xml).
-         Ref: CLAUDE.md §4 (IDs prefijados), task 1.2 punto 2. -->
+    <!-- 1. Botón «Acceso clientes» — override del CTA del header default.
+         v18: cta_btn_href/cta_btn_text are QWeb vars set in website.layout,
+         consumed by template_header_default via placeholder_header_call_to_action.
+         href: /clientes (alias público redirige 301 a /web/login per Q2). -->
     <template id="header_acceso_clientes"
               name="Header: Acceso clientes button"
-              inherit_id="website.template_header_default_oe_structure_header_default_1">
-        <!-- Reemplazamos el anchor «Contact Us» por «Acceso clientes».
-             Se mantiene la estructura oe_structure/section/container para no
-             romper el padding y la grilla del header por defecto.
-             Asume website usa template_header_default. Variantes
-             (_align_center, _align_right, _hamburger) no se contemplan en v1
-             per CLAUDE.md §10 (sin Website Builder). Si se cambia a otra
-             variante, este xpath no matchea y el botón desaparece sin error. -->
-        <xpath expr="//a[@href='/contactus']" position="replace">
-            <!-- href: /clientes — URL pública alias, redirect 301 a /web/login
-                 vía data/redirects.xml (Q2 cerrada sesión 2026-04-30). -->
-            <a href="/clientes"
-               class="btn btn-primary ml-4 s_avanzosc_acceso_clientes">
-                Acceso clientes
-            </a>
+              inherit_id="website.layout">
+        <xpath expr="//t[@t-set='cta_btn_href']" position="replace">
+            <t t-set="cta_btn_href">/clientes</t>
+        </xpath>
+        <xpath expr="//t[@t-set='cta_btn_text']" position="replace">
+            <t t-set="cta_btn_text">Acceso clientes</t>
         </xpath>
     </template>
 
