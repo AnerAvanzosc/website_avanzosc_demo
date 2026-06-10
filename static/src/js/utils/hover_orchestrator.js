@@ -1,5 +1,4 @@
-odoo.define('website_avanzosc_demo.utils.hover_orchestrator', function (require) {
-    'use strict';
+/** @odoo-module **/
 
     // -------------------------------------------------------------------
     // Hover orchestrator factory — extraído del orchestrator inline de
@@ -152,8 +151,9 @@ odoo.define('website_avanzosc_demo.utils.hover_orchestrator', function (require)
         };
     }
 
-    return {
-        createHoverOrchestrator: createHoverOrchestrator,
-        DEFAULT_AUTO_CLEAR_MS: DEFAULT_AUTO_CLEAR_MS,
-    };
-});
+export { createHoverOrchestrator, DEFAULT_AUTO_CLEAR_MS };
+
+export default {
+    createHoverOrchestrator: createHoverOrchestrator,
+    DEFAULT_AUTO_CLEAR_MS: DEFAULT_AUTO_CLEAR_MS,
+};

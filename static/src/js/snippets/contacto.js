@@ -1,7 +1,8 @@
-odoo.define('website_avanzosc_demo.snippets.contacto', function (require) {
-    'use strict';
+/** @odoo-module **/
 
-    // -------------------------------------------------------------------
+import publicWidget from "@web/legacy/js/public/public_widget";
+
+// -------------------------------------------------------------------
     // /contacto hero — letter-stagger entrance.
     //
     // Patrón derivado del s_avanzosc_hero principal (hero.js Phase 3.10):
@@ -25,9 +26,7 @@ odoo.define('website_avanzosc_demo.snippets.contacto', function (require) {
     // visible (opacity 1) para no quedar el hero permanentemente vacío.
     // -------------------------------------------------------------------
 
-    var publicWidget = require('web.public.widget');
-
-    publicWidget.registry.AvanzoscContactoHero = publicWidget.Widget.extend({
+publicWidget.registry.AvanzoscContactoHero = publicWidget.Widget.extend({
         selector: '.s_avanzosc_contacto_hero',
 
         start: function () {
@@ -95,4 +94,3 @@ odoo.define('website_avanzosc_demo.snippets.contacto', function (require) {
             return this._super.apply(this, arguments);
         },
     });
-});

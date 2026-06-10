@@ -1,5 +1,6 @@
-odoo.define('website_avanzosc_demo.snippets.header', function (require) {
-    'use strict';
+/** @odoo-module **/
+
+import publicWidget from "@web/legacy/js/public/public_widget";
 
     // -------------------------------------------------------------------
     // Phase 7.2 — Mobile overlay controller.
@@ -41,9 +42,7 @@ odoo.define('website_avanzosc_demo.snippets.header', function (require) {
     // entry point keeps state contained.
     // -------------------------------------------------------------------
 
-    var publicWidget = require('web.public.widget');
-
-    publicWidget.registry.AvanzoscMobileOverlay = publicWidget.Widget.extend({
+publicWidget.registry.AvanzoscMobileOverlay = publicWidget.Widget.extend({
         selector: '.s_avanzosc_hamburger',
         events: {
             'click': '_onHamburgerClick',
@@ -149,4 +148,3 @@ odoo.define('website_avanzosc_demo.snippets.header', function (require) {
             });
         },
     });
-});

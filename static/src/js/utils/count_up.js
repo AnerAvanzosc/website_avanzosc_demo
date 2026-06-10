@@ -1,7 +1,6 @@
-odoo.define('website_avanzosc_demo.utils.count_up', function (require) {
-    'use strict';
+/** @odoo-module **/
 
-    // -------------------------------------------------------------------
+// -------------------------------------------------------------------
     // Count-up util — extraído de Task 3.5 (contador.js) para reuso por
     // F1 (caso_exito.js KPI count-up del SVG dashboard).
     //
@@ -81,9 +80,10 @@ odoo.define('website_avanzosc_demo.utils.count_up', function (require) {
         window.requestAnimationFrame(step);
     }
 
-    return {
-        paintFinal: paintFinal,
-        animate: animate,
-        DEFAULT_DURATION_MS: DEFAULT_DURATION_MS,
-    };
-});
+export { paintFinal, animate, DEFAULT_DURATION_MS };
+
+export default {
+    paintFinal: paintFinal,
+    animate: animate,
+    DEFAULT_DURATION_MS: DEFAULT_DURATION_MS,
+};

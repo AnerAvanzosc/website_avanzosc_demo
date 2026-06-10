@@ -1,5 +1,6 @@
-odoo.define('website_avanzosc_demo.snippets.sectores', function (require) {
-    'use strict';
+/** @odoo-module **/
+
+import publicWidget from "@web/legacy/js/public/public_widget";
 
     // -------------------------------------------------------------------
     // F4 v3 — Background boxes layer (grid isométrico interactivo) en
@@ -32,11 +33,9 @@ odoo.define('website_avanzosc_demo.snippets.sectores', function (require) {
     // <1ms por evento. Sin Map ni setTimeout, menor overhead que v2.
     // -------------------------------------------------------------------
 
-    var publicWidget = require('web.public.widget');
+const COLOR_VARIANTS = 4;  // color-1..color-4
 
-    var COLOR_VARIANTS = 4;  // color-1..color-4
-
-    publicWidget.registry.AvanzoscSectoresBoxes = publicWidget.Widget.extend({
+publicWidget.registry.AvanzoscSectoresBoxes = publicWidget.Widget.extend({
         selector: '.s_avanzosc_sectores_boxes',
 
         start: function () {
@@ -135,4 +134,3 @@ odoo.define('website_avanzosc_demo.snippets.sectores', function (require) {
             return this._super.apply(this, arguments);
         },
     });
-});
