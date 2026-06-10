@@ -1,9 +1,8 @@
-odoo.define('website_avanzosc_demo.main', function (require) {
-    'use strict';
+/** @odoo-module **/
 
-    var publicWidget = require('web.public.widget');
+import publicWidget from "@web/legacy/js/public/public_widget";
 
-    publicWidget.registry.AvanzoscRoot = publicWidget.Widget.extend({
+publicWidget.registry.AvanzoscRoot = publicWidget.Widget.extend({
         selector: '#wrap',
         start: function () {
             // ----------------------------------------------------------------
@@ -361,6 +360,3 @@ odoo.define('website_avanzosc_demo.main', function (require) {
             return this._super.apply(this, arguments);
         },
     });
-
-    return publicWidget.registry.AvanzoscRoot;
-});
