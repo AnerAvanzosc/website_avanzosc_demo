@@ -101,7 +101,7 @@ publicWidget.registry.AvanzoscHero = publicWidget.Widget.extend({
 ### Modelos Python
 - Heredar con `_inherit = 'model.name'`. Campos custom prefijados con `x_avanzosc_`.
 - `@api.multi` y `@api.one` removed (desde v13/v14): todos los métodos son multi-record por default; iterar `self` explícitamente cuando haga falta single-record.
-- Hooks: signature v18 es `def _post_init_main(env)` (env-first). La signature v14 `(cr, registry)` sigue aceptada por compat pero deprecated — migrar al firmar el commit que toque `hooks.py`.
+- Hooks: signature v18 es `def _post_init_main(env)` (env-first; el env ya viene wrapped con SUPERUSER, ver `odoo/modules/loading.py:430`). La signature v14 `(cr, registry)` provoca `TypeError` runtime en `loading.py:246` al invocar el hook (v18 sólo pasa un argumento). Migrar obligatoriamente al tocar `hooks.py`.
 - Campos `translate=True` persisten como JSONB en v17+: queries SQL crudos sobre esos campos deben usar `col->>'en_US'`.
 
 ---
@@ -257,8 +257,9 @@ Prefijos de commit (mapeo de uso para este proyecto):
     - `<template inherit_id="web.assets_frontend"><xpath ...><script/link/></xpath></template>` para REGISTRAR nuevos archivos → ignorado en v17+, hay que migrar a manifest `'assets'`.
     - `@api.multi`, `@api.one` → AttributeError en runtime.
     - Queries SQL crudos sobre campos `translate=True` que asumen columna `text` en lugar de JSONB.
+    - Hooks Python con signature `(cr, registry)` — v18 invoca `getattr(py_module, post_init)(env)` con un solo argumento (`loading.py:246`); la firma vieja causa TypeError runtime en cuanto el hook se dispara.
+    - `self.env['ir.translation']` — modelo eliminado en v17+; las traducciones viven en columnas JSONB. Usar `record.with_context(lang=<code>)[field]` / `.write({field: value})`.
   - **WARNING** (sigue funcionando pero deprecated, migrar oportunísticamente):
-    - Hooks Python con signature `(cr, registry)` en lugar de `(env)`.
     - Variables Bootstrap con nombres v4 (`$primary`, `$btn-padding-y`) — Odoo 18 ships BS5; comprobar renames.
     - Lazy bundle `web.assets_frontend_lazy` (eliminado en v18: todo lo registrado en `assets_frontend` se carga eager).
 - **NO** guardar credenciales ni API keys en el código. `ir.config_parameter` o variables de entorno.
