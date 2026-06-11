@@ -86,17 +86,14 @@ publicWidget.registry.AvanzoscHero = publicWidget.Widget.extend({
             // translate Y simple) fuerza GPU layer composition, manteniendo
             // 60fps incluso con muchos elementos del hero animando.
             //
-            // Scroll target: en Odoo 14 con Lenis configurado en main.js
-            // (`wrapper: wrapwrap, content: wrapwrap`), el elemento que
-            // realmente scrollea es `#wrapwrap`, NO `window`. Los scroll
-            // events `window.addEventListener('scroll', …)` NO disparan
-            // bajo este setup (verificado empíricamente sesión 2026-05-04).
-            // El listener correcto va en `#wrapwrap`. Sin Lenis (e.g.,
-            // reduced-motion donde main.js no instancia Lenis) `#wrapwrap`
-            // sigue siendo el scrollable element del shell de Odoo, así
-            // que el listener funciona universalmente.
+            // Scroll target: v18 — el scroller real es `window` (#wrapwrap
+            // pasó a overflow: visible y ya no scrollea; verificado
+            // empíricamente F12.1/F13). En v14 era #wrapwrap (overflow:
+            // auto con html/body hidden) y el listener iba ahí. Los scroll
+            // events de window disparan tanto con Lenis activo (Lenis
+            // window-mode emite scroll nativo) como sin él (reduced-motion).
             // -----------------------------------------------------------------
-            var scrollTarget = document.getElementById('wrapwrap') || window;
+            var scrollTarget = window;
             var parallaxTicking = false;
             // Pieza A v2 — refactor: el transform de las capas decorativas
             // se compone en SCSS desde 3 CSS vars (--scroll-y, --mouse-rx,

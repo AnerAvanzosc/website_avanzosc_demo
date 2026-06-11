@@ -12,31 +12,23 @@ publicWidget.registry.AvanzoscRoot = publicWidget.Widget.extend({
             // La librería CDN se carga vía views/assets.xml (task 0.4).
             // window.lenis expuesto para diagnóstico (Playwright / DevTools).
             //
-            // Wrapper = `#wrapwrap` (Odoo Community v14): el módulo `website`
-            // pone `overflow: hidden` en `html, body, #wrapwrap` y usa
-            // `#wrapwrap` (height = viewport, overflow: auto) como el único
-            // elemento que realmente scrollea. Sin `wrapper: wrapwrap`, Lenis
-            // se ata a window que no scrollea — quedaba idle en `isScrolling:
-            // false` permanente sin aportar nada (bug de Task 0.6 detectado
-            // durante la implementación de Task 1.3).
-            //
-            // Content = wrapwrap (mismo elemento que wrapper): el DOM real
-            // tiene `#wrapwrap > {header, main, footer}` como hijos paralelos,
-            // sin un wrapper único intermedio. `content: wrapwrap` hace que
-            // Lenis mida `wrapwrap.offsetHeight` (que abarca los 3 hijos)
-            // para calcular el scroll-limit. Decisión sesión 2026-04-28
-            // («(α)+(ε)») validada empíricamente.
+            // v18 scroller: window (Lenis defaults). En v14, Odoo ponía
+            // `overflow: hidden` en html/body y el scroll vivía en
+            // `#wrapwrap` (overflow: auto) — por eso el código original
+            // pasaba `wrapper: wrapwrap, content: wrapwrap`. En v18
+            // `#wrapwrap` es `overflow: visible` y el scroller real es
+            // `window`/documentElement (verificado empíricamente F12.1:
+            // wrapwrap.scrollTop quedaba 0 al scrollear). Los defaults de
+            // Lenis (wrapper: window, content: documentElement) son
+            // exactamente eso, así que basta con omitir ambos params.
             //
             // autoToggle: true — defensivo: Lenis se auto-pausa si el wrapper
             // no necesita smoothing (e.g. contenido más corto que viewport).
             // ----------------------------------------------------------------
-            var wrapwrap = document.getElementById('wrapwrap');
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 // No-op: respect user preference. window.lenis queda undefined.
-            } else if (wrapwrap && typeof window.Lenis === 'function') {
+            } else if (typeof window.Lenis === 'function') {
                 var lenis = new window.Lenis({
-                    wrapper: wrapwrap,
-                    content: wrapwrap,
                     autoToggle: true,
                 });
                 window.lenis = lenis;
@@ -48,24 +40,18 @@ publicWidget.registry.AvanzoscRoot = publicWidget.Widget.extend({
                 requestAnimationFrame(raf);
 
                 // ----------------------------------------------------------------
-                // GSAP ScrollTrigger ↔ Lenis bridge (Pieza E v3).
-                // Patrón canónico Lenis docs:
-                //   1. scrollerProxy(wrapwrap, {scrollTop, getBoundingClientRect})
-                //      enseña a ScrollTrigger a leer/escribir scroll a través de
-                //      Lenis (no del DOM nativo, que en Odoo 14 vive en wrapwrap
-                //      con overflow auto, no window).
-                //   2. lenis.on('scroll', ScrollTrigger.update) — cada paso de
-                //      Lenis (smoothed) dispara update de los triggers, en lugar
-                //      del scroll listener nativo que ScrollTrigger pondría sobre
-                //      window por default.
-                //   3. ScrollTrigger.defaults({scroller: wrapwrap}) — todos los
-                //      triggers creados por widgets (timeline.js Pieza E v3) usan
-                //      wrapwrap como scroller sin tener que repetirlo.
-                //   4. pinType: 'transform' — fix obligatorio cuando el scroller
-                //      no es window. position:fixed dentro de un scroller custom
-                //      puede comportarse raro (clipping, transform-context). Con
-                //      'transform', ScrollTrigger pinéa moviendo translate3d
-                //      sobre el wrapwrap mientras el contenido pasa por debajo.
+                // GSAP ScrollTrigger ↔ Lenis bridge (Pieza E v3, ajustado v18).
+                // Con el scroller en window (default nativo de ScrollTrigger),
+                // el patrón canónico Lenis+ST se reduce a:
+                //   1. lenis.on('scroll', ScrollTrigger.update) — cada paso de
+                //      Lenis (smoothed) dispara update de los triggers.
+                //   2. NO scrollerProxy: solo se necesita cuando el scroller es
+                //      un elemento custom (el wrapwrap de v14). Con window,
+                //      ScrollTrigger lee window.scrollY nativamente.
+                //   3. NO ScrollTrigger.defaults({scroller}): el default ya es
+                //      window. Los triggers de timeline.js lo heredan.
+                //   4. NO pinType: 'transform': con scroller window, el pin usa
+                //      position: fixed (default correcto).
                 //
                 // Gating: sólo se ejecuta si Lenis está activo (estamos dentro
                 // del else-if Lenis); reduced-motion ya no entra. Guard explícito
@@ -76,25 +62,7 @@ publicWidget.registry.AvanzoscRoot = publicWidget.Widget.extend({
                     typeof window.ScrollTrigger !== 'undefined') {
                     var ST = window.ScrollTrigger;
                     window.gsap.registerPlugin(ST);
-                    ST.scrollerProxy(wrapwrap, {
-                        scrollTop: function (value) {
-                            if (arguments.length) {
-                                lenis.scrollTo(value, { immediate: true });
-                            }
-                            return lenis.scroll;
-                        },
-                        getBoundingClientRect: function () {
-                            return {
-                                top: 0,
-                                left: 0,
-                                width: window.innerWidth,
-                                height: window.innerHeight,
-                            };
-                        },
-                        pinType: 'transform',
-                    });
                     lenis.on('scroll', ST.update);
-                    ST.defaults({ scroller: wrapwrap });
                 }
 
                 // ----------------------------------------------------------------
@@ -192,12 +160,13 @@ publicWidget.registry.AvanzoscRoot = publicWidget.Widget.extend({
                                 window.history.scrollRestoration = 'manual';
                             }
                             // rAF callback runs DESPUÉS del native scroll-to-hash
-                            // del browser. Reseteamos wrap.scrollTop a 0 y
+                            // del browser. Reseteamos el scroll de window a 0 y
                             // delegamos a scrollToElement (que calcula el
                             // pixel value `el.offsetTop - HEADER_OFFSET`,
                             // evitando la varianza element-based de Lenis).
+                            // v18: el scroller es window, no #wrapwrap.
                             window.requestAnimationFrame(function () {
-                                wrapwrap.scrollTop = 0;
+                                window.scrollTo(0, 0);
                                 scrollToElement(bootstrapTarget);
                             });
                         }
@@ -305,12 +274,12 @@ publicWidget.registry.AvanzoscRoot = publicWidget.Widget.extend({
             }
 
             // ----------------------------------------------------------------
-            // Sticky header — clase «is-scrolled» (Task 1.3)
+            // Sticky header — clase «is-scrolled» (Task 1.3, ajustado v18)
             // ----------------------------------------------------------------
             // Sticky position lo proporciona el SCSS (_header.scss). Aquí
             // solo añadimos/quitamos la clase `is-scrolled` cuando el scroll
-            // pasa de 100px en `#wrapwrap` (el elemento que realmente
-            // scrollea en Odoo 14 — html/body tienen overflow: hidden).
+            // pasa de 100px. v18: el scroller es window (en v14 era #wrapwrap
+            // con html/body overflow: hidden).
             //
             // Listener dual:
             //   - Lenis activo (no reduced-motion): `lenis.on('scroll', cb)`
@@ -319,14 +288,14 @@ publicWidget.registry.AvanzoscRoot = publicWidget.Widget.extend({
             //     necesita rAF throttle propio — Lenis ya emite el evento al
             //     ritmo del rAF interno.
             //   - Reduced-motion (Lenis no instanciado, ver bloque arriba):
-            //     `#wrapwrap.addEventListener('scroll', ...)` nativo con
-            //     throttle rAF (1 frame ≈ 16ms). Leemos `wrapwrap.scrollTop`.
+            //     `window.addEventListener('scroll', ...)` nativo con
+            //     throttle rAF (1 frame ≈ 16ms). Leemos `window.scrollY`.
             //
             // Threshold = 100px (briefing 1.3). Transición visual la maneja
             // el SCSS (padding + box-shadow, 250ms ease-out expo).
             // ----------------------------------------------------------------
             var headerEl = document.querySelector('header');
-            if (headerEl && wrapwrap) {
+            if (headerEl) {
                 var SCROLL_THRESHOLD = 100;
                 var applyScrolledState = function (scrollValue) {
                     headerEl.classList.toggle(
@@ -341,19 +310,19 @@ publicWidget.registry.AvanzoscRoot = publicWidget.Widget.extend({
                     });
                     applyScrolledState(window.lenis.scroll);
                 } else {
-                    // Reduced-motion fallback: native scroll on wrapwrap with rAF.
+                    // Reduced-motion fallback: native scroll on window with rAF.
                     var ticking = false;
                     var checkScroll = function () {
                         ticking = false;
-                        applyScrolledState(wrapwrap.scrollTop);
+                        applyScrolledState(window.scrollY);
                     };
-                    wrapwrap.addEventListener('scroll', function () {
+                    window.addEventListener('scroll', function () {
                         if (!ticking) {
                             ticking = true;
                             window.requestAnimationFrame(checkScroll);
                         }
                     }, { passive: true });
-                    applyScrolledState(wrapwrap.scrollTop);
+                    applyScrolledState(window.scrollY);
                 }
             }
 
