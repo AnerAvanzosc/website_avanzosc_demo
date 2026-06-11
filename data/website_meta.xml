@@ -96,6 +96,29 @@
             }"/>
         </function>
 
+        <!-- T1.3 (auditoría UI 2026-06-11) — datos reales de res.company 1.
+             La BD arrastraba el bootstrap demo: name «My Company (San
+             Francisco)» (alt del logo del footer) y phone «+1 555-555-5556»
+             visible en el header de TODO el sitio. Datos factuales = los
+             mismos del JSON-LD (views/assets.xml) y la página /contacto.
+             Sin logo (A2 sigue bloqueado por asset) y sin `vat` (el CIF
+             B20875340 sin prefijo ES podría no pasar la validación de
+             base_vat; el CIF ya consta en footer y JSON-LD como texto).
+             Mismo patrón <function> imperativo idempotente. -->
+        <function model="res.company" name="write">
+            <value eval="[1]"/>
+            <value eval="{
+                'name': 'Avanzosc S.L.',
+                'phone': '943 026 902',
+                'email': 'comercial@avanzosc.es',
+                'street': 'Av. Julio Urkijo 34 bajo',
+                'zip': '20720',
+                'city': 'Azkoitia',
+                'state_id': ref('base.state_es_ss'),
+                'country_id': ref('base.es'),
+            }"/>
+        </function>
+
         <!-- C2/I5/I7/I8 — Home (`/` + `/eu_ES/`). Target: view
              `website.homepage` (core). Idénticos para ambas URLs porque
              comparten template. EU translation via i18n/eu.po. -->
