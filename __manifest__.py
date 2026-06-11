@@ -90,6 +90,15 @@
     #   - JS: main.js → utils (count_up, hover_orchestrator) ANTES de
     #     sus consumidores (contador, caso_exito, equipo) → snippets.
     "assets": {
+        # Prepend: los !default del core (primary_variables.scss) solo
+        # asignan si la variable no existe — la nuestra debe cargar ANTES.
+        # Ver static/src/scss/_primary_variables.scss (fix doble Inter M3).
+        "web._assets_primary_variables": [
+            (
+                "prepend",
+                "website_avanzosc_demo/static/src/scss/_primary_variables.scss",
+            ),
+        ],
         "web.assets_frontend": [
             # SCSS — base
             "website_avanzosc_demo/static/src/scss/_variables.scss",

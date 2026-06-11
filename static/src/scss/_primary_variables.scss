@@ -1,0 +1,25 @@
+// Override del theme core (prepended a web._assets_primary_variables, gana
+// sobre los `!default` de website/static/src/scss/primary_variables.scss).
+//
+// Motivo (auditoría 2026-06-11, hallazgo M3): la paleta default de Odoo 18
+// referencia las fuentes 'Inter' (base) e 'Inter Tight' (headings) de
+// $o-theme-font-configs, y website.scss emite un @import de Google Fonts
+// por cada 'url' del config — duplicando la carga de Inter (este módulo ya
+// la trae vía <link> css2 en views/assets.xml junto a Space Grotesk y
+// JetBrains Mono) y añadiendo Inter Tight que nadie usa (la tipografía
+// real la fija _typography.scss con custom properties).
+//
+// Con 'url': null el loop de website.scss no emite @import (y no hay
+// 'attachment', así que tampoco la rama local). Las families se conservan
+// para que cualquier estilo core que resuelva o-get-font-info siga
+// teniendo un stack válido — servido por NUESTRO <link> css2.
+$o-theme-font-configs: (
+    'Inter': (
+        'family': ('Inter', sans-serif),
+        'url': null,
+    ),
+    'Inter Tight': (
+        'family': ('Inter', sans-serif),
+        'url': null,
+    ),
+);
