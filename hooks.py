@@ -291,14 +291,16 @@ def post_init_setup_languages(env):
         1. Activate `es_ES` and `eu_ES` in `res.lang` if not already
            active. Uses `with_context(active_test=False)` so we find
            inactive entries (search() with no context filters them out).
-        2. Ensure `website.language_ids` for website 1 includes both
-           langs (no-op if already there).
+        2. Ensure `website.language_ids` for website 1 is EXACTLY
+           {es_ES, eu_ES} (removes any other bound lang, e.g. the
+           bootstrap-inherited en_US; no-op if already exact).
         3. Ensure `website.default_lang_id` for website 1 is `es_ES`
            (no-op if already so).
 
     Idempotency:
         - res.lang.write({'active': True}) is no-op if already True.
-        - language_ids is many2many; we union with existing.
+        - language_ids is many2many; we write the exact (6,0) set only
+          when it differs.
         - default_lang_id is m2o; we only write if differs.
         Re-running from shell or post_init is safe.
 
@@ -331,11 +333,14 @@ def post_init_setup_languages(env):
     if not (es_lang and eu_lang):
         return  # Lang setup failed earlier; bail out.
 
+    # Exact set (6,0,ids), not union: the Odoo bootstrap leaves en_US bound
+    # to website 1, which published an untranslated duplicate /en/* tree
+    # (canonical propio, hreflang en, «English (US)» in the switcher).
+    # Spec D1 is ES + EU only. en_US stays active at res.lang level (system
+    # language); it is only unbound from the website.
     target_lang_ids = es_lang | eu_lang
-    current_lang_ids = website.language_ids
-    missing = target_lang_ids - current_lang_ids
-    if missing:
-        website.write({"language_ids": [(4, lang.id) for lang in missing]})
+    if website.language_ids != target_lang_ids:
+        website.write({"language_ids": [(6, 0, target_lang_ids.ids)]})
 
     if website.default_lang_id != es_lang:
         website.write({"default_lang_id": es_lang.id})
