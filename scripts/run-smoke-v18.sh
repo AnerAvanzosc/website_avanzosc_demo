@@ -16,8 +16,18 @@
 #   - Exit 1 if output contains Traceback or 'ERROR ' lines, or odoo-bin exits non-zero.
 #   - If task-id is provided, last 20 lines saved to docs/smoke-tests/<task-id>.log.
 #
-# Does NOT manage a v18 dev server lifecycle (no v18 dev server is running
-# in this workspace; the equivalent v14 script handles that for v14).
+# Does NOT manage the v18 dev server lifecycle (the equivalent v14 script
+# handles that for v14). The v18 dev server is started manually with the
+# command below. IMPORTANT: the explicit PATH is mandatory — --dev=all
+# auto-reload re-execs via $PATH ("#!/usr/bin/env python3" / os.execvp),
+# and without the venv first in PATH the reloader re-execs with the system
+# Python and dies with ModuleNotFoundError (e.g. passlib). Same hardening
+# as run-smoke.sh (v14). Incident: v18 visual sweep 2026-06.
+#
+#   PATH="/opt/odoo/v18/venv/bin:/usr/local/bin:/usr/bin:/bin" \
+#     nohup /opt/odoo/v18/venv/bin/python /opt/odoo/v18/base/odoo-bin \
+#     -c /etc/odoo/odoo18.conf -d odoo18_avanzosc_web --dev=all \
+#     > /tmp/odoo18-dev.log 2>&1 &
 
 set -euo pipefail
 
@@ -80,6 +90,10 @@ TMP_FULL="$(mktemp)"
 trap 'rm -f "$TMP_FULL"' EXIT INT TERM
 
 SMOKE_RC=0
+# Explicit PATH (venv first, NOT prepend $PATH): same hardening as the v14
+# smoke — any subprocess or re-exec resolving "python3" via $PATH must hit
+# the venv interpreter, never the system one (which lacks Odoo deps).
+PATH="/opt/odoo/v18/venv/bin:/usr/local/bin:/usr/bin:/bin" \
 "$ODOO_PYTHON" "$ODOO_BIN" \
     -c "$ODOO_CONF" \
     -d "$ODOO_DB" \
