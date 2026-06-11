@@ -676,6 +676,8 @@ Pendientes que no requieren acción inmediata pero deben re-evaluarse cuando se 
 
 **Trigger de reapertura**: si en una próxima feature necesitamos un widget global (selector `body`, `html`, o sin selector) y el workaround D15 no encaja, investigar el lifecycle a fondo. Hasta entonces, no merece tiempo.
 
+**CERRADO en v18 (auditoría 2026-06-11)**: el `PublicRoot` v18 se monta sobre `document.body` (`addons/web/static/src/legacy/js/public/public_root.js:332`) y el matcher de selectores incluye el propio root (`if (fromEl.matches(selector))`, `public_root.js:154-155`), así que un widget con `selector: 'body'` SÍ auto-instancia en v18. El workaround D15 era v14-only; el módulo usa `selector: '#wrap'` (main.js) y no requiere cambios. NO aplicar D15 a código nuevo v18.
+
 <a id="deferred-ttfb-prod"></a>
 ### TTFB en producción real — re-validar Propuesta B
 

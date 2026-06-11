@@ -261,7 +261,7 @@ Prefijos de commit (mapeo de uso para este proyecto):
     - `self.env['ir.translation']` — modelo eliminado en v17+; las traducciones viven en columnas JSONB. Usar `record.with_context(lang=<code>)[field]` / `.write({field: value})`.
   - **WARNING** (sigue funcionando pero deprecated, migrar oportunísticamente):
     - Variables Bootstrap con nombres v4 (`$primary`, `$btn-padding-y`) — Odoo 18 ships BS5; comprobar renames.
-    - Lazy bundle `web.assets_frontend_lazy` (eliminado en v18: todo lo registrado en `assets_frontend` se carga eager).
+    - Lazy bundle `web.assets_frontend_lazy`: SÍ existe y se sirve en v18 (verificado empíricamente 2026-06-11: el server v18 emite `web.assets_frontend_lazy.min.js` ~2.5MB en cada página). La afirmación previa de este documento («eliminado en v18») era errónea. El módulo no registra nada en él; el JS propio va en `assets_frontend`.
 - **NO** guardar credenciales ni API keys en el código. `ir.config_parameter` o variables de entorno.
 - **NO** commitear datos reales de clientes en casos de éxito de prueba. Datos ficticios hasta aprobación del cliente.
 - **NO** replicar la estructura densa de párrafos de la web actual. La nueva va a tener ~30% del texto actual y triple de impacto.
@@ -330,7 +330,7 @@ Detalle íntegro de cada decisión (validaciones literales, justificaciones téc
 - [ ] **SVG del logo** — vectorizar antes de picar tema.
 - [ ] **Portal ERP «Acceso clientes»** — ¿`/web/login` estándar o URL custom?
 - [ ] **Plan migración contenido antiguo** — tienda/cursos: ¿migrar o solo re-skinear?
-- [ ] **Diferido — `publicWidget` selector `'body'` no instancia** — workaround D15 vigente. [link](docs/decisions-log.md#deferred-publicwidget-body).
+- [x] **Resuelto en v18 — `publicWidget` selector `'body'` sí auto-instancia** (PublicRoot v18 monta sobre `document.body` y el matcher incluye el propio root, `public_root.js:154-155,332`). Workaround D15 era v14-only; el módulo usa `selector: '#wrap'` y no necesita cambio. NO aplicar D15 a código nuevo. [link](docs/decisions-log.md#deferred-publicwidget-body).
 - [ ] **Diferido — TTFB prod re-validate** — D20 medido en localhost. Trigger: post-switchover Phase 10.6. [link](docs/decisions-log.md#deferred-ttfb-prod).
 - [ ] **Diferido — claim STEM en body `/conocenos` (B2)** — pre-switchover OBLIGATORIO. Sin trigger atendido NO autorizar switchover. [link](docs/decisions-log.md#deferred-conocenos-stem-claim).
 - [ ] **Diferido — Lighthouse Best Practices 81-82/100** — origen upstream Odoo 14, sin parche posible. [link](docs/decisions-log.md#deferred-lighthouse-best-practices-upstream).
