@@ -1,5 +1,6 @@
-odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
-    'use strict';
+/** @odoo-module **/
+
+import publicWidget from "@web/legacy/js/public/public_widget";
 
     // -------------------------------------------------------------------
     // Snippet `s_avanzosc_hero` — orquestación entrada con Splitting.js +
@@ -44,9 +45,7 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
     //   localmente sin depender exclusivamente del CSS externo.
     // -------------------------------------------------------------------
 
-    var publicWidget = require('web.public.widget');
-
-    publicWidget.registry.AvanzoscHero = publicWidget.Widget.extend({
+publicWidget.registry.AvanzoscHero = publicWidget.Widget.extend({
         selector: '.s_avanzosc_hero',
 
         start: function () {
@@ -455,4 +454,3 @@ odoo.define('website_avanzosc_demo.snippets.hero', function (require) {
             return this._super.apply(this, arguments);
         },
     });
-});

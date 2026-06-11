@@ -1,5 +1,6 @@
-odoo.define('website_avanzosc_demo.snippets.timeline', function (require) {
-    'use strict';
+/** @odoo-module **/
+
+import publicWidget from "@web/legacy/js/public/public_widget";
 
     // -------------------------------------------------------------------
     // Snippet `s_avanzosc_timeline` — Pieza D base + Pieza E v3 (approach H).
@@ -110,13 +111,11 @@ odoo.define('website_avanzosc_demo.snippets.timeline', function (require) {
     //   AvanzoscTimeline matching descendant).
     // -------------------------------------------------------------------
 
-    var publicWidget = require('web.public.widget');
+const IO_THRESHOLD = 0.3;          // Fallback reveal stagger threshold.
+const DESKTOP_MIN = 768;           // Alineado con SCSS @media.
+const SCRUB_PIN_VH = 1.0;          // Viewport heights por hito durante el pin.
 
-    var IO_THRESHOLD = 0.3;          // Fallback reveal stagger threshold.
-    var DESKTOP_MIN = 768;           // Alineado con SCSS @media.
-    var SCRUB_PIN_VH = 1.0;          // Viewport heights por hito durante el pin.
-
-    publicWidget.registry.AvanzoscTimeline = publicWidget.Widget.extend({
+publicWidget.registry.AvanzoscTimeline = publicWidget.Widget.extend({
         selector: '.s_avanzosc_timeline',
 
         start: function () {
@@ -453,4 +452,3 @@ odoo.define('website_avanzosc_demo.snippets.timeline', function (require) {
             return this._super.apply(this, arguments);
         },
     });
-});
