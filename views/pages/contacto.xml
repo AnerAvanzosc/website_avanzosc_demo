@@ -108,7 +108,7 @@
                                          re-valida (defense-in-depth).
                                          ========================================================== -->
                                     <div class="col-12 col-lg-7 s_avanzosc_contacto_form_wrap" data-avanzosc-reveal="">
-                                        <form action="/contacto/submit" method="POST" class="s_avanzosc_contacto_form" novalidate="novalidate">
+                                        <form action="/contacto/submit" method="POST" class="s_avanzosc_contacto_form">
                                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                                             <!-- Honeypot: campo trampa con name='website'. Bots
