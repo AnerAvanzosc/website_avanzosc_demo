@@ -124,6 +124,60 @@
          `views/pages/contacto_gracias.xml` (inline DOMContentLoaded).
          Ref: CLAUDE.md §11 D25, decisions-log.md §7.
          ============================================================ -->
+    <!-- ============================================================
+         JSON-LD Organization/LocalBusiness — M10 (auditoría 2026-06-11).
+         Un único nodo con @type dual (entidad única, evita duplicar la
+         organización ante Google). Datos factuales tomados de la columna
+         de contacto (views/pages/contacto.xml) y el footer:
+           - nombre + CIF: footer legal strip (© Avanzosc S.L. — CIF ...).
+           - dirección/teléfono/email/horario: /contacto.
+           - url: dominio canónico final post-switchover (mismo criterio
+             que data-domain de Plausible, abajo).
+         Sin `logo`: no hay asset definitivo aún (deuda A2/«SVG del
+         logo»); añadir cuando exista. `taxID` (no vatID): B20875340 es
+         el CIF tal cual figura en el footer, sin prefijo ES inventado.
+         Estático e idéntico en ES/EU (datos de entidad, no copy).
+         ============================================================ -->
+    <template id="head_jsonld_organization"
+              name="website_avanzosc_demo head: JSON-LD Organization/LocalBusiness"
+              inherit_id="web.layout">
+        <xpath expr="//head" position="inside">
+            <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": ["Organization", "LocalBusiness"],
+                "name": "Avanzosc S.L.",
+                "url": "https://avanzosc.es",
+                "email": "comercial@avanzosc.es",
+                "telephone": "+34943026902",
+                "taxID": "B20875340",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Av. Julio Urkijo 34 bajo",
+                    "postalCode": "20720",
+                    "addressLocality": "Azkoitia",
+                    "addressRegion": "Gipuzkoa",
+                    "addressCountry": "ES"
+                },
+                "openingHoursSpecification": [
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                        "opens": "08:30",
+                        "closes": "14:00"
+                    },
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                        "opens": "15:00",
+                        "closes": "17:30"
+                    }
+                ]
+            }
+            </script>
+        </xpath>
+    </template>
+
     <template id="head_plausible"
               name="website_avanzosc_demo head: Plausible Analytics"
               inherit_id="web.layout">
