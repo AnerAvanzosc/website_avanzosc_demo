@@ -1,0 +1,20 @@
+    tree = self.pool.get_trigger_tree(fields, select=select)
+  File "/opt/odoo/v18/base/odoo/modules/registry.py", line 421, in get_trigger_tree
+    trees = [
+  File "/opt/odoo/v18/base/odoo/modules/registry.py", line 424, in <listcomp>
+    if field in self._field_triggers
+  File "/opt/odoo/v18/base/odoo/tools/func.py", line 42, in __get__
+    value = self.fget(obj)
+  File "/opt/odoo/v18/base/odoo/modules/registry.py", line 518, in _field_triggers
+    dependencies = list(field.resolve_depends(self))
+  File "/opt/odoo/v18/base/odoo/fields.py", line 825, in resolve_depends
+    warnings.warn(f"Field {self} should be declared with recursive=True")
+ 
+2026-06-11 08:51:18,561 30554 INFO odoo18_avanzosc_web odoo.modules.registry: verifying fields for every extended model 
+2026-06-11 08:51:19,692 30554 INFO odoo18_avanzosc_web odoo.modules.loading: Modules loaded. 
+2026-06-11 08:51:19,699 30554 INFO odoo18_avanzosc_web odoo.modules.registry: Registry changed, signaling through the database 
+2026-06-11 08:51:19,700 30554 INFO odoo18_avanzosc_web odoo.modules.registry: Registry loaded in 11.988s 
+2026-06-11 08:51:19,700 30554 INFO odoo18_avanzosc_web odoo.service.server: Initiating shutdown 
+2026-06-11 08:51:19,700 30554 INFO odoo18_avanzosc_web odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-06-11 08:51:19,701 30554 INFO odoo18_avanzosc_web odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+2026-06-11 08:51:19,708 30554 INFO odoo18_avanzosc_web odoo.service.server: A child process was found, pid is psutil.Process(pid=30555, name='bash', status='sleeping', started='08:51:06'), process may hang 
