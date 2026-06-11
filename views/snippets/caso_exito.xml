@@ -80,7 +80,7 @@
                 <!-- Header sección -->
                 <div class="row mb-4">
                     <div class="col-12 text-center">
-                        <h2 class="s_avanzosc_caso_exito_eyebrow">Caso de éxito</h2>
+                        <p class="s_avanzosc_caso_exito_eyebrow">Caso de éxito</p>
                     </div>
                 </div>
 
@@ -95,7 +95,7 @@
                                 <span class="s_avanzosc_caso_exito_separator"> · </span>
                                 <span class="s_avanzosc_caso_exito_subsector">Mecanizado / metalúrgico exportador</span>
                             </p>
-                            <h3 class="s_avanzosc_caso_exito_title">Fabricante metal-mecánico (50-200 empleados)</h3>
+                            <h2 class="s_avanzosc_caso_exito_title">Fabricante metal-mecánico (50-200 empleados)</h2>
                             <p class="s_avanzosc_caso_exito_summary">Migración completa Excel → Odoo MRP con trazabilidad y multidivisa.</p>
                             <ul class="s_avanzosc_caso_exito_details">
                                 <li>MRP por capacidad finita y planificación por taller.</li>
@@ -113,7 +113,7 @@
                                 <span class="s_avanzosc_caso_exito_separator"> · </span>
                                 <span class="s_avanzosc_caso_exito_subsector">Química con producción por batch + ADR</span>
                             </p>
-                            <h3 class="s_avanzosc_caso_exito_title">Industria química media (~150 empleados)</h3>
+                            <h2 class="s_avanzosc_caso_exito_title">Industria química media (~150 empleados)</h2>
                             <p class="s_avanzosc_caso_exito_summary">Trazabilidad batch + cumplimiento ADR + presentación SILICIE automatizada.</p>
                             <ul class="s_avanzosc_caso_exito_details">
                                 <li>Vencimientos automáticos por lote y producto.</li>
@@ -131,7 +131,7 @@
                                 <span class="s_avanzosc_caso_exito_separator"> · </span>
                                 <span class="s_avanzosc_caso_exito_subsector">Alimentaria con AECOC + balanzas</span>
                             </p>
-                            <h3 class="s_avanzosc_caso_exito_title">Productor alimentario (4 plantas)</h3>
+                            <h2 class="s_avanzosc_caso_exito_title">Productor alimentario (4 plantas)</h2>
                             <p class="s_avanzosc_caso_exito_summary">Trazabilidad lote y alérgenos en milisegundos. Integración nativa con balanzas de envasado.</p>
                             <ul class="s_avanzosc_caso_exito_details">
                                 <li>Etiquetado AECOC con compliance retail.</li>
@@ -149,7 +149,7 @@
                                 <span class="s_avanzosc_caso_exito_separator"> · </span>
                                 <span class="s_avanzosc_caso_exito_subsector">Textil con temporadas y OEMs</span>
                             </p>
-                            <h3 class="s_avanzosc_caso_exito_title">Marca textil con producción para terceros</h3>
+                            <h2 class="s_avanzosc_caso_exito_title">Marca textil con producción para terceros</h2>
                             <p class="s_avanzosc_caso_exito_summary">Variantes talla-color con grid editable + planificación PV/OI + producción para terceros.</p>
                             <ul class="s_avanzosc_caso_exito_details">
                                 <li>Grid talla-color editable como matriz Excel.</li>
@@ -167,7 +167,7 @@
                                 <span class="s_avanzosc_caso_exito_separator"> · </span>
                                 <span class="s_avanzosc_caso_exito_subsector">Retail con omnicanal</span>
                             </p>
-                            <h3 class="s_avanzosc_caso_exito_title">Cadena retail multitienda + ecommerce (8 puntos físicos)</h3>
+                            <h2 class="s_avanzosc_caso_exito_title">Cadena retail multitienda + ecommerce (8 puntos físicos)</h2>
                             <p class="s_avanzosc_caso_exito_summary">POS multitienda + sync ecommerce + multialmacén con devoluciones omnicanal.</p>
                             <ul class="s_avanzosc_caso_exito_details">
                                 <li>POS Odoo en cada tienda + central de compras.</li>
@@ -185,7 +185,7 @@
                                 <span class="s_avanzosc_caso_exito_separator"> · </span>
                                 <span class="s_avanzosc_caso_exito_subsector">B2B mayorista con configurador</span>
                             </p>
-                            <h3 class="s_avanzosc_caso_exito_title">Distribuidor mayorista (catálogo +50.000 referencias)</h3>
+                            <h2 class="s_avanzosc_caso_exito_title">Distribuidor mayorista (catálogo +50.000 referencias)</h2>
                             <p class="s_avanzosc_caso_exito_summary">Configurador masivo + listas de precios por cliente + EDI + packs.</p>
                             <ul class="s_avanzosc_caso_exito_details">
                                 <li>Configurador para producto con variantes y compatibilidad.</li>
@@ -203,7 +203,7 @@
                                 <span class="s_avanzosc_caso_exito_separator"> · </span>
                                 <span class="s_avanzosc_caso_exito_subsector">Soporte técnico con SLA</span>
                             </p>
-                            <h3 class="s_avanzosc_caso_exito_title">Servicio IT/SAT con técnicos en ruta</h3>
+                            <h2 class="s_avanzosc_caso_exito_title">Servicio IT/SAT con técnicos en ruta</h2>
                             <p class="s_avanzosc_caso_exito_summary">Helpdesk + planning geolocalizado + facturación recurrente con SLA por contrato.</p>
                             <ul class="s_avanzosc_caso_exito_details">
                                 <li>Tickets con SLA por cliente y prioridad.</li>
@@ -221,7 +221,7 @@
                                 <span class="s_avanzosc_caso_exito_separator"> · </span>
                                 <span class="s_avanzosc_caso_exito_subsector">Educación con comunicación familias</span>
                             </p>
-                            <h3 class="s_avanzosc_caso_exito_title">Grupo educativo multicentro (4 colegios)</h3>
+                            <h2 class="s_avanzosc_caso_exito_title">Grupo educativo multicentro (4 colegios)</h2>
                             <p class="s_avanzosc_caso_exito_summary">Matriculación online + gestión académica multicentro + comunicación con familias.</p>
                             <ul class="s_avanzosc_caso_exito_details">
                                 <li>Matriculación online con generación automática de docs.</li>
@@ -241,7 +241,7 @@
                                 <span class="s_avanzosc_caso_exito_separator"> · </span>
                                 <span class="s_avanzosc_caso_exito_subsector">Mecanizado / metalúrgico exportador</span>
                             </p>
-                            <h3 class="s_avanzosc_caso_exito_title">Fabricante metal-mecánico (50-200 empleados)</h3>
+                            <h2 class="s_avanzosc_caso_exito_title">Fabricante metal-mecánico (50-200 empleados)</h2>
                             <p class="s_avanzosc_caso_exito_summary">Migración completa Excel → Odoo MRP con trazabilidad y multidivisa.</p>
                             <ul class="s_avanzosc_caso_exito_details">
                                 <li>MRP por capacidad finita y planificación por taller.</li>
