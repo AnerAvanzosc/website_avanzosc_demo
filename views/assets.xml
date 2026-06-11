@@ -25,6 +25,15 @@
              concretos serían más frágiles ante futuros cambios menores
              de Odoo. -->
         <xpath expr="//head" position="inside">
+            <!-- 0. Flag js-anim (L2.4, cierra D19) — inline síncrono: la
+                 clase existe ANTES del primer paint (ejecuta durante el
+                 parse), así que ocultar los estados pre-anim del hero bajo
+                 html.js-anim es atómico — cero flicker show-then-hide (el
+                 riesgo que descartó la Propuesta A en D19 era el orden
+                 inverso: revelar tarde). Sin JS la clase no se añade y el
+                 bloque de texto del hero queda visible por defecto. -->
+            <script type="text/javascript">document.documentElement.classList.add('js-anim');</script>
+
             <!-- 1. Google Fonts — preconnect (mejora TTFB de las fuentes).
                  Nota: NO añadimos preconnect para `cdnjs.cloudflare.com` ni
                  `cdn.jsdelivr.net`. Los <script> y <link rel="stylesheet">

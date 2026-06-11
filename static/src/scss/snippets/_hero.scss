@@ -490,7 +490,15 @@
     letter-spacing: -0.02em;
     color: var(--neutral-900, #0F1419);
     margin: 0 0 1.5rem 0;
-    opacity: 0;  // GSAP la establece a 1 tras orquestar la animación.
+
+    // L2.4 (lote perf 2026-06-11, cierra D19): el estado pre-anim vive
+    // bajo html.js-anim (clase añadida por un inline script síncrono en
+    // <head>, views/assets.xml). Sin JS (crawlers, JS bloqueado/fallido)
+    // la clase no existe → bloque de texto visible por defecto. Ocultar
+    // pre-paint es atómico: cero flicker. El widget hero.js no cambia.
+    html.js-anim & {
+        opacity: 0;  // GSAP la establece a 1 tras orquestar la animación.
+    }
 
     // Splitting.js produce <span class="char"> dentro del H1. Cada char
     // necesita display:inline-block para que su transform funcione (los
@@ -498,10 +506,13 @@
     // lo hace pero blindamos aquí por si la CDN falla.
     .char {
         display: inline-block;
-        opacity: 0;
-        transform: translateY(20px);
-        // GSAP timeline anima cada char: opacity 0 → 1 + y 20 → 0,
-        // duration 0.4s, stagger 0.025s, ease expo.out.
+
+        html.js-anim & {
+            opacity: 0;
+            transform: translateY(20px);
+            // GSAP timeline anima cada char: opacity 0 → 1 + y 20 → 0,
+            // duration 0.4s, stagger 0.025s, ease expo.out.
+        }
     }
 
     // El whitespace de Splitting es texto plano; no se anima — eso evita
@@ -518,9 +529,12 @@
     line-height: 1.5;
     color: var(--neutral-700, #3A4149);
     margin: 0 0 2.5rem 0;
-    opacity: 0;
-    transform: translateY(12px);
-    // GSAP: opacity 0→1 + y 12→0, duration 0.3s, delay 0.6s.
+
+    html.js-anim & {
+        opacity: 0;
+        transform: translateY(12px);
+        // GSAP: opacity 0→1 + y 12→0, duration 0.3s, delay 0.6s.
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -531,7 +545,11 @@
     align-items: center;
     gap: 1.5rem;
     flex-wrap: wrap;
-    opacity: 0;
+
+    html.js-anim & {
+        opacity: 0;
+        // GSAP: opacity 0→1, duration 0.3s, delay 0.9s.
+    }
 
     // UI-8 (tanda 2): en mobile el secundario quedaba pegado al primario
     // (wrap) y rozando las anotaciones CAD del borde inferior del hero.
@@ -539,7 +557,6 @@
         row-gap: 1.25rem;          // separa el secundario al envolver (20px)
         margin-bottom: 2rem;       // despeja las anotaciones X/SCALE (32px)
     }
-    // GSAP: opacity 0→1, duration 0.3s, delay 0.9s.
 }
 
 .s_avanzosc_hero_cta_primary {

@@ -286,6 +286,8 @@ El comentario inline ya existente en `_contacto.scss:31` («Si JS no carga, el S
 
 **Validación**: STOP-and-report del orquestador. No se modificó código bajo Propuesta A. Diagnóstico completo en branch session log; iteración alternativa en D20.
 
+**CERRADA en v18 con scoping `html.js-anim` (lote perf L2.4, 2026-06-11).** Re-medición Playwright+CDP en v18 (3 runs warm + 3 throttled CPU×4/1.6Mbps): gap first-paint → claim (elemento LCP) visible ≈ **280 ms** sin throttle; **>1,2 s** en móvil throttled; el subtítulo añade ~600 ms más que son delay coreográfico deliberado de la timeline, no carga. Solución implementada — la inversa segura de la Propuesta A: los estados pre-anim `opacity:0` del bloque de texto del hero (claim, .char, subtítulo, actions) viven bajo `html.js-anim`, clase añadida por un **inline script síncrono en `<head>`** (views/assets.xml) que ejecuta durante el parse, ANTES del primer paint → ocultar es atómico, cero flicker (el FOFC de la Propuesta A nacía de revelar/ocultar DESPUÉS del paint). Sin JS (crawlers, JS fallido) la clase no existe y el hero es visible por defecto — cierra también el residual a11y «opacity:0 permanente sin JS». El widget hero.js y la entrance no cambian; las decoraciones CAD quedan fuera del scope (su reveal es cosmético). El gap ~280 ms para usuarios CON JS se mantiene (inherente al arranque post-load del bundle lazy; recortarlo exigiría reordenar el bootstrap de la pieza firmada — no merece el riesgo).
+
 <a id="d20"></a>
 ### D20 — Page transition fade recortado 200→100 ms (Propuesta D); B diferida con criterio de reapertura
 
