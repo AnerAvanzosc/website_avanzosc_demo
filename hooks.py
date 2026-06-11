@@ -266,6 +266,33 @@ def post_init_remove_odoo_defaults(env):
         # Cascade D8: unlink propagates to all per-website copies of `url`.
         dummy.unlink()
 
+    # D8 extensión (T1.2, auditoría UI 2026-06-11) — «Home» core duplicado.
+    # El bootstrap crea copias per-website del canónico `website.menu_home`
+    # (url='/') que conviven con las copias de nuestro «Inicio» → el navbar
+    # mostraba dos items idénticos a '/'. NO se puede usar el patrón
+    # cascade-by-URL de arriba: el cascade del unlink() v18
+    # (website_menu.py:163-171) busca por URL e website_id != False y se
+    # llevaría TAMBIÉN nuestras copias de Inicio (misma url '/'). Tampoco
+    # se toca el canónico website.menu_home (mismo criterio que el resto de
+    # D8: los originales del Default Main Menu se preservan; además su
+    # unlink dispararía el mismo cascade). Unlink selectivo por copia:
+    # menús per-website con url='/' cuyo name (en_US, source lang de los
+    # records core/módulo) NO sea el de nuestro canónico menu_inicio.
+    # Comparar names traducidos sería frágil («Home» se renderiza «Inicio»
+    # en es_ES). Idempotente: segunda pasada no encuentra candidatos.
+    inicio_canonical = env.ref(
+        "website_avanzosc_demo.menu_inicio", raise_if_not_found=False
+    )
+    if inicio_canonical:
+        inicio_name = inicio_canonical.with_context(lang="en_US").name
+        home_copies = Menu.with_context(lang="en_US").search(
+            [("url", "=", "/"), ("website_id", "!=", False)]
+        ).filtered(lambda m: m.name != inicio_name)
+        if home_copies:
+            # Ninguna tiene parent = Default Main Menu root, así que el
+            # unlink no cascada (guard del filtered en unlink() core).
+            home_copies.unlink()
+
 
 def post_init_setup_languages(env):
     """Activate required languages and bind them to website 1.
