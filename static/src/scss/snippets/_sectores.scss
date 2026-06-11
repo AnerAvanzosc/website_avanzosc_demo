@@ -192,7 +192,7 @@
     display: block;
     background-color: var(--neutral-0, #FFFFFF);
     border: 1px solid var(--neutral-300, #D3D7DC);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     padding: 2rem;
     text-decoration: none;
     color: inherit;

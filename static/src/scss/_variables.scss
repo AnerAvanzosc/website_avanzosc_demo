@@ -9,6 +9,13 @@
     --brand-secondary: #1B2A41;     // TODO #spec-q3: pendiente de extracción del logo
     --brand-accent: #F5B800;
 
+    // Tokens de forma (UI-5, tanda 2 2026-06-11): 8 valores dispersos de
+    // border-radius consolidados en 2 tokens (+50% literal en circulares).
+    // sm: inputs, cards, chips, tooltips. lg: contenedores grandes
+    // (dashboard del caso de éxito, cards de equipo).
+    --radius-sm: 8px;
+    --radius-lg: 12px;
+
     --neutral-900: #0F1419;
     --neutral-700: #3A4149;
     // --neutral-500: ajustado de #7A828B a #646C75 en Sprint B3 (audit

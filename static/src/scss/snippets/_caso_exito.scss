@@ -182,7 +182,7 @@ $avanzosc-dim-opacity: 0.55;
     // por overflow:hidden del frame.
     .s_avanzosc_caso_exito_frame {
         background: #FFFFFF;
-        border-radius: 12px;
+        border-radius: var(--radius-lg);
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12),
                     0 4px 12px rgba(0, 0, 0, 0.06);
         overflow: hidden;
@@ -202,7 +202,7 @@ $avanzosc-dim-opacity: 0.55;
             // 12px sobre un container pequeño exagera la curvatura. La
             // columna ya era col-12 → 100% width, sin cambio de comportamiento
             // respecto a F1.2 v1.
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
         }
     }
 

@@ -148,7 +148,7 @@ nav.navbar.navbar-light .navbar-nav .nav-link {
 // (--brand-primary) vienen de Bootstrap override en _variables.scss.
 // -----------------------------------------------------------------------------
 .s_avanzosc_acceso_clientes {
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-weight: 600;
     white-space: nowrap;
     // Audit 8.1: 200ms está 100ms POR DEBAJO del rango micro 300-600ms.
