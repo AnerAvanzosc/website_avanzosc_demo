@@ -1744,3 +1744,10 @@ msgstr ""
 #, fuzzy
 msgid "Gracias · Avanzosc"
 msgstr "Eskerrik asko · Avanzosc"
+
+# DRAFT - REVIEW NEEDED — botón header «Acceso clientes» (T1.1; sin entrada previa, deuda heredada del template F3).
+#. module: website_avanzosc_demo
+#: model_terms:ir.ui.view,arch_db:website_avanzosc_demo.header_acceso_clientes
+#, fuzzy
+msgid "Acceso clientes"
+msgstr "Bezeroen sarbidea"

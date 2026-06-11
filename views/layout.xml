@@ -10,17 +10,23 @@
          ============================================================ -->
 
     <!-- 1. Botón «Acceso clientes» — override del CTA del header default.
-         v18: cta_btn_href/cta_btn_text are QWeb vars set in website.layout,
-         consumed by template_header_default via placeholder_header_call_to_action.
+         REGRESIÓN F3 corregida (T1.1, 2026-06-11): la vía v14 (override de
+         las QWeb vars cta_btn_href/cta_btn_text en website.layout) quedó
+         INERTE en v18 — las t-set siguen existiendo en website.layout
+         (website_templates.xml:182-183 v18) y la herencia aplicaba sin
+         error, pero ya NADA las consume: el CTA real es un <a> hardcodeado
+         href="/contactus" dentro de website.header_call_to_action
+         (website_templates.xml:2261-2272 v18), que template_header_default
+         invoca vía placeholder. Se hereda ese template y se reemplaza el
+         <a> conservando sus clases (btn_cta lleva los estilos y el glow).
+         Solo afecta a desktop: nuestro header mobile reemplaza íntegro el
+         buttons-wrap core con su propio «Acceso clientes» (ver abajo).
          href: /clientes (alias público redirige 301 a /web/login per Q2). -->
     <template id="header_acceso_clientes"
               name="Header: Acceso clientes button"
-              inherit_id="website.layout">
-        <xpath expr="//t[@t-set='cta_btn_href']" position="replace">
-            <t t-set="cta_btn_href">/clientes</t>
-        </xpath>
-        <xpath expr="//t[@t-set='cta_btn_text']" position="replace">
-            <t t-set="cta_btn_text">Acceso clientes</t>
+              inherit_id="website.header_call_to_action">
+        <xpath expr="//a[hasclass('btn_cta')]" position="replace">
+            <a href="/clientes" class="oe_unremovable btn btn-primary btn_cta">Acceso clientes</a>
         </xpath>
     </template>
 
