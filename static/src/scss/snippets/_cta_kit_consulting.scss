@@ -16,7 +16,13 @@
 // per simpleza — fade puro tiene impacto suficiente para una banner CTA.
 // -----------------------------------------------------------------------------
 .s_avanzosc_cta_kit {
-    background-color: var(--brand-accent, #F5B800);
+    // UI-9 (tanda 2): el accent #F5B800 está documentado en brand-guide
+    // como «highlights puntuales»; a banda full-bleed competía en
+    // saturación con el naranja brand. Tint + filete superior accent
+    // mantienen la identificación del programa sin gritar. Contraste
+    // texto neutral-900: 10.35:1 (antes) → 16.85:1 (ahora).
+    background-color: #FDF4D9;
+    border-top: 4px solid var(--brand-accent, #F5B800);
     padding: 5rem 0;
 
     @media (max-width: 767.98px) {
