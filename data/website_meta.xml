@@ -154,12 +154,15 @@
              que el resto de páginas del sitio. Patrón «X · Avanzosc». -->
         <record id="page_aviso_legal" model="ir.ui.view">
             <field name="website_meta_title">Aviso Legal · Avanzosc</field>
+            <field name="website_meta_description">Aviso legal del sitio web de Avanzosc S.L.: datos identificativos de la empresa, condiciones de uso y responsabilidad sobre los contenidos publicados.</field>
         </record>
         <record id="page_politica_privacidad" model="ir.ui.view">
             <field name="website_meta_title">Política de Privacidad · Avanzosc</field>
+            <field name="website_meta_description">Política de privacidad de Avanzosc S.L.: qué datos personales tratamos, con qué finalidad y cómo ejercer tus derechos de acceso, rectificación y supresión.</field>
         </record>
         <record id="page_politica_cookies" model="ir.ui.view">
             <field name="website_meta_title">Política de Cookies · Avanzosc</field>
+            <field name="website_meta_description">Política de cookies de Avanzosc S.L.: qué cookies utiliza este sitio web, con qué finalidad y cómo configurarlas o desactivarlas en tu navegador.</field>
         </record>
 
         <!-- /contacto/gracias — B2 (auditoría 2026-06-11): mismo fix de

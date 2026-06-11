@@ -1702,8 +1702,41 @@ msgstr "Pribatutasun Politika · Avanzosc"
 msgid "Política de Cookies · Avanzosc"
 msgstr "Cookieen Politika · Avanzosc"
 
+# DRAFT - REVIEW NEEDED — /aviso-legal meta description (L1.6, pendiente OK orquestador).
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_description:website_avanzosc_demo.page_aviso_legal
+#, fuzzy
+msgid ""
+"Aviso legal del sitio web de Avanzosc S.L.: datos identificativos de la "
+"empresa, condiciones de uso y responsabilidad sobre los contenidos "
+"publicados."
+msgstr ""
+"Avanzosc S.L.ren webguneko lege oharra: enpresaren identifikazio datuak, "
+"erabilera baldintzak eta argitaratutako edukien gaineko erantzukizuna."
 
+# DRAFT - REVIEW NEEDED — /politica-privacidad meta description (L1.6, pendiente OK orquestador).
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_description:website_avanzosc_demo.page_politica_privacidad
+#, fuzzy
+msgid ""
+"Política de privacidad de Avanzosc S.L.: qué datos personales tratamos, "
+"con qué finalidad y cómo ejercer tus derechos de acceso, rectificación y "
+"supresión."
+msgstr ""
+"Avanzosc S.L.ren pribatutasun politika: zein datu pertsonal tratatzen "
+"ditugun, zertarako, eta sarbide, zuzenketa eta ezabatze eskubideak nola "
+"erabili."
 
+# DRAFT - REVIEW NEEDED — /politica-cookies meta description (L1.6, pendiente OK orquestador).
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_description:website_avanzosc_demo.page_politica_cookies
+#, fuzzy
+msgid ""
+"Política de cookies de Avanzosc S.L.: qué cookies utiliza este sitio web, "
+"con qué finalidad y cómo configurarlas o desactivarlas en tu navegador."
+msgstr ""
+"Avanzosc S.L.ren cookie politika: webgune honek zein cookie erabiltzen "
+"dituen, zertarako, eta nabigatzailean nola konfiguratu edo desaktibatu."
 
 # DRAFT - REVIEW NEEDED — /contacto/gracias meta title (B2, fix título duplicado v18).
 #. module: website_avanzosc_demo
