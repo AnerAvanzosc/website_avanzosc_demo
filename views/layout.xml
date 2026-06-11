@@ -235,7 +235,7 @@
                             aria-label="Abrir menú"
                             aria-expanded="false"
                             aria-controls="s_avanzosc_mobile_overlay">
-                        <i data-lucide="menu"/>
+                        <i data-lucide="menu" aria-hidden="true"/>
                         <span class="s_avanzosc_sr_only">Abrir menú</span>
                     </button>
                 </li>
@@ -243,7 +243,7 @@
                     <a href="/clientes"
                        class="s_avanzosc_acceso_clientes_mobile"
                        aria-label="Acceso clientes">
-                        <i data-lucide="user"/>
+                        <i data-lucide="user" aria-hidden="true"/>
                         <span class="s_avanzosc_sr_only">Acceso clientes</span>
                     </a>
                 </li>
@@ -289,7 +289,7 @@
                         <button type="button"
                                 class="s_avanzosc_mobile_overlay_close"
                                 aria-label="Cerrar menú">
-                            <i data-lucide="x"/>
+                            <i data-lucide="x" aria-hidden="true"/>
                             <span class="s_avanzosc_sr_only">Cerrar menú</span>
                         </button>
                     </div>
@@ -304,7 +304,7 @@
                                         aria-expanded="false"
                                         aria-controls="s_avanzosc_mobile_overlay_submenu_soluciones">
                                     <span>Soluciones</span>
-                                    <i data-lucide="chevron-down"/>
+                                    <i data-lucide="chevron-down" aria-hidden="true"/>
                                 </button>
                                 <ul id="s_avanzosc_mobile_overlay_submenu_soluciones"
                                     class="s_avanzosc_mobile_overlay_submenu">
@@ -423,13 +423,49 @@
         <!-- Remove role="menuitem" del <a> de cada item del menú
              (top-level + dropdown leaves). El <a> es el único elemento
              dentro de website.submenu con role="menuitem". -->
+        <!-- IMPORTANTE (v18, M6): los xpath de herencia Odoo aplican SOLO
+             al primer match. El arch v18 de website.submenu tiene DOS <a
+             role="menuitem"> (leaf :9 y dropdown toggle :18), DOS <li
+             role="presentation"> (:6, :15) y un <div role="menuitem">
+             (mega menu :26). Se repite cada xpath por ocurrencia: tras
+             limpiar la primera, la misma expresión matchea la siguiente. -->
         <xpath expr="//a[@role='menuitem']" position="attributes">
+            <attribute name="role"></attribute>
+        </xpath>
+        <xpath expr="//a[@role='menuitem']" position="attributes">
+            <attribute name="role"></attribute>
+        </xpath>
+        <xpath expr="//div[@role='menuitem']" position="attributes">
             <attribute name="role"></attribute>
         </xpath>
         <!-- Remove role="menu" del <ul class="dropdown-menu"> que envuelve
              los items del dropdown — sin role en el padre, eliminar role
              en los hijos mantiene la consistencia ARIA (WAI-ARIA pattern
              de menu requiere ambos o ninguno). -->
+        <xpath expr="//ul[@role='menu']" position="attributes">
+            <attribute name="role"></attribute>
+        </xpath>
+        <!-- v18 añade role="presentation" a los <li> del submenu (leaf y
+             dropdown, website_templates.xml:6,15 core v18). Coherente con
+             la decisión C1 (sin menubar/menu, los li son list items
+             normales), se limpian también (×2, ver nota de arriba). -->
+        <xpath expr="//li[@role='presentation']" position="attributes">
+            <attribute name="role"></attribute>
+        </xpath>
+        <xpath expr="//li[@role='presentation']" position="attributes">
+            <attribute name="role"></attribute>
+        </xpath>
+    </template>
+
+    <!-- C1 (extensión v18) — el <ul id="top_menu"> lleva ahora role="menu"
+         en el propio core (website.navbar_nav, website_templates.xml:355
+         v18), no solo los dropdown. Con li/a sin roles (template anterior),
+         un role="menu" sin menuitem hijos dispara axe critical
+         aria-required-children en TODAS las páginas (verificado runtime
+         auditoría 2026-06-11 M6). Misma decisión C1: limpiar el role. -->
+    <template id="navbar_nav_remove_role_menu"
+              name="Header: remove ARIA role=menu from top_menu ul (C1 v18)"
+              inherit_id="website.navbar_nav">
         <xpath expr="//ul[@role='menu']" position="attributes">
             <attribute name="role"></attribute>
         </xpath>

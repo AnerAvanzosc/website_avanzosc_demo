@@ -233,9 +233,12 @@
                         box-shadow 200ms ease-out;
 
             &:focus {
+                // Ring sólido ≥3:1 sobre blanco (WCAG 1.4.11): el alfa 0.15
+                // original blendeaba a ~1.2:1. --brand-primary-dark #C44015
+                // da 5.13:1 (y se actualizará en bloque con el hex del logo).
                 outline: none;
-                border-color: var(--brand-primary);
-                box-shadow: 0 0 0 3px rgba(232, 93, 47, 0.15);
+                border-color: var(--brand-primary-dark);
+                box-shadow: 0 0 0 2px var(--brand-primary-dark);
             }
         }
 

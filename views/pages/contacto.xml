@@ -56,7 +56,7 @@
                                         <h2 class="s_avanzosc_contacto_info_heading">Canales directos</h2>
 
                                         <div class="s_avanzosc_contacto_info_item">
-                                            <i data-lucide="mail" class="s_avanzosc_contacto_info_icon"/>
+                                            <i data-lucide="mail" class="s_avanzosc_contacto_info_icon" aria-hidden="true"/>
                                             <div class="s_avanzosc_contacto_info_content">
                                                 <span class="s_avanzosc_contacto_info_label">Email</span>
                                                 <a href="mailto:comercial@avanzosc.es" class="s_avanzosc_contacto_info_value">comercial@avanzosc.es</a>
@@ -64,7 +64,7 @@
                                         </div>
 
                                         <div class="s_avanzosc_contacto_info_item">
-                                            <i data-lucide="phone" class="s_avanzosc_contacto_info_icon"/>
+                                            <i data-lucide="phone" class="s_avanzosc_contacto_info_icon" aria-hidden="true"/>
                                             <div class="s_avanzosc_contacto_info_content">
                                                 <span class="s_avanzosc_contacto_info_label">Teléfono</span>
                                                 <a href="tel:+34943026902" class="s_avanzosc_contacto_info_value">943 026 902</a>
@@ -72,7 +72,7 @@
                                         </div>
 
                                         <div class="s_avanzosc_contacto_info_item">
-                                            <i data-lucide="map-pin" class="s_avanzosc_contacto_info_icon"/>
+                                            <i data-lucide="map-pin" class="s_avanzosc_contacto_info_icon" aria-hidden="true"/>
                                             <div class="s_avanzosc_contacto_info_content">
                                                 <span class="s_avanzosc_contacto_info_label">Dirección</span>
                                                 <address class="s_avanzosc_contacto_info_value">
@@ -89,7 +89,7 @@
 
                                         <!-- DRAFT humano: horario real -->
                                         <div class="s_avanzosc_contacto_info_item">
-                                            <i data-lucide="clock" class="s_avanzosc_contacto_info_icon"/>
+                                            <i data-lucide="clock" class="s_avanzosc_contacto_info_icon" aria-hidden="true"/>
                                             <div class="s_avanzosc_contacto_info_content">
                                                 <span class="s_avanzosc_contacto_info_label">Horario</span>
                                                 <table class="s_avanzosc_contacto_info_horario">

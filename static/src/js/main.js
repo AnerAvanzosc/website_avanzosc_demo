@@ -6,6 +6,35 @@ publicWidget.registry.AvanzoscRoot = publicWidget.Widget.extend({
         selector: '#wrap',
         start: function () {
             // ----------------------------------------------------------------
+            // M6 (auditoría 2026-06-11) — el overflow menu «+» del navbar
+            // (o_extra_menu_items) lo genera el JS core auto_hide_menu.js
+            // con role="presentation" en un <div> hijo directo del <ul> y
+            // role="menuitem" en su toggle — markup inconsistente con la
+            // decisión C1 (roles de menú eliminados vía herencia XML en
+            // layout.xml) y disparador de axe critical aria-required-parent
+            // + serious list. Al ser DOM generado en runtime no es alcanzable
+            // por xpath: se corrige aquí cuando aparece. role="listitem" en
+            // el div (es un item de la lista del nav, igual que sus <li>
+            // hermanos) y sin role en el link, como el resto del navbar C1.
+            // ----------------------------------------------------------------
+            var topMenu = document.querySelector('header#top .top_menu');
+            if (topMenu && 'MutationObserver' in window) {
+                var fixExtraMenu = function () {
+                    var extra = topMenu.querySelector('.o_extra_menu_items');
+                    if (!extra) { return false; }
+                    extra.setAttribute('role', 'listitem');
+                    var toggle = extra.querySelector('.dropdown-toggle');
+                    if (toggle) { toggle.removeAttribute('role'); }
+                    return true;
+                };
+                if (!fixExtraMenu()) {
+                    var menuObserver = new MutationObserver(function () {
+                        if (fixExtraMenu()) { menuObserver.disconnect(); }
+                    });
+                    menuObserver.observe(topMenu, { childList: true });
+                }
+            }
+            // ----------------------------------------------------------------
             // Lenis smooth scroll — inicialización global.
             // No inicializar si el usuario tiene prefers-reduced-motion: reduce
             // activado. CLAUDE.md §5, spec §9.1 (Lenis 1.0.42).

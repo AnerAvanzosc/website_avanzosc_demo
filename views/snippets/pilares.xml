@@ -41,9 +41,9 @@
                          relative scopea el position absolute del tooltip. -->
                     <div class="col-12 col-md-4">
                         <div class="s_avanzosc_pilares_item">
-                            <div class="s_avanzosc_pilares_number_wrapper" tabindex="0">
+                            <div class="s_avanzosc_pilares_number_wrapper" tabindex="0" aria-describedby="s_avanzosc_pilares_tooltip_oca">
                                 <span class="s_avanzosc_pilares_number s_avanzosc_pilares_oca">OCA</span>
-                                <div class="s_avanzosc_pilares_tooltip" role="tooltip" aria-hidden="true">
+                                <div class="s_avanzosc_pilares_tooltip" role="tooltip" id="s_avanzosc_pilares_tooltip_oca">
                                     <span>Odoo Community Association</span>
                                 </div>
                             </div>
@@ -54,9 +54,9 @@
                          tooltip al hover (F3 v8) expandiendo el acrónimo. -->
                     <div class="col-12 col-md-4">
                         <div class="s_avanzosc_pilares_item">
-                            <div class="s_avanzosc_pilares_number_wrapper" tabindex="0">
+                            <div class="s_avanzosc_pilares_number_wrapper" tabindex="0" aria-describedby="s_avanzosc_pilares_tooltip_stem">
                                 <span class="s_avanzosc_pilares_number s_avanzosc_pilares_stem">STEM</span>
-                                <div class="s_avanzosc_pilares_tooltip" role="tooltip" aria-hidden="true">
+                                <div class="s_avanzosc_pilares_tooltip" role="tooltip" id="s_avanzosc_pilares_tooltip_stem">
                                     <span>Science, Technology, Engineering, Mathematics</span>
                                 </div>
                             </div>
