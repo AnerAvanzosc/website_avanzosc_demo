@@ -71,7 +71,9 @@
 // -----------------------------------------------------------------------------
 .s_avanzosc_cta_contacto_heading {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 2.5rem;
+    // UI-4 (tanda 2): el cierre del funnel pesaba igual (40px) que los
+    // headings de sección intermedia; un escalón más como clímax.
+    font-size: clamp(2.75rem, 4vw, 3.5rem);
     font-weight: 600;
     line-height: 1.2;
     letter-spacing: -0.02em;
