@@ -57,7 +57,7 @@ header {
         // Bootstrap (0 .125rem .25rem rgba(0,0,0,.075)). Diferenciación
         // sutil — separa visualmente el header del contenido scrolleable
         // sin agresividad.
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        box-shadow: var(--shadow-sm);
 
         nav.navbar {
             padding-top: 0.5rem;

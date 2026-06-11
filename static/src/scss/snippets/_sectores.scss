@@ -262,7 +262,7 @@
         // así que !important es la vía pragmática (vs refactor de la
         // regla reveal o cadena de selectors larga).
         transform: translateY(-6px) scale(1.03) !important;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
+        box-shadow: var(--shadow-lg);
         border-color: var(--brand-primary, #E85D2F);
         z-index: 2;
     }

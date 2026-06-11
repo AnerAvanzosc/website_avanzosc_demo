@@ -16,6 +16,16 @@
     --radius-sm: 8px;
     --radius-lg: 12px;
 
+    // Tokens de elevación (UI-6, tanda 2 2026-06-11): 10 sombras dispersas
+    // consolidadas en 3 niveles. EXCLUIDOS por diseño: el glow naranja del
+    // avatar CEO (_equipo.scss, semántico firmado), el glow del CTA
+    // (_cta_contacto.scss) y los focus rings 0 0 0 2px (indicadores, no
+    // elevación). sm: resting/sticky header. md: tooltips, avatares hover.
+    // lg: cards en hover, dashboard.
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.16);
+
     --neutral-900: #0F1419;
     --neutral-700: #3A4149;
     // --neutral-500: ajustado de #7A828B a #646C75 en Sprint B3 (audit

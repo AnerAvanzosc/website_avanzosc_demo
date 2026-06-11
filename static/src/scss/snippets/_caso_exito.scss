@@ -183,8 +183,7 @@ $avanzosc-dim-opacity: 0.55;
     .s_avanzosc_caso_exito_frame {
         background: #FFFFFF;
         border-radius: var(--radius-lg);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12),
-                    0 4px 12px rgba(0, 0, 0, 0.06);
+        box-shadow: var(--shadow-lg);
         overflow: hidden;
         // F1.2 v2: sin max-width ni margin auto — el frame ocupa todo el
         // ancho natural de la columna (col-lg-5 desktop, col-12 mobile).

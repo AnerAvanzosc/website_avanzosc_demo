@@ -194,7 +194,7 @@
     border-radius: 50%;
     border: 1px solid var(--neutral-300, #D3D7DC);
     background-color: var(--neutral-0, #FFFFFF);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-sm);
     color: var(--neutral-700, #3A4149);
     font-family: 'Space Grotesk', sans-serif;
     font-size: 1.5rem;

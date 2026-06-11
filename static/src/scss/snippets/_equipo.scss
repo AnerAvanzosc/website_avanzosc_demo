@@ -85,7 +85,7 @@
     gap: 1rem;
     align-items: center;
     position: relative;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--shadow-sm);
     transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
                 box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1),
                 opacity 280ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -191,7 +191,7 @@
 .s_avanzosc_equipo_card.is-hovered {
     transform: translateY(-6px) scale(1.06);
     transform-origin: center center;
-    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.18);
+    box-shadow: var(--shadow-lg);
     z-index: 2;
 }
 
@@ -200,7 +200,7 @@
 // MANTENER box-shadow para el glow semántico (naranja CEO o oscuro
 // resto), que es color, no motion.
 .s_avanzosc_equipo_card.is-hovered .s_avanzosc_equipo_card_avatar {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-md);
 }
 
 // CEO hovered: drop-shadow naranja en avatar, en vez del oscuro.
@@ -221,7 +221,7 @@
     .s_avanzosc_equipo_card.is-hovered {
         transform: none;
         z-index: auto;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        box-shadow: var(--shadow-sm);
     }
     .s_avanzosc_equipo_card.is-hovered .s_avanzosc_equipo_card_avatar {
         box-shadow: none;
