@@ -1,5 +1,7 @@
-odoo.define('website_avanzosc_demo.snippets.contador', function (require) {
-    'use strict';
+/** @odoo-module **/
+
+import publicWidget from "@web/legacy/js/public/public_widget";
+import countUp from "@website_avanzosc_demo/js/utils/count_up";
 
     // -------------------------------------------------------------------
     // Snippet `s_avanzosc_contador` — animated count-up (Task 3.5).
@@ -35,17 +37,14 @@ odoo.define('website_avanzosc_demo.snippets.contador', function (require) {
     // distinta y merece su propio observer + timing.
     // -------------------------------------------------------------------
 
-    var publicWidget = require('web.public.widget');
-    var countUp = require('website_avanzosc_demo.utils.count_up');
+// F1 refactor: la lógica de count-up (easeOutCubic + animate + paintFinal)
+// se extrajo a `website_avanzosc_demo.utils.count_up` para que F1
+// (caso_exito.js KPI animación del SVG dashboard) la reutilice sin
+// duplicar. Comportamiento idéntico al previo: 1500ms easeOutCubic,
+// one-shot via `data-counted="true"`, threshold IO 0.5.
+const THRESHOLD = 0.5;
 
-    // F1 refactor: la lógica de count-up (easeOutCubic + animate + paintFinal)
-    // se extrajo a `website_avanzosc_demo.utils.count_up` para que F1
-    // (caso_exito.js KPI animación del SVG dashboard) la reutilice sin
-    // duplicar. Comportamiento idéntico al previo: 1500ms easeOutCubic,
-    // one-shot via `data-counted="true"`, threshold IO 0.5.
-    var THRESHOLD = 0.5;
-
-    publicWidget.registry.AvanzoscContador = publicWidget.Widget.extend({
+publicWidget.registry.AvanzoscContador = publicWidget.Widget.extend({
         selector: '.s_avanzosc_contador',
 
         start: function () {
@@ -75,4 +74,3 @@ odoo.define('website_avanzosc_demo.snippets.contador', function (require) {
             return this._super.apply(this, arguments);
         },
     });
-});

@@ -1,5 +1,8 @@
-odoo.define('website_avanzosc_demo.snippets.caso_exito', function (require) {
-    'use strict';
+/** @odoo-module **/
+
+import publicWidget from "@web/legacy/js/public/public_widget";
+import countUp from "@website_avanzosc_demo/js/utils/count_up";
+import hoverUtil from "@website_avanzosc_demo/js/utils/hover_orchestrator";
 
     // -------------------------------------------------------------------
     // F1 — animación de entrada del SVG dashboard de §6 Caso éxito (home).
@@ -50,15 +53,11 @@ odoo.define('website_avanzosc_demo.snippets.caso_exito', function (require) {
     //   - Donut: 1 <path class="s_avanzosc_caso_exito_donut_fill">.
     // -------------------------------------------------------------------
 
-    var publicWidget = require('web.public.widget');
-    var countUp = require('website_avanzosc_demo.utils.count_up');
-    var hoverUtil = require('website_avanzosc_demo.utils.hover_orchestrator');
-
-    var IO_THRESHOLD = 0.4;
-    var KPI_DURATION_MS = 1500;
-    var BAR_DELAY_MS = 400;
-    var BAR_STAGGER_MS = 80;
-    var DONUT_DELAY_MS = 1100;
+const IO_THRESHOLD = 0.4;
+const KPI_DURATION_MS = 1500;
+const BAR_DELAY_MS = 400;
+const BAR_STAGGER_MS = 80;
+const DONUT_DELAY_MS = 1100;
 
     // Selector compuesto para findHoverTarget del orchestrator — los 3
     // tipos de hover-target dentro del SVG. Single-source-of-truth.
@@ -163,4 +162,3 @@ odoo.define('website_avanzosc_demo.snippets.caso_exito', function (require) {
             return this._super.apply(this, arguments);
         },
     });
-});

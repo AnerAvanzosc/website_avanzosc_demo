@@ -1,5 +1,7 @@
-odoo.define('website_avanzosc_demo.snippets.pilares', function (require) {
-    'use strict';
+/** @odoo-module **/
+
+import publicWidget from "@web/legacy/js/public/public_widget";
+import countUp from "@website_avanzosc_demo/js/utils/count_up";
 
     // -------------------------------------------------------------------
     // Snippet `s_avanzosc_pilares` — reveal-on-scroll + F3 v4 entries.
@@ -39,12 +41,9 @@ odoo.define('website_avanzosc_demo.snippets.pilares', function (require) {
     // procesos disparados directo (sin delay).
     // -------------------------------------------------------------------
 
-    var publicWidget = require('web.public.widget');
-    var countUp = require('website_avanzosc_demo.utils.count_up');
-
-    var REVEAL_THRESHOLD = 0.2;
-    var TRIGGER_DELAY_MS = 200;
-    var NUMBER_DURATION_MS = 1500;
+const REVEAL_THRESHOLD = 0.2;
+const TRIGGER_DELAY_MS = 200;
+const NUMBER_DURATION_MS = 1500;
     var ROULETTE_INTERVAL_MS = 43;             // ms por salto, igual para los 3 chars.
     var ROULETTE_MAX_STEPS_BASE = 14;          // saltos del rodillo «máster» (char 0).
     var ROULETTE_STOP_STAGGER_STEPS = 2;       // cada char i para 2*i saltos más tarde.
@@ -180,4 +179,3 @@ odoo.define('website_avanzosc_demo.snippets.pilares', function (require) {
             return this._super.apply(this, arguments);
         },
     });
-});

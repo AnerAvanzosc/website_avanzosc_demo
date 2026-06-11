@@ -1,5 +1,7 @@
-odoo.define('website_avanzosc_demo.snippets.equipo', function (require) {
-    'use strict';
+/** @odoo-module **/
+
+import publicWidget from "@web/legacy/js/public/public_widget";
+import hoverUtil from "@website_avanzosc_demo/js/utils/hover_orchestrator";
 
     // -------------------------------------------------------------------
     // F2 v2 — hover dramático sobre el grid de 8 tarjetas del equipo.
@@ -28,10 +30,7 @@ odoo.define('website_avanzosc_demo.snippets.equipo', function (require) {
     // por AvanzoscReveal (reveal.js) — sin interferencia.
     // -------------------------------------------------------------------
 
-    var publicWidget = require('web.public.widget');
-    var hoverUtil = require('website_avanzosc_demo.utils.hover_orchestrator');
-
-    publicWidget.registry.AvanzoscEquipo = publicWidget.Widget.extend({
+publicWidget.registry.AvanzoscEquipo = publicWidget.Widget.extend({
         selector: '.s_avanzosc_equipo',
 
         start: function () {
@@ -63,4 +62,3 @@ odoo.define('website_avanzosc_demo.snippets.equipo', function (require) {
             return this._super.apply(this, arguments);
         },
     });
-});
