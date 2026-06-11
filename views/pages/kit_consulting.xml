@@ -23,6 +23,15 @@
 
         <template id="page_kit_consulting" name="Avanzosc · Kit Consulting">
             <t t-call="website.layout">
+                <!-- D5/M9 (auditoría 2026-06-11): kit-consulting es ES-only.
+                     Restringir frontend_languages a es_ES en esta página:
+                     con len()==1 el layout core omite el bloque hreflang
+                     (website_templates.xml:144 v18) — sin par EU apuntando
+                     a /eu_ES/kit-consulting, que ahora 301ea a ES (ver
+                     models/ir_http.py) — y oculta el language switcher,
+                     que solo rebotaría al visitante de vuelta a ES. -->
+                <t t-set="frontend_languages"
+                   t-value="{code: lg for code, lg in frontend_languages.items() if code == 'es_ES'}"/>
                 <div id="wrap">
                     <div>
                         <section class="s_avanzosc_kit_hero" data-avanzosc-reveal="">
