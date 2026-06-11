@@ -57,19 +57,29 @@
                   href="https://cdn.jsdelivr.net/npm/splitting@1.0.6/dist/splitting.css"/>
 
             <!-- 4. Lucide Icons 0.453.0 UMD build — expone el global `lucide`.
-                 Sin atributo defer: ejecuta síncronamente durante el parse,
-                 antes de que los bundles defer de Odoo arranquen los widgets.
+                 CONTRATO DE ORDEN (L2.3, lote perf 2026-06-11): los 5 CDN
+                 llevan `defer` — ejecutan en orden documental como muy
+                 tarde en DOMContentLoaded. Nuestros widgets viven en
+                 `web.assets_frontend`, que v18 sirve como bundle LAZY
+                 (`data-src`, inyectado por el lazyloader del bundle
+                 minimal DESPUÉS de `load`) → siempre posterior a DCL: los
+                 globals están garantizados cuando los widgets arrancan,
+                 sin guards adicionales. Medido baseline: blocking CDN
+                 0,5-1,5s estimados en first-visit móvil real; con defer el
+                 primer paint no espera a los CDN.
+                 RIESGO RESIDUAL: si algún día se registra JS propio en un
+                 bundle EAGER (p.ej. assets_frontend_minimal), ese código
+                 NO puede asumir los globals — revisar este contrato.
                  La llamada lucide.createIcons() vive en main.js dentro de
-                 publicWidget.AvanzoscRoot.start(), que dispara después de
-                 que el módulo Odoo esté cargado.
+                 publicWidget.AvanzoscRoot.start().
                  Ref: CLAUDE.md §9.7, spec §9 tabla de versiones. -->
-            <script type="text/javascript"
+            <script type="text/javascript" defer="defer"
                     src="https://cdn.jsdelivr.net/npm/lucide@0.453.0/dist/umd/lucide.min.js"/>
 
-            <!-- 5. GSAP 3.12.5 — core. Debe cargar antes de cualquier plugin.
-                 Sin defer: expone el global `gsap` síncronamente.
+            <!-- 5. GSAP 3.12.5 — core. Debe cargar antes de cualquier plugin
+                 (defer preserva el orden documental: gsap → ScrollTrigger).
                  Ref: spec §9.1 tabla de versiones. -->
-            <script type="text/javascript"
+            <script type="text/javascript" defer="defer"
                     src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"/>
 
             <!-- 6. GSAP ScrollTrigger 3.12.5 — re-introducido para Pieza E v3
@@ -82,19 +92,19 @@
                  al cerrar `deferred-timeline-scrolljacking` con approach H
                  (decisions-log §6).
                  Ref: D27 (Pieza A), Pieza E v3 brief sesión 2026-05-05. -->
-            <script type="text/javascript"
+            <script type="text/javascript" defer="defer"
                     src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"/>
 
             <!-- 7. Splitting.js 1.0.6 JS — reemplazo MIT de GSAP SplitText.
                  Expone el global `Splitting`. Usado en hero para split por letra.
                  Ref: spec §9.1 (nota: descarte de SplitText en favor de Splitting.js MIT). -->
-            <script type="text/javascript"
+            <script type="text/javascript" defer="defer"
                     src="https://cdn.jsdelivr.net/npm/splitting@1.0.6/dist/splitting.min.js"/>
 
             <!-- 8. Lenis 1.0.42 — smooth scroll global. Expone el global `Lenis`.
                  La instancia se crea en Task 0.6; aquí solo se registra la librería.
                  Ref: spec §9.1 tabla de versiones, CLAUDE.md §5 (smooth scroll con Lenis). -->
-            <script type="text/javascript"
+            <script type="text/javascript" defer="defer"
                     src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"/>
         </xpath>
     </template>
