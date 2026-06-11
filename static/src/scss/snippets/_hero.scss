@@ -126,7 +126,7 @@
     .s_avanzosc_hero_lines_secondary {
         stroke-opacity: 0.2;
         // Pieza A v2 — glow al hover de zona: stroke-opacity 0.2→0.6
-        // y stroke-width 1→1.5px con transition 200ms ease-out.
+        // y stroke-width 1→1.5px con transition 200ms curva canónica.
         // JS añade .is-glow al path activo según zona-cuadrante del cursor.
         // currentColor mantiene --neutral-500 (lenguaje "blueprint discreto"
         // intacto, sin saltar a brand-primary).

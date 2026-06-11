@@ -370,7 +370,7 @@
             background-color: var(--neutral-300, #D3D7DC);
             z-index: 3;
             pointer-events: none;
-            transition: background-color 200ms ease;
+            transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
 
             &.is-passed {
                 background-color: var(--brand-primary, #E85D2F);

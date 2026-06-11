@@ -156,7 +156,7 @@ nav.navbar.navbar-light .navbar-nav .nav-link {
     // Bootstrap 150ms). Por debajo de 300ms el hover responde de inmediato,
     // un valor del rango micro (≥300ms) haría que el botón se sintiera
     // perezoso al pasar el cursor. Decisión consciente Phase 1.2.
-    transition: background-color 200ms ease-out, transform 200ms ease-out;
+    transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1), transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover,
     &:focus {
@@ -297,7 +297,7 @@ header nav.navbar .navbar-toggler {
     border: none;
     color: var(--neutral-900, #0F1419);
     cursor: pointer;
-    transition: color 200ms ease-out;
+    transition: color 200ms cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover,
     &:focus {
@@ -325,7 +325,7 @@ header nav.navbar .navbar-toggler {
     padding: 0;
     color: var(--neutral-900, #0F1419);
     text-decoration: none;
-    transition: color 200ms ease-out;
+    transition: color 200ms cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover,
     &:focus {
@@ -387,14 +387,14 @@ header nav.navbar .navbar-toggler {
     // 150-250ms. El usuario espera respuesta inmediata al tap del
     // hamburger; 300ms+ haría sentir lag. Decisión Phase 7.2 sesión
     // 2026-04-29 (decisión C explícita: «fade 200ms (sólo opacity)»).
-    transition: opacity 200ms ease-out, visibility 0s linear 200ms;
+    transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 200ms;
     overflow-y: auto;  // scroll interno del overlay si el menú es largo
 
     &.is-open {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-        transition: opacity 200ms ease-out, visibility 0s linear 0s;
+        transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0s;
     }
 
     @include reduced-motion {
@@ -427,7 +427,7 @@ header nav.navbar .navbar-toggler {
     border: none;
     color: var(--neutral-900, #0F1419);
     cursor: pointer;
-    transition: color 200ms ease-out;
+    transition: color 200ms cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover,
     &:focus {
@@ -500,7 +500,7 @@ header nav.navbar .navbar-toggler {
     .s_avanzosc_mobile_overlay_dropdown_toggle [data-lucide="chevron-down"] {
         width: 20px;
         height: 20px;
-        transition: transform 200ms ease-out;
+        transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     &.is-expanded {

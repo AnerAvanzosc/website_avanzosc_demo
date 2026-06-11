@@ -229,8 +229,8 @@
             background: var(--neutral-0);
             border: 1px solid var(--neutral-300);
             border-radius: 0.375rem;
-            transition: border-color 200ms ease-out,
-                        box-shadow 200ms ease-out;
+            transition: border-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1);
 
             &:focus {
                 // Ring sólido ≥3:1 sobre blanco (WCAG 1.4.11): el alfa 0.15
