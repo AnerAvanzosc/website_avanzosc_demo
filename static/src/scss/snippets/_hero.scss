@@ -532,6 +532,13 @@
     gap: 1.5rem;
     flex-wrap: wrap;
     opacity: 0;
+
+    // UI-8 (tanda 2): en mobile el secundario quedaba pegado al primario
+    // (wrap) y rozando las anotaciones CAD del borde inferior del hero.
+    @media (max-width: 767.98px) {
+        row-gap: 1.25rem;          // separa el secundario al envolver (20px)
+        margin-bottom: 2rem;       // despeja las anotaciones X/SCALE (32px)
+    }
     // GSAP: opacity 0→1, duration 0.3s, delay 0.9s.
 }
 

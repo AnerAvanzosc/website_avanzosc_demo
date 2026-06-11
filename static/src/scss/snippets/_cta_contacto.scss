@@ -46,7 +46,8 @@
     }
 
     @media (max-width: 767.98px) {
-        padding: 3rem 0;
+        // UI-8 (tanda 2): el subtítulo tocaba los bordes del viewport.
+        padding: 3rem 1.5rem;
     }
 }
 
