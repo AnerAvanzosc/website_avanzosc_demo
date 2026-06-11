@@ -1,0 +1,86 @@
+// -----------------------------------------------------------------------------
+// Página /kit-consulting — UI-1 (tanda 2, 2026-06-11).
+// La página nació en Phase 6 sin SCSS propio (clases s_avanzosc_kit_* sin
+// regla alguna): h1 pegado al header, bullets disc de serie y ritmo plano.
+// Este partial la alinea con el design system del sitio: padding de hero
+// estándar, listas flecha → (patrón _sector_specifics/_caso_exito), ritmo
+// vertical 80px y disclaimer diferenciado. El cierre es el snippet común
+// s_avanzosc_cta_contacto (t-call en views/pages/kit_consulting.xml).
+// -----------------------------------------------------------------------------
+
+.s_avanzosc_kit_hero {
+    padding: 96px 0 64px;
+}
+
+.s_avanzosc_kit_subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: var(--neutral-700, #3A4149);
+    margin: 1rem 0 0;
+    max-width: 38rem;
+}
+
+.s_avanzosc_kit_descripcion,
+.s_avanzosc_kit_requisitos {
+    padding: 40px 0;
+}
+
+// Aire antes del cierre (la banda CTA común ya trae su propio padding).
+.s_avanzosc_kit_requisitos {
+    padding-bottom: 80px;
+}
+
+.s_avanzosc_kit_heading {
+    margin-bottom: 1.25rem;
+}
+
+.s_avanzosc_kit_paragraph {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: var(--neutral-700, #3A4149);
+    margin: 0;
+}
+
+// Lista de requisitos con flecha → como bullet (mismo patrón que
+// _sector_specifics.scss y caso_exito; 1 columna: items largos).
+.s_avanzosc_kit_lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+
+    li {
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: var(--neutral-700, #3A4149);
+        padding-left: 1.5rem;
+        position: relative;
+
+        &::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--brand-primary, #E85D2F);
+            font-weight: 600;
+        }
+    }
+}
+
+.s_avanzosc_kit_disclaimer {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9375rem;
+    color: var(--neutral-500, #646C75);
+    margin: 1.5rem 0 0;
+
+    a {
+        color: var(--brand-primary-dark, #C44015);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+}

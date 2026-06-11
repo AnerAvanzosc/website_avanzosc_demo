@@ -117,6 +117,7 @@
             # SCSS — post-v1
             "website_avanzosc_demo/static/src/scss/snippets/_page_transition.scss",
             "website_avanzosc_demo/static/src/scss/snippets/_contacto.scss",
+            "website_avanzosc_demo/static/src/scss/snippets/_kit_page.scss",
             # SCSS — main (último para overrides globales)
             "website_avanzosc_demo/static/src/scss/main.scss",
             # JS — entry

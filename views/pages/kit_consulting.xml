@@ -37,7 +37,10 @@
                         <section class="s_avanzosc_kit_hero" data-avanzosc-reveal="">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-12 col-lg-10 offset-lg-1">
+                                    <!-- UI-1 (d): eje único — mismo col/offset que las
+                                         secciones de contenido (antes col-10 offset-1, que
+                                         creaba una escalera de 3 indentaciones). -->
+                                    <div class="col-12 col-lg-8 offset-lg-2">
                                         <h1 class="s_avanzosc_kit_claim">Kit Consulting</h1>
                                         <p class="s_avanzosc_kit_subtitle">Subvención Red.es para asesoría especializada en digitalización.</p>
                                     </div>
@@ -74,15 +77,12 @@
                             </div>
                         </section>
 
-                        <section class="s_avanzosc_kit_cta" data-avanzosc-reveal="">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-12 col-lg-8 offset-lg-2 text-center">
-                                        <a href="/contacto" class="btn btn-primary btn-lg">Hablar con Avanzosc</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
+                        <!-- UI-1 (c): cierre con la banda común del sitio en lugar
+                             del botón suelto (redundante: la banda ya lleva el CTA
+                             primario a /contacto). El snippet es autocontenido y
+                             funciona en página interior (reveal + glow, igual que
+                             en las sectoriales). -->
+                        <t t-call="website_avanzosc_demo.s_avanzosc_cta_contacto"/>
                     </div>
                 </div>
             </t>
