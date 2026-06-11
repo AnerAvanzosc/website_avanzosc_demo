@@ -125,6 +125,22 @@
             <field name="website_meta_description">Avanzosc participa en el programa Kit Consulting de Red.es como entidad consultora. Asesoramiento en transformación digital para pymes industriales.</field>
         </record>
 
+        <!-- Páginas legales — fix título duplicado v18. Sin meta_title
+             explícito, v18 cae al fallback `view.name | website.name` y
+             el `name` de los templates ya lleva el prefijo «Avanzosc · »
+             → render «Avanzosc · Aviso Legal | Avanzosc». Con meta_title
+             set, website_templates lo usa verbatim (sin sufijo), igual
+             que el resto de páginas del sitio. Patrón «X · Avanzosc». -->
+        <record id="page_aviso_legal" model="ir.ui.view">
+            <field name="website_meta_title">Aviso Legal · Avanzosc</field>
+        </record>
+        <record id="page_politica_privacidad" model="ir.ui.view">
+            <field name="website_meta_title">Política de Privacidad · Avanzosc</field>
+        </record>
+        <record id="page_politica_cookies" model="ir.ui.view">
+            <field name="website_meta_title">Política de Cookies · Avanzosc</field>
+        </record>
+
         <!-- Sync EU translations from `website.homepage` master a las copias
              per-website. Razón en `models/website_meta_sync.py` docstring:
              Odoo no propaga ir.translation entre el view master y sus

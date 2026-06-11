@@ -1680,3 +1680,24 @@ msgstr ""
 "Hitz egin dezagun nola Odoo egokitzen den zure industria edo "
 "merkataritza eragiketara. Avanzosc, 17 urteko esperientzia. Erantzuna "
 "24-48 ordutan."
+
+# DRAFT - REVIEW NEEDED — /aviso-legal meta title (fix título duplicado v18).
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_title:website_avanzosc_demo.page_aviso_legal
+#, fuzzy
+msgid "Aviso Legal · Avanzosc"
+msgstr "Lege Oharra · Avanzosc"
+
+# DRAFT - REVIEW NEEDED — /politica-privacidad meta title (fix título duplicado v18).
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_title:website_avanzosc_demo.page_politica_privacidad
+#, fuzzy
+msgid "Política de Privacidad · Avanzosc"
+msgstr "Pribatutasun Politika · Avanzosc"
+
+# DRAFT - REVIEW NEEDED — /politica-cookies meta title (fix título duplicado v18).
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_title:website_avanzosc_demo.page_politica_cookies
+#, fuzzy
+msgid "Política de Cookies · Avanzosc"
+msgstr "Cookieen Politika · Avanzosc"
