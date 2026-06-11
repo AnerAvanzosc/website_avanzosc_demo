@@ -76,6 +76,32 @@
         <field name="active" eval="False"/>
     </record>
 
+    <!-- 3c. T1.4 (auditoría UI 2026-06-11) — carrito y buscador fuera del
+         header global. Spec §8.1: header = menú + «Acceso clientes»; el
+         bootstrap v18 de website_sale inyecta el icono del carrito en el
+         header default (website_sale/views/templates.xml:44-52 v18) y
+         website activa el search box (placeholder pattern, mismo que el
+         language selector). El carrito/checkout siguen operativos dentro
+         de /shop — solo desaparece el icono global del header.
+         CAVEAT BD existente: si hay copias COW per-website de estos
+         templates (sin xml_id, p.ej. website_sale.template_header_default
+         website_id=1 en la BD QA), el record declarativo NO las alcanza —
+         desactivarlas post-deploy vía ORM/psql (patrón gotcha cache_time,
+         CLAUDE.md §5). Aplicado a la BD QA vía shell 2026-06-11. -->
+    <record id="website_sale.template_header_default" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="website.header_search_box" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+    <!-- Text element del header v18: teléfono demo «+1 555-555-5556»
+         HARDCODEADO en el template core (website_templates.xml:2998+,
+         placeholder pattern) — no lee res.company, así que el fix de
+         datos T1.3 no lo corrige. Spec §8.1: header sin teléfono. -->
+    <record id="website.header_text_element" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+
     <!-- ============================================================
          Task 1.3 — Sticky header con estado «scrolled»
          ============================================================ -->
