@@ -75,6 +75,27 @@
             <value eval="{'name': 'Avanzosc'}"/>
         </function>
 
+        <!-- M8 (auditoría 2026-06-11) — limpiar las redes sociales demo de
+             Odoo S.A. en res.company 1. `social_twitter` alimentaba el
+             fallback `twitter:site="@Odoo"` del mixin SEO
+             (website/models/mixins.py:66-67 v18) en todas las páginas,
+             atribuyendo las cards a una cuenta ajena. Avanzosc no tiene
+             cuentas propias configuradas → vaciar (el mixin omite el tag).
+             Mismo patrón <function> imperativo que el rename del website
+             (bypass noupdate, idempotente). -->
+        <function model="res.company" name="write">
+            <value eval="[1]"/>
+            <value eval="{
+                'social_twitter': False,
+                'social_facebook': False,
+                'social_linkedin': False,
+                'social_youtube': False,
+                'social_instagram': False,
+                'social_github': False,
+                'social_tiktok': False,
+            }"/>
+        </function>
+
         <!-- C2/I5/I7/I8 — Home (`/` + `/eu_ES/`). Target: view
              `website.homepage` (core). Idénticos para ambas URLs porque
              comparten template. EU translation via i18n/eu.po. -->
