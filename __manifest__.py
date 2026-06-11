@@ -1,6 +1,6 @@
 {
     "name": "Website Avanzosc Demo",
-    "summary": "Tema y contenido a medida para avanzosc.es sobre Odoo 14.",
+    "summary": "Tema y contenido a medida para avanzosc.es sobre Odoo 18.",
     "version": "18.0.1.0.0",
     "category": "Website/Theme",
     "website": "https://github.com/avanzosc/odoo-addons",
@@ -74,14 +74,10 @@
         "data/website_meta.xml",
     ],
     # Phase 1 v18 migration — assets registered via manifest dict (v15+
-    # pattern). Mirrors exactly the load order of the legacy
-    # `<template inherit_id="web.assets_frontend">` xpath in
-    # views/assets.xml (kept in place transitionally as dead code; the
-    # v18 bundler ignores re-registration of the same paths). Two
-    # `inherit_id="web.layout"` templates in that same file
-    # (head_external_assets, head_plausible) inject <link>/<script>
-    # directly into <head> and are NOT bundle registrations, so they
-    # stay in XML as-is.
+    # pattern), mismo orden que el legacy xpath v14 (ya eliminado de
+    # views/assets.xml — allí solo quedan templates `inherit_id="web.layout"`
+    # que inyectan <link>/<script>/JSON-LD directamente en <head>, que NO
+    # son registros de bundle y siguen en XML por diseño).
     #
     # Order rules:
     #   - SCSS: partials de variables/mixins/typography → snippets en

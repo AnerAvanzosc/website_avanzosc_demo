@@ -54,7 +54,21 @@ publicWidget.registry.AvanzoscRoot = publicWidget.Widget.extend({
             // autoToggle: true — defensivo: Lenis se auto-pausa si el wrapper
             // no necesita smoothing (e.g. contenido más corto que viewport).
             // ----------------------------------------------------------------
-            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            // B5 (auditoría 2026-06-11): todos los widgets evalúan
+            // matchMedia una sola vez en start(); si el usuario cambia la
+            // preferencia con la página abierta no se respetaba hasta
+            // recargar. El CSS sí es live (media query), pero los tweens
+            // GSAP/Lenis en vuelo y los inline styles no. Reload es el fix
+            // proporcionado: evento rarísimo (ajuste de SO), y re-inicializa
+            // los 9 widgets con el gating correcto sin re-arquitectura.
+            var reducedMotionMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+            if (typeof reducedMotionMQ.addEventListener === 'function') {
+                reducedMotionMQ.addEventListener('change', function () {
+                    window.location.reload();
+                });
+            }
+
+            if (reducedMotionMQ.matches) {
                 // No-op: respect user preference. window.lenis queda undefined.
             } else if (typeof window.Lenis === 'function') {
                 var lenis = new window.Lenis({

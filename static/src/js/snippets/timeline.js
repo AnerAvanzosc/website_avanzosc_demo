@@ -401,6 +401,13 @@ publicWidget.registry.AvanzoscTimeline = publicWidget.Widget.extend({
             // Skip clean cuando pinEnabled.
             // En modo Pieza D base se mantiene el reveal stagger original
             // (Task 3.8) para entrada coreografiada de los 8 items.
+            // Stash refs for destroy ANTES del early return: en modo pin
+            // el return de abajo saltaba el stash y destroy() nunca mataba
+            // el ScrollTrigger ni el resize listener (leak en re-render —
+            // B3, auditoría 2026-06-11).
+            this._pinST = pinST;
+            this._resizeHandler = resizeHandler;
+
             if (reducedMotion || pinEnabled || !hasGsap) {
                 return this._super.apply(this, arguments);
             }
@@ -432,10 +439,6 @@ publicWidget.registry.AvanzoscTimeline = publicWidget.Widget.extend({
                 });
             }, { threshold: IO_THRESHOLD });
             observer.observe(section);
-
-            // Stash refs for destroy.
-            this._pinST = pinST;
-            this._resizeHandler = resizeHandler;
 
             return this._super.apply(this, arguments);
         },

@@ -365,6 +365,12 @@
             <field name="url_to">/conocenos</field>
         </record>
 
+        <!-- INERTE en v18: el router multilang rerutea `/eu_ES/X` a `/X`
+             antes del lookup de website.rewrite (caso /9), así que este
+             url_from con prefijo nunca matchea — la request EU caía en el
+             record ES de arriba y perdía el idioma. El 301 lang-aware real
+             lo emite models/ir_http.py::_serve_fallback (fix B1, auditoría
+             2026-06-11). Se conserva como documentación del mapeo. -->
         <record id="redirect_trabaja_to_conocenos_eu" model="website.rewrite">
             <field name="name">/eu_ES/trabaja-con-nosotros → /eu_ES/conocenos (page removed post-v1)</field>
             <field name="redirect_type">301</field>

@@ -29,6 +29,14 @@ eu → caso /5 del router redirige a `/eu_ES/kit-consulting` → nuestro 301
 → ... El patrón cookie-en-redirect es el mismo que usa el core en el
 caso /6 (strip de default lang). Trade-off asumido (decisión orquestador
 lote 1): el visitante EU que entra a kit-consulting pasa a navegar en ES.
+
+Caso 2 — B1 (auditoría 2026-06-11): `/eu_ES/trabaja-con-nosotros` → 301
+`/eu_ES/conocenos`. Sin esto, el reroute hace matchear el record ES de
+`website.rewrite` y el visitante EU aterriza en `/conocenos` (ES),
+perdiendo el idioma. El record EU de data/redirects.xml
+(`redirect_trabaja_to_conocenos_eu`) queda inerte en v18 por el motivo
+de arriba; se conserva como documentación del mapeo y por si el
+comportamiento del router cambia.
 """
 
 from odoo import models
@@ -48,4 +56,6 @@ class IrHttp(models.AbstractModel):
                 # Evita el loop con el caso /5 del router (ver docstring).
                 redirect.set_cookie("frontend_lang", "es_ES")
                 return redirect
+            if path == "/trabaja-con-nosotros":
+                return request.redirect("/eu_ES/conocenos", code=301, local=True)
         return super()._serve_fallback()

@@ -53,16 +53,19 @@ def post_init_menu_hierarchy(env):
     """Create the 4 dropdown children of «Soluciones sectoriales» per website.
 
     Why this is a Python hook instead of XML data:
-        Odoo 14 multi-website handling of `website.menu` records flattens
-        sub-hierarchies declared in XML. Specifically, addons/website/models/
-        website_menu.py:80-99 — Menu.create() else branch forces
-        parent_id = website.menu_id.id (top_menu of each website) for
-        records without an explicit `website_id` in vals, IGNORING the
-        parent_id from vals. Only records whose parent_id equals
-        default_menu.id (root) are saved into Default Main Menu. Records
-        with parent_id pointing to another menu (e.g. our menu_soluciones)
-        are NOT saved into Default Main Menu and the website-specific
-        copies end up flat at top_menu.
+        Multi-website handling of `website.menu` records flattens
+        sub-hierarchies declared in XML. In v18 (re-verificado migración
+        2026-06): addons/website/models/website_menu.py:101-135 —
+        Menu.create() ya no fuerza parent_id incondicionalmente (solo lo
+        remapea si falta o apunta a website.main_menu), PERO las copias
+        per-website de un hijo declarado en XML conservarían parent_id
+        apuntando al record canónico (website_id=False), fuera del árbol
+        de cada website, y el record canónico del hijo solo se crea
+        cuando parent_id == main_menu. El XML declarativo sigue sin
+        producir el árbol correcto; el branch `if 'website_id' in vals`
+        (:115-117) que este hook explota sigue intacto. v18 añade además
+        la constraint de máx. 2 niveles (_validate_parent_menu,
+        website_menu.py:71-99) — Soluciones→hijos cumple (nivel 2).
 
     Workaround:
         Pass `website_id` explicitly. This makes Menu.create() take the
@@ -209,7 +212,8 @@ def post_init_remove_odoo_defaults(env):
         mechanic from a Python hook.
 
     Cascade mechanic (D8):
-        addons/website/models/website_menu.py:105-113 — when unlink() is
+        addons/website/models/website_menu.py:163-171 (v18; era :105-113
+        en v14, lógica idéntica) — when unlink() is
         called on a menu whose parent is Default Main Menu, the ORM also
         searches for `website.menu` records matching the same URL with
         `website_id != False` and unlinks them too. The originals in
@@ -312,16 +316,14 @@ def post_init_setup_languages(env):
     """
     Lang = env["res.lang"].with_context(active_test=False)
 
-    # Step 1: activate the required languages in res.lang.
+    # Step 1: activate the required languages. v18 expone
+    # res.lang._activate_lang(code) (base/models/res_lang.py:152) que
+    # reemplaza el patrón v14 search+write+load_lang; _create_lang como
+    # fallback si el lang no existe (mismo patrón que usa el core en
+    # res_lang.py:243).
     for code in _REQUIRED_LANG_CODES:
-        lang = Lang.search([("code", "=", code)], limit=1)
-        if lang and not lang.active:
-            lang.write({"active": True})
-        elif not lang:
-            # Lang record doesn't exist yet — load it. Odoo's load_lang
-            # creates the res.lang record with active=True. Defensive:
-            # only invoked if search-then-update path didn't find it.
-            env["res.lang"].load_lang(code)
+        if not env["res.lang"]._activate_lang(code):
+            env["res.lang"]._create_lang(code)
 
     # Step 2 + 3: bind to website id=1 (default for the v1 site).
     website = env["website"].browse(1)

@@ -30,7 +30,7 @@ a Google entender que son la misma página en idiomas distintos sin
 penalizar como duplicate content.
 """
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 from markupsafe import escape
 
@@ -136,7 +136,7 @@ class WebsiteAvanzoscSitemap(Website):
         )
 
     @http.route('/robots.txt', type='http', auth='public', website=True,
-                sitemap=False)
+                multilang=False, sitemap=False)
     def robots(self, **kwargs):
         """Override built-in robots. Durante QA en `nueva.avanzosc.es`
         servimos `Disallow: /` para evitar que Google indexe el subdominio
@@ -276,7 +276,7 @@ class WebsiteAvanzoscContact(http.Controller):
             escape(empresa),
             telefono_display,
             escape(lang_code),
-            escape(datetime.utcnow().isoformat(timespec='seconds')),
+            escape(datetime.now(timezone.utc).isoformat(timespec='seconds')),
             escape(mensaje),
         )
 

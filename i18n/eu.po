@@ -1701,3 +1701,13 @@ msgstr "Pribatutasun Politika · Avanzosc"
 #, fuzzy
 msgid "Política de Cookies · Avanzosc"
 msgstr "Cookieen Politika · Avanzosc"
+
+
+
+
+# DRAFT - REVIEW NEEDED — /contacto/gracias meta title (B2, fix título duplicado v18).
+#. module: website_avanzosc_demo
+#: model:ir.ui.view,website_meta_title:website_avanzosc_demo.page_contacto_gracias
+#, fuzzy
+msgid "Gracias · Avanzosc"
+msgstr "Eskerrik asko · Avanzosc"
