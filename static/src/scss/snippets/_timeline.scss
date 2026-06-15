@@ -105,7 +105,7 @@
     &::-webkit-scrollbar { display: none; }  // Webkit
 
     &:focus-visible {
-        outline: 2px solid var(--brand-primary, #E85D2F);
+        outline: 2px solid var(--brand-blue-text, #2C7AA3);
         outline-offset: 4px;
     }
 
@@ -141,7 +141,7 @@
     width: 1rem;
     height: 1rem;
     border-radius: 50%;
-    background-color: var(--brand-primary, #E85D2F);
+    background-color: var(--brand-blue, #4FA7D3);
     border: 2px solid var(--neutral-0, #FFFFFF);
     box-shadow: 0 0 0 2px var(--neutral-300, #D3D7DC);
     top: 0;
@@ -155,7 +155,7 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--brand-primary, #E85D2F);
+    color: var(--brand-blue-text, #2C7AA3);
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -208,9 +208,9 @@
 
     &:hover:not([disabled]),
     &:focus-visible:not([disabled]) {
-        background-color: var(--brand-primary, #E85D2F);
+        background-color: var(--brand-blue, #4FA7D3);
         color: var(--neutral-0, #FFFFFF);
-        border-color: var(--brand-primary, #E85D2F);
+        border-color: var(--brand-blue, #4FA7D3);
     }
 
     &[disabled] {
@@ -249,7 +249,7 @@
 
     &.is-active,
     &[aria-current="step"] {
-        background-color: var(--brand-primary, #E85D2F);
+        background-color: var(--brand-blue, #4FA7D3);
         transform: scale(1.4);
     }
 
@@ -259,7 +259,7 @@
     }
 
     &:focus-visible {
-        outline: 2px solid var(--brand-primary, #E85D2F);
+        outline: 2px solid var(--brand-blue-text, #2C7AA3);
         outline-offset: 3px;
     }
 
@@ -334,8 +334,8 @@
             background-color: transparent;
             background-image: linear-gradient(
                 to right,
-                var(--brand-primary, #E85D2F) 0%,
-                var(--brand-primary, #E85D2F) var(--progress-fill, 0%),
+                var(--brand-blue, #4FA7D3) 0%,
+                var(--brand-blue, #4FA7D3) var(--progress-fill, 0%),
                 var(--neutral-300, #D3D7DC) var(--progress-fill, 0%),
                 var(--neutral-300, #D3D7DC) 100%
             );
@@ -373,7 +373,7 @@
             transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
 
             &.is-passed {
-                background-color: var(--brand-primary, #E85D2F);
+                background-color: var(--brand-blue, #4FA7D3);
             }
 
             @media (prefers-reduced-motion: reduce) {
