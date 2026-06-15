@@ -128,13 +128,13 @@
     // Paleta multi-color hover, alpha 0.60 sobre fondo blanco. RGB
     // triplets hardcodeados — rgba() no acepta var(--hex) y color-mix()
     // no es patrón establecido en el módulo:
-    //   color-1: brand-primary  #E85D2F → rgb(232, 93, 47)
+    //   color-1: brand-blue     #4FA7D3 → rgb(79, 167, 211)  (lote4 recolor; era brand-primary naranja)
     //   color-2: brand-accent   #F5B800 → rgb(245, 184, 0)
     //   color-3: neutral-700    #3A4149 → rgb(58, 65, 73)
     //   color-4: neutral-300    #D3D7DC → rgb(211, 215, 220)
     // color-4 más tímido del set, añade ritmo entre los 3 saturados.
     &.is-hovered.color-1 {
-        background-color: rgba(232, 93, 47, 0.60);  // brand-primary
+        background-color: rgba(79, 167, 211, 0.60);  // brand-blue (lote4 recolor; color-1)
     }
     &.is-hovered.color-2 {
         background-color: rgba(245, 184, 0, 0.60);   // brand-accent
@@ -229,7 +229,7 @@
         left: 0;
         width: 0;
         height: 3px;
-        background: var(--brand-primary, #E85D2F);
+        background: var(--brand-blue, #4FA7D3);
         transition: width 400ms cubic-bezier(0.16, 1, 0.3, 1);
         pointer-events: none;
     }
@@ -263,7 +263,7 @@
         // regla reveal o cadena de selectors larga).
         transform: translateY(-6px) scale(1.03) !important;
         box-shadow: var(--shadow-lg);
-        border-color: var(--brand-primary, #E85D2F);
+        border-color: var(--brand-blue, #4FA7D3);
         z-index: 2;
     }
     .s_avanzosc_sectores_card:hover::before,
