@@ -205,5 +205,14 @@
              Idempotente. Corre en cada `-i` y `-u`. -->
         <function model="website" name="_avanzosc_sync_homepage_meta"/>
 
+        <!-- A2/A3 (lote 3 2026-06-15) — logo real de marca (header website.logo
+             + footer res.company.logo) e imagen social por defecto
+             (website.social_default_image → og:image/twitter:image). Lee los
+             ficheros de static/src/img/ y escribe los campos binarios sólo si
+             difieren. Detalle en models/website_meta_sync.py. Corre tras el
+             write del name de la company (arriba) para que el alt del footer
+             resuelva «Avanzosc S.L.». Idempotente. -->
+        <function model="website" name="_avanzosc_set_brand_assets"/>
+
     </data>
 </odoo>

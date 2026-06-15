@@ -29,11 +29,61 @@ v18: traducciones persisten como columnas JSONB en cada modelo (no en
 `record.with_context(lang=<code>).write({field: value})` — Odoo
 gestiona internamente el merge JSONB. Ver D27+ y CLAUDE.md §3.
 """
-from odoo import api, models
+import base64
+
+from odoo import api, models, tools
 
 
 class Website(models.Model):
     _inherit = "website"
+
+    # Brand assets (A2/A3, lote 3 2026-06-15). Logo del header (website.logo)
+    # + footer (res.company.logo, ver views/layout.xml:185) + imagen social
+    # por defecto (website.social_default_image → og:image/twitter:image vía
+    # el mixin SEO, mixins.py:50 v18: usa social_default_image cuando
+    # has_social_default_image). Ficheros en static/src/img/. El SVG
+    # (avanzosc_logo.svg) se aloja como alternativa vectorial para escalado
+    # pero NO se usa por defecto: pesa ~80KB con degradado vs ~105KB del PNG
+    # a tamaño fijo, y el header lo sirve a 30px de alto donde el PNG basta.
+    _AVANZOSC_LOGO_PATH = "website_avanzosc_demo/static/src/img/avanzosc_logo.png"
+    _AVANZOSC_OG_PATH = "website_avanzosc_demo/static/src/img/og-image.jpg"
+
+    @api.model
+    def _avanzosc_set_brand_assets(self):
+        """Set the real brand logo (header + footer) and the default social
+        share image from the module's static files.
+
+        Idempotent: reads each file once and writes a binary field only when
+        it differs from the asset's current bytes (avoids rewriting binaries
+        — and invalidating derived/cached images — on every -u). Reproducible
+        on a fresh install: invoked from data/website_meta.xml <function>,
+        which runs on both -i and -u (unlike the homepage-meta sync, this
+        does not depend on .po being loaded, so no post-init hook call is
+        needed). Resolves A2 (placeholder logo) and A3 (og:image was the SVG
+        logo, unrenderable by social crawlers).
+        """
+        def _read(path):
+            with tools.file_open(path, "rb") as fh:
+                return base64.b64encode(fh.read())
+
+        logo_b64 = _read(self._AVANZOSC_LOGO_PATH)
+        og_b64 = _read(self._AVANZOSC_OG_PATH)
+
+        # website 1: header logo + default social image.
+        website = self.env["website"].browse(1).sudo()
+        if website.exists():
+            vals = {}
+            if website.logo != logo_b64:
+                vals["logo"] = logo_b64
+            if website.social_default_image != og_b64:
+                vals["social_default_image"] = og_b64
+            if vals:
+                website.write(vals)
+
+        # res.company 1: footer logo (t-field res_company.logo).
+        company = self.env["res.company"].browse(1).sudo()
+        if company.exists() and company.logo != logo_b64:
+            company.write({"logo": logo_b64})
 
     @api.model
     def _avanzosc_sync_homepage_meta(self):
