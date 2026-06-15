@@ -237,8 +237,8 @@
                 // original blendeaba a ~1.2:1. --brand-primary-dark #C44015
                 // da 5.13:1 (y se actualizará en bloque con el hex del logo).
                 outline: none;
-                border-color: var(--brand-primary-dark);
-                box-shadow: 0 0 0 2px var(--brand-primary-dark);
+                border-color: var(--brand-blue-text, #2C7AA3);
+                box-shadow: 0 0 0 2px var(--brand-blue-text, #2C7AA3);
             }
         }
 

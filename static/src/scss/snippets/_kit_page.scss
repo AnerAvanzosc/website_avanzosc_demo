@@ -66,7 +66,7 @@
             content: "→";
             position: absolute;
             left: 0;
-            color: var(--brand-primary, #E85D2F);
+            color: var(--brand-blue-text, #2C7AA3);
             font-weight: 600;
         }
     }
@@ -79,7 +79,7 @@
     margin: 1.5rem 0 0;
 
     a {
-        color: var(--brand-primary-dark, #C44015);
+        color: var(--brand-blue-text, #2C7AA3);
         text-decoration: underline;
         text-underline-offset: 3px;
     }
