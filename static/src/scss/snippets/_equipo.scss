@@ -148,7 +148,7 @@
 
 // CEO accent.
 .s_avanzosc_equipo_card.is-ceo .s_avanzosc_equipo_card_avatar {
-    background: var(--brand-primary, #E85D2F);
+    background: var(--brand-blue, #4FA7D3);
 }
 
 // CEO badge — span markup en .meta, posicionado absolute top-right del card.
@@ -164,8 +164,8 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     line-height: 1.4;
-    color: var(--brand-primary, #E85D2F);
-    background: rgba(232, 93, 47, 0.1);
+    color: var(--brand-blue-text, #2C7AA3);
+    background: rgba(79, 167, 211, 0.1);
     padding: 0.125rem 0.5rem;
     border-radius: var(--radius-sm);
 }
@@ -205,7 +205,7 @@
 
 // CEO hovered: drop-shadow naranja en avatar, en vez del oscuro.
 .s_avanzosc_equipo_card.is-ceo.is-hovered .s_avanzosc_equipo_card_avatar {
-    box-shadow: 0 8px 24px rgba(232, 93, 47, 0.25);
+    box-shadow: 0 8px 24px rgba(79, 167, 211, 0.25);
 }
 
 // Reduced-motion: anula transitions y transforms del hover, mantiene el
@@ -245,7 +245,7 @@
 }
 
 .s_avanzosc_equipo_stat {
-    border-left: 3px solid var(--brand-primary, #E85D2F);
+    border-left: 3px solid var(--brand-blue, #4FA7D3);
     padding-left: 1rem;
 
     .s_avanzosc_equipo_stat_label {
