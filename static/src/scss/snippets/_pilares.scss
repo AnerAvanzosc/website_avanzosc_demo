@@ -199,7 +199,7 @@
 // =============================================================================
 
 .s_avanzosc_pilares_oca {
-    color: var(--brand-primary, #E85D2F);
+    color: var(--brand-blue-text, #2C7AA3);
 
     .char:not(:last-child) {
         letter-spacing: 0.2em;
@@ -241,7 +241,7 @@
     display: inline-block;
 
     &:focus {
-        outline: 2px solid var(--brand-primary, #E85D2F);
+        outline: 2px solid var(--brand-blue-text, #2C7AA3);
         outline-offset: 4px;
         border-radius: var(--radius-sm);
     }

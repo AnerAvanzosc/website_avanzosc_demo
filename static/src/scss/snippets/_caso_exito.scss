@@ -42,7 +42,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--brand-primary, #E85D2F);
+    color: var(--brand-blue-text, #2C7AA3);
     margin: 0 0 1rem 0;
 }
 
@@ -110,7 +110,7 @@
             content: "→";
             position: absolute;
             left: 0;
-            color: var(--brand-primary, #E85D2F);
+            color: var(--brand-blue-text, #2C7AA3);
             font-weight: 600;
         }
     }
@@ -347,7 +347,7 @@ $avanzosc-dim-opacity: 0.55;
     // el hover-IN responda rápido. hover-OUT cae a 600ms del base.
     .s_avanzosc_caso_exito_bar.is-drawn.is-hovered {
         transform: scaleY(1.12);
-        filter: brightness(1.25) drop-shadow(0 0 12px rgba(232, 93, 47, 0.5));
+        filter: brightness(1.25) drop-shadow(0 0 12px rgba(79, 167, 211, 0.5));
         transition: transform $avanzosc-hover-duration $avanzosc-hover-curve,
                     filter $avanzosc-hover-duration $avanzosc-hover-curve;
     }
@@ -357,7 +357,7 @@ $avanzosc-dim-opacity: 0.55;
     // overrides de los valores final.
     .s_avanzosc_caso_exito_donut_fill.is-hovered {
         transform: scale(1.08);
-        filter: drop-shadow(0 0 16px rgba(232, 93, 47, 0.55));
+        filter: drop-shadow(0 0 16px rgba(79, 167, 211, 0.55));
     }
 
     // KPI cards: translateY -4px + drop-shadow oscuro suave + stroke 1px
@@ -367,7 +367,7 @@ $avanzosc-dim-opacity: 0.55;
         filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
     }
     .s_avanzosc_caso_exito_kpi_card.is-hovered .s_avanzosc_caso_exito_kpi_card_bg {
-        stroke: var(--brand-primary, #E85D2F);
+        stroke: var(--brand-blue, #4FA7D3);
         stroke-width: 1;
     }
 

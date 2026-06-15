@@ -336,12 +336,12 @@
 
             <!-- Bar chart — 6 bars izq→der para stagger natural. -->
             <rect x="20" y="180" width="370" height="200" rx="6" fill="#F4F5F7"/>
-            <rect class="s_avanzosc_caso_exito_bar" x="40" y="320" width="40" height="50" rx="2" fill="#E85D2F"/>
-            <rect class="s_avanzosc_caso_exito_bar" x="100" y="290" width="40" height="80" rx="2" fill="#E85D2F"/>
-            <rect class="s_avanzosc_caso_exito_bar" x="160" y="240" width="40" height="130" rx="2" fill="#E85D2F"/>
-            <rect class="s_avanzosc_caso_exito_bar" x="220" y="270" width="40" height="100" rx="2" fill="#E85D2F"/>
-            <rect class="s_avanzosc_caso_exito_bar" x="280" y="220" width="40" height="150" rx="2" fill="#E85D2F"/>
-            <rect class="s_avanzosc_caso_exito_bar" x="340" y="200" width="40" height="170" rx="2" fill="#E85D2F"/>
+            <rect class="s_avanzosc_caso_exito_bar" x="40" y="320" width="40" height="50" rx="2" fill="#4FA7D3"/>
+            <rect class="s_avanzosc_caso_exito_bar" x="100" y="290" width="40" height="80" rx="2" fill="#4FA7D3"/>
+            <rect class="s_avanzosc_caso_exito_bar" x="160" y="240" width="40" height="130" rx="2" fill="#4FA7D3"/>
+            <rect class="s_avanzosc_caso_exito_bar" x="220" y="270" width="40" height="100" rx="2" fill="#4FA7D3"/>
+            <rect class="s_avanzosc_caso_exito_bar" x="280" y="220" width="40" height="150" rx="2" fill="#4FA7D3"/>
+            <rect class="s_avanzosc_caso_exito_bar" x="340" y="200" width="40" height="170" rx="2" fill="#4FA7D3"/>
 
             <!-- Donut: ring gris background + arc stroked brand-primary. -->
             <rect x="400" y="180" width="180" height="200" rx="6" fill="#F4F5F7"/>
@@ -349,7 +349,7 @@
             <path class="s_avanzosc_caso_exito_donut_fill"
                   d="M 490 225 A 55 55 0 0 1 538 308"
                   fill="none"
-                  stroke="#E85D2F"
+                  stroke="#4FA7D3"
                   stroke-width="20"
                   stroke-linecap="butt"
                   pathLength="100"/>
