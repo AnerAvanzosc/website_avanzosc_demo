@@ -207,7 +207,7 @@ nav.navbar.navbar-light .navbar-nav .nav-link {
 
         &:hover,
         &:focus {
-            color: var(--brand-primary, #E85D2F);
+            color: var(--brand-blue-text, #2C7AA3);
             background: transparent;
         }
     }
@@ -219,7 +219,7 @@ nav.navbar.navbar-light .navbar-nav .nav-link {
 
         &:hover,
         &:focus {
-            color: var(--brand-primary, #E85D2F);
+            color: var(--brand-blue-text, #2C7AA3);
             background-color: var(--neutral-100, #F4F5F7);
         }
     }
@@ -234,7 +234,7 @@ nav.navbar.navbar-light .navbar-nav .nav-link {
         text-decoration: underline;
         text-decoration-thickness: 2px;
         text-underline-offset: 4px;
-        color: var(--brand-primary, #E85D2F);
+        color: var(--brand-blue-text, #2C7AA3);
     }
 }
 
@@ -245,7 +245,7 @@ nav.navbar.navbar-light .navbar-nav .nav-link {
     text-decoration: underline;
     text-decoration-thickness: 2px;
     text-underline-offset: 4px;
-    text-decoration-color: var(--brand-primary, #E85D2F);
+    text-decoration-color: var(--brand-blue-text, #2C7AA3);
 }
 
 // =============================================================================
@@ -301,7 +301,7 @@ header nav.navbar .navbar-toggler {
 
     &:hover,
     &:focus {
-        color: var(--brand-primary, #E85D2F);
+        color: var(--brand-blue-text, #2C7AA3);
     }
 
     [data-lucide] {
@@ -329,7 +329,7 @@ header nav.navbar .navbar-toggler {
 
     &:hover,
     &:focus {
-        color: var(--brand-primary, #E85D2F);
+        color: var(--brand-blue-text, #2C7AA3);
         text-decoration: none;
     }
 
@@ -431,7 +431,7 @@ header nav.navbar .navbar-toggler {
 
     &:hover,
     &:focus {
-        color: var(--brand-primary, #E85D2F);
+        color: var(--brand-blue-text, #2C7AA3);
     }
 
     [data-lucide] {
@@ -485,7 +485,7 @@ header nav.navbar .navbar-toggler {
     > ul > li > a:focus,
     > ul > li > button:hover,
     > ul > li > button:focus {
-        color: var(--brand-primary, #E85D2F);
+        color: var(--brand-blue-text, #2C7AA3);
         text-decoration: none;
     }
 }
@@ -530,7 +530,7 @@ header nav.navbar .navbar-toggler {
 
             &:hover,
             &:focus {
-                color: var(--brand-primary, #E85D2F);
+                color: var(--brand-blue-text, #2C7AA3);
                 text-decoration: none;
             }
         }
@@ -560,12 +560,12 @@ header nav.navbar .navbar-toggler {
 
         &:hover,
         &:focus {
-            color: var(--brand-primary, #E85D2F);
+            color: var(--brand-blue-text, #2C7AA3);
             text-decoration: none;
         }
 
         &.is-active {
-            color: var(--brand-primary, #E85D2F);
+            color: var(--brand-blue-text, #2C7AA3);
             text-decoration: underline;
             text-decoration-thickness: 2px;
             text-underline-offset: 4px;
