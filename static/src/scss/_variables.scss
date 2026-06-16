@@ -26,6 +26,20 @@
     --brand-blue-text: #2C7AA3;
     --bg-dark: #13293D;
 
+    // Naranja de BOTONES de acción (A5, lote 5 2026-06-16). Separado de
+    // --brand-primary para fijar contraste WCAG AA del label blanco sin
+    // tocar el naranja decorativo/glow. Escala oscurecida un paso:
+    //   antes: base #E85D2F (label blanco 3.48:1, NO AA) / hover #C44015
+    //   ahora: base #C44015 (5.13:1 AA ✓)            / hover #A8330E (6.68:1)
+    // --brand-primary (#E85D2F) se conserva INTACTO para el glow del CTA y
+    // cualquier uso decorativo/luminoso (no texto). Trade-off aceptado
+    // (orquestador): el botón #C44015 sobre la banda oscura #13293D da
+    // 2.90:1 forma-vs-fondo (<3:1), pero el glow naranja + el label blanco
+    // a 5.13:1 lo mantienen identificable; el fallo AA del label era el
+    // problema real.
+    --btn-primary: #C44015;
+    --btn-primary-hover: #A8330E;
+
     // Tokens de forma (UI-5, tanda 2 2026-06-11): 8 valores dispersos de
     // border-radius consolidados en 2 tokens (+50% literal en circulares).
     // sm: inputs, cards, chips, tooltips. lg: contenedores grandes
@@ -103,38 +117,41 @@ $brand-accent: #F5B800;
 // que ganan por especificidad sobre un `.btn-primary` plano. Con `.btn.btn-primary`
 // igualamos su especificidad y ganamos por orden de carga (assets_frontend
 // nuestro va después en el bundle).
+// A5 (lote 5): fill de botones usa --btn-primary (#C44015, label blanco
+// 5.13:1 AA) / hover --btn-primary-hover (#A8330E, 6.68:1). El naranja vivo
+// #E85D2F queda solo para el glow del CTA (deco/luminoso, no texto).
 .btn.btn-primary {
-    background-color: var(--brand-primary, #E85D2F);
-    border-color: var(--brand-primary, #E85D2F);
+    background-color: var(--btn-primary, #C44015);
+    border-color: var(--btn-primary, #C44015);
 
     &:hover,
     &:focus {
-        background-color: var(--brand-primary-dark, #C44015);
-        border-color: var(--brand-primary-dark, #C44015);
+        background-color: var(--btn-primary-hover, #A8330E);
+        border-color: var(--btn-primary-hover, #A8330E);
     }
 
     &:not(:disabled):not(.disabled):active,
     &:not(:disabled):not(.disabled).active {
-        background-color: var(--brand-primary-dark, #C44015);
-        border-color: var(--brand-primary-dark, #C44015);
+        background-color: var(--btn-primary-hover, #A8330E);
+        border-color: var(--btn-primary-hover, #A8330E);
     }
 
     &:disabled,
     &.disabled {
-        background-color: var(--brand-primary, #E85D2F);
-        border-color: var(--brand-primary, #E85D2F);
+        background-color: var(--btn-primary, #C44015);
+        border-color: var(--btn-primary, #C44015);
     }
 }
 
 // .btn-outline-primary: variante outline (consistencia visual).
 .btn.btn-outline-primary {
-    color: var(--brand-primary, #E85D2F);
-    border-color: var(--brand-primary, #E85D2F);
+    color: var(--btn-primary, #C44015);
+    border-color: var(--btn-primary, #C44015);
 
     &:hover,
     &:focus {
-        background-color: var(--brand-primary, #E85D2F);
-        border-color: var(--brand-primary, #E85D2F);
+        background-color: var(--btn-primary, #C44015);
+        border-color: var(--btn-primary, #C44015);
         color: var(--neutral-0, #FFFFFF);
     }
 }
