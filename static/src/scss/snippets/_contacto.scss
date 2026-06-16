@@ -103,7 +103,7 @@
         flex-shrink: 0;
         width: 1.5rem;
         height: 1.5rem;
-        color: var(--brand-primary);
+        color: var(--brand-blue-text, #2C7AA3);
         margin-top: 0.25rem;
 
         // Lucide inserta el SVG dentro del <i>; aseguramos que el SVG
@@ -141,7 +141,7 @@
 
         &[href]:hover,
         &[href]:focus {
-            color: var(--brand-primary);
+            color: var(--brand-blue-text, #2C7AA3);
         }
     }
 
@@ -149,11 +149,11 @@
         display: inline-block;
         font-family: 'Inter', sans-serif;
         font-size: 0.9375rem;
-        color: var(--brand-primary);
+        color: var(--brand-blue-text, #2C7AA3);
         text-decoration: underline;
         margin-top: 0.5rem;
 
-        &:hover, &:focus { color: var(--brand-primary-dark); }
+        &:hover, &:focus { color: var(--brand-blue-text, #2C7AA3); }
     }
 
     .s_avanzosc_contacto_info_directions {
@@ -250,7 +250,7 @@
     }
 
     .s_avanzosc_contacto_form_required {
-        color: var(--brand-primary);
+        color: var(--brand-blue-text, #2C7AA3);
         font-weight: 600;
     }
 
@@ -270,7 +270,7 @@
             flex-shrink: 0;
             width: 1.125rem;
             height: 1.125rem;
-            accent-color: var(--brand-primary);
+            accent-color: var(--brand-blue, #4FA7D3);
         }
 
         label {
@@ -280,8 +280,8 @@
             line-height: 1.45;
             font-weight: 400;
 
-            a { color: var(--brand-primary); text-decoration: underline; }
-            a:hover, a:focus { color: var(--brand-primary-dark); }
+            a { color: var(--brand-blue-text, #2C7AA3); text-decoration: underline; }
+            a:hover, a:focus { color: var(--brand-blue-text, #2C7AA3); }
         }
     }
 
@@ -359,12 +359,12 @@
     .s_avanzosc_contacto_gracias_secondary {
         font-family: 'Inter', sans-serif;
         font-weight: 500;
-        color: var(--brand-primary);
+        color: var(--brand-blue-text, #2C7AA3);
         text-decoration: none;
         padding: 0.75rem 0;
 
         &:hover, &:focus {
-            color: var(--brand-primary-dark);
+            color: var(--brand-blue-text, #2C7AA3);
             text-decoration: underline;
         }
     }
