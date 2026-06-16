@@ -34,6 +34,19 @@
                  bloque de texto del hero queda visible por defecto. -->
             <script type="text/javascript">document.documentElement.classList.add('js-anim');</script>
 
+            <!-- Apple touch icon (favicon set «Av» azul, lote favicon
+                 2026-06-16). El <link rel="icon"> de la pestaña lo emite el
+                 core desde website.favicon (seteado en
+                 models/website_meta_sync.py); este link cubre el caso que
+                 website.favicon NO cubre: «Añadir a pantalla de inicio» en
+                 iOS, que requiere apple-touch-icon 180×180. Servido como
+                 estático del módulo. NO añadimos manifest PWA (192/512): el
+                 sitio no declara un web app manifest, los links quedarían
+                 huérfanos; los PNGs 192/512 quedan en static/ por si se
+                 añade manifest en el futuro. -->
+            <link rel="apple-touch-icon" sizes="180x180"
+                  href="/website_avanzosc_demo/static/src/img/favicon-180.png"/>
+
             <!-- 1. Google Fonts — preconnect (mejora TTFB de las fuentes).
                  Nota: NO añadimos preconnect para `cdnjs.cloudflare.com` ni
                  `cdn.jsdelivr.net`. Los <script> y <link rel="stylesheet">

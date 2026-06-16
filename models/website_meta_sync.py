@@ -47,6 +47,12 @@ class Website(models.Model):
     # a tamaño fijo, y el header lo sirve a 30px de alto donde el PNG basta.
     _AVANZOSC_LOGO_PATH = "website_avanzosc_demo/static/src/img/avanzosc_logo.png"
     _AVANZOSC_OG_PATH = "website_avanzosc_demo/static/src/img/og-image.jpg"
+    # Favicon «Av» azul (lote favicon 2026-06-16). Fuente 512px: el setter
+    # website.favicon (_handle_favicon, website.py:378-380 v18) procesa
+    # CUALQUIER write a un ICO 256×256 crop=center, así que damos la fuente
+    # de mayor resolución y Odoo la reduce nítida. El icono es cuadrado →
+    # crop=center es no-op.
+    _AVANZOSC_FAVICON_PATH = "website_avanzosc_demo/static/src/img/favicon-512.png"
 
     @api.model
     def _avanzosc_set_brand_assets(self):
@@ -69,7 +75,20 @@ class Website(models.Model):
         logo_b64 = _read(self._AVANZOSC_LOGO_PATH)
         og_b64 = _read(self._AVANZOSC_OG_PATH)
 
-        # website 1: header logo + default social image.
+        # Favicon: el write a website.favicon se procesa a ICO 256 por
+        # _handle_favicon, así que el valor ALMACENADO nunca igualaría a
+        # b64(fuente). Para idempotencia real comparamos contra el resultado
+        # procesado (misma transformación que el core), evitando reescribir
+        # — y rotar el hash unique, busteando caché de navegador — en cada -u.
+        favicon_src = _read(self._AVANZOSC_FAVICON_PATH)
+        favicon_expected = base64.b64encode(
+            tools.image_process(
+                base64.b64decode(favicon_src),
+                size=(256, 256), crop="center", output_format="ICO",
+            )
+        )
+
+        # website 1: header logo + default social image + favicon.
         website = self.env["website"].browse(1).sudo()
         if website.exists():
             vals = {}
@@ -77,6 +96,11 @@ class Website(models.Model):
                 vals["logo"] = logo_b64
             if website.social_default_image != og_b64:
                 vals["social_default_image"] = og_b64
+            if website.favicon != favicon_expected:
+                # Escribimos la FUENTE; _handle_favicon la procesa al ICO
+                # que coincide con favicon_expected (idempotente en el
+                # siguiente run).
+                vals["favicon"] = favicon_src
             if vals:
                 website.write(vals)
 
