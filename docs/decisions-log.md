@@ -449,7 +449,7 @@ producción»). Cierre con Plausible Cloud sobre `data-domain="avanzosc.es"`.
 
 **Por qué `/contacto/gracias` y no hook en submit del form**: el form usa Post-Redirect-Get (controller `WebsiteAvanzoscContact.contacto_submit` devuelve 303 a `/contacto/gracias`). Hookear en submit-time tiene riesgos de race con la navegación inmediata (la request a `plausible.io/api/event` puede cancelarse antes de salir aunque Plausible use `keepalive`). Hookear en DOMContentLoaded de gracias es el canal limpio: sólo se llega a esa página tras validación server-side exitosa. Edge case: el honeypot también redirige a gracias silenciosamente; bots que ejecuten JS Y burlen el bot-filtering de Plausible inflarían el goal — aceptado v1 (incidencia esperada cercana a cero).
 
-**Localhost behavior**: Plausible script suprime envíos cuando el hostname del navegador no coincide con `data-domain`. En desarrollo (`localhost:14070`) los eventos no llegan al dashboard; producción (`avanzosc.es`) los disparará normalmente. La verificación dinámica local es entonces estática-en-DOM (script tag presente, listener registrado, signature exacta del goal verificada activamente con stub de `window.plausible`). Mismo comportamiento durante QA en `nueva.avanzosc.es`: dominio mismatch → eventos suprimidos → no contamina el dashboard de producción con tráfico de pre-producción (efecto colateral deseable).
+**Localhost behavior**: Plausible script suprime envíos cuando el hostname del navegador no coincide con `data-domain`. En desarrollo (`localhost:18069`) los eventos no llegan al dashboard; producción (`avanzosc.es`) los disparará normalmente. La verificación dinámica local es entonces estática-en-DOM (script tag presente, listener registrado, signature exacta del goal verificada activamente con stub de `window.plausible`). Mismo comportamiento durante QA en `nueva.avanzosc.es`: dominio mismatch → eventos suprimidos → no contamina el dashboard de producción con tráfico de pre-producción (efecto colateral deseable).
 
 **Trigger de reapertura**: si tras 6 meses post-switchover Plausible no da datos suficientes para decisiones de negocio (e.g., demasiado escueto para análisis de funnel B2B), reabrir y considerar añadir GA4 con consent banner como segunda capa para datos enriquecidos. Mantener Plausible como baseline RGPD-friendly aunque se sume otra capa.
 
@@ -761,9 +761,9 @@ Verificación funcional curl (3 escenarios, smoke `sprint-deferred-q4-gracias` v
 
 **Estado**: el body de `/conocenos` (snippet `s_avanzosc_equipo` invocado desde `views/pages/conocenos.xml`) contiene actualmente el claim «Equipo STEM mayoritariamente femenino» y referencias derivadas (~6 menciones de «STEM»/«femenino» entre la copia ES y la traducción EU). Durante Sprint B2 (commit `73933f4`) el orquestador-humano confirmó que el claim demográfico de «mayoría femenina» no es sostenible factualmente. La meta description de `/conocenos` fue limpiada en el amend B2 (eliminando «STEM» y «mayoritariamente femenino» de los textos SEO), pero el body permanece sin tocar por política «copy creativo al final del proyecto» — el body es contenido editorial sujeto al sprint final de revisión narrativa, no una iteración técnica.
 
-**Decisión diferida**: aceptar el claim en body durante la fase de desarrollo. La branch sigue siendo `feature/v1-implementation` y `robots.txt` devuelve `Disallow:/` (intencional pre-switchover, C4 / D6), por lo que NO hay exposición pública: ni Google, ni LinkedIn shares, ni visitantes orgánicos ven la copia. Riesgo factual = 0 mientras esto siga así.
+**Decisión diferida**: aceptar el claim en body durante la fase de desarrollo. La branch sigue siendo `feature/v18-migration` y `robots.txt` devuelve `Disallow:/` (intencional pre-switchover, C4 / D6), por lo que NO hay exposición pública: ni Google, ni LinkedIn shares, ni visitantes orgánicos ven la copia. Riesgo factual = 0 mientras esto siga así.
 
-**Workaround vigente**: ninguno — el claim queda en la web mientras la branch sea `feature/v1-implementation` y `robots.txt` siga bloqueando indexación. La meta description (que SÍ es shareable de forma cacheada por motores) ya está limpia post-B2.
+**Workaround vigente**: ninguno — el claim queda en la web mientras la branch sea `feature/v18-migration` y `robots.txt` siga bloqueando indexación. La meta description (que SÍ es shareable de forma cacheada por motores) ya está limpia post-B2.
 
 **Trigger de reapertura**: **pre-switchover OBLIGATORIO**. En el sprint final de revisión de copy creativo (parkeado por política), revisar las ~6 menciones STEM/femenino en `/conocenos` body + las equivalentes en `/eu_ES/conocenos` (vía `i18n/eu.po`) y decidir entre 3 alternativas:
 - (a) **Eliminar el claim demográfico**, manteniendo «STEM» pero retirando «mayoría femenina» y derivadas. Más mínimo invasivo.
@@ -772,7 +772,7 @@ Verificación funcional curl (3 escenarios, smoke `sprint-deferred-q4-gracias` v
 
 Aplicar el cambio elegido en `views/snippets/equipo.xml` (o template equivalente) + sincronizar `i18n/eu.po` (ya con flags DRAFT, sujeto a Q1 fase 2). Smoke `run-smoke.sh` + curl spot check confirmando 0 menciones de «STEM»/«femenino» en body Y meta. **Sin este trigger atendido, NO autorizar switchover** — el claim factualmente insostenible no debe llegar al dominio público.
 
-**Localización**: el snippet de equipo invocado por la página de conócenos (probablemente `views/snippets/equipo.xml`); las referencias EU correspondientes en `i18n/eu.po` (entries marcadas `# DRAFT - REVIEW NEEDED — Equipo STEM …` o similar). Verificación de count: `curl -s http://localhost:14070/conocenos http://localhost:14070/eu_ES/conocenos | grep -ciE 'STEM|femenin'` — esperado 0 post-fix.
+**Localización**: el snippet de equipo invocado por la página de conócenos (probablemente `views/snippets/equipo.xml`); las referencias EU correspondientes en `i18n/eu.po` (entries marcadas `# DRAFT - REVIEW NEEDED — Equipo STEM …` o similar). Verificación de count: `curl -s http://localhost:18069/conocenos http://localhost:18069/eu_ES/conocenos | grep -ciE 'STEM|femenin'` — esperado 0 post-fix.
 
 <a id="deferred-lighthouse-best-practices-upstream"></a>
 ### Lighthouse Best Practices score 81-82/100 — deuda upstream Odoo 14
@@ -876,7 +876,7 @@ Verificación playwright (smoke `sprint-pieza-e-v3`):
 
 Por qué approach H resuelve el ghost: D28 generaba ghost porque las clases discretas `is-slot-*` cambiaban a cadencia inter-event 30-200 ms, mientras que las CSS transitions (0.5 s) se redirigían sin completar — el item asomaba hacia un slot, cambiaba de target a medio camino. Approach H NO usa clases discretas durante scrub, NO usa transitions CSS sobre las propiedades animadas: el JS lee `progress` desde Lenis raf y aplica inline styles directamente. Cada frame es la verdad — no hay tween en flight que pueda ser interrumpido.
 
-Pendiente validación visual humana del orquestador en localhost:14070 (commit local, NO pusheado pre-validación).
+Pendiente validación visual humana del orquestador en localhost:18069 (commit local, NO pusheado pre-validación).
 
 **Ajuste post-validación (mismo commit, amend)** — tras validación visual del orquestador, 3 refinamientos sobre la sensibilidad cinemática:
 
