@@ -219,4 +219,63 @@
                     src="https://plausible.io/js/script.404.outbound-links.js"/>
         </xpath>
     </template>
+
+    <!-- ============================================================
+         Duotono #avz-duotone — filtro SVG GLOBAL (una sola def para todo
+         el sitio; NO en el body del snippet, evita id duplicado con N
+         instancias). Referenciado por CSS `filter: url(#avz-duotone)` en
+         _avz_band.scss. Es un SISTEMA: tiñe CUALQUIER imagen a la que se
+         aplique, no solo la default de la banda.
+
+         Mapeo: desatura a luminancia (feColorMatrix, pesos Rec.709) y
+         remapea a un degradado de 2 tonos (feComponentTransfer tableValues):
+           sombras → #13293D  (0.0745, 0.1608, 0.2392)
+           altas   → #E9F3FB  (0.9137, 0.9529, 0.9843)
+         Los valores replican las SCSS vars `avz-duotone-shadow` /
+         `avz-duotone-high` de _avz_band.scss (SVG no puede leer custom
+         properties → sincronizar a mano; comentado en ambos lados).
+         color-interpolation-filters="sRGB"
+         obligatorio: sin él el filtro opera en linearRGB y los tonos salen
+         mal. SVG oculto vía position/size/overflow (NO display:none, que
+         rompe la referencia del filtro en algunos browsers).
+         ============================================================ -->
+    <template id="head_avz_duotone"
+              name="website_avanzosc_demo head: SVG duotone filter"
+              inherit_id="web.layout">
+        <xpath expr="//head" position="inside">
+            <svg class="s_avz_duotone_defs" aria-hidden="true" focusable="false"
+                 style="position:absolute;width:0;height:0;overflow:hidden">
+                <filter id="avz-duotone" color-interpolation-filters="sRGB">
+                    <feColorMatrix type="matrix"
+                        values="0.2126 0.7152 0.0722 0 0
+                                0.2126 0.7152 0.0722 0 0
+                                0.2126 0.7152 0.0722 0 0
+                                0      0      0      1 0"/>
+                    <feComponentTransfer>
+                        <feFuncR type="table" tableValues="0.0745 0.9137"/>
+                        <feFuncG type="table" tableValues="0.1608 0.9529"/>
+                        <feFuncB type="table" tableValues="0.2392 0.9843"/>
+                    </feComponentTransfer>
+                </filter>
+            </svg>
+            <!-- Aplicación del duotono vía clase utilitaria `.avz-duotone`
+                 (sistema reusable: cualquier elemento con esta clase queda
+                 teñido). DEBE ir en un <style> EMBEBIDO en el documento, NO
+                 en el bundle SCSS: `filter: url(#id)` en una hoja externa
+                 resuelve el fragmento contra la URL de la HOJA (Blink), no
+                 contra el documento → referencia rota (verificado: el img
+                 salía sin teñir + 404 al fragmento). Un <style> embebido
+                 tiene base = URL del documento → `#avz-duotone` resuelve al
+                 filtro de arriba. La clase persiste al swap de imagen del
+                 editor (Odoo conserva las clases del <img>), así que tiñe
+                 CUALQUIER imagen que se ponga. Fallback grayscale para
+                 browsers sin soporte de url()-filter. -->
+            <style type="text/css">
+                .avz-duotone { filter: grayscale(1) brightness(1.02); }
+                @supports (filter: url("#avz-duotone")) {
+                    .avz-duotone { filter: url(#avz-duotone); }
+                }
+            </style>
+        </xpath>
+    </template>
 </odoo>

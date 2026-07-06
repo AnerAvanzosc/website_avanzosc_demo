@@ -123,6 +123,8 @@
             "website_avanzosc_demo/static/src/scss/snippets/_page_transition.scss",
             "website_avanzosc_demo/static/src/scss/snippets/_contacto.scss",
             "website_avanzosc_demo/static/src/scss/snippets/_kit_page.scss",
+            # Pilote snippet editable (Fase 2): estilo + duotono de la banda.
+            "website_avanzosc_demo/static/src/scss/snippets/_avz_band.scss",
             # SCSS — main (último para overrides globales)
             "website_avanzosc_demo/static/src/scss/main.scss",
             # JS — entry
