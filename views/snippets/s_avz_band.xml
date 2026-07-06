@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    s_avz_band — Banda separadora "Avanzosc" (pilote snippet editable, Fase 1).
+
+    PRIMER snippet del módulo REGISTRADO en el Website Builder (hasta ahora
+    todos los snippets eran t-call only, D4). Patrón "diseño a medida pero
+    editable desde el editor". Full-width, puro CSS/SVG, sin JS custom.
+
+    FASE 1 (este commit): scaffold + registro. Cuerpo con <img> PLACEHOLDER
+    (SVG temporal), kicker y titular editables inline. SIN estilos (SCSS +
+    duotono llegan en Fase 2). Objetivo: validar que el registro v18
+    (herencia website.snippets) hace aparecer el bloque en el panel bajo la
+    categoría propia "Avanzosc" y que se puede arrastrar a una página.
+
+    API v18 verificada (source addons/website/views/snippets/snippets.xml +
+    doc 18.0 building_blocks.rst): heredar website.snippets, xpath sobre los
+    elementos <snippets id="snippet_groups"> (categoría) y
+    <snippets id="snippet_structure"> (el snippet), t-snippet apunta al id
+    del cuerpo, group lo asigna a la categoría, t-thumbnail el icono del panel.
+-->
+<odoo>
+
+    <!-- Cuerpo del snippet. data-snippet enlaza la instancia soltada con su
+         definición; data-name es el nombre mostrado en el editor. -->
+    <template id="s_avz_band" name="Banda Avanzosc">
+        <section class="s_avz_band" data-name="Banda Avanzosc" data-snippet="s_avz_band">
+            <img class="s_avz_band_img"
+                 src="/website_avanzosc_demo/static/src/img/snippets/s_avz_band_placeholder.svg"
+                 alt="Banda Avanzosc"/>
+            <div class="s_avz_band_content">
+                <p class="s_avz_band_kicker">DESDE 2008</p>
+                <h2 class="s_avz_band_title">Odoo industrial de verdad.</h2>
+            </div>
+        </section>
+    </template>
+
+    <!-- Registro en el builder: categoría propia "Avanzosc" + el snippet.
+         position="before" sobre el primer hijo → la categoría aparece
+         arriba del panel. -->
+    <template id="s_avz_band_snippets" inherit_id="website.snippets">
+        <xpath expr="//snippets[@id='snippet_groups']/*[1]" position="before">
+            <t snippet-group="avanzosc"
+               t-snippet="website.s_snippet_group"
+               string="Avanzosc"
+               t-thumbnail="/website_avanzosc_demo/static/src/img/snippets/s_avz_band_group.svg"/>
+        </xpath>
+        <xpath expr="//snippets[@id='snippet_structure']/*[1]" position="before">
+            <t t-snippet="website_avanzosc_demo.s_avz_band"
+               string="Banda Avanzosc"
+               group="avanzosc"
+               t-thumbnail="/website_avanzosc_demo/static/src/img/snippets/s_avz_band_thumb.svg">
+                <keywords>banda, separador, avanzosc, imagen, duotono, full-width, franja</keywords>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

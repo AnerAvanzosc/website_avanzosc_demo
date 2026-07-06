@@ -35,6 +35,11 @@
         "views/snippets/timeline_trayectoria.xml",
         "views/snippets/equipo.xml",
         "views/snippets/hero.xml",
+        # Pilote: primer snippet REGISTRADO en el Website Builder (vs D4
+        # t-call only). Cuerpo + herencia de website.snippets (categoría
+        # "Avanzosc" + snippet). Carga tras website (dependencia) para que
+        # el inherit_id="website.snippets" resuelva.
+        "views/snippets/s_avz_band.xml",
         "data/config_parameters.xml",
         # Phase 4 — composición de la home / con los 9 snippets en orden
         # funnel. La view extiende `website.homepage` via xpath
