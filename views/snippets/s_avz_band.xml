@@ -24,22 +24,20 @@
          definición; data-name es el nombre mostrado en el editor. -->
     <template id="s_avz_band" name="Banda Avanzosc">
         <section class="s_avz_band" data-name="Banda Avanzosc" data-snippet="s_avz_band">
-            <!-- Media: imagen default (asset real Fase 2, cosmético). El
-                 duotono es CAPA CSS (filter: url(#avz-duotone) en _avz_band.scss),
-                 NO horneado → se aplica a esta imagen y a cualquiera que ponga
-                 el editor. <img> plano (NO <picture>) deliberado: el editor de
-                 Odoo reemplaza el `src` del <img> al swap, pero un <source
-                 webp> de <picture> quedaría stale y taparía la nueva imagen en
-                 browsers con webp (bug de editabilidad). webp tiene soporte
-                 universal en browsers actuales; el jpg de fallback vía <picture>
-                 se descartó a favor de la editabilidad (ver reporte Fase 2).
+            <!-- Imagen default en FLUJO NORMAL con clases `img img-fluid`
+                 (FIX editabilidad): así el editor de Odoo la reconoce como
+                 imagen reemplazable (patrón canónico de los snippets core;
+                 la versión previa dentro de un div absoluto y sin la clase
+                 `img` no era editable). El duotono es CAPA CSS (clase
+                 `avz-duotone` → filtro global en head), NO horneado → tiñe
+                 esta imagen y cualquiera que ponga el editor. <img> plano
+                 (NO <picture>): un <source webp> quedaría stale al swap del
+                 editor y taparía la nueva imagen; webp es universal.
                  loading=lazy: banda decorativa, no crítica al primer paint. -->
-            <div class="s_avz_band_media">
-                <img class="s_avz_band_img avz-duotone"
-                     src="/website_avanzosc_demo/static/src/img/s_avz_band.webp"
-                     alt="Banda Avanzosc" loading="lazy"/>
-                <div class="s_avz_band_scrim"/>
-            </div>
+            <img class="s_avz_band_img img img-fluid avz-duotone"
+                 src="/website_avanzosc_demo/static/src/img/s_avz_band.webp"
+                 alt="Banda Avanzosc" loading="lazy"/>
+            <div class="s_avz_band_scrim"/>
             <div class="s_avz_band_content">
                 <p class="s_avz_band_kicker">DESDE 2008</p>
                 <h2 class="s_avz_band_title">Odoo industrial de verdad.</h2>

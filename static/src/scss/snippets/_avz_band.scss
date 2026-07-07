@@ -23,45 +23,42 @@
     --avz-band-scrim-strength: 0.55;
 }
 
+// Estructura canónica de imagen editable de Odoo (FIX editabilidad): el
+// <img> va en FLUJO NORMAL (define la altura de la banda) con las clases
+// `img img-fluid` que el editor de Odoo reconoce como imagen reemplazable
+// (verificado: todos los snippets core de imagen editable las usan, p.ej.
+// s_banner `class="img img-fluid …"`; la versión previa con <img> dentro de
+// un `.s_avz_band_media` absoluto y SIN la clase `img` no era editable). El
+// scrim y el contenido son overlays absolutos por encima del <img>, con
+// pointer-events:none donde no llevan texto para no interceptar clics del
+// editor.
 .s_avz_band {
     position: relative;
     width: 100%;
-    min-height: var(--avz-band-min-height);
-    display: flex;
-    align-items: flex-end;          // texto abajo
     overflow: hidden;
     // Líneas azul-marca full-bleed arriba y abajo.
     border-top: var(--avz-band-line-width) solid var(--avz-band-line);
     border-bottom: var(--avz-band-line-width) solid var(--avz-band-line);
     background-color: var(--avz-duotone-shadow);   // color base si el img aún no carga
-
-    @media (max-width: 767.98px) {
-        min-height: var(--avz-band-min-height-mobile);
-    }
-}
-
-// -----------------------------------------------------------------------------
-// Media: imagen + scrim, ocupan toda la banda por detrás del texto.
-// -----------------------------------------------------------------------------
-.s_avz_band_media {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
 }
 
 .s_avz_band_img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
     display: block;
-    // El duotono NO se aplica aquí: `filter: url(#avz-duotone)` en el bundle
-    // SCSS resuelve el fragmento contra la URL de la hoja (Blink) → roto. Se
-    // aplica vía la clase `.avz-duotone` en un <style> embebido del head
-    // (views/assets.xml), cuyo base = documento → el fragmento resuelve al
-    // filtro. El <img> lleva `avz-duotone` en el template.
+    width: 100%;
+    height: var(--avz-band-min-height);   // el <img> en flujo define la altura de la banda
+    object-fit: cover;
+    // El duotono se aplica vía la clase `.avz-duotone` en un <style> embebido
+    // del head (views/assets.xml): `filter: url(#avz-duotone)` en el bundle
+    // SCSS resuelve el fragmento contra la URL de la HOJA (Blink) → roto; un
+    // <style> embebido resuelve contra el documento → funciona.
+
+    @media (max-width: 767.98px) {
+        height: var(--avz-band-min-height-mobile);
+    }
 }
 
 // Scrim inferior-izquierdo para legibilidad del texto sobre la imagen.
+// pointer-events:none → no intercepta clics (el editor llega al <img>/texto).
 .s_avz_band_scrim {
     position: absolute;
     inset: 0;
@@ -75,11 +72,12 @@
 }
 
 // -----------------------------------------------------------------------------
-// Contenido: kicker + titular, abajo-izquierda, sobre la imagen.
+// Contenido: kicker + titular, overlay abajo-izquierda sobre la imagen.
 // -----------------------------------------------------------------------------
 .s_avz_band_content {
-    position: relative;
-    z-index: 1;
+    position: absolute;
+    left: 0;
+    bottom: 0;
     padding: 2.5rem clamp(1.5rem, 5vw, 5rem);
     max-width: 46rem;
 
